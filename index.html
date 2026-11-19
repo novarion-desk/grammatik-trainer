@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grammatik Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Richtung: wie Lightning. Weiss und Slate, Indigo als einzige Bedienfarbe, runde Karten.
+   Die vier Fallfarben sind Fachfarben (gleich wie die Satzglied-Farben) und erscheinen nur als helle Chips. */
+:root{
+  --bg:#f8fafc; --surface:#ffffff; --alt:#f1f5f9; --line:#e2e8f0; --line2:#cbd5e1;
+  --text:#0f172a; --muted:#475569;
+  --primary:#4f46e5; --primary-h:#4338ca; --primary-l:#eef2ff;
+  --ok:#16a34a; --ok-l:#f0fdf4; --bad:#dc2626; --bad-l:#fef2f2; --warn-l:#fffbeb; --warn:#d97706;
+  --radius:1rem; --radius-s:.75rem;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.04);
+  --f:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f);line-height:1.55;min-height:100dvh}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+[hidden]{display:none!important}
+.f-nom{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}
+.f-gen{--c:#d97706;--b:#fef3c7;--t:#78350f}
+.f-dat{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}
+.f-akk{--c:#16a34a;--b:#dcfce7;--t:#14532d}
+
+/* Kopf */
+header{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
+.hin{max-width:1000px;margin:0 auto;padding:.6rem 1rem;display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center}
+.brand{display:flex;align-items:center;gap:.6rem;border:0;background:none;padding:0;text-align:left;min-height:44px}
+.logo{width:38px;height:38px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.9rem}
+.brand b{display:block;font-size:1rem;line-height:1.15}
+.brand span{display:block;font-size:.75rem;color:var(--muted)}
+.crumb{flex:1 1 12rem;font-size:.85rem;color:var(--muted);min-width:0}
+.seg{display:inline-flex;background:var(--alt);border:1px solid var(--line);border-radius:var(--radius-s);padding:.2rem;gap:.15rem}
+.seg button{border:0;background:transparent;border-radius:.55rem;min-height:40px;min-width:44px;padding:.2rem .7rem;font-weight:600;font-size:.88rem;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--primary);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.lblniv{font-size:.75rem;color:var(--muted);font-weight:600}
+
+main{max-width:1000px;margin:0 auto;padding:1.2rem 1rem 3rem}
+h1,h2,h3{line-height:1.2;margin:0}
+h2.page{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
+.sub{color:var(--muted);margin:.2rem 0 1.2rem}
+
+/* Bausteine */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:46px;padding:.5rem 1.1rem;border-radius:var(--radius-s);border:1px solid var(--line2);background:var(--surface);font-weight:600;font-size:.95rem;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--alt)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.primary:hover{background:var(--primary-h)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.sm{min-height:44px;font-size:.85rem;padding:.35rem .8rem}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow)}
+.card h3{font-size:1.05rem;margin-bottom:.5rem}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+@media (max-width:900px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.grid2,.grid4{grid-template-columns:minmax(0,1fr)}}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:.12rem .55rem;border-radius:6px;background:var(--primary-l);color:var(--primary)}
+.pill.gray{background:var(--alt);color:var(--muted)}
+.tag{display:inline-block;padding:.05rem .6rem;border-radius:999px;background:var(--b);border:1.5px solid var(--c);color:var(--t);font-weight:700;font-size:.82em;white-space:nowrap}
+mark.w{background:var(--b);color:inherit;box-shadow:inset 0 -3px 0 var(--c);border-radius:.2rem;padding:0 .12em}
+.muted{color:var(--muted)}
+.callout{margin-top:1rem;padding:.85rem 1.1rem;border-radius:var(--radius-s);background:var(--warn-l);border:1px solid #fcd34d}
+.callout.info{background:var(--primary-l);border-color:#c7d2fe}
+
+/* Start und Kapitel */
+.bigcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}
+@media (max-width:640px){.bigcards{grid-template-columns:minmax(0,1fr)}}
+.bigcard{display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem 1.3rem;box-shadow:var(--shadow);min-height:120px;transition:border-color .15s,transform .15s}
+.bigcard:hover{border-color:var(--primary);transform:translateY(-2px)}
+.bigcard b{font-size:1.2rem}
+.bigcard span{color:var(--muted);font-size:.92rem}
+.bigcard .go{margin-top:auto;color:var(--primary);font-weight:700}
+.nivcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin:.6rem 0 1.4rem}
+@media (max-width:640px){.nivcards{grid-template-columns:minmax(0,1fr)}}
+.nivcard{text-align:left;background:var(--surface);border:1.5px solid var(--line2);border-radius:var(--radius-s);padding:.8rem 1rem;min-height:84px}
+.nivcard.on{border-color:var(--primary);background:var(--primary-l)}
+.nivcard b{display:block;font-size:1rem}
+.nivcard span{font-size:.84rem;color:var(--muted)}
+.chlist{display:grid;gap:.6rem;margin-top:.6rem}
+.chrow{display:flex;align-items:center;gap:.8rem;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:.7rem 1rem;min-height:56px}
+.chrow .n{flex:0 0 2rem;height:2rem;border-radius:8px;background:var(--alt);display:grid;place-items:center;font-weight:700;color:var(--muted)}
+.chrow.act{border-color:var(--primary);box-shadow:var(--shadow)}
+.chrow.act .n{background:var(--primary);color:#fff}
+.chrow b{flex:1}
+.chrow.off{opacity:.55;cursor:default}
+
+/* Lernen */
+.toc{position:sticky;top:61px;z-index:20;background:rgba(248,250,252,.95);backdrop-filter:blur(6px);padding:.5rem 0;margin:0 0 .8rem;display:flex;gap:.4rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.toc button{flex:0 0 auto;min-height:44px;border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:.3rem .9rem;font-weight:600;font-size:.85rem;color:var(--muted)}
+.toc button:hover{border-color:var(--primary);color:var(--primary)}
+.sec{scroll-margin-top:120px;margin-bottom:1.6rem}
+.sec>h2{font-size:1.3rem;font-weight:800;margin-bottom:.6rem}
+.sec h3.pr{font-size:1.1rem;margin:1.2rem 0 .5rem}
+.sent{font-size:1.2rem;margin:.3rem 0 .6rem}
+.fcard{border:2px solid var(--c);background:var(--b);border-radius:var(--radius);padding:.9rem 1rem}
+.fcard h3{font-size:1rem;color:var(--t)}
+.fcard .q{font-size:1.35rem;font-weight:800;margin:.25rem 0;color:var(--t)}
+.fcard .role{font-size:.92rem;margin-bottom:.5rem}
+.fcard .ex{background:#fff;border-radius:.6rem;padding:.45rem .7rem;font-size:.95rem}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;position:relative;padding:.3rem 0 .3rem 2.1rem}
+.steps li::before{content:counter(s);position:absolute;left:0;top:.35rem;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--primary);color:#fff;text-align:center;font-weight:700;font-size:.85rem;line-height:1.5rem}
+.sol{margin-top:.5rem;padding:.6rem .9rem;border-radius:var(--radius-s);background:var(--ok-l);border:1px solid #86efac;font-size:.95rem}
+.sol p{margin:.15rem 0}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:.5rem .7rem;text-align:left;vertical-align:top;background:var(--surface)}
+th{background:var(--alt)}
+td.rh{font-weight:700;background:var(--b);border-left:5px solid var(--c);color:var(--t)}
+tr.dim td,tr.dim th{opacity:.28}
+.showsame td.same{background:#fef9c3;box-shadow:inset 0 0 0 2px #eab308;font-weight:700}
+.btnrow{display:flex;flex-wrap:wrap;gap:.45rem;margin:.2rem 0 .8rem}
+.btnrow button{min-height:44px;border:1px solid var(--line2);background:var(--surface);border-radius:var(--radius-s);padding:.3rem .8rem;font-weight:600;font-size:.85rem}
+.btnrow button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.uw .u{border-radius:.2rem;padding:0 .12em;font-weight:600}
+.uw.on .u{background:var(--b);box-shadow:inset 0 -3px 0 var(--c)}
+.uw p{margin:.3rem 0;font-size:1.1rem}
+.stone b{display:block;margin-bottom:.25rem}
+
+/* Fall-Knöpfe und Optionen */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:.8rem 0}
+.opt{min-height:54px;text-align:left;border:1.5px solid var(--line2);background:var(--surface);border-radius:var(--radius-s);padding:.6rem .9rem;font-weight:600;font-size:1rem;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--primary);background:var(--primary-l)}
+.opt.fall{border-left:6px solid var(--c)}
+.opt.sel{border-color:var(--primary);background:var(--primary-l);color:#312e81;box-shadow:inset 0 0 0 1px var(--primary)}
+.opt.right{border-color:var(--ok);background:var(--ok-l);color:#14532d}
+.opt.wrong{border-color:var(--bad);background:var(--bad-l);color:#7f1d1d}
+.opt[disabled]{cursor:default}
+.opt.right::after{content:' ✓';font-weight:800}.opt.wrong::after{content:' ✗';font-weight:800}
+.chip.right::after{content:' ✓'}.chip.wrong::after{content:' ✗'}
+.fb{margin-top:1rem;padding:.9rem 1.1rem;border-radius:var(--radius-s);border-left:5px solid;font-size:.95rem}
+.fb.ok{background:var(--ok-l);border-color:var(--ok);color:#14532d}
+.fb.err{background:var(--bad-l);border-color:var(--bad);color:#7f1d1d}
+.hl{background:#fde68a;color:var(--text);border-radius:.4rem;padding:.05rem .35rem;font-weight:700}
+.gap{display:inline-block;min-width:4.5rem;border-bottom:3px solid var(--primary);text-align:center;color:var(--primary);font-weight:700}
+.mc{padding:.9rem 1rem;margin:0 0 .8rem;border:1px solid var(--line);border-radius:var(--radius-s);background:var(--surface)}
+.grp{background:#fde68a;border-radius:.4rem;padding:.05rem .35rem;font-weight:700}
+
+/* Üben */
+.cfg h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:1rem 0 .4rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.chk{display:flex;flex-wrap:wrap;gap:.5rem}
+.chk label{display:inline-flex;align-items:center;gap:.5rem;min-height:46px;padding:.4rem .85rem;border:1.5px solid var(--line2);border-radius:var(--radius-s);background:var(--surface);font-weight:600;font-size:.92rem;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--primary)}
+.chk label.sel{border-color:var(--primary);background:var(--primary-l)}
+.chk.fall label.sel{border-color:var(--c);background:var(--b)}
+.avail{margin-top:1rem;padding:.7rem 1rem;border-radius:var(--radius-s);background:var(--alt);font-weight:600}
+.avail.warn{background:var(--warn-l);border:1px solid #fcd34d}
+.avail.none{background:var(--bad-l);border:1px solid #fecaca;color:#7f1d1d}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem;padding-bottom:.8rem;margin-bottom:1rem;border-bottom:1px solid var(--line)}
+.prog{display:flex;align-items:center;gap:.6rem;font-weight:600;font-size:.88rem;color:var(--muted)}
+.bar{width:140px;height:10px;background:var(--alt);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--primary);transition:width .25s}
+.instr{font-weight:700;color:var(--primary);margin-bottom:.5rem}
+.sbox{font-size:1.25rem;line-height:1.8;background:var(--alt);border:1px solid var(--line);border-radius:var(--radius-s);padding:1rem 1.2rem}
+.hint{margin-top:.8rem;padding:.7rem 1rem;border-radius:var(--radius-s);background:var(--primary-l);border:1px solid #c7d2fe;font-size:.92rem}
+.actions{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem;margin-top:1.2rem}
+.brush{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.brush button{min-height:48px;border-radius:var(--radius-s);border:2px solid var(--c);background:var(--b);color:var(--t);font-weight:700;padding:.3rem .9rem}
+.brush button.on{outline:3px solid var(--text);outline-offset:1px}
+.flow{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;font-size:1.15rem;line-height:2.2;background:var(--alt);border:1px solid var(--line);border-radius:var(--radius-s);padding:.8rem 1rem}
+.chip{min-height:46px;border:1.5px dashed var(--line2);background:var(--surface);border-radius:.6rem;padding:.2rem .8rem;font-weight:600}
+.chip.p-nom,.chip.p-gen,.chip.p-dat,.chip.p-akk{border-style:solid;border-color:var(--c);background:var(--b);color:var(--t)}
+.chip.right{outline:3px solid var(--ok)}
+.chip.wrong{outline:3px solid var(--bad)}
+.plain{padding:.2rem .1rem}
+.score{font-size:2.2rem;font-weight:800;color:var(--primary)}
+.sumhead{text-align:center;background:var(--alt);border-radius:var(--radius-s);padding:1.2rem;margin-bottom:1.2rem}
+.cat{border:1px solid var(--line);border-radius:var(--radius-s);padding:.7rem .9rem;background:var(--surface)}
+.cat .top{display:flex;justify-content:space-between;font-weight:700;font-size:.9rem;margin-bottom:.35rem}
+.cat .b{height:7px;background:var(--alt);border-radius:999px;overflow:hidden}
+.cat .b i{display:block;height:100%}
+.rev{border:1px solid var(--line);border-left:5px solid;border-radius:.6rem;padding:.65rem .9rem;margin-top:.55rem;background:var(--surface);font-size:.92rem}
+.rev.ok{border-left-color:var(--ok)}.rev.err{border-left-color:var(--bad)}
+dialog{margin:auto;border:1px solid var(--line);border-radius:var(--radius);width:min(94vw,900px);max-height:88dvh;padding:0;box-shadow:0 20px 25px -5px rgba(0,0,0,.2)}
+dialog::backdrop{background:rgba(15,23,42,.5)}
+.mh{position:sticky;top:0;z-index:2;background:var(--surface);padding:.8rem 1rem;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between}
+.mb{padding:1rem;overflow-y:auto}
+#merk{display:none}
+.try{margin:1rem 0;padding:1rem 1.1rem;border:1.5px dashed #a5b4fc;border-radius:var(--radius);background:var(--primary-l)}
+.try .sbox{background:#fff}
+.resetbar{margin-top:1.6rem;padding-top:1rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:flex-end;font-size:.9rem;color:var(--muted)}
+.hero{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#eef2ff 0%,#fff 70%);border:1px solid #c7d2fe;border-radius:1.25rem;padding:1.6rem 1.6rem;margin-bottom:1.6rem;box-shadow:var(--shadow)}
+.hero h1{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;color:#312e81}
+.hero p{margin:.3rem 0 0;color:var(--muted);font-size:1.05rem}
+.heroniv{display:flex;flex-direction:column;gap:.35rem;align-items:flex-start}
+.seg.big button{min-height:48px;min-width:60px;font-size:1.05rem}
+.heroniv .nd{font-size:.85rem;color:var(--muted)}
+.colh{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.7rem;border-bottom:2px solid var(--line);padding-bottom:.4rem}
+.colh h2{font-size:1.35rem;font-weight:800;margin:0}.colh span{color:var(--muted);font-size:.9rem}
+.tiles{display:grid;gap:.7rem}
+.tile{position:relative;display:flex;gap:.9rem;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:.9rem 1rem .9rem 1.1rem;overflow:hidden}
+.tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--line2)}
+.tile.act{box-shadow:var(--shadow)}.tile.act::before{background:var(--primary)}
+.tile .n{flex:0 0 2.2rem;height:2.2rem;border-radius:10px;background:var(--alt);display:grid;place-items:center;font-weight:800;color:var(--muted)}
+.tile.act .n{background:var(--primary);color:#fff}
+.tile .tb{flex:1;display:flex;flex-direction:column;gap:.25rem;min-width:0}
+.tile b{font-size:1.1rem}.tile .td{color:var(--muted);font-size:.9rem}
+.tile .tex{background:var(--alt);border-radius:.6rem;padding:.35rem .6rem;font-size:.95rem;margin-top:.2rem}
+.tile .tp{display:flex;align-items:center;gap:.6rem;font-size:.82rem;color:var(--muted);margin-top:.25rem}
+.tile .tp .bar{width:90px;flex:0 0 auto}
+.tile .tbtn{display:flex;gap:.5rem;margin-top:.5rem}
+.tile.off{opacity:.55;align-items:center}
+.glance{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin:0 0 1.3rem}
+@media (max-width:640px){.glance{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.gl{background:var(--b);border:2px solid var(--c);border-radius:var(--radius-s);padding:.6rem .8rem;color:var(--t)}
+.gl span{display:block;font-size:.78rem;font-weight:700}.gl b{font-size:1.15rem}
+.presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin-bottom:1rem}
+@media (max-width:900px){.presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.preset{text-align:left;min-height:84px;background:var(--surface);border:1.5px solid var(--line2);border-radius:var(--radius);padding:.8rem 1rem;display:flex;flex-direction:column;gap:.2rem}
+.preset b{font-size:1rem}.preset span{font-size:.82rem;color:var(--muted)}
+.preset:hover{border-color:var(--primary)}.preset.on{border-color:var(--primary);background:var(--primary-l);box-shadow:inset 0 0 0 1px var(--primary)}
+.sumline{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;font-weight:600;font-size:.92rem;color:var(--muted)}
+@media print{header,main,dialog{display:none!important}body.pm #merk{display:block;padding:0 .5cm}body{background:#fff}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}table,tr{break-inside:avoid}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* Lehrerteil */
+.tbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1rem;padding:.6rem .8rem;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.tbar .tsp{flex:1}
+.tchips{display:flex;gap:.35rem;overflow-x:auto;padding:.2rem 0 .7rem}
+.tchip{flex:0 0 auto;min-width:44px;min-height:44px;border:1px solid var(--line2);background:var(--surface);border-radius:.6rem;font-weight:700;color:var(--muted)}
+.tchip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.tslide,.tov{padding:1.4rem 1.6rem}
+.tov{margin-bottom:1.2rem}
+.tkick{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tslide h2,.tov h2{font-size:1.7em;font-weight:800;margin:.2rem 0 .8rem}
+.tnote{margin-top:.8rem;padding:.7rem 1rem;border-radius:var(--radius-s);background:var(--warn-l);border:1px solid #fcd34d;font-size:.92em}
+.kicker{margin:0;font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.big{font-size:clamp(1.8rem,5vw,3rem);line-height:1.1;font-weight:800;margin:.2rem 0 .8rem;letter-spacing:-.02em}
+.lead{font-size:1.2em;margin:.2rem 0 1rem;max-width:62ch}
+.stage .sent{font-size:1.2em}
+.line{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);padding:.8rem 1rem;margin:0 0 .7rem;border-radius:var(--radius)}
+.line .s{font-size:1.4em}
+.line mark.w{background:none;box-shadow:none}
+.line.open mark.w{background:var(--b);box-shadow:inset 0 -3px 0 var(--c)}
+.line .why{display:none;margin-top:.5rem;font-size:.98em;color:var(--muted)}
+.line.open .why{display:block}
+.stp{font-size:1.6em;margin:.4rem 0 .9rem;display:flex;flex-wrap:wrap;gap:.3rem .6rem}
+.stp span{padding:.1rem .4rem;border-radius:.3rem}
+.pred{box-shadow:inset 0 -3px 0 #b91c1c;background:#fde2e2;border-radius:.2rem;padding:0 .12em}
+.stepmsg{min-height:4.6rem;font-size:1.15em;padding:.8rem 1rem;background:var(--alt);border:1px solid var(--line);border-radius:var(--radius-s)}
+.stbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem;align-items:center}
+.dotrow{display:flex;gap:.35rem}.dotrow i{width:.8rem;height:.8rem;border-radius:50%;background:var(--line)}.dotrow i.on{background:var(--primary)}
+ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:1.1em}
+.wl{height:1.9rem;border-bottom:1.5px solid #999;margin-top:.3rem}
+.po{display:none}
+.ps{margin-bottom:1rem}
+#login form{padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:.7rem;min-width:min(88vw,380px)}
+#login input{min-height:48px;border:1.5px solid var(--line2);border-radius:var(--radius-s);padding:.4rem .8rem;width:100%}
+#login label{font-size:.85rem;font-weight:600;color:var(--muted)}
+.lerr{padding:.6rem .8rem;border-radius:var(--radius-s);background:var(--bad-l);border:1px solid #fecaca;color:#7f1d1d;font-size:.9rem}
+.chip.tok{border-style:solid;border-color:var(--line2)}
+.chip.tok.sel{background:var(--primary-l);border-color:var(--primary);color:#312e81}
+.chip.tok.right{background:var(--ok-l);border-color:var(--ok)}.chip.tok.wrong{background:var(--bad-l);border-color:var(--bad)}.chip.tok.miss{border:2px dashed var(--ok)}
+.chip.tok.right::after{content:' ✓'}.chip.tok.wrong::after{content:' ✗'}
+.f-nomen{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-verb{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adj{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-pron{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-part{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-art{--c:#0891b2;--b:#cffafe;--t:#164e63}
+.f-sg1{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-sg2{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-sg3{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-sg4{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-sg5{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-sg6{--c:#0891b2;--b:#cffafe;--t:#164e63}.f-sg0{--c:#64748b;--b:#f1f5f9;--t:#334155}
+@media print{.po{display:block!important}.noprint,#merk button,#merk .try{display:none!important}#merk .sol[hidden]{display:block!important}#merk .uw .u{background:var(--b);box-shadow:inset 0 -3px 0 var(--c)}#merk .card{box-shadow:none}}
+</style>
+</head>
+<body>
+<header><div class="hin" id="head"></div></header>
+<main id="app"></main>
+<div id="merk"></div>
+<dialog id="login"><form id="lform" autocomplete="on"><b style="font-size:1.15rem">Lehrer-Anmeldung</b>
+<p class="muted" style="margin:0;font-size:.9rem">Wie beim Sek Planer: gleiches Konto. Schüler brauchen keine Anmeldung.</p>
+<div><label for="lmail">E-Mail</label><input id="lmail" type="email" autocomplete="email" required placeholder="name@schule.ch" autocapitalize="off"></div>
+<div><label for="lpass">Passwort</label><input id="lpass" type="password" autocomplete="current-password" required></div>
+<div class="lerr" id="lerr" hidden></div>
+<button class="btn primary" id="lbtn" type="submit">Anmelden</button>
+<button class="btn" type="button" data-a="ldemo">Demo ansehen (ohne Anmeldung)</button>
+<button class="btn sm" type="button" data-a="lclose">Schliessen</button></form></dialog>
+<dialog id="ref"><div class="mh"><b>Nachschlagen</b><div class="btnrow" id="refTabs" style="margin:0"></div><button class="btn sm" data-a="closeRef">Schliessen</button></div><div class="mb" id="refBody"></div></dialog>
+
+<script src="vendor/firebase-app-compat.js"></script>
+<script src="vendor/firebase-auth-compat.js"></script>
+<script>
+(function(){
+'use strict';
+const GT=window.GT={chapters:{},
+ WORT:[['Wortarten','wortarten','Nomen, Verb, Adjektiv, Pronomen und Partikel erkennen'],['Nomen','nomen','Wörter für Lebewesen, Dinge und Gedanken'],['Die 4 Fälle','faelle','Nominativ, Genitiv, Dativ und Akkusativ bestimmen'],['Verb','verb','Formen, Zeitformen und Modi'],['Adjektiv','adjektiv','Eigenschaften beschreiben und steigern'],['Pronomen','pronomen','Stellvertreter und Begleiter, auch Artikel'],['Partikel','partikel','Adverb, Konjunktion und Präposition']],
+ SATZ:[['Wortlehre und Satzlehre','wl-sl','Wörter und Sätze untersuchen'],['Verbale Teile und Rohform','verbale','Verben im Satz erkennen'],['Verschiebeprobe','verschiebe','Satzglieder durch Umstellen finden'],['Satzarten','satzarten','Sätze nach ihrer Aufgabe unterscheiden'],['Hauptsatz und Nebensatz','hs-ns','Satzgefüge und Nebensatzarten'],['Kommasetzung','komma','Kommaregeln anwenden']],
+ register(c){c.catWord=c.catWord||'Fall';this.chapters[c.id]=c;},
+ mk:(k,t)=>'<mark class="w f-'+k+'">'+t+'</mark>',
+ cap:s=>s.charAt(0).toUpperCase()+s.slice(1),
+ shuffle:a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}};
+const shuffle=GT.shuffle;
+/* ================= Zustand ================= */
+const LV={C:1,B:2,A:3};
+const S={resetAsk:false,cfgOpen:false,niv:'A',screen:'start',teil:'wort',ch:'faelle',user:null,demo:/[?&]demo\b/.test(location.search),authReady:false,loginOpen:false,t:{mode:'slides',cur:0,scale:0,notes:true},cfg:{types:null,cats:null,stufe:'mix',count:'10',custom:12},R:null,ref:'proben'};
+try{const n=localStorage.getItem('wsl-niv');if(n==='A'||n==='B'||n==='C')S.niv=n;}catch(e){}
+const lv=()=>LV[S.niv];GT.lv=lv;GT.S=S;
+const C=()=>GT.chapters[S.ch],CK=()=>C().cats,CN=()=>C().catName,TY=()=>C().TYPES;
+const catTag=k=>'<span class="tag f-'+k+'">'+CN()[k]+'</span>';
+function setCh(t,v){if(t)S.teil=t;if(v&&v!==S.ch){S.ch=v;S.cfg.types=null;S.cfg.cats=null;}}
+const PK='gt-progress';
+function loadP(){try{return JSON.parse(localStorage.getItem(PK))||{};}catch(e){return {};}}
+function saveP(ok){try{const P=loadP(),c=P[S.ch]||{a:0,r:0};c.a++;if(ok)c.r++;P[S.ch]=c;localStorage.setItem(PK,JSON.stringify(P));}catch(e){}}
+const $app=document.getElementById('app'),$head=document.getElementById('head');
+
+function visibleTasks(){return C().TASKS.filter(t=>t.lv<=lv());}
+function typesAvailable(){return Object.keys(TY()).filter(k=>visibleTasks().some(t=>t.typ===k));}
+function poolFor(cfg){
+  if(!cfg.cats)cfg.cats=new Set(CK());
+  const types=cfg.types||new Set(typesAvailable());
+  return visibleTasks().filter(t=>types.has(t.typ)&&t.cats.every(f=>cfg.cats.has(f))&&stufeOk(t,cfg.stufe));
+}
+function stufeOk(t,s){return s==='mix'?true:t.stufe===Number(s);}
+function wanted(cfg){return cfg.count==='custom'?Math.max(1,Math.min(100,parseInt(cfg.custom,10)||10)):parseInt(cfg.count,10);}
+
+/* ================= Rendering ================= */
+const BACK={teach:'start',lernen:'start',config:'start',round:'config',summary:'config'};
+function crumb(){
+  const t=S.teil==='wort'?'Wortlehre':'Satzlehre',c=t+' › '+C().title;
+  const m={start:'',teach:c+' › Folien',lernen:c+' › Theorie',config:c+' › Üben',round:c+' › Runde',summary:c+' › Auswertung'};
+  return m[S.screen];
+}
+function renderHead(){
+  $head.innerHTML='<button class="brand" data-a="home" aria-label="Zur Startseite"><div class="logo">GT</div><div><b>Grammatik Trainer</b><span>Wortlehre und Satzlehre</span></div></button>'+
+   (S.screen!=='start'?'<button class="btn sm" data-a="back">‹ Zurück</button>':'')+'<div class="crumb">'+crumb()+'</div>'+
+   '<span class="lblniv">Niveau</span><div class="seg" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div>'+authBtns();
+}
+function screenStart(){
+  const D={A:'Alles, auch die Erweiterungen',B:'Kern und einige Erweiterungen',C:'Der Kern: Grundlagen und Proben'},P=loadP();
+  const tile=(key,c,i)=>{
+    const ch=GT.chapters[c[1]];
+    if(!ch)return '<div class="tile off"><span class="n">'+(i+1)+'</span><div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span></div><span class="pill gray">Folgt</span></div>';
+    const p=P[c[1]],pct=p&&p.a?Math.round(p.r/p.a*100):0;
+    return '<div class="tile act"><span class="n">'+(i+1)+'</span><div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span>'+
+     (p&&p.a?'<div class="tp"><div class="bar"><i style="width:'+pct+'%"></i></div><span>'+p.r+' von '+p.a+' richtig ('+pct+' %)</span></div>':'')+
+     '<div class="tbtn">'+(teacherAccess()?'<button class="btn" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'" style="border-color:var(--primary);color:var(--primary)">Folien</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div></div>';
+  };
+  const col=(key,title,sub,L)=>'<section><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>tile(key,c,i)).join('')+'</div></section>';
+  return '<div class="hero"><div><h1>Grammatik Trainer</h1><p>Theorie lesen, Aufgaben lösen, Fehler gezielt wiederholen.</p></div>'+
+   '<div class="heroniv"><span class="lblniv">Dein Niveau</span><div class="seg big" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div><span class="nd">'+D[S.niv]+'</span></div></div>'+
+   '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
+   (Object.keys(P).length?'<div class="resetbar">'+(S.resetAsk?'<span>Wirklich den ganzen Fortschritt auf diesem Gerät löschen?</span> <button class="btn sm" data-a="resetyes" style="border-color:var(--bad);color:var(--bad)">Ja, löschen</button> <button class="btn sm" data-a="resetno">Abbrechen</button>':'<button class="btn sm" data-a="resetask">Fortschritt zurücksetzen</button>')+'</div>':'');
+}
+function screenLernen(){
+  const vis=C().TOC.filter(t=>!t[2]||lv()>=t[2]);
+  return '<div class="toc" id="toc">'+vis.map(t=>'<button data-a="toc" data-v="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'+
+   '<div class="topbar"><h2 class="page" style="margin:0">Die 4 Fälle: Theorie</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="merk">Merkblatt drucken</button><button class="btn sm primary" data-a="config">Übung zusammenstellen →</button></div></div>'+
+   (C().glance?C().glance():'')+
+   vis.map(t=>'<section class="sec" id="s-'+t[0]+'">'+C().SEC[t[0]]()+'</section>').join('')+
+   '<div class="card" style="text-align:center"><b>Bereit zum Üben?</b><p class="muted">Jetzt die Aufgaben zu den vier Fällen lösen.</p><button class="btn primary" data-a="config">Übung zusammenstellen →</button></div>';
+}
+const PRESETS=[['Alles gemischt','Alle Aufgabentypen',['bestimmen','zuordnen','frage','ersatz','einsetzen','anmalen']],['Fälle bestimmen','Fall im Satz erkennen und anmalen',['bestimmen','anmalen']],['Proben','Frageprobe und Ersatzprobe',['frage','ersatz']],['Wissen und Formen','Fälle, Fragen, Artikel',['zuordnen','einsetzen']]];
+function sameSet(a,b){return a.size===b.size&&[...a].every(x=>b.has(x));}
+function screenConfig(){
+  const c=S.cfg;if(!c.cats)c.cats=new Set(CK());if(!c.types)c.types=new Set(typesAvailable());
+  const av=typesAvailable(),pool=poolFor(c),want=wanted(c);
+  const cnt=s=>visibleTasks().filter(t=>c.types.has(t.typ)&&t.cats.every(f=>c.cats.has(f))&&stufeOk(t,s)).length;
+  const st=[['mix','Gemischt (alle Stufen)'],['1','Einfach'],['2','Mittel'],['3','Schwierig']];
+  let info;
+  if(pool.length===0)info='<div class="avail none">Mit dieser Auswahl gibt es keine Aufgaben. Wähle mehr Fälle, Aufgabentypen oder eine andere Stufe.</div>';
+  else if(pool.length<want)info='<div class="avail warn">Es gibt nur '+pool.length+' passende Aufgaben. Die Runde hat deshalb '+pool.length+' statt '+want+' Fragen.</div>';
+  else info='<div class="avail">'+pool.length+' passende Aufgaben verfügbar. Die Runde hat '+want+' Fragen.</div>';
+  const pre=C().PRESETS.map(p=>{const set=new Set(p[2].filter(k=>av.includes(k)));const on=sameSet(set,c.types)&&c.cats.size===4;return '<button class="preset '+(on?'on':'')+'" data-a="preset" data-v="'+p[2].join(',')+'"><b>'+p[0]+'</b><span>'+p[1]+'</span></button>';}).join('');
+  const sum='Typen: '+(c.types.size===av.length?'alle':c.types.size)+' · Fälle: '+(c.cats.size===4?'alle':c.cats.size)+' · Stufe: '+(c.stufe==='mix'?'gemischt':st.find(x=>x[0]===c.stufe)[1])+' · '+want+' Fragen';
+  const det='<div class="cfg"><h3>Aufgabentypen <span><button class="btn sm" data-a="all" data-g="types">Alle</button> <button class="btn sm" data-a="none" data-g="types">Keine</button></span></h3><div class="chk">'+
+   av.map(k=>'<label class="'+(c.types.has(k)?'sel':'')+'"><input type="checkbox" data-cfg="type" value="'+k+'" '+(c.types.has(k)?'checked':'')+'> '+TY()[k].label+'</label>').join('')+'</div>'+
+   '<h3>'+C().catTitle+' <span><button class="btn sm" data-a="all" data-g="cats">Alle</button> <button class="btn sm" data-a="none" data-g="cats">Keine</button></span></h3><div class="chk fall">'+
+   CK().map(k=>'<label class="f-'+k+' '+(c.cats.has(k)?'sel':'')+'"><input type="checkbox" data-cfg="fall" value="'+k+'" '+(c.cats.has(k)?'checked':'')+'> '+CN()[k]+'</label>').join('')+'</div>'+
+   '<h3>Schwierigkeit</h3><div class="chk">'+st.map(s=>{const n=cnt(s[0]);return '<label class="'+(c.stufe===s[0]?'sel':'')+'" style="'+(n===0?'opacity:.5':'')+'"><input type="radio" name="stufe" data-cfg="stufe" value="'+s[0]+'" '+(c.stufe===s[0]?'checked':'')+(n===0?' disabled':'')+'> '+s[1]+' ('+n+')</label>';}).join('')+'</div>'+
+   '<h3>Fragen pro Runde</h3><div class="chk">'+[['5','5'],['10','10'],['15','15'],['20','20'],['custom','Eigene Anzahl']].map(o=>'<label class="'+(c.count===o[0]?'sel':'')+'"><input type="radio" name="count" data-cfg="count" value="'+o[0]+'" '+(c.count===o[0]?'checked':'')+'> '+o[1]+'</label>').join('')+
+   (c.count==='custom'?'<input type="number" inputmode="numeric" min="1" max="100" data-cfg="custom" value="'+c.custom+'" aria-label="Eigene Anzahl" style="width:90px;min-height:46px;border:1.5px solid var(--line2);border-radius:.75rem;padding:.3rem .6rem;text-align:center">':'')+'</div></div>';
+  return '<h2 class="page">Die 4 Fälle: Üben</h2><p class="sub">Was möchtest du üben? Niveau '+S.niv+' ist eingestellt.</p><div class="presets">'+pre+'</div>'+
+   '<div class="card"><div class="sumline"><span>'+sum+'</span><button class="btn sm" data-a="moreopt">'+(S.cfgOpen?'Einstellungen schliessen':'Einstellungen anpassen')+'</button></div>'+(S.cfgOpen?det:'')+
+   '<div id="avail">'+info+'</div>'+
+   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="faelle">Erst Theorie lesen</button><button class="btn primary" id="startBtn" data-a="start" '+(pool.length===0?'disabled':'')+'>Übung starten →</button></div></div>';
+}
+function updateAvail(){
+  const c=S.cfg,pool=poolFor(c),want=wanted(c),el=document.getElementById('avail'),b=document.getElementById('startBtn');if(!el)return;
+  el.innerHTML=pool.length===0?'<div class="avail none">Mit dieser Auswahl gibt es keine Aufgaben. Wähle mehr Fälle, Aufgabentypen oder eine andere Stufe.</div>':
+   pool.length<want?'<div class="avail warn">Es gibt nur '+pool.length+' passende Aufgaben. Die Runde hat deshalb '+pool.length+' statt '+want+' Fragen.</div>':'<div class="avail">'+pool.length+' passende Aufgaben verfügbar. Die Runde hat '+want+' Fragen.</div>';
+  if(b)b.disabled=pool.length===0;
+}
+
+/* ---- Runde ---- */
+function startRound(tasks,title){
+  S.R={tasks,i:0,hist:[],title:title||'Runde',answered:false,choice:null,paint:{},sel:new Set(),brush:CK()[0],hint:false,order:null};
+  S.screen='round';render();
+}
+function screenRound(){
+  const R=S.R,t=R.tasks[R.i],T=TY()[t.typ],total=R.tasks.length;
+  let body='';
+  if(t.typ==='anmalen'){
+    body='<div class="instr">'+T.instr+'</div><div class="brush">'+CK().map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+CN()[k]+'</button>').join('')+'</div>'+
+     '<div class="flow">'+t.parts.map((p,i)=>p.f?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
+  }else if(t.tokens){
+    body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="tok" data-i="'+i+'">'+x+'</button>').join('')+'</div>';
+  }else{
+    if(!R.order)R.order=shuffle(t.opts);
+    body='<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'<div class="sbox">'+t.sent+'</div>')+
+     '<div class="opts">'+R.order.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="pick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
+  }
+  return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div><span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+'</span></div>'+
+   '<div class="prog"><span>'+(R.i+1)+' / '+total+' · '+R.hist.filter(h=>h.ok).length+' ✓</span><div class="bar"><i style="width:'+((R.i+1)/total*100)+'%"></i></div></div></div>'+
+   body+'<div class="hint" id="hintBox" hidden>'+T.hint+'</div><div id="fb" role="status" aria-live="polite"></div>'+
+   '<div class="actions"><div><button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button></div>'+
+   '<div><button class="btn primary" id="checkBtn" data-a="check" disabled>Überprüfen</button><button class="btn ok" id="nextBtn" data-a="next" hidden>'+(R.i+1<total?'Nächste Aufgabe →':'Auswertung anzeigen')+'</button></div></div></div>';
+}
+function checkRound(){
+  const R=S.R,t=R.tasks[R.i];if(R.answered)return;
+  let ok=false,mine='',right='',conf=null;
+  if(t.typ==='anmalen'){
+    const need=t.parts.map((p,i)=>p.f?i:-1).filter(i=>i>=0);
+    if(need.some(i=>!R.paint[i])){document.getElementById('fb').innerHTML='<div class="fb err">Male zuerst alle Gruppen an.</div>';return;}
+    ok=need.every(i=>R.paint[i]===t.parts[i].f);
+    need.forEach(i=>{const b=document.querySelector('.chip[data-i="'+i+'"]');b.classList.remove('p-nom','p-gen','p-dat','p-akk');b.classList.add(R.paint[i]===t.parts[i].f?'right':'wrong');b.classList.add('f-'+t.parts[i].f,'p-'+t.parts[i].f);});
+    mine=need.map(i=>(R.paint[i]?CN()[R.paint[i]]:'–')).join(', ');right=need.map(i=>CN()[t.parts[i].f]).join(', ');
+    need.forEach(i=>{if(R.paint[i]!==t.parts[i].f)conf=[t.parts[i].f,R.paint[i]];});
+    document.querySelectorAll('.chip,.brush button').forEach(b=>b.disabled=true);
+  }else if(t.tokens){
+    if(!R.sel.size)return;
+    const tg=new Set(t.targets);ok=t.tokens.every((_,i)=>R.sel.has(i)===tg.has(i));
+    document.querySelectorAll('.tok').forEach(b=>{const i=Number(b.dataset.i);b.disabled=true;if(R.sel.has(i)&&tg.has(i))b.classList.add('right');else if(R.sel.has(i))b.classList.add('wrong');else if(tg.has(i))b.classList.add('miss');});
+    mine=[...R.sel].sort((a,b)=>a-b).map(i=>t.tokens[i]).join(', ');right=t.targets.map(i=>t.tokens[i]).join(', ');
+  }else{
+    if(R.choice===null)return;
+    const got=R.order[R.choice];ok=got===t.answer;mine=got;right=t.answer;
+    if(t.optCat&&!ok)conf=[t.optCat[t.answer],t.optCat[got]];
+    document.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(R.order[i]===t.answer)b.classList.add('right');else if(i===R.choice)b.classList.add('wrong');});
+    document.querySelectorAll('.sbox .hl').forEach(h=>{if(t.cats.length===1)h.classList.add('f-'+t.cats[0]);});
+  }
+  R.answered=true;R.hist.push({t,ok,mine,right,conf});saveP(ok);
+  document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+'</div>';
+  document.getElementById('checkBtn').hidden=true;document.getElementById('nextBtn').hidden=false;
+}
+function nextRound(){
+  const R=S.R;
+  if(R.i+1<R.tasks.length){R.i++;R.answered=false;R.choice=null;R.paint={};R.sel=new Set();R.order=null;R.hint=false;render();}
+  else{S.screen='summary';render();}
+}
+function qText(t){return t.prompt||t.sent||(t.tokens?t.tokens.join(' '):'')||(t.parts?t.parts.map(p=>p.t).join(' '):'');}
+function screenSummary(){
+  const H=S.R.hist,tot=H.length,ok=H.filter(h=>h.ok).length,pct=tot?Math.round(ok/tot*100):0;
+  const grp=(keyf,labf)=>{const m={};H.forEach(h=>{const k=keyf(h);(m[k]=m[k]||{o:0,n:0,l:labf(h)});m[k].n++;if(h.ok)m[k].o++;});return Object.values(m).sort((a,b)=>a.o/a.n-b.o/b.n);};
+  const card=g=>g.map(x=>{const p=Math.round(x.o/x.n*100),col=p>=80?'var(--ok)':p>=50?'var(--warn)':'var(--bad)';return '<div class="cat"><div class="top"><span>'+x.l+'</span><span style="color:'+col+'">'+x.o+' / '+x.n+' ('+p+' %)</span></div><div class="b"><i style="width:'+p+'%;background:'+col+'"></i></div></div>';}).join('');
+  const byType=grp(h=>h.t.typ,h=>TY()[h.t.typ].label);
+  const byFall=grp(h=>h.t.cats.length===1?h.t.cats[0]:'mehr',h=>h.t.cats.length===1?CN()[h.t.cats[0]]:'Mehrere '+C().catWord+'e');
+  const cf={};H.forEach(h=>{if(h.conf&&h.conf[0]&&h.conf[1]){const k=h.conf[0]+'>'+h.conf[1];cf[k]=(cf[k]||0)+1;}});
+  const cl=Object.entries(cf).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,n])=>{const [a,b]=k.split('>');return '<li>Du hast '+catTag(a)+' als '+catTag(b)+' angegeben ('+n+'×).</li>';}).join('');
+  const wrong=H.filter(h=>!h.ok);
+  const worst=wrong.length?TY()[wrong[0].t.typ].ref:'proben';
+  return '<div class="card"><div class="sumhead"><div class="muted" style="font-weight:700">Auswertung</div><div class="score">'+ok+' / '+tot+' ('+pct+' %)</div><div class="muted">'+(pct>=80?'Sehr gut, du bist sicher.':pct>=50?'Gut, einige Stellen noch üben.':'Schau dir die Proben nochmals an und übe weiter.')+'</div></div>'+
+   '<h3>Nach '+C().catWord+'</h3><div class="grid3" style="margin:.5rem 0 1.2rem">'+card(byFall)+'</div><h3>Nach Aufgabentyp</h3><div class="grid3" style="margin:.5rem 0 1.2rem">'+card(byType)+'</div>'+
+   (cl?'<div class="callout info"><b>Typische Verwechslungen</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">'+cl+'</ul></div>':'')+
+   '<div class="actions" style="justify-content:flex-start;margin:1.2rem 0">'+(wrong.length?'<button class="btn primary" data-a="retry">Fehler gezielt wiederholen ('+wrong.length+')</button>':'')+
+   '<button class="btn" data-a="again">Neue Runde</button><button class="btn" data-a="ref" data-v="'+worst+'">Zur passenden Theorie</button><button class="btn" data-a="home">Zur Übersicht</button></div>'+
+   '<h3>Alle Fragen</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+TY()[h.t.typ].label+'</b> '+(h.ok?'· richtig':'· falsch')+'<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
+}
+function render(){
+  renderHead();
+  $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary})[S.screen]();
+  initTry(document);mountWidgets(document);window.scrollTo(0,0);renderLogin();
+}
+function renderTry(el){
+  const types=el.dataset.types.split(',');
+  const pool=visibleTasks().filter(t=>types.includes(t.typ));if(!pool.length){el.hidden=true;return;}
+  let t,n=0;do{t=pool[Math.floor(Math.random()*pool.length)];n++;}while(String(t.id)===el.dataset.tid&&pool.length>1&&n<20);
+  el.dataset.tid=t.id;el._t=t;el._o=shuffle(t.opts);
+  el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div><div class="opts">'+
+   el._o.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="tpick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div>';
+}
+function tryPick(b){
+  const el=b.closest('[data-w="try"]');if(el.dataset.done)return;el.dataset.done='1';
+  const t=el._t,i=Number(b.dataset.i),ok=el._o[i]===t.answer;
+  el.querySelectorAll('.opt').forEach((x,j)=>{x.disabled=true;if(el._o[j]===t.answer)x.classList.add('right');else if(j===i)x.classList.add('wrong');});
+  el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
+}
+function initTry(root){(root||document).querySelectorAll('[data-w="try"]').forEach(renderTry);}
+function openRef(sec){
+  S.ref=sec;
+  const T=C().REF;
+  document.getElementById('refTabs').innerHTML=T.map(x=>'<button data-a="refsec" data-v="'+x[0]+'" class="'+(S.ref===x[0]?'on':'')+'">'+x[1]+'</button>').join('');
+  document.getElementById('refBody').innerHTML='<div class="sec" style="margin:0">'+C().SEC[S.ref]()+'</div>';
+  initTry(document.getElementById('refBody'));const d=document.getElementById('ref');if(!d.open){try{d.showModal();}catch(e){d.setAttribute('open','');}}
+}
+
+/* ================= Merkblatt (Druck) ================= */
+function printMerk(){
+  document.getElementById('merk').innerHTML=C().merk();document.body.classList.add('pm');
+  const done=()=>document.body.classList.remove('pm');window.addEventListener('afterprint',done,{once:true});
+  try{window.print();}catch(e){done();}
+}
+
+/* ================= Ereignisse ================= */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b||!b.dataset.a)return;
+  const a=b.dataset.a,v=b.dataset.v;
+  switch(a){
+   case 'home':S.screen='start';render();break;
+   case 'back':S.screen=BACK[S.screen]||'start';render();break;
+   case 'niv':S.niv=v;try{localStorage.setItem('wsl-niv',v);}catch(x){}S.cfg.types=null;render();break;
+   case 'theorie':setCh(b.dataset.t,v);S.screen='lernen';render();break;
+   case 'teach':setCh(b.dataset.t,v);S.screen='teach';S.t.cur=0;render();break;
+   case 'config':setCh(b.dataset.t,v);S.screen='config';render();break;
+   case 'tpick':tryPick(b);break;
+   case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
+   case 'resetask':S.resetAsk=true;render();break;
+   case 'resetno':S.resetAsk=false;render();break;
+   case 'resetyes':try{localStorage.removeItem(PK);}catch(x){}S.resetAsk=false;render();break;
+   case 'merk':printMerk();break;
+   case 'moreopt':S.cfgOpen=!S.cfgOpen;render();break;
+   case 'preset':{const av=typesAvailable();S.cfg.types=new Set(v.split(',').filter(k=>av.includes(k)));S.cfg.cats=new Set(CK());render();break;}
+   case 'toc':{const el=document.getElementById('s-'+v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});break;}
+   case 'rev':{const s=b.nextElementSibling;s.hidden=!s.hidden;b.textContent=s.hidden?b.dataset.l:'Verbergen';break;}
+   case 'all':case 'none':{const g=b.dataset.g,on=a==='all';if(g==='types')S.cfg.types=on?new Set(typesAvailable()):new Set();else S.cfg.cats=on?new Set(CK()):new Set();render();break;}
+   case 'start':{const pool=poolFor(S.cfg);if(!pool.length)return;startRound(shuffle(pool).slice(0,wanted(S.cfg)),'Runde');break;}
+   case 'pick':{const R=S.R;if(R.answered)return;R.choice=Number(b.dataset.i);document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');document.getElementById('checkBtn').disabled=false;break;}
+   case 'brush':{S.R.brush=b.dataset.k;document.querySelectorAll('.brush button').forEach(x=>x.classList.toggle('on',x===b));break;}
+   case 'paint':{const R=S.R;if(R.answered)return;const i=b.dataset.i;b.classList.remove('f-nom','f-gen','f-dat','f-akk','p-nom','p-gen','p-dat','p-akk');
+     if(R.paint[i]===R.brush){delete R.paint[i];}else{R.paint[i]=R.brush;b.classList.add('f-'+R.brush,'p-'+R.brush);}
+     const need=R.tasks[R.i].parts.filter(p=>p.f).length;document.getElementById('checkBtn').disabled=Object.keys(R.paint).length<need;break;}
+   case 'tok':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=!R.sel.size;break;}
+   case 'hint':{const h=document.getElementById('hintBox');h.hidden=!h.hidden;break;}
+   case 'check':checkRound();break;
+   case 'next':nextRound();break;
+   case 'stop':S.screen='config';render();break;
+   case 'ref':openRef(v);break;
+   case 'refsec':openRef(v);break;
+   case 'closeRef':document.getElementById('ref').close();break;
+   case 'retry':{const w=S.R.hist.filter(h=>!h.ok).map(h=>h.t);startRound(shuffle(w),'Wiederholung');break;}
+   case 'again':S.screen='config';render();break;
+   case 'tmode':S.t.mode=v;S.t.cur=0;render();break;
+   case 'tgo':tGo(S.t.cur+Number(v));break;
+   case 'tjump':tGo(Number(b.dataset.i));break;
+   case 'tscale':S.t.scale=(S.t.scale+1)%3;render();break;
+   case 'tnotes':S.t.notes=!S.t.notes;render();break;
+   case 'tprint':printTeach(v);break;
+   case 'tlogin':S.loginOpen=true;renderLogin();break;
+   case 'tlogout':doLogout();break;
+   case 'lclose':S.loginOpen=false;renderLogin();break;
+   case 'ldemo':location.href=location.pathname+'?demo';break;
+   case 'exitdemo':location.href=location.pathname;break;
+   default:{const f=C().actions&&C().actions[a];if(f)f(b);}
+  }
+});
+document.addEventListener('change',e=>{
+  const i=e.target.closest('[data-cfg]');if(!i)return;const c=S.cfg,k=i.dataset.cfg;
+  if(k==='type'){if(!c.types)c.types=new Set(typesAvailable());i.checked?c.types.add(i.value):c.types.delete(i.value);render();}
+  else if(k==='fall'){i.checked?c.cats.add(i.value):c.cats.delete(i.value);render();}
+  else if(k==='stufe'){c.stufe=i.value;render();}
+  else if(k==='count'){c.count=i.value;render();}
+});
+document.addEventListener('input',e=>{const i=e.target.closest('[data-cfg="custom"]');if(i){S.cfg.custom=i.value;updateAvail();}});
+document.getElementById('ref').addEventListener('click',e=>{if(e.target.id==='ref')e.target.close();});
+/* ================= Lehrerteil ================= */
+const SCV=[1,1.25,1.5],SCN=['Normal','Gross','Beamer'];
+const stripH=h=>h.replace(/^\s*<h[23][^>]*>.*?<\/h[23]>/s,'');
+const slidesVis=()=>C().SLIDES.filter(s=>!(s.lv&&lv()<s.lv));
+function tGo(i){const V=slidesVis();S.t.cur=Math.max(0,Math.min(V.length-1,i));render();}
+function screenTeach(){
+  const V=slidesVis(),T=S.t;if(T.cur>=V.length)T.cur=V.length-1;
+  const tot=V.reduce((a,s)=>a+(s.min||0),0);
+  const bar='<div class="tbar"><div class="seg"><button data-a="tmode" data-v="slides" class="'+(T.mode==='slides'?'on':'')+'">Folien</button><button data-a="tmode" data-v="overview" class="'+(T.mode==='overview'?'on':'')+'">Übersicht</button></div>'+
+   '<button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tnotes">Hinweise: '+(T.notes?'an':'aus')+'</button>'+
+   '<span class="tsp"></span><span class="muted" style="font-size:.85rem">'+V.length+' Folien · ca. '+tot+' Min.</span>'+
+   '<button class="btn sm" data-a="tprint" data-v="h">Übersicht drucken</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt drucken</button><button class="btn sm" data-a="tprint" data-v="u">Übungsblatt drucken</button></div>';
+  const note=s=>T.notes&&s.note?'<div class="tnote noprint"><b>Hinweis für dich:</b> '+s.note+'</div>':'';
+  let body;
+  if(T.mode==='slides'){
+    const s=V[T.cur];
+    body='<div class="tchips">'+V.map((x,i)=>'<button class="tchip '+(i===T.cur?'on':'')+'" data-a="tjump" data-i="'+i+'" title="'+x.title+'" aria-label="Folie '+(i+1)+': '+x.title+'">'+(i+1)+'</button>').join('')+'</div>'+
+     '<div class="card tslide"><div class="tkick">Folie '+(T.cur+1)+' von '+V.length+(s.min?' · '+s.min+' Min.':'')+'</div><h2>'+s.title+'</h2>'+stripH(s.html())+'</div>'+note(s)+
+     '<div class="actions"><button class="btn" data-a="tgo" data-v="-1" '+(T.cur===0?'disabled':'')+'>‹ Zurück</button><button class="btn primary" data-a="tgo" data-v="1" '+(T.cur===V.length-1?'disabled':'')+'>Weiter ›</button></div>';
+  }else{
+    body=V.map((s,i)=>'<section class="card tov"><div class="tkick">Folie '+(i+1)+(s.min?' · '+s.min+' Min.':'')+'</div><h2>'+s.title+'</h2>'+stripH(s.html())+note(s)+'</section>').join('');
+  }
+  return bar+'<div class="stage" style="font-size:'+SCV[T.scale]+'rem">'+body+'</div>';
+}
+function mountWidgets(root){
+  const W=C()&&C().widgets;if(!W)return;
+  (root||document).querySelectorAll('[data-w]').forEach(el=>{const f=W[el.dataset.w];if(f&&!el._m){el._m=1;f(el);}});
+}
+function doPrint(html){
+  const m=document.getElementById('merk');m.innerHTML=html;document.body.classList.add('pm');
+  const done=()=>document.body.classList.remove('pm');window.addEventListener('afterprint',done,{once:true});
+  try{window.print();}catch(e){done();}
+}
+function printTeach(mode){
+  const c=C();let h;
+  if(mode==='m')h=c.merk();
+  else{
+    const name=mode==='u'?'Übungsblatt':'Übersicht für das Heft';
+    h='<h1 style="font-size:1.5rem;margin:0 0 .2rem">'+c.title+'</h1><p class="muted" style="margin:0 0 .8rem">'+name+' · Niveau '+S.niv+'</p>'+
+     slidesVis().filter(s=>(s.p||'').includes(mode)).map(s=>'<section class="ps"><h2 style="font-size:1.15rem">'+s.title+'</h2>'+(s.print?s.print():stripH(s.html()))+'</section>').join('');
+  }
+  doPrint(h);
+}
+document.addEventListener('keydown',e=>{
+  if(S.screen!=='teach'||S.t.mode!=='slides'||/INPUT|SELECT|TEXTAREA/.test((e.target||{}).tagName||''))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();tGo(S.t.cur+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();tGo(S.t.cur-1);}
+});
+
+/* ================= Anmeldung (Firebase, wie beim Sek Planer) ================= */
+const FBCFG={apiKey:"AIzaSyBHHhgjAvY0D0trm2IMxauhFp-ssw9ooz4",authDomain:"zufallsgenerator-209f3.firebaseapp.com",projectId:"zufallsgenerator-209f3",storageBucket:"zufallsgenerator-209f3.firebasestorage.app",messagingSenderId:"274439019701",appId:"1:274439019701:web:b90892c5745657e39972fc"};
+let auth=null;
+function initAuth(){
+  try{
+    if(window.firebase){
+      if(!firebase.apps.length)firebase.initializeApp(FBCFG);
+      auth=firebase.auth();
+      auth.onAuthStateChanged(u=>{S.user=u;S.authReady=true;if(u)S.loginOpen=false;if(!u&&S.screen==='teach'&&!S.demo)S.screen='start';render();});
+    }
+  }catch(e){auth=null;}
+}
+const teacherAccess=()=>!!(S.user||S.demo);
+function authBtns(){
+  if(S.demo)return '<span class="pill">Demo</span><button class="btn sm" data-a="exitdemo">Demo beenden</button>';
+  if(S.user)return '<span class="pill">Lehrer</span><button class="btn sm" data-a="tlogout">Abmelden</button>';
+  return '<button class="btn sm" data-a="tlogin">Lehrer-Anmeldung</button>';
+}
+function doLogout(){try{if(auth)auth.signOut();}catch(e){}S.user=null;if(S.screen==='teach')S.screen='start';render();}
+function renderLogin(){
+  const d=document.getElementById('login');if(!d)return;
+  if(S.loginOpen&&!d.open){try{d.showModal();}catch(e){d.setAttribute('open','');}}
+  else if(!S.loginOpen&&d.open){try{d.close();}catch(e){d.removeAttribute('open');}}
+}
+document.addEventListener('submit',async e=>{
+  if(e.target.id!=='lform')return;e.preventDefault();
+  const err=document.getElementById('lerr'),btn=document.getElementById('lbtn');err.hidden=true;
+  if(!auth){err.textContent='Die Anmeldung ist hier nicht verfügbar (keine Verbindung). Die Demo funktioniert trotzdem.';err.hidden=false;return;}
+  btn.disabled=true;btn.textContent='Anmelden …';
+  try{
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithEmailAndPassword(document.getElementById('lmail').value.trim(),document.getElementById('lpass').value);
+  }catch(x){err.textContent='Anmeldung fehlgeschlagen. Bitte E-Mail und Passwort prüfen.';err.hidden=false;}
+  finally{btn.disabled=false;btn.textContent='Anmelden';}
+});
+GT.tryW=t=>'<div class="try" data-w="try" data-types="'+t+'"></div>';
+GT.reveal=(label,inner)=>'<div><button class="btn sm" data-a="rev" data-l="'+label+'">'+label+'</button><div class="sol" hidden>'+inner+'</div></div>';
+GT.table=(head,rows,cls)=>'<div class="tw"><table class="'+(cls||'')+'"><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>';
+GT.chapter=function(d){
+  const lvOf=x=>x.lv||1;
+  const cats=Object.keys(d.cats);
+  const catName=Object.fromEntries(cats.map(k=>[k,d.cats[k]]));
+  const TY={};Object.keys(d.types).forEach(k=>TY[k]=Object.assign({ref:d.sections[0].id,hint:d.hint||''},d.types[k]));
+  let id=1;const TASKS=d.tasks.map(t=>Object.assign({id:id++,lv:t.lv||(t.stufe===3?2:1),cats:t.cats||[cats[0]]},t));
+  const sec=s=>()=>'<h2>'+s.title+'</h2>'+(typeof s.html==='function'?s.html():s.html);
+  const SEC={ziele:()=>'<div class="card"><h3>Das lernst du hier</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+d.goals.map(g=>'<li>'+g+'</li>').join('')+'</ul></div>'};
+  const secs=d.sections.filter(s=>!s.teacherOnly);
+  secs.forEach(s=>SEC[s.id]=sec(s));
+  SEC.check=()=>'<h2>Probier es aus</h2><p class="sub" style="margin-top:0">Gemischte Aufgaben zum Ausprobieren. Nach jeder Antwort siehst du die Lösung.</p>'+GT.tryW(Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(','));
+  const TOC=[['ziele','Lernziele']].concat(secs.map(s=>[s.id,s.short||s.title,s.lv>1?s.lv:undefined])).concat([['check','Ausprobieren']]);
+  const tryAll=Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
+  const ex=d.exercises||[];
+  const exHTML=()=>'<ol class="ex">'+ex.filter(u=>(u[2]||1)<=lv()).map(u=>'<li>'+u[0]+'<div class="po wl"></div><div class="noprint">'+GT.reveal('Lösung zeigen',u[1])+'</div></li>').join('')+'</ol>';
+  const SLIDES=[{id:'titel',title:d.title,min:3,p:'h',note:d.noteTitel||'Lernziele laut lesen. Das Niveau oben bestimmt, wie viel Erweiterung eingeblendet wird.',
+     html:()=>'<p class="kicker">'+(d.teil==='wort'?'I. Wortlehre':'II. Satzlehre')+' · Kapitel '+d.nr+'</p><p class="big">'+(d.big||d.title)+'</p><div class="grid2">'+SEC.ziele()+'<div class="card noprint"><h3>Ablauf</h3><ol>'+secs.filter(s=>!s.lv||s.lv<=lv()).map(s=>'<li>'+(s.short||s.title)+'</li>').join('')+'<li>Üben und Abschluss-Check</li></ol></div></div>'}]
+   .concat(d.sections.map(s=>({id:s.id,title:s.title,min:s.min||5,lv:s.lv,p:s.p===undefined?'h':s.p,note:s.note,html:typeof s.html==='function'?s.html:()=>s.html,print:s.print})))
+   .concat(ex.length?[{id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:exHTML}]:[])
+   .concat([{id:'merkblatt',title:'Merkblatt',min:4,p:'hm',note:'Als Merkblatt drucken (Menü «Merkblatt drucken») oder abschreiben lassen.',html:()=>d.merk()},
+            {id:'check',title:'Abschluss-Check',min:5,p:'',note:'Als Exit-Ticket einzeln lösen lassen. Das Ergebnis zeigt, wo noch Lücken sind.',html:()=>'<p class="lead">Tippe jeweils die richtige Antwort.</p>'+[1,2,3,4].map(()=>GT.tryW(tryAll)).join('')}]);
+  const allT=Object.keys(d.types);
+  const PRESETS=[['Alles gemischt','Alle Aufgabentypen',allT]].concat(allT.slice(0,3).map(k=>[d.types[k].label,d.types[k].short||'Nur dieser Typ',[k]]));
+  if(d.css){const st=document.createElement('style');st.textContent=d.css;document.head.appendChild(st);}
+  GT.register({id:d.id,teil:d.teil,nr:d.nr,title:d.title,desc:d.desc,ex:d.ex,cats,catName,catTitle:d.catTitle||'Welche Themen?',catWord:d.catWord||'Thema',
+    TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>'<h1 style="font-size:1.5rem;margin:0 0 .2rem">Merkblatt: '+d.title+'</h1><p class="muted" style="margin:0 0 .8rem">Grammatik Trainer · Niveau '+S.niv+'</p>'+d.merk(),
+    SLIDES,widgets:d.widgets||{},actions:d.actions||{}});
+};
+GT.start=function(){
+  const l=document.getElementById('login');if(l)l.addEventListener('close',()=>{S.loginOpen=false;});
+  initAuth();render();
+};
+GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
+})();
+
+</script>
+<script src="chapters/wortarten.js"></script>
+<script src="chapters/nomen.js"></script>
+<script src="chapters/verb.js"></script>
+<script src="chapters/adjektiv.js"></script>
+<script src="chapters/pronomen.js"></script>
+<script src="chapters/partikel.js"></script>
+<script src="chapters/wl-sl.js"></script>
+<script src="chapters/verbale.js"></script>
+<script src="chapters/verschiebe.js"></script>
+<script src="chapters/satzarten.js"></script>
+<script src="chapters/hs-ns.js"></script>
+<script src="chapters/komma.js"></script>
+<script src="chapters/faelle.js"></script>
+<script>GT.start();</script>
+</body>
+</html>

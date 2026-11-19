@@ -1,0 +1,138 @@
+/* Kapitel Wortlehre 4: Verb. Registriert sich beim Trainer (GT). Konjunktiv folgt als eigenes Thema. */
+(function(){
+'use strict';
+const GT=window.GT,mk=GT.mk,lv=GT.lv,tryW=GT.tryW,reveal=GT.reveal,T=GT.table;
+const C={sg1:'Personalformen',sg2:'Zeitformen',sg3:'Stammformen',sg4:'Verbarten und Befehlsform'};
+const task=[];
+const brk=s=>s.replace(/\[(.+?)\]/g,'<span class="hl">$1</span>');
+const ZN=['Präsens','Präteritum','Perfekt','Plusquamperfekt','Futur I'];
+
+/* Zeitformen bestimmen: [Satz, Zeitform, Stufe, Hinweis] */
+const Z=[
+['Ich [lache] laut.',0,1,'Gegenwart: ich lache.'],['Sie [lachte] laut.',1,1,'Stamm + -te: lachte.'],['Er [hat gelacht].',2,1,'haben + Partizip II.'],['Wir [werden lachen].',4,1,'werden + Infinitiv.'],['Es [regnet].',0,1,'Gegenwart.'],['Gestern [regnete] es.',1,1,'Vergangenheit mit Stamm + -te.'],['Ich [habe gegessen].',2,1,'haben + Partizip II.'],['Sie [wird kommen].',4,1,'werden + Infinitiv.'],['Er [spielt] Fussball.',0,1,'Gegenwart.'],['Wir [spielten] Fussball.',1,1,'Stamm + -ten.'],['Wir [haben gespielt].',2,1,'haben + Partizip II.'],['Du [singst] schön.',0,1,'Gegenwart.'],['Ihr [sangt] im Chor.',1,1,'Ablaut: singen – sang.'],['Sie [sind gelaufen].',2,1,'sein + Partizip II.'],
+['Er [hatte gegessen], bevor wir ankamen.',3,2,'hatte + Partizip II: Es war schon vorher passiert.'],['Ich [bin] gestern [gerannt].',2,2,'sein + Partizip II ist ein Perfekt.'],['Sie [ist] schon [abgereist].',2,2,'sein + Partizip II.'],['Er [wird] bald [schlafen].',4,2,'werden + Infinitiv.'],['Wir [assen] Pizza.',1,2,'Ablaut: essen – ass.'],['Sie [hatten] das Haus [gebaut].',3,2,'hatten + Partizip II.'],['Es [hatte] stark [geschneit].',3,2,'hatte + Partizip II.'],['Ich [werde] dich morgen [anrufen].',4,2,'werden + Infinitiv.'],['Du [hast] das Buch [gelesen].',2,2,'haben + Partizip II.'],['Wir [fuhren] nach Bern.',1,2,'Ablaut: fahren – fuhr.'],['Sie [kamen] spät.',1,2,'Ablaut: kommen – kam.'],['Er [steht] früh [auf].',0,2,'Gegenwart: aufstehen, getrennt.'],['Er [stand] früh [auf].',1,2,'Vergangenheit: aufstehen – stand auf.'],
+['Nachdem er [gegessen hatte], ging er hinaus.',3,3,'hatte + Partizip II: früher als «ging».'],['Morgen [fahren] wir nach Bern.',0,3,'Das Präsens kann auch Zukünftiges ausdrücken. «morgen» zeigt die Zukunft.'],['Nächste Woche [habe] ich Geburtstag.',0,3,'Präsens mit Zukunftsbedeutung.'],['Er [wird] jetzt wohl zu Hause [sein].',4,3,'werden + Infinitiv. Hier drückt es eine Vermutung aus.'],['Als wir ankamen, [hatte] es schon [aufgehört].',3,3,'hatte + Partizip II.']
+];
+Z.forEach(z=>task.push({typ:'zeit',stufe:z[2],lv:z[2]===3?2:1,cats:['sg2'],sent:brk(z[0]),opts:ZN,answer:ZN[z[1]],why:'<b>'+ZN[z[1]]+'.</b> '+z[3]}));
+
+/* Personalformen: [Satz, Antwort, falsch, Stufe] */
+const P=[
+['Ich ___ (lachen) laut.','lache',['lachst','lacht','lachen'],1],['Du ___ (lachen) laut.','lachst',['lache','lacht','lachen'],1],['Er ___ (lachen) laut.','lacht',['lache','lachst','lachen'],1],['Wir ___ (spielen) Fussball.','spielen',['spiele','spielst','spielt'],1],['Ihr ___ (spielen) Fussball.','spielt',['spiele','spielst','spielen'],1],['Die Kinder ___ (singen).','singen',['singe','singst','singt'],1],['Du ___ (gehen) nach Hause.','gehst',['gehe','geht','gehen'],1],
+['Ich ___ (sein) müde.','bin',['bist','ist','sind'],1],['Du ___ (sein) müde.','bist',['ist','bin','sind'],1],['Wir ___ (sein) müde.','sind',['seid','bin','ist'],1],['Ihr ___ (sein) müde.','seid',['sind','bist','ist'],2],['Er ___ (haben) Hunger.','hat',['habt','hast','haben'],1],['Du ___ (haben) Hunger.','hast',['hat','habe','habt'],1],['Ihr ___ (haben) Hunger.','habt',['hat','hast','haben'],2],
+['Er ___ (lesen) ein Buch.','liest',['lest','lesst','lesen'],2],['Du ___ (lesen) ein Buch.','liest',['lest','lesst','lesen'],2],['Er ___ (fahren) nach Bern.','fährt',['fahrt','fahrst','fähren'],2],['Du ___ (fahren) nach Bern.','fährst',['fahrst','fährt','fahren'],2],['Du ___ (essen) Pizza.','isst',['esst','essen','isse'],2],['Er ___ (sehen) den Hund.','sieht',['sehe','seht','siehst'],2],['Meine Schwester ___ (werden) Ärztin.','wird',['werde','wirst','werden'],2],['Du ___ (werden) müde.','wirst',['wird','werde','werdet'],2],['Er ___ (nehmen) den Zug.','nimmt',['nehmt','nehme','nehmst'],2],['Du ___ (nehmen) den Zug.','nimmst',['nimmt','nehmst','nehme'],2],
+['Er ___ (können) schwimmen.','kann',['kannt','könnt','können'],3],['Du ___ (müssen) lernen.','musst',['muss','müsst','müssen'],3],['Ich ___ (wollen) gehen.','will',['willst','wollt','wollen'],3]
+];
+P.forEach(p=>task.push({typ:'person',stufe:p[3],lv:p[3]===3?2:1,cats:['sg1'],sent:p[0].replace('___','<span class="gap">_____</span>'),opts:[p[1]].concat(p[2]),answer:p[1],why:'<b>'+p[1]+'.</b> Die Personalform richtet sich nach der Person (ich, du, er …) und der Zahl.'}));
+
+/* Stammformen: [Infinitiv, Präteritum, Partizip II, falsche Prät., falsche PII, Stufe] */
+const S=[
+['spielen','spielte','gespielt',['spielt','spielete','spiel'],['gespielen','gespielet','gespiel'],1],['lachen','lachte','gelacht',['lacht','lachete','lach'],['gelachen','gelachet','gelach'],1],['kaufen','kaufte','gekauft',['kauft','kaufete','kauf'],['gekaufen','gekaufet','gekauf'],1],
+['gehen','ging','gegangen',['gehte','gangte','ginget'],['gegeht','gegangt','gegehen'],1],['singen','sang','gesungen',['singte','sung','sangte'],['gesingt','gesang','gesangen'],1],['kommen','kam','gekommen',['kommte','kamte','kamm'],['gekommt','gekam','gekamt'],1],['essen','ass','gegessen',['esste','asste','ase'],['gegesst','gegass','geessen'],2],['schreiben','schrieb','geschrieben',['schreibte','schriebte','schribe'],['geschreibt','geschrieb','geschriebt'],2],['lesen','las','gelesen',['leste','laste','lasste'],['gelest','gelas','geliesen'],2],['fahren','fuhr','gefahren',['fahrte','fahr','fuhrte'],['gefahrt','gefuhr','gefahrte'],2],['nehmen','nahm','genommen',['nehmte','nam','nahmte'],['genehmt','genahm','genommt'],2],['sehen','sah','gesehen',['sehte','siehte','sahte'],['gesehnt','gesah','gesieht'],2],['trinken','trank','getrunken',['trinkte','trunk','trankte'],['getrinkt','getrank','getrinken'],2],['laufen','lief','gelaufen',['laufte','lauf','liefte'],['gelauft','gelief','geloffen'],2],['schwimmen','schwamm','geschwommen',['schwimmte','schwomm','schwammte'],['geschwimmt','geschwamm','geschwammen'],2],['geben','gab','gegeben',['gebte','gabte','gib'],['gegebt','gegab','gegaben'],2],['helfen','half','geholfen',['helfte','halfte','hilfte'],['gehelft','gehalf','gehilft'],2],
+['besuchen','besuchte','besucht',['besuchet','gebesuchte','besuchete'],['gebesucht','gebesuchen','besuchen'],3],['aufstehen','stand auf','aufgestanden',['aufstand','stehte auf','aufstehte'],['aufgestehen','gestandenauf','aufgestandt'],3],['anrufen','rief an','angerufen',['anrief','rufte an','anrufte'],['geanrufen','angerufte','angerufet'],3]
+];
+S.forEach(s=>{
+  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Präteritum</b> von «'+s[0]+'»? (er/sie/es …)',opts:[s[1]].concat(s[3]),answer:s[1],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Präteritum: «er '+s[1]+'».'});
+  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Partizip II</b> von «'+s[0]+'»?',opts:[s[2]].concat(s[4]),answer:s[2],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Perfekt: «er hat/ist '+s[2]+'».'});
+});
+
+/* Verbteile markieren */
+const M=[
+['Die Katze *schläft.',1,'Ein einziges Verb: schläft.'],['Wir *spielen draussen.',1,'Verb: spielen. «draussen» ist kein Verb.'],['Wir *haben gestern Fussball *gespielt.',1,'Zwei Teile des Verbs: haben + gespielt (Perfekt).'],
+['Er *steht früh *auf.',2,'Trennbares Verb «aufstehen»: steht + auf.'],['Sie *will heute nicht *kommen.',2,'Modalverb «will» + Infinitiv «kommen».'],['Ich *bin gestern nach Bern *gefahren.',2,'sein + gefahren (Perfekt).'],['Er *wird bald *schlafen.',2,'werden + schlafen (Futur I).'],
+['Sie *hatte das Buch schon *gelesen.',3,'hatte + gelesen (Plusquamperfekt).'],['Wir *müssen morgen früh *aufstehen.',3,'Modalverb «müssen» + Infinitiv «aufstehen».']
+];
+M.forEach(m=>{
+  const raw=m[0].split(' '),tokens=raw.map(w=>w.replace(/^\*/,'')),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
+  task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg4'],tokens,targets,instr:'Tippe alle Teile des Verbs an.',why:m[2]});
+});
+
+/* Wissen */
+const W=[
+['Wie heisst die Grundform des Verbs (zum Beispiel «lachen») in der Fachsprache?',['Infinitiv (Rohform)','Partizip II','Imperativ','Präteritum'],'Infinitiv (Rohform)','Die Grundform endet meist auf -en: lachen, gehen, sein.','sg4',1],
+['Welche drei Verben sind <b>Hilfsverben</b>?',['sein, haben, werden','gehen, kommen, laufen','können, müssen, wollen','essen, trinken, schlafen'],'sein, haben, werden','Mit Hilfsverben bildet man zusammengesetzte Zeitformen (hat gelacht, wird kommen).','sg4',1],
+['Welches Verb ist ein <b>Modalverb</b>?',['können','laufen','werden','schlafen'],'können','Modalverben: können, müssen, dürfen, wollen, sollen, mögen.','sg4',2],
+['Wie bildet man das <b>Perfekt</b>?',['haben oder sein + Partizip II','werden + Infinitiv','Stamm + -te','hatte + Partizip II'],'haben oder sein + Partizip II','Beispiele: er hat gelacht, sie ist gelaufen.','sg2',1],
+['Wie bildet man das <b>Plusquamperfekt</b>?',['hatte oder war + Partizip II','haben oder sein + Partizip II','werden + Infinitiv','Stamm + -te'],'hatte oder war + Partizip II','Beispiele: er hatte gegessen, sie war gegangen.','sg2',2],
+['Wie bildet man das <b>Futur I</b>?',['werden + Infinitiv','haben + Partizip II','hatte + Partizip II','Stamm + -te'],'werden + Infinitiv','Beispiel: er wird kommen.','sg2',1],
+['Welche Zeitform beschreibt, was <b>vor</b> einem anderen Geschehen passiert ist?',['Plusquamperfekt','Präsens','Futur I','Präteritum'],'Plusquamperfekt','«Nachdem er gegessen hatte, ging er.» Das Essen passierte zuerst.','sg2',2],
+['Welche Zeitform braucht man oft beim mündlichen Erzählen von Vergangenem?',['Perfekt','Futur I','Plusquamperfekt','Imperativ'],'Perfekt','Mündlich sagen wir meist «ich habe gelacht», schriftlich eher «ich lachte».','sg2',1],
+['Welche Zeitform verwendet man oft beim <b>schriftlichen Erzählen</b> in der Vergangenheit?',['Präteritum','Futur I','Perfekt','Präsens'],'Präteritum','In Geschichten schreiben wir meist im Präteritum: «Sie ging nach Hause.»','sg2',2],
+['Wie lautet die <b>Befehlsform</b> (Imperativ) von «lesen» für «du»?',['Lies!','Lese!','Liest!','Lesen!'],'Lies!','Der Imperativ von «lesen» hat -ie-: Lies!','sg4',2],
+['Wie lautet die Befehlsform von «fahren» für «du»?',['Fahr!','Fähr!','Fährst!','Fahre!'],'Fahr!','Der Imperativ hat keinen Umlaut: Fahr!','sg4',2],
+['Wie lautet die Befehlsform von «geben» für «du»?',['Gib!','Gebe!','Gibst!','Geb!'],'Gib!','Wie bei «lesen» wechselt das e zu i: Gib!','sg4',2],
+['Wie lautet die Befehlsform von «kommen» für «ihr»?',['Kommt!','Kommen!','Komm!','Kommst!'],'Kommt!','Der Imperativ Mehrzahl endet auf -t: Kommt!','sg4',1],
+['Welcher Satz ist eine <b>Aufforderung</b> (Imperativ)?',['Komm bitte her!','Er kommt.','Sie kam gestern.','Wir werden kommen.'],'Komm bitte her!','Der Imperativ verlangt etwas: Komm! Geh! Lies!','sg4',1],
+['Welcher Satz steht im <b>Passiv</b>?',['Das Buch wird gelesen.','Er liest das Buch.','Sie hat gelesen.','Wir lesen.'],'Das Buch wird gelesen.','Passiv: werden + Partizip II. Der Täter ist nicht wichtig.','sg4',3],
+['Wie bildet man das <b>Passiv</b>?',['werden + Partizip II','haben + Partizip II','werden + Infinitiv','sein + Infinitiv'],'werden + Partizip II','Beispiel: Das Haus wird gebaut.','sg4',3]
+];
+W.forEach(w=>task.push({typ:'wissen',stufe:w[5]===3?3:(w[5]),lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+
+/* ---------- Theorie ---------- */
+const SECS=[
+{id:'merkmale',title:'Was ist ein Verb?',short:'Merkmale',min:6,note:'Verben nicht nur als Tätigkeiten: regnen, sein, schlafen. Konjugationsprobe wiederholen.',
+ html:()=>'<div class="grid2"><div class="card"><h3>Verben nennen …</h3><p><b>Tätigkeiten:</b> laufen, schreiben, kochen</p><p><b>Vorgänge:</b> regnen, wachsen, schmelzen</p><p><b>Zustände:</b> sein, schlafen, wohnen</p></div>'+
+ '<div class="card"><h3>Die Konjugationsprobe</h3><p>Kannst du das Wort nach Person und Zeit verändern? Dann ist es ein Verb.</p>'+T(['','lachen','gehen'],[['ich','ich lache','ich gehe'],['du','du lachst','du gehst'],['er/sie/es','er lacht','er geht'],['Vergangenheit','er lachte','er ging']])+'</div></div>'},
+{id:'formen',title:'Grundform und Personalform',short:'Personalformen',min:8,note:'Die Begriffe Grundform (Rohform, Infinitiv) und Personalform klar trennen. Wichtig für die Satzlehre. Unregelmässige Verben: du liest, er fährt, ich bin.',
+ html:()=>'<div class="grid2"><div class="card"><h3>Grundform (Infinitiv, Rohform)</h3><p>So steht das Verb im Wörterbuch: <b>lachen, gehen, sein</b>.</p><p class="muted">Sie hat keine Person: «Ich will lachen.»</p></div>'+
+ '<div class="card"><h3>Personalform</h3><p>Sie richtet sich nach der Person und der Zahl: <b>ich lache, du lachst, wir lachen</b>.</p></div></div>'+
+ '<div class="card" style="margin-top:.8rem">'+T(['Person','Endung','lachen','sein','haben'],[['ich','-e','ich lache','ich bin','ich habe'],['du','-st','du lachst','du bist','du hast'],['er/sie/es','-t','er lacht','er ist','er hat'],['wir','-en','wir lachen','wir sind','wir haben'],['ihr','-t','ihr lacht','ihr seid','ihr habt'],['sie (Mz.)','-en','sie lachen','sie sind','sie haben']])+'</div>'+
+ '<div class="callout">Bei einigen Verben ändert sich der Stamm: du l<b>ie</b>st, er f<b>ä</b>hrt, du n<b>imm</b>st. Lerne sie mit.</div>'},
+{id:'zeiten',title:'Die Zeitformen',short:'Zeitformen',min:12,note:'Zeitstrahl an die Wandtafel zeichnen. Zuerst Präsens, Präteritum, Perfekt; dann Plusquamperfekt und Futur. Wichtig: Perfekt ist die Form fürs Sprechen.',
+ html:()=>T(['Zeitform','Beispiel (lachen)','Bildung','Wann'],[
+  ['Präsens','er lacht','Stamm + Endung','jetzt; auch Zukunft (Morgen fahre ich.)'],
+  ['Präteritum','er lachte','Stamm + -te (oder Ablaut: ging)','schriftliches Erzählen'],
+  ['Perfekt','er hat gelacht','haben oder sein + Partizip II','mündliches Erzählen von Vergangenem'],
+  ['Plusquamperfekt','er hatte gelacht','hatte oder war + Partizip II','Geschehen, das schon vorher passiert ist'],
+  ['Futur I','er wird lachen','werden + Infinitiv','Zukunft; auch Vermutung (Er wird wohl krank sein.)']])+
+ '<div class="callout"><b>Merke:</b> Bei <b>haben/sein + Partizip II</b> stehen zwei Teile eines Verbs im Satz: «Er <b>hat</b> gestern <b>gelacht</b>.»</div>'},
+{id:'bildung',title:'Partizip II und Stammformen',short:'Stammformen',min:10,note:'Starke (unregelmässige) und schwache (regelmässige) Verben vergleichen. Die Stammformen lernt man am besten laut.',
+ html:()=>'<div class="grid2"><div class="card"><h3>Regelmässige Verben</h3><p>Stamm + <b>-te</b> im Präteritum, <b>ge- … -t</b> im Partizip II.</p><p>lachen – lachte – <b>ge</b>lach<b>t</b></p></div>'+
+ '<div class="card"><h3>Unregelmässige Verben</h3><p>Der Vokal wechselt (Ablaut). Das Partizip II endet auf <b>-en</b>.</p><p>singen – sang – <b>ge</b>sung<b>en</b></p></div></div>'+
+ '<div class="card" style="margin-top:.8rem"><h3>Wichtige Stammformen</h3>'+T(['Grundform','Präteritum','Partizip II'],[['gehen','ging','gegangen'],['kommen','kam','gekommen'],['essen','ass','gegessen'],['lesen','las','gelesen'],['fahren','fuhr','gefahren'],['sehen','sah','gesehen'],['nehmen','nahm','genommen'],['schreiben','schrieb','geschrieben']])+'</div>'+
+ '<div class="callout">Trennbare Verben: <b>auf</b>stehen → ich stehe <b>auf</b>, ich bin <b>auf</b>gestanden. Verben mit be-, ver-, er- haben im Partizip II kein ge-: be<b>sucht</b>.</div>'},
+{id:'arten',title:'Vollverb, Hilfsverb und Modalverb',short:'Verbarten',lv:2,min:8,note:'Ab Niveau B. Modalverben immer mit Infinitiv am Satzende zeigen.',
+ html:()=>'<div class="grid3"><div class="card"><h3>Vollverb</h3><p>Hat eine eigene Bedeutung.</p><p>Er <b>lacht</b>. Sie <b>geht</b> nach Hause.</p></div>'+
+ '<div class="card"><h3>Hilfsverb</h3><p><b>sein, haben, werden</b> bilden zusammengesetzte Zeitformen.</p><p>Er <b>hat</b> gelacht. Sie <b>wird</b> kommen.</p></div>'+
+ '<div class="card"><h3>Modalverb</h3><p><b>können, müssen, dürfen, wollen, sollen, mögen</b> – mit Infinitiv.</p><p>Ich <b>muss</b> gehen. Sie <b>will</b> lachen.</p></div></div>'},
+{id:'modi',title:'Aussagen und Aufforderungen',short:'Befehlsform',min:7,note:'Nur Indikativ (Wirklichkeit) und Imperativ (Befehlsform) behandeln. Der Konjunktiv folgt später als eigenes Thema.',
+ html:()=>'<div class="grid2"><div class="card"><h3>Indikativ (Wirklichkeitsform)</h3><p>Er sagt, wie etwas ist: «Du <b>kommst</b>.»</p></div>'+
+ '<div class="card"><h3>Imperativ (Befehlsform)</h3><p>Er fordert auf: «<b>Komm</b>!» «<b>Kommt</b>!»</p>'+T(['Grundform','du','ihr'],[['kommen','Komm!','Kommt!'],['lesen','Lies!','Lest!'],['fahren','Fahr!','Fahrt!'],['geben','Gib!','Gebt!']])+'</div></div>'+
+ '<div class="callout">Den <b>Konjunktiv</b> (Möglichkeitsform: «Er sagte, er sei müde.») lernst du in einem späteren Thema.</div>'},
+{id:'passiv',title:'Aktiv und Passiv',short:'Passiv',lv:3,min:8,note:'Nur Niveau A. Zeigen, dass im Passiv der Handelnde nicht genannt werden muss.',
+ html:()=>'<div class="grid2"><div class="card"><h3>Aktiv</h3><p>Der Handelnde steht im Vordergrund.</p><p>«Der Bäcker <b>backt</b> das Brot.»</p></div>'+
+ '<div class="card"><h3>Passiv</h3><p><b>werden + Partizip II</b>. Das Geschehen steht im Vordergrund.</p><p>«Das Brot <b>wird gebacken</b>.»</p></div></div>'},
+{id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Pro Stolperstein ein Beispiel von den Schülern bilden lassen.',
+ html:()=>'<div class="grid3">'+[
+  ['1 · Zwei Teile, ein Verb','«Er <b>hat</b> gestern <b>gelacht</b>.»','Hilfsverb und Partizip II gehören zusammen. Dazwischen können andere Wörter stehen.'],
+  ['2 · Trennbare Verben','«Er <b>steht</b> früh <b>auf</b>.»','«aufstehen»: Die Vorsilbe steht am Satzende.'],
+  ['3 · Perfekt mit sein','«Ich <b>bin</b> gelaufen.»','Bei Bewegung und Zustandsänderung: sein + Partizip II.'],
+  ['4 · Präsens für die Zukunft','«Morgen <b>fahre</b> ich nach Bern.»','Das Präsens kann Zukünftiges ausdrücken, wenn eine Zeitangabe da ist.'],
+  ['5 · Unregelmässige Personalformen','«du <b>liest</b>, er <b>fährt</b>»','Der Stamm ändert sich. Das erkennt man nur beim Konjugieren.'],
+  ['6 · «würde» ist kein Präsens','«Ich <b>würde</b> kommen.»','Das ist der Konjunktiv. Der kommt in einem späteren Thema.']
+ ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('zeit,person,stamm')}
+];
+const EX=[
+ ['Konjugiere «gehen» im Präsens: ich, du, er, wir, ihr, sie.','ich gehe · du gehst · er geht · wir gehen · ihr geht · sie gehen',1],
+ ['Bestimme die Zeitform: «Sie hat gelacht.»','Perfekt: hat + gelacht (Partizip II).',1],
+ ['Schreibe den Satz im Präteritum: «Wir spielen Fussball.»','Wir spielten Fussball.',1],
+ ['Schreibe den Satz im Perfekt: «Er liest ein Buch.»','Er hat ein Buch gelesen.',1],
+ ['Schreibe den Satz im Futur I: «Ich rufe dich an.»','Ich werde dich anrufen.',1],
+ ['Gib die Stammformen an: gehen, essen, sehen.','gehen – ging – gegangen · essen – ass – gegessen · sehen – sah – gesehen',1],
+ ['Unterstreiche alle Teile des Verbs: «Sie hat gestern früh aufstehen müssen.»','hat · aufstehen · müssen (drei Teile)',2],
+ ['Bilde die Befehlsform für «du»: lesen, fahren, geben.','Lies! · Fahr! · Gib!',2],
+ ['Schreibe im Plusquamperfekt: «Er isst. Dann geht er.» («Nachdem …»)','Nachdem er gegessen hatte, ging er.',2]
+];
+const merk=()=>T(['Zeitform','Beispiel','Bildung'],[['Präsens','er lacht','Stamm + Endung'],['Präteritum','er lachte','Stamm + -te oder Ablaut'],['Perfekt','er hat gelacht','haben/sein + Partizip II'],['Plusquamperfekt','er hatte gelacht','hatte/war + Partizip II'],['Futur I','er wird lachen','werden + Infinitiv']])+
+ '<h3 style="margin-top:.9rem">Personalformen</h3>'+T(['','Endung','lachen'],[['ich','-e','lache'],['du','-st','lachst'],['er/sie/es','-t','lacht'],['wir','-en','lachen'],['ihr','-t','lacht'],['sie','-en','lachen']])+
+ '<ul><li>Grundform (Infinitiv, Rohform): lachen, gehen, sein.</li><li>Hilfsverben: sein, haben, werden.</li><li>Befehlsform: Komm! Lies! Fahr!</li></ul>';
+GT.chapter({id:'verb',teil:'wort',nr:4,title:'Verb',big:'Er lacht. Er lachte. Er hat gelacht.',desc:'Formen, Zeitformen und Befehlsform',
+ ex:'«Er '+mk('verb','lacht')+'. Er '+mk('verb','lachte')+'. Er '+mk('verb','hat gelacht')+'.»',
+ goals:['Ich erkenne Verben mit der Konjugationsprobe.','Ich kenne die Grundform (Rohform) und bilde die Personalformen.','Ich kenne die Zeitformen Präsens, Präteritum, Perfekt, Plusquamperfekt und Futur I und erkenne sie im Satz.','Ich bilde Stammformen und das Partizip II.','Ich bilde die Befehlsform (Imperativ).'],
+ cats:C,catTitle:'Welche Themen?',catWord:'Thema',
+ types:{zeit:{label:'Zeitform bestimmen',short:'Zeitform im Satz',instr:'In welcher Zeitform steht das markierte Verb?',hint:'Achte auf die Bildung: -te? haben/sein + Partizip? hatte/war + Partizip? werden + Infinitiv?',ref:'zeiten'},
+  person:{label:'Personalform',short:'Verb richtig konjugieren',instr:'Welche Form passt in die Lücke?',hint:'Welche Person? Denke an die Endungen -e, -st, -t, -en, -t, -en.',ref:'formen'},
+  stamm:{label:'Stammformen',short:'Präteritum und Partizip II',instr:'Wähle die richtige Form.',hint:'Regelmässig: -te und ge-…-t. Unregelmässig: Ablaut und ge-…-en.',ref:'bildung'},
+  markieren:{label:'Verbteile markieren',short:'Alle Teile des Verbs finden',instr:'Tippe alle Teile des Verbs an.',hint:'Suche Hilfsverb, Modalverb, Partizip, Infinitiv und abgetrennte Vorsilbe.',ref:'zeiten'},
+  wissen:{label:'Wissen',short:'Zeitformen, Verbarten, Befehlsform',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'zeiten'}},
+ sections:SECS,tasks:task,exercises:EX,merk});
+})();
