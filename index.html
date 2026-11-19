@@ -292,7 +292,8 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 .wl{height:1.9rem;border-bottom:1.5px solid #999;margin-top:.3rem}
 .po{display:none}
 .ps{margin-bottom:1rem}
-#settings{width:min(94vw,460px)}
+#settings{width:min(94vw,480px)}
+#settings form{max-height:86dvh;overflow:auto}#settings h3{margin:.6rem 0 0;font-size:1rem;border-bottom:1px solid var(--line);padding-bottom:.2rem}#settings select,#settings input[type=text]{min-height:48px;width:100%;border:1.5px solid var(--line2);border-radius:var(--radius-s);padding:.4rem .8rem;background:#fff;font:inherit}#settings label.inl{display:flex;gap:.6rem;align-items:center;font-size:.95rem;color:var(--text,#1e293b);font-weight:500}#settings label.inl input{width:22px;height:22px;min-height:0}
 #login form,#settings form{padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:.7rem;min-width:min(88vw,380px)}
 #login input,#settings input{min-height:48px;border:1.5px solid var(--line2);border-radius:var(--radius-s);padding:.4rem .8rem;width:100%}
 #login label,#settings label{font-size:.85rem;font-weight:600;color:var(--muted)}
@@ -318,12 +319,21 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 <button class="btn primary" id="lbtn" type="submit">Anmelden</button>
 <button class="btn" type="button" data-a="ldemo">Demo ansehen (ohne Anmeldung)</button>
 <button class="btn sm" type="button" data-a="lclose">Schliessen</button></form></dialog>
-<dialog id="settings"><form id="sform" method="dialog" autocomplete="off"><b style="font-size:1.15rem">⚙️ Einstellungen</b>
-<p class="muted" style="margin:0;font-size:.9rem">KI-Schlüssel für das Übungsblatt. Sie werden wie im Sek Planer im Lehrerkonto gespeichert. Hinterlegst du sie dort schon, musst du hier nichts tun.</p>
+<dialog id="settings"><form id="sform" method="dialog" autocomplete="off"><b style="font-size:1.2rem">⚙️ Einstellungen</b>
+<h3>Allgemein</h3>
+<div><label>Standard-Niveau</label><div class="chk" id="s-niv"><label><input type="radio" name="sniv" value="A"> A</label><label><input type="radio" name="sniv" value="B"> B</label><label><input type="radio" name="sniv" value="C"> C</label></div></div>
+<div><label for="s-scale">Schrift in den Folien</label><select id="s-scale"><option value="0">Normal</option><option value="1">Gross</option><option value="2">Beamer</option></select></div>
+<div><label class="inl"><input type="checkbox" id="s-notes"> Hinweise für mich in den Folien anzeigen</label></div>
+<div><label for="s-school">Kopfzeile auf Ausdrucken</label><input id="s-school" type="text" placeholder="z. B. Sek Mättmi · Frau/Herr Name"></div>
+<h3>KI für das Übungsblatt</h3>
+<p class="muted" style="margin:0;font-size:.88rem" id="s-kinfo">Die Schlüssel werden wie im Sek Planer im Lehrerkonto gespeichert. Hast du sie dort schon hinterlegt, siehst du sie hier.</p>
+<div><label for="s-first">Zuerst fragen</label><select id="s-first"><option value="gemini">Google Gemini</option><option value="claude">Anthropic Claude</option><option value="openai">OpenAI ChatGPT</option><option value="mistral">Mistral</option></select></div>
 <div><label for="k-gemini">Google Gemini</label><input id="k-gemini" type="password" autocomplete="off" placeholder="aistudio.google.com/apikey"></div>
 <div><label for="k-claude">Anthropic Claude</label><input id="k-claude" type="password" autocomplete="off" placeholder="sk-ant-…"></div>
 <div><label for="k-openai">OpenAI ChatGPT</label><input id="k-openai" type="password" autocomplete="off" placeholder="sk-…"></div>
 <div><label for="k-mistral">Mistral</label><input id="k-mistral" type="password" autocomplete="off" placeholder="console.mistral.ai"></div>
+<h3>Daten auf diesem Gerät</h3>
+<div><button class="btn sm" type="button" data-a="sreset" id="sreset">Übungsfortschritt löschen</button></div>
 <div class="lerr" id="smsg" hidden></div>
 <button class="btn primary" type="button" id="sbtn" data-a="ssave">Speichern</button>
 <button class="btn sm" type="button" data-a="sclose">Schliessen</button></form></dialog>
@@ -558,7 +568,7 @@ function openRef(sec){
 /* ================= Merkblatt (Druck) ================= */
 const LOGOSM='<svg viewBox="0 0 120 120" width="34" height="34" aria-hidden="true"><rect width="120" height="120" rx="28" fill="#4f46e5"/><path d="M60 30C46 22 28 22 12 28V84C28 78 46 78 60 86Z" fill="#fff"/><path d="M60 30C74 22 92 22 108 28V84C92 78 74 78 60 86Z" fill="#e0e7ff"/><rect x="22" y="40" width="28" height="6" rx="3" fill="#2563eb"/><rect x="22" y="52" width="22" height="6" rx="3" fill="#d97706"/><rect x="22" y="64" width="26" height="6" rx="3" fill="#16a34a"/><rect x="70" y="40" width="28" height="6" rx="3" fill="#7c3aed"/><rect x="70" y="52" width="22" height="6" rx="3" fill="#2563eb"/><rect x="70" y="64" width="26" height="6" rx="3" fill="#d97706"/></svg>';
 function wrapPrint(kind,title,inner){
-  return '<table class="pg"><thead><tr><td><div class="sp"></div></td></tr></thead><tbody><tr><td><div class="phead">'+LOGOSM+'<div><b>'+title+'</b><span>'+kind+' · '+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+'</span></div></div><div class="pbody">'+inner+'</div></td></tr></tbody><tfoot><tr><td><div class="sp"></div></td></tr></tfoot></table>';
+  return '<table class="pg"><thead><tr><td><div class="sp"></div></td></tr></thead><tbody><tr><td><div class="phead">'+LOGOSM+'<div><b>'+title+'</b><span>'+kind+' · '+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+(getSet().school?' · '+esc(getSet().school):'')+'</span></div></div><div class="pbody">'+inner+'</div></td></tr></tbody><tfoot><tr><td><div class="sp"></div></td></tr></tfoot></table>';
 }
 function printMerk(){
   document.getElementById('merk').innerHTML=wrapPrint('Merkblatt',C().title,C().merk());document.body.classList.add('pm');
@@ -729,27 +739,55 @@ function printSheet(w){
 }
 
 
-/* ================= Einstellungen (KI-Schlüssel, wie im Sek Planer) ================= */
+/* ================= Einstellungen (Lehrer; KI-Schlüssel wie im Sek Planer) ================= */
 const KEYF=[['gemini','geminiKey'],['claude','claudeKey'],['openai','openaiKey'],['mistral','mistralKey']];
-function smsg(t,ok){const m=document.getElementById('smsg');m.textContent=t;m.hidden=!t;m.style.color=ok?'#14532d':'';}
+const GSK='gt-set';
+function getSet(){try{return JSON.parse(localStorage.getItem(GSK))||{};}catch(e){return {};}}
+function applySet(){const g=getSet();if(g.scale!==undefined)S.t.scale=Number(g.scale)||0;if(g.notes!==undefined)S.t.notes=!!g.notes;}
+applySet();
+const $s=id=>document.getElementById(id);
+function smsg(t,ok){const m=$s('smsg');m.textContent=t;m.hidden=!t;m.style.color=ok?'#14532d':'';m.style.background=ok?'#dcfce7':'';m.style.borderColor=ok?'#86efac':'';}
 async function openSettings(){
-  const d=document.getElementById('settings');if(!S.user||!d)return;
-  KEYF.forEach(k=>{document.getElementById('k-'+k[0]).value='';});smsg('');S.sLoaded=false;
+  const d=$s('settings');if(!d)return;
+  const g=getSet();
+  document.querySelectorAll('#s-niv input').forEach(r=>r.checked=(r.value===(g.niv||S.niv)));
+  $s('s-scale').value=String(g.scale!==undefined?g.scale:S.t.scale);$s('s-notes').checked=g.notes!==undefined?!!g.notes:S.t.notes;$s('s-school').value=g.school||'';
+  KEYF.forEach(k=>{$s('k-'+k[0]).value='';$s('k-'+k[0]).disabled=!S.user;});$s('s-first').disabled=!S.user;
+  $s('s-kinfo').textContent=S.user?'Die Schlüssel werden wie im Sek Planer im Lehrerkonto gespeichert. Hast du sie dort schon hinterlegt, siehst du sie hier.':'Die KI-Schlüssel kannst du nur nach der Lehrer-Anmeldung eingeben. Die Demo speichert nichts im Konto.';
+  smsg('');S.sLoaded=false;$s('sreset').textContent='Übungsfortschritt löschen';S.sResetAsk=false;
   try{d.showModal();}catch(e){d.setAttribute('open','');}
+  if(!S.user)return;
   try{
     const snap=await firebase.firestore().collection('sekSync').doc('apikeys_'+S.user.uid).get();
     const x=snap.exists?(snap.data()||{}):{};
-    KEYF.forEach(k=>{document.getElementById('k-'+k[0]).value=String(x[k[1]]||'');});S.sLoaded=true;
+    KEYF.forEach(k=>{$s('k-'+k[0]).value=String(x[k[1]]||'');});
+    if(Array.isArray(x.aiOrder)&&x.aiOrder[0])$s('s-first').value=x.aiOrder[0];
+    S.aiOrderOld=Array.isArray(x.aiOrder)?x.aiOrder:[];S.sLoaded=true;
   }catch(e){smsg('Die gespeicherten Schlüssel konnten nicht geladen werden.');}
 }
 async function saveSettings(){
-  if(!S.user)return;if(!S.sLoaded){smsg('Die vorhandenen Schlüssel sind nicht geladen. Zum Schutz wird nichts überschrieben. Bitte Einstellungen neu öffnen.');return;}const b=document.getElementById('sbtn');b.disabled=true;smsg('');
-  const clean=v=>String(v||'').trim().replace(/^["']|["']$/g,'');
-  const data={ownerUid:S.user.uid,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
-  KEYF.forEach(k=>{data[k[1]]=clean(document.getElementById('k-'+k[0]).value);});
-  try{await firebase.firestore().collection('sekSync').doc('apikeys_'+S.user.uid).set(data,{merge:true});smsg('Gespeichert.',true);}
-  catch(e){smsg('Speichern nicht möglich ('+(e.code||e.message)+').');}
-  b.disabled=false;
+  const b=$s('sbtn');b.disabled=true;smsg('');
+  const niv=(document.querySelector('#s-niv input:checked')||{}).value||'A';
+  const g={niv,scale:Number($s('s-scale').value),notes:$s('s-notes').checked,school:$s('s-school').value.trim()};
+  try{localStorage.setItem(GSK,JSON.stringify(g));localStorage.setItem('gt-niv2',niv);}catch(e){}
+  S.niv=niv;S.t.scale=g.scale;S.t.notes=g.notes;S.cfg.types=null;
+  let note='Gespeichert.';
+  if(S.user){
+    if(!S.sLoaded){smsg('Allgemeine Einstellungen gespeichert. Die KI-Schlüssel wurden nicht geändert, weil die vorhandenen nicht geladen sind. Bitte Einstellungen neu öffnen.');b.disabled=false;render();return;}
+    const clean=v=>String(v||'').trim().replace(/^["']|["']$/g,'');
+    const P=['gemini','claude','openai','mistral'],first=$s('s-first').value;
+    const data={ownerUid:S.user.uid,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),preferredAi:first,aiOrder:[...new Set([first,...(S.aiOrderOld||[]).filter(x=>P.includes(x)),...P])]};
+    KEYF.forEach(k=>{data[k[1]]=clean($s('k-'+k[0]).value);});
+    try{await firebase.firestore().collection('sekSync').doc('apikeys_'+S.user.uid).set(data,{merge:true});}
+    catch(e){note='Allgemeine Einstellungen gespeichert, KI-Schlüssel nicht ('+(e.code||e.message)+').';smsg(note);b.disabled=false;render();return;}
+  }
+  smsg(note,true);b.disabled=false;render();
+}
+function resetProgressAsk(){
+  const b=$s('sreset');
+  if(!S.sResetAsk){S.sResetAsk=true;b.textContent='Wirklich löschen? Nochmals tippen';return;}
+  try{localStorage.removeItem(PK);localStorage.removeItem('gt-last');}catch(e){}
+  S.sResetAsk=false;b.textContent='Gelöscht';render();
 }
 
 /* ================= Ereignisse ================= */
@@ -804,6 +842,7 @@ document.addEventListener('click',e=>{
    case 'tlogout':doLogout();break;
    case 'tsettings':openSettings();break;
    case 'ssave':saveSettings();break;
+   case 'sreset':resetProgressAsk();break;
    case 'sclose':document.getElementById('settings').close();break;
    case 'lclose':S.loginOpen=false;renderLogin();break;
    case 'ldemo':location.href=location.pathname+'?demo';break;
@@ -887,7 +926,7 @@ function initAuth(){
 }
 const teacherAccess=()=>!!(S.user||S.demo);
 function authBtns(){
-  if(S.demo)return '<span class="pill">Demo</span><button class="btn sm" data-a="exitdemo">Demo beenden</button>';
+  if(S.demo)return '<span class="pill">Demo</span><button class="btn sm" data-a="tsettings">⚙️ Einstellungen</button><button class="btn sm" data-a="exitdemo">Demo beenden</button>';
   if(S.user)return '<span class="pill">Lehrer</span><button class="btn sm" data-a="tsettings">⚙️ Einstellungen</button><button class="btn sm" data-a="tlogout">Abmelden</button>';
   return '<button class="btn sm" data-a="tlogin">Lehrer-Anmeldung</button>';
 }
