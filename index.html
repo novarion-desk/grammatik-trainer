@@ -265,6 +265,17 @@ dialog::backdrop{background:rgba(15,23,42,.5)}
 .tbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1rem;padding:.6rem .8rem;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
 .tbar .tsp{flex:1}.tinfo{font-size:.85rem}.dd{position:relative}.dd summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center}.dd summary::-webkit-details-marker{display:none}.ddm{position:absolute;right:0;top:calc(100% + 4px);z-index:20;display:flex;flex-direction:column;gap:.3rem;background:var(--surface);border:1px solid var(--line2);border-radius:.8rem;padding:.4rem;min-width:13rem;box-shadow:0 8px 20px rgba(30,41,59,.15)}.ddm .btn{justify-content:flex-start;white-space:nowrap}
 @media (max-width:560px){.tinfo{display:none}}
+body.presing{overflow:hidden}
+.pres{position:fixed;inset:0;z-index:1000;background:var(--surface);display:flex;flex-direction:column;overflow:hidden}
+.pres-slide{flex:1;min-height:0;overflow:hidden;padding:2.2vh 5vw 8vh;display:flex;flex-direction:column;justify-content:flex-start;cursor:pointer}
+.pres-slide>.pin{width:100%;max-width:1500px;margin:0 auto}
+.pres-slide h2{font-size:1.9em;font-weight:800;margin:.1rem 0 .7rem;color:var(--primary-d,#3730a3)}
+.pres .tkick{display:none}
+.pres-bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;background:linear-gradient(to top,rgba(255,255,255,.96) 60%,rgba(255,255,255,0));transition:opacity .3s}
+.pres-bar .tsp{flex:1}.pres-bar .pn{font-weight:700;color:var(--muted);min-width:5.5ch;text-align:center}
+.pres.idle .pres-bar{opacity:0}.pres.idle{cursor:none}
+.pres-prog{position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--line)}.pres-prog i{display:block;height:100%;background:var(--primary)}
+.pres-note{position:absolute;left:3vw;right:3vw;bottom:4.2rem;max-height:34vh;overflow:auto;padding:.8rem 1.1rem;border-radius:var(--radius-s);background:var(--warn-l);border:2px solid #fcd34d;font-size:1rem;box-shadow:var(--shadow)}
 .tchips{display:flex;gap:.35rem;overflow-x:auto;padding:.2rem 0 .7rem}
 .tchip{flex:0 0 auto;min-width:44px;min-height:44px;padding:.3rem .8rem;white-space:nowrap;font-size:.9rem;border:1px solid var(--line2);background:var(--surface);border-radius:.6rem;font-weight:700;color:var(--muted)}
 .tchip.on{background:var(--primary);border-color:var(--primary);color:#fff}
@@ -541,6 +552,7 @@ function render(){
   renderHead();
   $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary,sheet:screenSheet})[S.screen]();
   initTry(document);mountWidgets(document);window.scrollTo(0,0);renderLogin();
+  const pr=!!(S.screen==='teach'&&S.t.pres&&S.t.mode==='slides');document.body.classList.toggle('presing',pr);if(pr){fitPres();presWake();}else if(S.t.pres&&S.screen!=='teach'){S.t.pres=false;}
 }
 function renderTry(el){
   const types=el.dataset.types.split(',');
@@ -833,6 +845,9 @@ document.addEventListener('click',e=>{
    case 'retry':{const w=S.R.hist.filter(h=>!h.ok).map(h=>h.t);startRound(shuffle(w),'Wiederholung');break;}
    case 'again':S.screen='config';render();break;
    case 'tmode':S.t.mode=v;S.t.cur=0;render();break;
+   case 'tpres':presOn();break;
+   case 'tpresx':presOff();break;
+   case 'tpnote':S.t.pn=!S.t.pn;render();break;
    case 'tgo':tGo(S.t.cur+Number(v));break;
    case 'tjump':tGo(Number(b.dataset.i));break;
    case 'tscale':S.t.scale=(S.t.scale+1)%3;render();break;
@@ -865,15 +880,56 @@ document.getElementById('ref').addEventListener('click',e=>{if(e.target.id==='re
 const SCV=[1,1.25,1.5],SCN=['Normal','Gross','Beamer'];
 const stripH=h=>h.replace(/^\s*<h[23][^>]*>.*?<\/h[23]>/s,'');
 const slidesVis=()=>C().SLIDES.filter(s=>!(s.lv&&lv()<s.lv));
+function presOn(){
+  if(!teacherAccess())return;
+  S.t.pres=true;S.t.fs=false;
+  try{const el=document.documentElement;if(el.requestFullscreen){const r=el.requestFullscreen();if(r&&r.then)r.then(()=>{S.t.fs=true;},()=>{});else S.t.fs=true;}}catch(e){}
+  render();
+}
+function presOff(){
+  const was=S.t.pres;S.t.pres=false;
+  try{if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen();}catch(e){}
+  S.t.fs=false;if(was)render();
+}
+function fitPres(){
+  const sl=document.getElementById('pslide'),pin=document.getElementById('pin');if(!sl||!pin)return;
+  const cs=getComputedStyle(sl),avail=sl.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-4;
+  const set=f=>{pin.style.zoom=f.toFixed(3);};
+  let lo=0.7,hi=1.7*SCV[S.t.scale];sl.style.overflowY='hidden';
+  set(hi);if(pin.getBoundingClientRect().height<=avail)return;
+  set(lo);if(pin.getBoundingClientRect().height>avail){sl.style.overflowY='auto';return;}
+  for(let i=0;i<12;i++){const m=(lo+hi)/2;set(m);if(pin.getBoundingClientRect().height<=avail)lo=m;else hi=m;}
+  set(lo);
+}
+let presIdle=null;
+function presWake(){const p=document.getElementById('pres');if(!p)return;p.classList.remove('idle');clearTimeout(presIdle);presIdle=setTimeout(()=>{const q=document.getElementById('pres');if(q)q.classList.add('idle');},2800);}
+document.addEventListener('mousemove',presWake);document.addEventListener('touchstart',presWake,{passive:true});
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&S.t.pres&&S.t.fs)presOff();});
+document.addEventListener('click',e=>{
+  const sl=e.target.closest&&e.target.closest('#pslide');if(!sl||!S.t.pres)return;
+  if(e.target.closest('button,a,input,select,textarea,summary,[data-w],[data-a]'))return;
+  const r=sl.getBoundingClientRect();tGo(S.t.cur+((e.clientX-r.left)<r.width*0.25?-1:1));
+});
+let pX=null;
+document.addEventListener('touchstart',e=>{if(S.t.pres&&e.touches.length===1)pX=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{if(!S.t.pres||pX===null)return;const dx=e.changedTouches[0].clientX-pX;pX=null;if(Math.abs(dx)>70)tGo(S.t.cur+(dx<0?1:-1));},{passive:true});
 function tGo(i){const V=slidesVis();S.t.cur=Math.max(0,Math.min(V.length-1,i));render();}
 function screenTeach(){
   const V=slidesVis(),T=S.t;if(T.cur>=V.length)T.cur=V.length-1;
   const tot=V.reduce((a,s)=>a+(s.min||0),0);
   const bar='<div class="tbar"><div class="seg"><button data-a="tmode" data-v="slides" class="'+(T.mode==='slides'?'on':'')+'">Folien</button><button data-a="tmode" data-v="overview" class="'+(T.mode==='overview'?'on':'')+'">Übersicht</button></div>'+
-   '<button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tnotes">Hinweise: '+(T.notes?'an':'aus')+'</button>'+
+   (T.mode==='slides'?'<button class="btn sm primary" data-a="tpres" title="Vollbild, wie in PowerPoint (Esc beendet)">▶ Präsentieren</button>':'')+'<button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tnotes">Hinweise: '+(T.notes?'an':'aus')+'</button>'+
    '<span class="tsp"></span><span class="muted tinfo">'+V.length+' Folien · ca. '+tot+' Min.</span>'+
    '<details class="dd"><summary class="btn sm">Drucken ▾</summary><div class="ddm"><button class="btn sm" data-a="tprint" data-v="h">Übersicht für das Heft</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt</button><button class="btn sm" data-a="tprint" data-v="u">Gemeinsame Übungen</button></div></details>'+
    '<button class="btn sm primary" data-a="sheet" data-t="'+S.teil+'" data-v="'+S.ch+'">Übungsblatt erstellen</button></div>';
+  if(T.pres&&T.mode==='slides'){
+    const s=V[T.cur];
+    return '<div class="pres" id="pres"><div class="pres-slide" id="pslide"><div class="pin" id="pin" style="zoom:1"><h2>'+s.title+'</h2>'+stripH(s.html())+'</div></div>'+
+     (T.pn&&s.note?'<div class="pres-note"><b>Hinweis für dich:</b> '+s.note+'</div>':'')+
+     '<div class="pres-bar"><button class="btn sm" data-a="tgo" data-v="-1" '+(T.cur===0?'disabled':'')+' aria-label="Zurück">‹</button><span class="pn">'+(T.cur+1)+' / '+V.length+'</span><button class="btn sm" data-a="tgo" data-v="1" '+(T.cur===V.length-1?'disabled':'')+' aria-label="Weiter">›</button>'+
+     '<span class="tsp"></span><button class="btn sm" data-a="tpnote" title="Taste N">Hinweise: '+(T.pn?'an':'aus')+'</button><button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tpresx" title="Esc">✕ Beenden</button></div>'+
+     '<div class="pres-prog"><i style="width:'+((T.cur+1)/V.length*100)+'%"></i></div></div>';
+  }
   const note=s=>T.notes&&s.note?'<div class="tnote noprint"><b>Hinweis für dich:</b> '+s.note+'</div>':'';
   let body;
   if(T.mode==='slides'){
@@ -908,6 +964,14 @@ document.addEventListener('input',e=>{if(e.target.id==='wfield'){const b=documen
 document.addEventListener('keydown',e=>{
   if(e.target&&e.target.id==='wfield'&&e.key==='Enter'){e.preventDefault();const b=document.getElementById('checkBtn'),n=document.getElementById('nextBtn');if(n&&!n.hidden)n.click();else if(b&&!b.disabled)b.click();return;}
   if(S.screen!=='teach'||S.t.mode!=='slides'||/INPUT|SELECT|TEXTAREA/.test((e.target||{}).tagName||''))return;
+  if(S.t.pres){
+    if(e.key==='Escape'){e.preventDefault();presOff();return;}
+    if(e.key==='n'||e.key==='N'){S.t.pn=!S.t.pn;render();return;}
+    if(e.key===' '||e.key==='ArrowDown'){e.preventDefault();tGo(S.t.cur+1);return;}
+    if(e.key==='ArrowUp'){e.preventDefault();tGo(S.t.cur-1);return;}
+    if(e.key==='Home'){e.preventDefault();tGo(0);return;}
+    if(e.key==='End'){e.preventDefault();tGo(9999);return;}
+  }
   if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();tGo(S.t.cur+1);}
   else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();tGo(S.t.cur-1);}
 });
