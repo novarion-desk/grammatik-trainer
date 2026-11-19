@@ -566,7 +566,7 @@ function sheetConfig(pre,sum,det,info,pool){
   return '<h2 class="page">'+C().title+': Übungsblatt</h2><p class="sub">Wähle Themen, Aufgabentypen und Schwierigkeit. Danach siehst du das Blatt als Vorschau und druckst es mit Lösungsblatt. Niveau '+S.niv+' ist eingestellt.</p>'+
    '<div class="card">'+src+'<div class="sumline" style="margin-top:.8rem"><span>'+sum+'</span><button class="btn sm" data-a="moreopt">'+(S.cfgOpen?'Einstellungen schliessen':'Einstellungen anpassen')+'</button></div>'+(S.cfgOpen?det:'')+
    '<div id="avail">'+(ai?'<div class="avail">Die KI erstellt neue Aufgaben zu deiner Auswahl.</div>':info)+'</div>'+err+
-   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Theorie ansehen</button><button class="btn primary" id="mkBtn" data-a="mksheet" '+((!ai&&pool.length===0)||S.busy?'disabled':'')+'>'+(S.busy?'Wird erstellt …':'Übungsblatt erstellen →')+'</button></div></div>';
+   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Theorie ansehen</button><button class="btn" id="pvBtn" data-a="mksheet" data-v="preview" '+((!ai&&pool.length===0)||S.busy?'disabled':'')+'>👁️ Vorschau</button><button class="btn primary" id="mkBtn" data-a="mksheet" data-v="print" '+((!ai&&pool.length===0)||S.busy?'disabled':'')+'>'+(S.busy?'Wird erstellt …':'Übungsblatt erstellen →')+'</button></div></div>';
 }
 function sheetItem(t){
   const T=TY()[t.typ]||{};let q,a,opts=null,instr=T.instr||'',kind='line';
@@ -689,7 +689,7 @@ async function buildAiSheet(){
   if(!out.length)throw new Error('Die KI hat keine brauchbaren Aufgaben geliefert. Bitte nochmals versuchen.');
   return out.slice(0,wanted(S.cfg));
 }
-async function makeSheet(){
+async function makeSheet(mode){
   if(S.busy)return;S.sheetErr='';
   try{
     let items;
@@ -699,10 +699,11 @@ async function makeSheet(){
     S.sheetOut=Object.assign(sheetHTML(items),{src:S.src,title:C().title});S.screen='sheet';
   }catch(e){S.sheetErr=esc(e.message||e);S.screen='config';}
   S.busy=false;render();
+  if(mode==='print'&&S.sheetOut&&S.screen==='sheet')printSheet('both');
 }
 function screenSheet(){
   const o=S.sheetOut;if(!o)return screenConfig();
-  return '<div class="topbar"><h2 class="page" style="margin:0">Übungsblatt: '+esc(o.title)+'</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="back">‹ Einstellungen</button><button class="btn sm" data-a="mksheet">'+(o.src==='ai'?'Neu erstellen':'Neu mischen')+'</button></div></div>'+
+  return '<div class="topbar"><h2 class="page" style="margin:0">Übungsblatt: '+esc(o.title)+'</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="back">‹ Einstellungen</button><button class="btn sm" data-a="mksheet" data-v="preview">'+(o.src==='ai'?'Neu erstellen':'Neu mischen')+'</button></div></div>'+
    (o.src==='ai'?'<div class="callout noprint">Von der KI erstellt. Bitte die Aufgaben und Lösungen vor dem Einsatz kurz prüfen.</div>':'')+
    '<div class="btnrow"><button class="btn primary" data-a="psheet" data-v="ws">Arbeitsblatt drucken</button><button class="btn" data-a="psheet" data-v="sol">Lösungsblatt drucken</button><button class="btn" data-a="psheet" data-v="both">Beides drucken</button></div>'+
    '<div class="card" style="background:#fff"><div class="muted" style="font-size:.8rem;margin-bottom:.4rem">Arbeitsblatt (Vorschau)</div>'+o.ws+'</div>'+
@@ -727,7 +728,7 @@ document.addEventListener('click',e=>{
    case 'teach':setCh(b.dataset.t,v);S.screen='teach';S.t.cur=0;render();break;
    case 'config':setCh(b.dataset.t,v);S.sheet=false;S.screen='config';render();break;
    case 'sheet':if(!teacherAccess())break;setCh(b.dataset.t,v);S.sheet=true;S.sheetOut=null;S.sheetErr='';S.screen='config';render();break;
-   case 'mksheet':makeSheet();break;
+   case 'mksheet':makeSheet(v);break;
    case 'psheet':printSheet(v);break;
    case 'tpick':tryPick(b);break;
    case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
