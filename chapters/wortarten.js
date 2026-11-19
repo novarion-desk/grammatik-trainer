@@ -104,6 +104,23 @@ const Z=[
 ];
 Z.forEach(z=>task.push({typ:'zuordnen',stufe:1,cats:[z[4]],prompt:z[0],opts:z[1],answer:z[2],why:z[3]}));
 
+
+/* Alle Wortarten im Text bestimmen (anmalen) */
+const AN=[
+[1,"Die|pron Katze|nomen schläft|verb auf|part dem|pron Sofa|nomen."],
+[1,"Ich|pron lese|verb ein|pron spannendes|adj Buch|nomen."],
+[1,"Der|pron Hund|nomen bellt|verb laut|part."],
+[2,"Meine|pron kleine|adj Schwester|nomen trinkt|verb gern|part warmen|adj Tee|nomen."],
+[2,"Wir|pron spielen|verb heute|part draussen|part Fussball|nomen, weil|part die|pron Sonne|nomen scheint|verb."],
+[3,"Gestern|part sah|verb ich|pron einen|pron alten|adj Mann|nomen. Er|pron fütterte|verb die|pron hungrigen|adj Tauben|nomen."],
+[3,"Lena|nomen backt|verb einen|pron Kuchen|nomen, und|part ihr|pron Bruder|nomen deckt|verb den|pron Tisch|nomen."]
+];
+AN.forEach(a=>{
+  const parts=a[1].split(' ').map(w=>{const i=w.indexOf('|');if(i<0)return{t:w,f:null};const m=w.slice(i+1).match(/^([a-z]+)(.*)$/);return{t:w.slice(0,i)+m[2],f:m[1]};});
+  const cats=[...new Set(parts.filter(p=>p.f).map(p=>p.f))];
+  task.push({typ:'anmalen',stufe:a[0],lv:a[0]===3?2:1,cats,parts,sent:'',why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,]$/,'')+' → '+N[p.f]).join(' · ')});
+});
+
 /* ---------- Theorie (gemeinsam für Schüler und Lehrer) ---------- */
 const FAM=GT.table(['Wortart','Fachbegriff','Aufgabe','Beispiele','Verändert sich?'],[
  ['<span class="tag f-nomen">Nomen</span>','Namenwort','nennt Lebewesen, Dinge und Gedanken','Hund, Haus, Freude','ja: Fall und Zahl'],
@@ -178,6 +195,7 @@ GT.chapter({id:'wortarten',teil:'wort',nr:1,title:'Die fünf Wortarten',big:'Nom
  goals:['Ich kenne die fünf Wortarten: Nomen, Verb, Adjektiv, Pronomen und Partikel.','Ich weiss, welche Wortarten sich verändern und welche nicht.','Ich kann Wortarten mit Proben bestimmen (Artikelprobe, Konjugationsprobe, Steigerungsprobe, Ersatzprobe).','Ich kann Wortarten in Sätzen erkennen und bestimmen.'],
  cats:N,catTitle:'Welche Wortarten?',catWord:'Wortart',
  types:{bestimmen:{label:'Wortart bestimmen',short:'Wort im Satz bestimmen',instr:'Welche Wortart hat das markierte Wort?',hint:'Mache die Proben: Verändert es sich? Artikel davor? Konjugieren? Steigern? Ersetzt es ein Nomen?',ref:'proben'},
+  anmalen:{icon:'🎨',label:'Wortarten im Text',short:'Alle Wortarten in einem Text anmalen',instr:'Wähle eine Wortart und tippe die passenden Wörter an.',hint:'Wende bei jedem Wort die Probe an: Artikelprobe, Konjugationsprobe, Steigerung.',ref:'proben'},
   markieren:{label:'Wörter markieren',short:'Alle Wörter einer Wortart finden',instr:'Tippe die passenden Wörter an.',hint:'Wende bei jedem Wort die passende Probe an.',ref:'proben'},
   zuordnen:{label:'Wissen und Proben',short:'Begriffe, Proben und Merkmale',instr:'Wähle die richtige Antwort.',hint:'Schau in die Tabelle mit den fünf Wortarten.',ref:'ueberblick'}},
  sections:SECS,tasks:task,exercises:EX,merk});

@@ -95,6 +95,20 @@ M.forEach(m=>{
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg4'],tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe alle Partikel an (Präpositionen, Konjunktionen, Adverbien).',why:m[2]});
 });
 
+
+/* Wortart im Text erkennen */
+const TX=[
+["Der Hund liegt *unter dem Tisch.",1,"unter ist eine Präposition."],
+["Wir bleiben *heute *zu Hause, *weil es regnet.",2,"heute (Adverb), zu (Präposition), weil (Konjunktion)."],
+["Tim spielt *gern Fussball, *und Lena liest *oft *in ihrem Zimmer.",2,"gern, oft (Adverbien), und (Konjunktion), in (Präposition)."],
+["*Gestern war ich *mit meiner Familie *draussen, *aber es war kalt.",3,"Gestern, draussen (Adverbien), mit (Präposition), aber (Konjunktion)."],
+["Er lernt *heute, *denn er schreibt *morgen eine Prüfung.",3,"heute, morgen (Adverbien), denn (Konjunktion)."]
+];
+TX.forEach(m=>{
+  const raw=m[0].split(' '),tokens=raw.map(w=>w.replace(/^\*/,'')),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
+  task.push({typ:'text',stufe:m[1],lv:m[1]===3?2:1,cats:['sg4'],tokens,targets,instr:'Tippe alle Partikel im Text an.',why:m[2]});
+});
+
 const SECS=[
 {id:'merkmale',title:'Was sind Partikel?',short:'Merkmale',min:6,note:'Partikel = unveränderliche Wörter. Zählprobe: Kann man das Wort verändern (konjugieren, deklinieren, steigern)? Wenn nein: Partikel.',
  html:()=>'<div class="grid2"><div class="card"><h3>Partikel verändern sich nicht</h3><p>Sie haben keine Endungen und keine Zeitformen: <b>und, in, heute, aber, oft</b>.</p></div>'+
@@ -144,6 +158,7 @@ GT.chapter({id:'partikel',teil:'wort',nr:7,title:'Partikel',big:'Und, in, heute,
   konj:{label:'Konjunktion einsetzen',short:'und, aber, weil, obwohl',instr:'Welche Konjunktion passt?',hint:'Grund (weil), Gegensatz (obwohl, aber), Zweck (damit), Bedingung (wenn).',ref:'konj'},
   adverb:{label:'Adverbien',short:'Wann? Wo? Wie? Warum?',instr:'Wähle die richtige Antwort.',hint:'Stelle die passende Frage.',ref:'adverb'},
   art:{label:'Partikelart bestimmen',short:'Adverb, Präposition oder Konjunktion',instr:'Welche Partikelart ist das markierte Wort?',hint:'Vor einem Nomen: Präposition. Verbindet Sätze: Konjunktion. Beantwortet Wann/Wo/Wie: Adverb.',ref:'merkmale'},
+  text:{icon:'🔍',label:'Partikel im Text',short:'Alle Partikel in einem Text finden',instr:'Tippe alle Partikel im Text an.',hint:'Partikel verändern sich nicht.',ref:'merkmale'},
   markieren:{label:'Partikel markieren',short:'Alle Partikel finden',instr:'Tippe alle Partikel an.',hint:'Partikel verändern sich nicht.',ref:'merkmale'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

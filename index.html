@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Grammatik Trainer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20120%20120%22%20aria-hidden%3D%22true%22%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20rx%3D%2228%22%20fill%3D%22%234f46e5%22/%3E%3Cpath%20d%3D%22M60%2030C46%2022%2028%2022%2012%2028V84C28%2078%2046%2078%2060%2086Z%22%20fill%3D%22%23fff%22/%3E%3Cpath%20d%3D%22M60%2030C74%2022%2092%2022%20108%2028V84C92%2078%2074%2078%2060%2086Z%22%20fill%3D%22%23e0e7ff%22/%3E%3Crect%20x%3D%2222%22%20y%3D%2240%22%20width%3D%2228%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%232563eb%22/%3E%3Crect%20x%3D%2222%22%20y%3D%2252%22%20width%3D%2222%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%23d97706%22/%3E%3Crect%20x%3D%2222%22%20y%3D%2264%22%20width%3D%2226%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%2316a34a%22/%3E%3Crect%20x%3D%2270%22%20y%3D%2240%22%20width%3D%2228%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%237c3aed%22/%3E%3Crect%20x%3D%2270%22%20y%3D%2252%22%20width%3D%2222%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%232563eb%22/%3E%3Crect%20x%3D%2270%22%20y%3D%2264%22%20width%3D%2226%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22%23d97706%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -36,7 +37,7 @@ button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:tran
 header{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
 .hin{max-width:1000px;margin:0 auto;padding:.6rem 1rem;display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center}
 .brand{display:flex;align-items:center;gap:.6rem;border:0;background:none;padding:0;text-align:left;min-height:44px}
-.logo{width:38px;height:38px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.9rem}
+.logo{width:38px;height:38px;display:block;flex:none}.logo svg{display:block}
 .brand b{display:block;font-size:1rem;line-height:1.15}
 .brand span{display:block;font-size:.75rem;color:var(--muted)}
 .crumb{flex:1 1 12rem;font-size:.85rem;color:var(--muted);min-width:0}
@@ -151,6 +152,11 @@ tr.dim td,tr.dim th{opacity:.28}
 /* Üben */
 .cfg h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:1rem 0 .4rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
 .chk{display:flex;flex-wrap:wrap;gap:.5rem}
+.chk.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.6rem}
+.chk.cards label{display:block;position:relative;min-height:76px;padding:.6rem .85rem;border-radius:1rem}.chk.cards label input{position:absolute;opacity:0;width:1px;height:1px}
+.chk.cards b{display:block;font-size:1rem;margin-bottom:.15rem}.chk.cards small{display:block;font-weight:400;font-size:.85rem;color:var(--muted);line-height:1.35}
+.wfield{width:100%;max-width:30rem;min-height:56px;font-size:1.3rem;border:2px solid var(--line2);border-radius:var(--radius-s);padding:.4rem .9rem;margin-top:.8rem;background:#fff}
+.wfield:focus{outline:3px solid var(--primary-l);border-color:var(--primary)}.wfield.right{border-color:var(--ok);background:var(--ok-l)}.wfield.wrong{border-color:var(--bad);background:var(--bad-l)}
 .chk label{display:inline-flex;align-items:center;gap:.5rem;min-height:46px;padding:.4rem .85rem;border:1.5px solid var(--line2);border-radius:var(--radius-s);background:var(--surface);font-weight:600;font-size:.92rem;cursor:pointer}
 .chk input{width:20px;height:20px;accent-color:var(--primary)}
 .chk label.sel{border-color:var(--primary);background:var(--primary-l)}
@@ -171,7 +177,7 @@ tr.dim td,tr.dim th{opacity:.28}
 .brush button.on{outline:3px solid var(--text);outline-offset:1px}
 .flow{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;font-size:1.15rem;line-height:2.2;background:var(--alt);border:1px solid var(--line);border-radius:var(--radius-s);padding:.8rem 1rem}
 .chip{min-height:46px;border:1.5px dashed var(--line2);background:var(--surface);border-radius:.6rem;padding:.2rem .8rem;font-weight:600}
-.chip.p-nom,.chip.p-gen,.chip.p-dat,.chip.p-akk{border-style:solid;border-color:var(--c);background:var(--b);color:var(--t)}
+.chip[class*=" p-"]{border-style:solid;border-color:var(--c);background:var(--b);color:var(--t)}
 .chip.right{outline:3px solid var(--ok)}
 .chip.wrong{outline:3px solid var(--bad)}
 .plain{padding:.2rem .1rem}
@@ -222,17 +228,27 @@ dialog::backdrop{background:rgba(15,23,42,.5)}
 .preset b{font-size:1rem}.preset span{font-size:.82rem;color:var(--muted)}
 .preset:hover{border-color:var(--primary)}.preset.on{border-color:var(--primary);background:var(--primary-l);box-shadow:inset 0 0 0 1px var(--primary)}
 .sumline{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;font-weight:600;font-size:.92rem;color:var(--muted)}
-@media print{header,main,dialog{display:none!important}body.pm #merk{display:block;padding:0 .5cm}body{background:#fff}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}table,tr{break-inside:avoid}}
+@page{margin:0}
+.pg+.pg{break-before:page;page-break-before:always}
+.wsh h3{font-size:1.02rem;margin:1rem 0 .15rem;border-bottom:1.5px solid #c7d2fe;padding-bottom:.15rem}.wsh .wi{font-size:.88rem;color:#475569;margin:0 0 .4rem}
+.wsh ol{margin:.2rem 0 .4rem;padding-left:1.7rem}.wsh li{margin:.55rem 0;line-height:1.6;break-inside:avoid}.wsh .wl{border-bottom:1px solid #64748b;height:1.7rem;margin-top:.25rem}
+.wsh .wo{display:flex;flex-wrap:wrap;gap:.2rem 1.4rem;margin-top:.2rem}.wsh .wo span::before{content:'☐ ';font-size:1.1em}.wsh u{text-decoration-thickness:2px;text-underline-offset:3px}
+.wsh .nm{display:flex;gap:2rem;font-size:.95rem;margin-bottom:.4rem}.wsh .nm span{flex:1;border-bottom:1px solid #64748b;padding-bottom:.1rem}.wsh .leg{font-size:.85rem;color:#475569;margin:.2rem 0}
+.wsh .sol li{margin:.25rem 0}.wsh .sol b{color:#14532d}
+.pg{width:100%;border-collapse:collapse}.pg td{padding:0;border:0}.pg .sp{height:1.4cm}
+.phead{display:flex;align-items:center;gap:.7rem;border-bottom:3px solid #4f46e5;padding-bottom:.55rem;margin-bottom:.9rem}.phead b{display:block;font-size:1.5rem;line-height:1.15;color:#0f172a}.phead span{font-size:.85rem;color:#475569}
+.pbody{font-size:11.5pt;line-height:1.45}.pbody h3{font-size:1.05rem;margin:1rem 0 .4rem;color:#4f46e5}.pbody table{width:100%;border-collapse:collapse;margin:.3rem 0 .8rem}.pbody th{background:#eef2ff;color:#1e1b4b;text-align:left}.pbody th,.pbody td{border:1px solid #cbd5e1;padding:.35rem .55rem;vertical-align:top}.pbody ul{padding-left:1.2rem}.pbody li{margin:.15rem 0}.pbody .tw{overflow:visible}
+@media print{header,main,dialog{display:none!important}body.pm #merk{display:block;padding:0 1.8cm}body{background:#fff}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}table,tr{break-inside:avoid}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
 /* Lehrerteil */
 .tbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:1rem;padding:.6rem .8rem;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
 .tbar .tsp{flex:1}
 .tchips{display:flex;gap:.35rem;overflow-x:auto;padding:.2rem 0 .7rem}
-.tchip{flex:0 0 auto;min-width:44px;min-height:44px;border:1px solid var(--line2);background:var(--surface);border-radius:.6rem;font-weight:700;color:var(--muted)}
+.tchip{flex:0 0 auto;min-width:44px;min-height:44px;padding:.3rem .8rem;white-space:nowrap;font-size:.9rem;border:1px solid var(--line2);background:var(--surface);border-radius:.6rem;font-weight:700;color:var(--muted)}
 .tchip.on{background:var(--primary);border-color:var(--primary);color:#fff}
 .tslide,.tov{padding:1.4rem 1.6rem}
-.tov{margin-bottom:1.2rem}
+.tov{margin-bottom:1.2rem;scroll-margin-top:4.5rem}.tchips.sticky{position:sticky;top:4rem;z-index:5;background:var(--bg,#f8fafc);margin:0 0 .6rem;padding:.5rem 0;border-bottom:1px solid var(--line2)}
 .tkick{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .tslide h2,.tov h2{font-size:1.7em;font-weight:800;margin:.2rem 0 .8rem}
 .tnote{margin-top:.8rem;padding:.7rem 1rem;border-radius:var(--radius-s);background:var(--warn-l);border:1px solid #fcd34d;font-size:.92em}
@@ -285,20 +301,21 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 
 <script src="vendor/firebase-app-compat.js"></script>
 <script src="vendor/firebase-auth-compat.js"></script>
+<script src="vendor/firebase-firestore-compat.js"></script>
 <script>
 (function(){
 'use strict';
 const GT=window.GT={chapters:{},
  WORT:[['Wortarten','wortarten','Nomen, Verb, Adjektiv, Pronomen und Partikel erkennen'],['Nomen','nomen','Wörter für Lebewesen, Dinge und Gedanken'],['Die 4 Fälle','faelle','Nominativ, Genitiv, Dativ und Akkusativ bestimmen'],['Verb','verb','Formen, Zeitformen und Modi'],['Adjektiv','adjektiv','Eigenschaften beschreiben und steigern'],['Pronomen','pronomen','Stellvertreter und Begleiter, auch Artikel'],['Partikel','partikel','Adverb, Konjunktion und Präposition']],
  SATZ:[['Wortlehre und Satzlehre','wl-sl','Wörter und Sätze untersuchen'],['Verbale Teile und Rohform','verbale','Verben im Satz erkennen'],['Verschiebeprobe','verschiebe','Satzglieder durch Umstellen finden'],['Satzarten','satzarten','Sätze nach ihrer Aufgabe unterscheiden'],['Hauptsatz und Nebensatz','hs-ns','Satzgefüge und Nebensatzarten'],['Kommasetzung','komma','Kommaregeln anwenden']],
- register(c){c.catWord=c.catWord||'Fall';this.chapters[c.id]=c;},
+ register(c){c.catWord=c.catWord||'Fall';this.chapters[c.id]=c;if(GT.autoW)GT.autoW(c);},
  mk:(k,t)=>'<mark class="w f-'+k+'">'+t+'</mark>',
  cap:s=>s.charAt(0).toUpperCase()+s.slice(1),
  shuffle:a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}};
 const shuffle=GT.shuffle;
 /* ================= Zustand ================= */
 const LV={C:1,B:2,A:3};
-const S={resetAsk:false,cfgOpen:false,niv:'A',screen:'start',teil:'wort',ch:'faelle',user:null,demo:/[?&]demo\b/.test(location.search),authReady:false,loginOpen:false,t:{mode:'slides',cur:0,scale:0,notes:true},cfg:{types:null,cats:null,stufe:'mix',count:'10',custom:12},R:null,ref:'proben'};
+const S={resetAsk:false,cfgOpen:true,niv:'A',screen:'start',teil:'wort',ch:'faelle',user:null,demo:/[?&]demo\b/.test(location.search),authReady:false,loginOpen:false,t:{mode:'slides',cur:0,scale:0,notes:true},sheet:false,src:'pool',shint:'',cfg:{mode:'write',types:null,cats:null,stufe:'mix',count:'10',custom:12},R:null,ref:'proben'};
 try{const n=localStorage.getItem('wsl-niv');if(n==='A'||n==='B'||n==='C')S.niv=n;}catch(e){}
 const lv=()=>LV[S.niv];GT.lv=lv;GT.S=S;
 const C=()=>GT.chapters[S.ch],CK=()=>C().cats,CN=()=>C().catName,TY=()=>C().TYPES;
@@ -309,6 +326,10 @@ function loadP(){try{return JSON.parse(localStorage.getItem(PK))||{};}catch(e){r
 function saveP(ok){try{const P=loadP(),c=P[S.ch]||{a:0,r:0};c.a++;if(ok)c.r++;P[S.ch]=c;localStorage.setItem(PK,JSON.stringify(P));}catch(e){}}
 const $app=document.getElementById('app'),$head=document.getElementById('head');
 
+const isW=t=>!!(t.input||(t.w&&t.opts&&S.cfg.mode==='write'));
+const normA=(x,strict)=>{x=String(x||'').trim().replace(/[\u2018\u2019]/g,"'").replace(/\s+/g,' ').replace(/[.!?]+$/,'').replace(/ß/g,'ss');return strict?x:x.toLowerCase();};
+function autoW(c){c.TASKS.forEach(t=>{if(t.w===undefined&&t.opts&&(c.writeTypes||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a)&&(/class="gap"/.test(t.sent||'')||/^Wie lautet/.test(t.prompt||''));}if(c.strictTypes&&c.strictTypes.includes(t.typ))t.strict=true;});}
+GT.autoW=autoW;
 function visibleTasks(){return C().TASKS.filter(t=>t.lv<=lv());}
 function typesAvailable(){return Object.keys(TY()).filter(k=>visibleTasks().some(t=>t.typ===k));}
 function poolFor(cfg){
@@ -320,14 +341,14 @@ function stufeOk(t,s){return s==='mix'?true:t.stufe===Number(s);}
 function wanted(cfg){return cfg.count==='custom'?Math.max(1,Math.min(100,parseInt(cfg.custom,10)||10)):parseInt(cfg.count,10);}
 
 /* ================= Rendering ================= */
-const BACK={teach:'start',lernen:'start',config:'start',round:'config',summary:'config'};
+const BACK={teach:'start',lernen:'start',config:'start',round:'config',summary:'config',sheet:'config'};
 function crumb(){
   const t=S.teil==='wort'?'Wortlehre':'Satzlehre',c=t+' › '+C().title;
   const m={start:'',teach:c+' › Folien',lernen:c+' › Theorie',config:c+' › Üben',round:c+' › Runde',summary:c+' › Auswertung'};
   return m[S.screen];
 }
 function renderHead(){
-  $head.innerHTML='<button class="brand" data-a="home" aria-label="Zur Startseite"><div class="logo">GT</div><div><b>Grammatik Trainer</b><span>Wortlehre und Satzlehre</span></div></button>'+
+  $head.innerHTML='<button class="brand" data-a="home" aria-label="Zur Startseite"><div class="logo"><svg class="logosvg" viewBox="0 0 120 120" width="38" height="38" aria-hidden="true"><rect width="120" height="120" rx="28" fill="#4f46e5"/><path d="M60 30C46 22 28 22 12 28V84C28 78 46 78 60 86Z" fill="#fff"/><path d="M60 30C74 22 92 22 108 28V84C92 78 74 78 60 86Z" fill="#e0e7ff"/><rect x="22" y="40" width="28" height="6" rx="3" fill="#2563eb"/><rect x="22" y="52" width="22" height="6" rx="3" fill="#d97706"/><rect x="22" y="64" width="26" height="6" rx="3" fill="#16a34a"/><rect x="70" y="40" width="28" height="6" rx="3" fill="#7c3aed"/><rect x="70" y="52" width="22" height="6" rx="3" fill="#2563eb"/><rect x="70" y="64" width="26" height="6" rx="3" fill="#d97706"/></svg></div><div><b>Grammatik Trainer</b><span>Wortlehre und Satzlehre</span></div></button>'+
    (S.screen!=='start'?'<button class="btn sm" data-a="back">‹ Zurück</button>':'')+'<div class="crumb">'+crumb()+'</div>'+
    '<span class="lblniv">Niveau</span><div class="seg" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div>'+authBtns();
 }
@@ -339,7 +360,7 @@ function screenStart(){
     const p=P[c[1]],pct=p&&p.a?Math.round(p.r/p.a*100):0;
     return '<div class="tile act"><span class="n">'+(i+1)+'</span><div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span>'+
      (p&&p.a?'<div class="tp"><div class="bar"><i style="width:'+pct+'%"></i></div><span>'+p.r+' von '+p.a+' richtig ('+pct+' %)</span></div>':'')+
-     '<div class="tbtn">'+(teacherAccess()?'<button class="btn" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'" style="border-color:var(--primary);color:var(--primary)">Folien</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div></div>';
+     '<div class="tbtn">'+(teacherAccess()?'<button class="btn" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'" style="border-color:var(--primary);color:var(--primary)">Folien</button><button class="btn" data-a="sheet" data-t="'+key+'" data-v="'+c[1]+'" style="border-color:var(--primary);color:var(--primary)">Blatt</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div></div>';
   };
   const col=(key,title,sub,L)=>'<section><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>tile(key,c,i)).join('')+'</div></section>';
   return '<div class="hero"><div><h1>Grammatik Trainer</h1><p>Theorie lesen, Aufgaben lösen, Fehler gezielt wiederholen.</p></div>'+
@@ -350,10 +371,10 @@ function screenStart(){
 function screenLernen(){
   const vis=C().TOC.filter(t=>!t[2]||lv()>=t[2]);
   return '<div class="toc" id="toc">'+vis.map(t=>'<button data-a="toc" data-v="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'+
-   '<div class="topbar"><h2 class="page" style="margin:0">Die 4 Fälle: Theorie</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="merk">Merkblatt drucken</button><button class="btn sm primary" data-a="config">Übung zusammenstellen →</button></div></div>'+
+   '<div class="topbar"><h2 class="page" style="margin:0">'+C().title+': Theorie</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="merk">Merkblatt drucken</button><button class="btn sm primary" data-a="config">Übung zusammenstellen →</button></div></div>'+
    (C().glance?C().glance():'')+
    vis.map(t=>'<section class="sec" id="s-'+t[0]+'">'+C().SEC[t[0]]()+'</section>').join('')+
-   '<div class="card" style="text-align:center"><b>Bereit zum Üben?</b><p class="muted">Jetzt die Aufgaben zu den vier Fällen lösen.</p><button class="btn primary" data-a="config">Übung zusammenstellen →</button></div>';
+   '<div class="card" style="text-align:center"><b>Bereit zum Üben?</b><p class="muted">Jetzt die Aufgaben zu «'+C().title+'» lösen.</p><button class="btn primary" data-a="config">Übung zusammenstellen →</button></div>';
 }
 const PRESETS=[['Alles gemischt','Alle Aufgabentypen',['bestimmen','zuordnen','frage','ersatz','einsetzen','anmalen']],['Fälle bestimmen','Fall im Satz erkennen und anmalen',['bestimmen','anmalen']],['Proben','Frageprobe und Ersatzprobe',['frage','ersatz']],['Wissen und Formen','Fälle, Fragen, Artikel',['zuordnen','einsetzen']]];
 function sameSet(a,b){return a.size===b.size&&[...a].every(x=>b.has(x));}
@@ -363,26 +384,28 @@ function screenConfig(){
   const cnt=s=>visibleTasks().filter(t=>c.types.has(t.typ)&&t.cats.every(f=>c.cats.has(f))&&stufeOk(t,s)).length;
   const st=[['mix','Gemischt (alle Stufen)'],['1','Einfach'],['2','Mittel'],['3','Schwierig']];
   let info;
-  if(pool.length===0)info='<div class="avail none">Mit dieser Auswahl gibt es keine Aufgaben. Wähle mehr Fälle, Aufgabentypen oder eine andere Stufe.</div>';
+  if(pool.length===0)info='<div class="avail none">Mit dieser Auswahl gibt es keine Aufgaben. Wähle mehr Themen, Aufgabentypen oder eine andere Stufe.</div>';
   else if(pool.length<want)info='<div class="avail warn">Es gibt nur '+pool.length+' passende Aufgaben. Die Runde hat deshalb '+pool.length+' statt '+want+' Fragen.</div>';
   else info='<div class="avail">'+pool.length+' passende Aufgaben verfügbar. Die Runde hat '+want+' Fragen.</div>';
-  const pre=C().PRESETS.map(p=>{const set=new Set(p[2].filter(k=>av.includes(k)));const on=sameSet(set,c.types)&&c.cats.size===4;return '<button class="preset '+(on?'on':'')+'" data-a="preset" data-v="'+p[2].join(',')+'"><b>'+p[0]+'</b><span>'+p[1]+'</span></button>';}).join('');
-  const sum='Typen: '+(c.types.size===av.length?'alle':c.types.size)+' · Fälle: '+(c.cats.size===4?'alle':c.cats.size)+' · Stufe: '+(c.stufe==='mix'?'gemischt':st.find(x=>x[0]===c.stufe)[1])+' · '+want+' Fragen';
-  const det='<div class="cfg"><h3>Aufgabentypen <span><button class="btn sm" data-a="all" data-g="types">Alle</button> <button class="btn sm" data-a="none" data-g="types">Keine</button></span></h3><div class="chk">'+
-   av.map(k=>'<label class="'+(c.types.has(k)?'sel':'')+'"><input type="checkbox" data-cfg="type" value="'+k+'" '+(c.types.has(k)?'checked':'')+'> '+TY()[k].label+'</label>').join('')+'</div>'+
+  const pre=C().PRESETS.map(p=>{const set=new Set(p[2].filter(k=>av.includes(k)));const on=sameSet(set,c.types)&&c.cats.size===CK().length;return '<button class="preset '+(on?'on':'')+'" data-a="preset" data-v="'+p[2].join(',')+'"><b>'+p[0]+'</b><span>'+p[1]+'</span></button>';}).join('');
+  const sum='Typen: '+(c.types.size===av.length?'alle':c.types.size)+' · '+C().catWord+': '+(c.cats.size===CK().length?'alle':c.cats.size)+' · Stufe: '+(c.stufe==='mix'?'gemischt':st.find(x=>x[0]===c.stufe)[1])+' · '+want+' Fragen';
+  const det='<div class="cfg"><h3>Aufgabentypen <span><button class="btn sm" data-a="all" data-g="types">Alle</button> <button class="btn sm" data-a="none" data-g="types">Keine</button></span></h3><div class="chk cards">'+
+   av.map(k=>'<label class="'+(c.types.has(k)?'sel':'')+'"><input type="checkbox" data-cfg="type" value="'+k+'" '+(c.types.has(k)?'checked':'')+'><b>'+(TY()[k].icon?TY()[k].icon+' ':'')+TY()[k].label+'</b><small>'+(TY()[k].short||'')+'</small></label>').join('')+'</div>'+
+   (!S.sheet&&visibleTasks().some(t=>t.w||t.input)?'<h3>Antwort</h3><div class="chk"><label class="'+(c.mode==='write'?'sel':'')+'"><input type="radio" name="amode" data-cfg="mode" value="write" '+(c.mode==='write'?'checked':'')+'> Selber schreiben</label><label class="'+(c.mode==='choose'?'sel':'')+'"><input type="radio" name="amode" data-cfg="mode" value="choose" '+(c.mode==='choose'?'checked':'')+'> Auswählen</label></div>':'')+
    '<h3>'+C().catTitle+' <span><button class="btn sm" data-a="all" data-g="cats">Alle</button> <button class="btn sm" data-a="none" data-g="cats">Keine</button></span></h3><div class="chk fall">'+
    CK().map(k=>'<label class="f-'+k+' '+(c.cats.has(k)?'sel':'')+'"><input type="checkbox" data-cfg="fall" value="'+k+'" '+(c.cats.has(k)?'checked':'')+'> '+CN()[k]+'</label>').join('')+'</div>'+
    '<h3>Schwierigkeit</h3><div class="chk">'+st.map(s=>{const n=cnt(s[0]);return '<label class="'+(c.stufe===s[0]?'sel':'')+'" style="'+(n===0?'opacity:.5':'')+'"><input type="radio" name="stufe" data-cfg="stufe" value="'+s[0]+'" '+(c.stufe===s[0]?'checked':'')+(n===0?' disabled':'')+'> '+s[1]+' ('+n+')</label>';}).join('')+'</div>'+
    '<h3>Fragen pro Runde</h3><div class="chk">'+[['5','5'],['10','10'],['15','15'],['20','20'],['custom','Eigene Anzahl']].map(o=>'<label class="'+(c.count===o[0]?'sel':'')+'"><input type="radio" name="count" data-cfg="count" value="'+o[0]+'" '+(c.count===o[0]?'checked':'')+'> '+o[1]+'</label>').join('')+
    (c.count==='custom'?'<input type="number" inputmode="numeric" min="1" max="100" data-cfg="custom" value="'+c.custom+'" aria-label="Eigene Anzahl" style="width:90px;min-height:46px;border:1.5px solid var(--line2);border-radius:.75rem;padding:.3rem .6rem;text-align:center">':'')+'</div></div>';
-  return '<h2 class="page">Die 4 Fälle: Üben</h2><p class="sub">Was möchtest du üben? Niveau '+S.niv+' ist eingestellt.</p><div class="presets">'+pre+'</div>'+
+  if(S.sheet)return sheetConfig(pre,sum,det,info,pool);
+  return '<h2 class="page">'+C().title+': Üben</h2><p class="sub">Was möchtest du üben? Niveau '+S.niv+' ist eingestellt.</p><div class="presets">'+pre+'</div>'+
    '<div class="card"><div class="sumline"><span>'+sum+'</span><button class="btn sm" data-a="moreopt">'+(S.cfgOpen?'Einstellungen schliessen':'Einstellungen anpassen')+'</button></div>'+(S.cfgOpen?det:'')+
    '<div id="avail">'+info+'</div>'+
-   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="faelle">Erst Theorie lesen</button><button class="btn primary" id="startBtn" data-a="start" '+(pool.length===0?'disabled':'')+'>Übung starten →</button></div></div>';
+   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Erst Theorie lesen</button><button class="btn primary" id="startBtn" data-a="start" '+(pool.length===0?'disabled':'')+'>Übung starten →</button></div></div>';
 }
 function updateAvail(){
   const c=S.cfg,pool=poolFor(c),want=wanted(c),el=document.getElementById('avail'),b=document.getElementById('startBtn');if(!el)return;
-  el.innerHTML=pool.length===0?'<div class="avail none">Mit dieser Auswahl gibt es keine Aufgaben. Wähle mehr Fälle, Aufgabentypen oder eine andere Stufe.</div>':
+  el.innerHTML=pool.length===0?'<div class="avail none">Mit dieser Auswahl gibt es keine Aufgaben. Wähle mehr Themen, Aufgabentypen oder eine andere Stufe.</div>':
    pool.length<want?'<div class="avail warn">Es gibt nur '+pool.length+' passende Aufgaben. Die Runde hat deshalb '+pool.length+' statt '+want+' Fragen.</div>':'<div class="avail">'+pool.length+' passende Aufgaben verfügbar. Die Runde hat '+want+' Fragen.</div>';
   if(b)b.disabled=pool.length===0;
 }
@@ -400,6 +423,8 @@ function screenRound(){
      '<div class="flow">'+t.parts.map((p,i)=>p.f?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
   }else if(t.tokens){
     body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="tok" data-i="'+i+'">'+x+'</button>').join('')+'</div>';
+  }else if(isW(t)){
+    body='<div class="instr">'+(t.sent&&t.prompt?t.prompt:(T.winstr||T.instr))+'</div><div class="sbox">'+(t.sent||t.prompt)+'</div><input class="wfield" id="wfield" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="Deine Antwort" placeholder="Deine Antwort">';
   }else{
     if(!R.order)R.order=shuffle(t.opts);
     body='<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'<div class="sbox">'+t.sent+'</div>')+
@@ -418,7 +443,7 @@ function checkRound(){
     const need=t.parts.map((p,i)=>p.f?i:-1).filter(i=>i>=0);
     if(need.some(i=>!R.paint[i])){document.getElementById('fb').innerHTML='<div class="fb err">Male zuerst alle Gruppen an.</div>';return;}
     ok=need.every(i=>R.paint[i]===t.parts[i].f);
-    need.forEach(i=>{const b=document.querySelector('.chip[data-i="'+i+'"]');b.classList.remove('p-nom','p-gen','p-dat','p-akk');b.classList.add(R.paint[i]===t.parts[i].f?'right':'wrong');b.classList.add('f-'+t.parts[i].f,'p-'+t.parts[i].f);});
+    need.forEach(i=>{const b=document.querySelector('.chip[data-i="'+i+'"]');CK().forEach(k=>b.classList.remove('f-'+k,'p-'+k));b.classList.add(R.paint[i]===t.parts[i].f?'right':'wrong');b.classList.add('f-'+t.parts[i].f,'p-'+t.parts[i].f);});
     mine=need.map(i=>(R.paint[i]?CN()[R.paint[i]]:'–')).join(', ');right=need.map(i=>CN()[t.parts[i].f]).join(', ');
     need.forEach(i=>{if(R.paint[i]!==t.parts[i].f)conf=[t.parts[i].f,R.paint[i]];});
     document.querySelectorAll('.chip,.brush button').forEach(b=>b.disabled=true);
@@ -427,6 +452,10 @@ function checkRound(){
     const tg=new Set(t.targets);ok=t.tokens.every((_,i)=>R.sel.has(i)===tg.has(i));
     document.querySelectorAll('.tok').forEach(b=>{const i=Number(b.dataset.i);b.disabled=true;if(R.sel.has(i)&&tg.has(i))b.classList.add('right');else if(R.sel.has(i))b.classList.add('wrong');else if(tg.has(i))b.classList.add('miss');});
     mine=[...R.sel].sort((a,b)=>a-b).map(i=>t.tokens[i]).join(', ');right=t.targets.map(i=>t.tokens[i]).join(', ');
+  }else if(isW(t)){
+    const f=document.getElementById('wfield'),v=(f.value||'').trim();if(!v)return;
+    const acc=[t.answer].concat(t.accept||[]);ok=acc.some(a=>normA(a,t.strict)===normA(v,t.strict));mine=v;right=t.answer;
+    f.disabled=true;f.classList.add(ok?'right':'wrong');
   }else{
     if(R.choice===null)return;
     const got=R.order[R.choice];ok=got===t.answer;mine=got;right=t.answer;
@@ -463,7 +492,7 @@ function screenSummary(){
 }
 function render(){
   renderHead();
-  $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary})[S.screen]();
+  $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary,sheet:screenSheet})[S.screen]();
   initTry(document);mountWidgets(document);window.scrollTo(0,0);renderLogin();
 }
 function renderTry(el){
@@ -490,10 +519,175 @@ function openRef(sec){
 }
 
 /* ================= Merkblatt (Druck) ================= */
+const LOGOSM='<svg viewBox="0 0 120 120" width="34" height="34" aria-hidden="true"><rect width="120" height="120" rx="28" fill="#4f46e5"/><path d="M60 30C46 22 28 22 12 28V84C28 78 46 78 60 86Z" fill="#fff"/><path d="M60 30C74 22 92 22 108 28V84C92 78 74 78 60 86Z" fill="#e0e7ff"/><rect x="22" y="40" width="28" height="6" rx="3" fill="#2563eb"/><rect x="22" y="52" width="22" height="6" rx="3" fill="#d97706"/><rect x="22" y="64" width="26" height="6" rx="3" fill="#16a34a"/><rect x="70" y="40" width="28" height="6" rx="3" fill="#7c3aed"/><rect x="70" y="52" width="22" height="6" rx="3" fill="#2563eb"/><rect x="70" y="64" width="26" height="6" rx="3" fill="#d97706"/></svg>';
+function wrapPrint(kind,title,inner){
+  return '<table class="pg"><thead><tr><td><div class="sp"></div></td></tr></thead><tbody><tr><td><div class="phead">'+LOGOSM+'<div><b>'+title+'</b><span>'+kind+' · '+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+'</span></div></div><div class="pbody">'+inner+'</div></td></tr></tbody><tfoot><tr><td><div class="sp"></div></td></tr></tfoot></table>';
+}
 function printMerk(){
-  document.getElementById('merk').innerHTML=C().merk();document.body.classList.add('pm');
+  document.getElementById('merk').innerHTML=wrapPrint('Merkblatt',C().title,C().merk());document.body.classList.add('pm');
   const done=()=>document.body.classList.remove('pm');window.addEventListener('afterprint',done,{once:true});
   try{window.print();}catch(e){done();}
+}
+
+
+/* ================= Übungsblatt (Lehrerbereich): Pool oder KI ================= */
+const esc=x=>String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function sheetConfig(pre,sum,det,info,pool){
+  const ai=S.src==='ai';
+  const src='<div class="cfg"><h3>Woher kommen die Aufgaben?</h3><div class="chk cards"><label class="'+(!ai?'sel':'')+'"><input type="radio" name="src" data-cfg="src" value="pool" '+(!ai?'checked':'')+'><b>📚 Aus dem Aufgabenpool</b><small>Geprüfte Aufgaben dieses Kapitels, zufällig gemischt</small></label>'+
+   '<label class="'+(ai?'sel':'')+'"><input type="radio" name="src" data-cfg="src" value="ai" '+(ai?'checked':'')+'><b>✨ Mit KI erstellen</b><small>Neue Aufgaben zu den gewählten Themen. Vor dem Einsatz kurz prüfen.</small></label></div>'+
+   (ai?'<h3>Wunsch an die KI (optional)</h3><textarea data-cfg="shint" rows="2" placeholder="z. B. Thema Schule und Sport, Sätze mit Tieren …" style="width:100%;border:1.5px solid var(--line2);border-radius:.75rem;padding:.6rem .8rem;font:inherit">'+esc(S.shint)+'</textarea>':'')+'</div>';
+  const err=S.sheetErr?'<div class="avail none" style="margin-top:.6rem">'+S.sheetErr+'</div>':'';
+  return '<h2 class="page">'+C().title+': Übungsblatt</h2><p class="sub">Wähle Themen, Aufgabentypen und Schwierigkeit. Danach siehst du das Blatt als Vorschau und druckst es mit Lösungsblatt. Niveau '+S.niv+' ist eingestellt.</p>'+
+   '<div class="card">'+src+'<div class="sumline" style="margin-top:.8rem"><span>'+sum+'</span><button class="btn sm" data-a="moreopt">'+(S.cfgOpen?'Einstellungen schliessen':'Einstellungen anpassen')+'</button></div>'+(S.cfgOpen?det:'')+
+   '<div id="avail">'+(ai?'<div class="avail">Die KI erstellt neue Aufgaben zu deiner Auswahl.</div>':info)+'</div>'+err+
+   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Theorie ansehen</button><button class="btn primary" id="mkBtn" data-a="mksheet" '+((!ai&&pool.length===0)||S.busy?'disabled':'')+'>'+(S.busy?'Wird erstellt …':'Übungsblatt erstellen →')+'</button></div></div>';
+}
+function sheetItem(t){
+  const T=TY()[t.typ]||{};let q,a,opts=null,instr=T.instr||'',kind='line';
+  if(t.parts){
+    q=t.parts.map(p=>p.f?'<u>'+esc(p.t)+'</u>':esc(p.t)).join(' ');
+    a=t.parts.filter(p=>p.f).map(p=>esc(p.t.replace(/[.,]$/,''))+' → '+esc(CN()[p.f])).join('; ');
+    instr='Bestimme die unterstrichenen Wörter und schreibe die Bezeichnung darüber.';kind='para';
+  }else if(t.tokens){
+    q=t.tokens.map((x,i)=>t.targets.includes(i)?x:x).join(' ');q=esc(q);
+    a=t.targets.map(i=>esc(t.tokens[i])).join(', ');instr=t.instr||instr;kind='para';
+  }else{
+    q=(t.prompt&&t.sent?t.prompt+'<br>'+t.sent:(t.sent||t.prompt));a=esc(t.answer);
+    if(t.input||(t.w))instr=T.winstr||instr;
+    else if(t.opts){opts=shuffle(t.opts);}
+    if(t.input&&t.prompt&&t.sent)instr=T.instr||'';
+    if(opts)kind='opts';
+  }
+  instr=instr.replace(/Tippe (.+?) an\.?$/,'Unterstreiche $1.').replace(/Wähle /,'Kreuze an: ');
+  return{typ:t.typ,q,a,opts,kind,instr};
+}
+function sheetHTML(items,title){
+  const groups=[];items.forEach(it=>{let g=groups.find(x=>x.typ===it.typ);if(!g){g={typ:it.typ,instr:it.instr,list:[]};groups.push(g);}g.list.push(it);});
+  let n=0,ws='',so='';
+  groups.forEach(g=>{
+    const T=TY()[g.typ]||{label:g.typ};
+    ws+='<h3>'+esc(T.label)+'</h3><p class="wi">'+g.instr+'</p><ol start="'+(n+1)+'">';
+    so+='<h3>'+esc(T.label)+'</h3><ol class="sol" start="'+(n+1)+'">';
+    g.list.forEach(it=>{
+      ws+='<li>'+it.q+(it.opts?'<div class="wo">'+it.opts.map(o=>'<span>'+esc(o)+'</span>').join('')+'</div>':(it.kind==='para'?'<div class="wl"></div>':'<div class="wl"></div>'))+'</li>';
+      so+='<li><b>'+it.a+'</b></li>';n++;
+    });
+    ws+='</ol>';so+='</ol>';
+  });
+  const leg=(S.ch==='faelle'||S.ch==='wortarten')?'<p class="leg">Bezeichnungen: '+CK().map(k=>esc(CN()[k])).join(' · ')+'</p>':'';
+  const head='<div class="nm"><span>Name:</span><span>Klasse:</span><span>Datum:</span></div>';
+  return{ws:'<div class="wsh">'+head+leg+ws+'</div>',sol:'<div class="wsh"><p class="wi">Lösungen für die Lehrperson</p>'+so+'</div>',n};
+}
+function buildPoolSheet(){
+  const pool=shuffle(poolFor(S.cfg).slice()),want=wanted(S.cfg);
+  // gleichmässig auf die Aufgabentypen verteilen
+  const byT={};pool.forEach(t=>(byT[t.typ]=byT[t.typ]||[]).push(t));
+  const keys=Object.keys(byT),pick=[];let i=0;
+  while(pick.length<want&&keys.some(k=>byT[k].length)){const k=keys[i++%keys.length];if(byT[k].length)pick.push(byT[k].shift());}
+  return pick.map(sheetItem);
+}
+async function loadAiKeys(){
+  if(!S.user)throw new Error('Bitte mit dem Lehrerkonto anmelden.');
+  if(!window.firebase||!firebase.firestore)throw new Error('Die Verbindung zum Konto ist nicht verfügbar.');
+  const snap=await firebase.firestore().collection('sekSync').doc('apikeys_'+S.user.uid).get();
+  const d=snap.exists?(snap.data()||{}):{};
+  const clean=k=>String(k||'').trim().replace(/^["']|["']$/g,'');
+  const keys={gemini:clean(d.geminiKey),claude:clean(d.claudeKey),openai:clean(d.openaiKey),mistral:clean(d.mistralKey)};
+  const P=['gemini','claude','openai','mistral'];
+  const order=[...new Set([...(Array.isArray(d.aiOrder)?d.aiOrder:[]).filter(x=>P.includes(x)),...P])].filter(p=>keys[p]);
+  if(!order.length)throw new Error('Im Konto ist kein KI-Schlüssel gespeichert. Hinterlege ihn im Sek Planer (Einstellungen) mit demselben Konto.');
+  return{keys,order};
+}
+async function fetchT(url,opt,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms||90000);try{return await fetch(url,Object.assign({signal:c.signal},opt));}finally{clearTimeout(t);}}
+async function askAI(system,user){
+  const {keys,order}=await loadAiKeys();const errs=[];
+  for(const p of order){
+    try{
+      if(p==='claude'){
+        for(const m of ['claude-sonnet-5-5','claude-haiku-5-5']){
+          try{
+            const r=await fetchT('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':keys.claude,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:m,max_tokens:6000,system,messages:[{role:'user',content:user}]})});
+            const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error((j.error&&j.error.message)||('HTTP '+r.status));
+            const t=(j.content||[]).map(x=>x.text||'').join('');if(t)return t;
+          }catch(e){errs.push('Claude '+m+': '+e.message);}
+        }
+      }else if(p==='gemini'){
+        for(const m of ['gemini-flash-latest','gemini-2.5-flash']){
+          try{
+            const r=await fetchT('https://generativelanguage.googleapis.com/v1beta/models/'+m+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':keys.gemini},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents:[{role:'user',parts:[{text:user}]}],generationConfig:{responseMimeType:'application/json'}})});
+            const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error((j.error&&j.error.message)||('HTTP '+r.status));
+            const t=((((j.candidates||[])[0]||{}).content||{}).parts||[]).map(x=>x.text||'').join('');if(t)return t;
+          }catch(e){errs.push('Gemini '+m+': '+e.message);}
+        }
+      }else{
+        const cfg=p==='openai'?{u:'https://api.openai.com/v1/chat/completions',m:['gpt-4o-mini']}:{u:'https://api.mistral.ai/v1/chat/completions',m:['mistral-large-latest','mistral-small-latest']};
+        for(const m of cfg.m){
+          try{
+            const r=await fetchT(cfg.u,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+keys[p]},body:JSON.stringify({model:m,messages:[{role:'system',content:system},{role:'user',content:user}]})});
+            const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error((j.error&&(j.error.message||j.error))||('HTTP '+r.status));
+            const t=(((j.choices||[])[0]||{}).message||{}).content;if(t)return t;
+          }catch(e){errs.push(p+' '+m+': '+e.message);}
+        }
+      }
+    }catch(e){errs.push(p+': '+e.message);}
+  }
+  throw new Error('Die KI hat nicht geantwortet. '+errs.slice(0,3).join(' | '));
+}
+function aiPrompt(){
+  const c=S.cfg,want=wanted(c),types=[...c.types].filter(k=>typesAvailable().includes(k));
+  const cats=[...c.cats].map(k=>CN()[k]).join(', ');
+  const ex=types.map(k=>{
+    const t=visibleTasks().find(x=>x.typ===k&&!x.parts);if(!t)return null;const it=sheetItem(t);
+    const strip=h=>String(h).replace(/<br>/g,' ').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+    return {typ:k,q:strip(it.q),a:strip(it.a),opts:it.opts?it.opts.slice(0,4):undefined};
+  }).filter(Boolean);
+  const tl=types.map(k=>{const T=TY()[k];return '- '+k+': '+T.label+' ('+(T.short||'')+'). Anweisung: '+(T.winstr||T.instr||'');}).join('\n');
+  const system='Du bist eine erfahrene Deutschlehrperson der Sekundarstufe I in der Schweiz (Niveau '+S.niv+', Schülerinnen und Schüler 13 bis 15 Jahre). Du erstellst Grammatik-Übungsaufgaben. Schweizer Rechtschreibung (immer «ss», nie «ß»). Sprache einfach und altersgerecht. Jede Aufgabe hat genau eine korrekte, fachlich gesicherte Lösung. Keine Wiederholungen. Antworte ausschliesslich mit einem JSON-Array, ohne Text davor oder danach.';
+  const user='Kapitel: '+C().title+'\nThemen: '+cats+'\nSchwierigkeit: '+(c.stufe==='mix'?'gemischt (einfach bis schwierig)':({1:'einfach',2:'mittel',3:'schwierig'})[c.stufe])+'\nAnzahl Aufgaben: genau '+want+', gleichmässig auf die Aufgabentypen verteilt.\nAufgabentypen (Feld «typ»):\n'+tl+'\n'+(S.shint.trim()?'Wunsch der Lehrperson: '+S.shint.trim()+'\n':'')+
+   '\nFormat jedes Elements: {"typ":"<Typ>","q":"<Aufgabentext>","a":"<Lösung>","opts":["<4 Antwortmöglichkeiten, nur bei Auswahlaufgaben, die Lösung ist eine davon>"]}\n- Lückenaufgaben: Lücke als ___ schreiben, «a» enthält nur das fehlende Wort.\n- Markieren/Text: «q» ist der Satz oder kurze Text, «a» die gesuchten Wörter, getrennt durch Komma.\n- Frage- und Wissensaufgaben ohne Lücke: «q» ist die Frage.\nBeispiele zur Orientierung (nicht wiederverwenden):\n'+JSON.stringify(ex);
+  return{system,user,types};
+}
+async function buildAiSheet(){
+  const {system,user,types}=aiPrompt();
+  const txt=await askAI(system,user);
+  const i=txt.indexOf('['),j=txt.lastIndexOf(']');if(i<0||j<i)throw new Error('Die Antwort der KI war nicht lesbar. Bitte nochmals versuchen.');
+  let arr;try{arr=JSON.parse(txt.slice(i,j+1));}catch(e){throw new Error('Die Antwort der KI war nicht lesbar. Bitte nochmals versuchen.');}
+  const out=[];
+  arr.forEach(x=>{
+    if(!x||!types.includes(x.typ)||!x.q||x.a==null)return;
+    const T=TY()[x.typ]||{},mark=!!(T.instr&&/Tippe/.test(T.instr));
+    const a=Array.isArray(x.a)?x.a.join(', '):String(x.a);
+    const hasOpts=Array.isArray(x.opts)&&x.opts.length>1;
+    out.push({typ:x.typ,q:esc(x.q).replace(/___/g,'_____'),a:esc(a),opts:hasOpts?shuffle(x.opts.map(String)):null,kind:hasOpts?'opts':(mark?'para':'line'),instr:(mark?T.instr:(hasOpts?(T.instr||''):(T.winstr||T.instr||''))).replace(/Tippe (.+?) an\.?$/,'Unterstreiche $1.')});
+  });
+  if(!out.length)throw new Error('Die KI hat keine brauchbaren Aufgaben geliefert. Bitte nochmals versuchen.');
+  return out.slice(0,wanted(S.cfg));
+}
+async function makeSheet(){
+  if(S.busy)return;S.sheetErr='';
+  try{
+    let items;
+    if(S.src==='ai'){S.busy=true;render();items=await buildAiSheet();}
+    else items=buildPoolSheet();
+    if(!items.length)throw new Error('Mit dieser Auswahl gibt es keine Aufgaben.');
+    S.sheetOut=Object.assign(sheetHTML(items),{src:S.src,title:C().title});S.screen='sheet';
+  }catch(e){S.sheetErr=esc(e.message||e);S.screen='config';}
+  S.busy=false;render();
+}
+function screenSheet(){
+  const o=S.sheetOut;if(!o)return screenConfig();
+  return '<div class="topbar"><h2 class="page" style="margin:0">Übungsblatt: '+esc(o.title)+'</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="back">‹ Einstellungen</button><button class="btn sm" data-a="mksheet">'+(o.src==='ai'?'Neu erstellen':'Neu mischen')+'</button></div></div>'+
+   (o.src==='ai'?'<div class="callout noprint">Von der KI erstellt. Bitte die Aufgaben und Lösungen vor dem Einsatz kurz prüfen.</div>':'')+
+   '<div class="btnrow"><button class="btn primary" data-a="psheet" data-v="ws">Arbeitsblatt drucken</button><button class="btn" data-a="psheet" data-v="sol">Lösungsblatt drucken</button><button class="btn" data-a="psheet" data-v="both">Beides drucken</button></div>'+
+   '<div class="card" style="background:#fff"><div class="muted" style="font-size:.8rem;margin-bottom:.4rem">Arbeitsblatt (Vorschau)</div>'+o.ws+'</div>'+
+   '<div class="card" style="background:#fff"><div class="muted" style="font-size:.8rem;margin-bottom:.4rem">Lösungsblatt (Vorschau)</div>'+o.sol+'</div>';
+}
+function printSheet(w){
+  const o=S.sheetOut;if(!o)return;
+  const kind=(S.src==='ai'?'KI-Übungsblatt':'Übungsblatt');
+  const a=wrapPrint(kind,o.title,o.ws),b=wrapPrint('Lösungsblatt',o.title,o.sol);
+  doPrint(w==='ws'?a:w==='sol'?b:a+b);
 }
 
 /* ================= Ereignisse ================= */
@@ -501,12 +695,15 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('[data-a]');if(!b||!b.dataset.a)return;
   const a=b.dataset.a,v=b.dataset.v;
   switch(a){
-   case 'home':S.screen='start';render();break;
+   case 'home':S.screen='start';S.sheet=false;render();break;
    case 'back':S.screen=BACK[S.screen]||'start';render();break;
    case 'niv':S.niv=v;try{localStorage.setItem('wsl-niv',v);}catch(x){}S.cfg.types=null;render();break;
    case 'theorie':setCh(b.dataset.t,v);S.screen='lernen';render();break;
    case 'teach':setCh(b.dataset.t,v);S.screen='teach';S.t.cur=0;render();break;
-   case 'config':setCh(b.dataset.t,v);S.screen='config';render();break;
+   case 'config':setCh(b.dataset.t,v);S.sheet=false;S.screen='config';render();break;
+   case 'sheet':if(!teacherAccess())break;setCh(b.dataset.t,v);S.sheet=true;S.sheetOut=null;S.sheetErr='';S.screen='config';render();break;
+   case 'mksheet':makeSheet();break;
+   case 'psheet':printSheet(v);break;
    case 'tpick':tryPick(b);break;
    case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
    case 'resetask':S.resetAsk=true;render();break;
@@ -515,13 +712,14 @@ document.addEventListener('click',e=>{
    case 'merk':printMerk();break;
    case 'moreopt':S.cfgOpen=!S.cfgOpen;render();break;
    case 'preset':{const av=typesAvailable();S.cfg.types=new Set(v.split(',').filter(k=>av.includes(k)));S.cfg.cats=new Set(CK());render();break;}
+   case 'tov':{const el=document.getElementById('ov-'+b.dataset.i);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});break;}
    case 'toc':{const el=document.getElementById('s-'+v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});break;}
    case 'rev':{const s=b.nextElementSibling;s.hidden=!s.hidden;b.textContent=s.hidden?b.dataset.l:'Verbergen';break;}
    case 'all':case 'none':{const g=b.dataset.g,on=a==='all';if(g==='types')S.cfg.types=on?new Set(typesAvailable()):new Set();else S.cfg.cats=on?new Set(CK()):new Set();render();break;}
    case 'start':{const pool=poolFor(S.cfg);if(!pool.length)return;startRound(shuffle(pool).slice(0,wanted(S.cfg)),'Runde');break;}
    case 'pick':{const R=S.R;if(R.answered)return;R.choice=Number(b.dataset.i);document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');document.getElementById('checkBtn').disabled=false;break;}
    case 'brush':{S.R.brush=b.dataset.k;document.querySelectorAll('.brush button').forEach(x=>x.classList.toggle('on',x===b));break;}
-   case 'paint':{const R=S.R;if(R.answered)return;const i=b.dataset.i;b.classList.remove('f-nom','f-gen','f-dat','f-akk','p-nom','p-gen','p-dat','p-akk');
+   case 'paint':{const R=S.R;if(R.answered)return;const i=b.dataset.i;CK().forEach(k=>b.classList.remove('f-'+k,'p-'+k));
      if(R.paint[i]===R.brush){delete R.paint[i];}else{R.paint[i]=R.brush;b.classList.add('f-'+R.brush,'p-'+R.brush);}
      const need=R.tasks[R.i].parts.filter(p=>p.f).length;document.getElementById('checkBtn').disabled=Object.keys(R.paint).length<need;break;}
    case 'tok':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=!R.sel.size;break;}
@@ -554,8 +752,10 @@ document.addEventListener('change',e=>{
   else if(k==='fall'){i.checked?c.cats.add(i.value):c.cats.delete(i.value);render();}
   else if(k==='stufe'){c.stufe=i.value;render();}
   else if(k==='count'){c.count=i.value;render();}
+  else if(k==='mode'){c.mode=i.value;render();}
+  else if(k==='src'){S.src=i.value;render();}
 });
-document.addEventListener('input',e=>{const i=e.target.closest('[data-cfg="custom"]');if(i){S.cfg.custom=i.value;updateAvail();}});
+document.addEventListener('input',e=>{const i=e.target.closest('[data-cfg="custom"]');if(i){S.cfg.custom=i.value;updateAvail();}const h=e.target.closest('[data-cfg="shint"]');if(h)S.shint=h.value;});
 document.getElementById('ref').addEventListener('click',e=>{if(e.target.id==='ref')e.target.close();});
 /* ================= Lehrerteil ================= */
 const SCV=[1,1.25,1.5],SCN=['Normal','Gross','Beamer'];
@@ -568,16 +768,16 @@ function screenTeach(){
   const bar='<div class="tbar"><div class="seg"><button data-a="tmode" data-v="slides" class="'+(T.mode==='slides'?'on':'')+'">Folien</button><button data-a="tmode" data-v="overview" class="'+(T.mode==='overview'?'on':'')+'">Übersicht</button></div>'+
    '<button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tnotes">Hinweise: '+(T.notes?'an':'aus')+'</button>'+
    '<span class="tsp"></span><span class="muted" style="font-size:.85rem">'+V.length+' Folien · ca. '+tot+' Min.</span>'+
-   '<button class="btn sm" data-a="tprint" data-v="h">Übersicht drucken</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt drucken</button><button class="btn sm" data-a="tprint" data-v="u">Übungsblatt drucken</button></div>';
+   '<button class="btn sm" data-a="tprint" data-v="h">Übersicht drucken</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt drucken</button><button class="btn sm" data-a="tprint" data-v="u">Übungsblatt drucken</button><button class="btn sm primary" data-a="sheet" data-t="'+S.teil+'" data-v="'+S.ch+'">KI-Übungsblatt</button></div>';
   const note=s=>T.notes&&s.note?'<div class="tnote noprint"><b>Hinweis für dich:</b> '+s.note+'</div>':'';
   let body;
   if(T.mode==='slides'){
     const s=V[T.cur];
-    body='<div class="tchips">'+V.map((x,i)=>'<button class="tchip '+(i===T.cur?'on':'')+'" data-a="tjump" data-i="'+i+'" title="'+x.title+'" aria-label="Folie '+(i+1)+': '+x.title+'">'+(i+1)+'</button>').join('')+'</div>'+
+    body='<div class="tchips">'+V.map((x,i)=>'<button class="tchip '+(i===T.cur?'on':'')+'" data-a="tjump" data-i="'+i+'" aria-label="Folie '+(i+1)+': '+x.title+'">'+x.title+'</button>').join('')+'</div>'+
      '<div class="card tslide"><div class="tkick">Folie '+(T.cur+1)+' von '+V.length+(s.min?' · '+s.min+' Min.':'')+'</div><h2>'+s.title+'</h2>'+stripH(s.html())+'</div>'+note(s)+
      '<div class="actions"><button class="btn" data-a="tgo" data-v="-1" '+(T.cur===0?'disabled':'')+'>‹ Zurück</button><button class="btn primary" data-a="tgo" data-v="1" '+(T.cur===V.length-1?'disabled':'')+'>Weiter ›</button></div>';
   }else{
-    body=V.map((s,i)=>'<section class="card tov"><div class="tkick">Folie '+(i+1)+(s.min?' · '+s.min+' Min.':'')+'</div><h2>'+s.title+'</h2>'+stripH(s.html())+note(s)+'</section>').join('');
+    body='<div class="tchips sticky">'+V.map((x,i)=>'<button class="tchip" data-a="tov" data-i="'+i+'">'+x.title+'</button>').join('')+'</div>'+V.map((s,i)=>'<section class="card tov" id="ov-'+i+'"><div class="tkick">Folie '+(i+1)+(s.min?' · '+s.min+' Min.':'')+'</div><h2>'+s.title+'</h2>'+stripH(s.html())+note(s)+'</section>').join('');
   }
   return bar+'<div class="stage" style="font-size:'+SCV[T.scale]+'rem">'+body+'</div>';
 }
@@ -592,15 +792,16 @@ function doPrint(html){
 }
 function printTeach(mode){
   const c=C();let h;
-  if(mode==='m')h=c.merk();
+  if(mode==='m')h=wrapPrint('Merkblatt',c.title,c.merk());
   else{
     const name=mode==='u'?'Übungsblatt':'Übersicht für das Heft';
-    h='<h1 style="font-size:1.5rem;margin:0 0 .2rem">'+c.title+'</h1><p class="muted" style="margin:0 0 .8rem">'+name+' · Niveau '+S.niv+'</p>'+
-     slidesVis().filter(s=>(s.p||'').includes(mode)).map(s=>'<section class="ps"><h2 style="font-size:1.15rem">'+s.title+'</h2>'+(s.print?s.print():stripH(s.html()))+'</section>').join('');
+    h=wrapPrint(name,c.title,slidesVis().filter(s=>(s.p||'').includes(mode)).map(s=>'<section class="ps"><h2 style="font-size:1.15rem">'+s.title+'</h2>'+(s.print?s.print():stripH(s.html()))+'</section>').join(''));
   }
   doPrint(h);
 }
+document.addEventListener('input',e=>{if(e.target.id==='wfield'){const b=document.getElementById('checkBtn');if(b)b.disabled=!e.target.value.trim();}});
 document.addEventListener('keydown',e=>{
+  if(e.target&&e.target.id==='wfield'&&e.key==='Enter'){e.preventDefault();const b=document.getElementById('checkBtn'),n=document.getElementById('nextBtn');if(n&&!n.hidden)n.click();else if(b&&!b.disabled)b.click();return;}
   if(S.screen!=='teach'||S.t.mode!=='slides'||/INPUT|SELECT|TEXTAREA/.test((e.target||{}).tagName||''))return;
   if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();tGo(S.t.cur+1);}
   else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();tGo(S.t.cur-1);}
@@ -669,7 +870,7 @@ GT.chapter=function(d){
   const PRESETS=[['Alles gemischt','Alle Aufgabentypen',allT]].concat(allT.slice(0,3).map(k=>[d.types[k].label,d.types[k].short||'Nur dieser Typ',[k]]));
   if(d.css){const st=document.createElement('style');st.textContent=d.css;document.head.appendChild(st);}
   GT.register({id:d.id,teil:d.teil,nr:d.nr,title:d.title,desc:d.desc,ex:d.ex,cats,catName,catTitle:d.catTitle||'Welche Themen?',catWord:d.catWord||'Thema',
-    TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>'<h1 style="font-size:1.5rem;margin:0 0 .2rem">Merkblatt: '+d.title+'</h1><p class="muted" style="margin:0 0 .8rem">Grammatik Trainer · Niveau '+S.niv+'</p>'+d.merk(),
+    writeTypes:d.write||[],strictTypes:d.strict||[],TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>d.merk(),
     SLIDES,widgets:d.widgets||{},actions:d.actions||{}});
 };
 GT.start=function(){

@@ -50,7 +50,7 @@ const B=[
 ['Wir feiern ___ Geburtstag.',['unseren','unsere','unser','unseres'],'unseren','Akkusativ männlich: unseren Geburtstag.',2],
 ['Hast du ___ Buch dabei?',['dein','deine','deiner','deinen'],'dein','Akkusativ sächlich: dein Buch.',2],
 ['Er hilft ___ Freund.',['seinem','seinen','seine','sein'],'seinem','Dativ männlich: seinem Freund.',3],
-['Das ist das Haus ___ Eltern.',['meiner','meine','meinen','mein'],'meiner','Genitiv Mehrzahl: meiner Eltern.',3]
+['Das ist das Haus (ich) ___ Eltern.',['meiner','meine','meinen','mein'],'meiner','Genitiv Mehrzahl: meiner Eltern.',3]
 ];
 B.forEach(b=>task.push({typ:'possessiv',stufe:b[4],lv:b[4]===3?2:1,cats:['sg3'],prompt:b[0].replace('___','<span class="gap">_____</span>'),opts:b[1],answer:b[2],why:'<b>'+b[2]+'.</b> '+b[3]}));
 
@@ -81,6 +81,20 @@ const M=[
 M.forEach(m=>{
   const raw=m[0].split(' '),tokens=raw.map(w=>w.replace(/^\*/,'').replace(/,$/,m=>m)),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg2'],tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe alle Pronomen an.',why:m[2]});
+});
+
+
+/* Wortart im Text erkennen */
+const TX=[
+["*Ich sehe *den Hund. *Er bellt.",1,"Ich, er (Personalpronomen), den (Artikel)."],
+["*Das Mädchen gibt *ihrem Bruder *ein Buch.",2,"Das und ein (Artikel), ihrem (Possessivpronomen)."],
+["*Wir spielen mit *unserem Ball, und *er gehört *uns.",2,"wir, er, uns (Personalpronomen), unserem (Possessivpronomen)."],
+["*Die Lehrerin lobt *uns, weil *wir *unsere Hausaufgaben gemacht haben.",2,"Die (Artikel), uns, wir (Personalpronomen), unsere (Possessivpronomen)."],
+["*Mein Vater sagt, dass *er *dich morgen abholt.",3,"Mein (Possessivpronomen), er, dich (Personalpronomen)."]
+];
+TX.forEach(m=>{
+  const raw=m[0].split(' '),tokens=raw.map(w=>w.replace(/^\*/,'')),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
+  task.push({typ:'text',stufe:m[1],lv:m[1]===3?2:1,cats:['sg2'],tokens,targets,instr:'Tippe alle Pronomen im Text an (auch Artikel).',why:m[2]});
 });
 
 const SECS=[
@@ -127,11 +141,12 @@ const merk=()=>T(['Thema','Merksatz'],[['Pronomen','Sie ersetzen ein Nomen oder 
 GT.chapter({id:'pronomen',teil:'wort',nr:6,title:'Pronomen',big:'Er gibt ihr sein Buch',desc:'Artikel und Pronomen: ersetzen und begleiten',
  ex:'«'+mk('pron','Er')+' gibt '+mk('pron','ihr')+' '+mk('pron','sein')+' Buch.»',
  goals:['Ich erkenne bestimmte und unbestimmte Artikel.','Ich ersetze Nomen durch Personalpronomen in der richtigen Form.','Ich wähle das richtige Possessivpronomen.','Ich kenne weitere Pronomen (reflexiv, demonstrativ, Frage, unbestimmt).'],
- cats:C,catTitle:'Welche Themen?',catWord:'Thema',
+  write:['personal','possessiv'], cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{artikel:{label:'Artikel erkennen',short:'bestimmt oder unbestimmt',instr:'Wähle die richtige Antwort.',hint:'bestimmt: der, die, das · unbestimmt: ein, eine.',ref:'artikel'},
-  personal:{label:'Personalpronomen',short:'Nomen ersetzen',instr:'Welches Pronomen passt?',hint:'Geschlecht, Zahl und Fall des Nomens beachten. Wen? → Akk. Wem? → Dat.',ref:'personal'},
-  possessiv:{label:'Possessivpronomen',short:'Wem gehört es?',instr:'Welche Form passt?',hint:'Wer ist der Besitzer? Welches Geschlecht und welchen Fall hat das Nomen?',ref:'possessiv'},
+  personal:{winstr:'Schreibe das passende Pronomen.',label:'Personalpronomen',short:'Nomen ersetzen',instr:'Welches Pronomen passt?',hint:'Geschlecht, Zahl und Fall des Nomens beachten. Wen? → Akk. Wem? → Dat.',ref:'personal'},
+  possessiv:{winstr:'Schreibe das passende Possessivpronomen.',label:'Possessivpronomen',short:'Wem gehört es?',instr:'Welche Form passt?',hint:'Wer ist der Besitzer? Welches Geschlecht und welchen Fall hat das Nomen?',ref:'possessiv'},
   wissen:{label:'Wissen',short:'Pronomenarten',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'weitere'},
+  text:{icon:'🔍',label:'Pronomen im Text',short:'Alle Pronomen in einem Text finden',instr:'Tippe alle Pronomen im Text an (auch Artikel).',hint:'Pronomen ersetzen oder begleiten ein Nomen. Artikel gehören auch dazu.',ref:'merkmale'},
   markieren:{label:'Pronomen markieren',short:'Alle Pronomen finden',instr:'Tippe alle Pronomen an.',hint:'Pronomen ersetzen oder begleiten ein Nomen.',ref:'merkmale'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

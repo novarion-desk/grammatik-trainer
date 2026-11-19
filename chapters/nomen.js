@@ -86,6 +86,20 @@ M.forEach(m=>{
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg3'],tokens,targets,instr:'Tippe alle Nomen an (auch nominalisierte).',why:m[2]});
 });
 
+
+/* Wortart im Text erkennen */
+const TX=[
+["Der *Hund spielt mit dem *Ball im *Garten.",1,"Nomen: Hund, Ball, Garten."],
+["Meine *Schwester liest ein *Buch über *Pferde.",1,"Nomen: Schwester, Buch, Pferde."],
+["Am *Montag kauft die *Lehrerin frisches *Brot in der *Stadt.",2,"Nomen: Montag, Lehrerin, Brot, Stadt. «frisches» ist ein Adjektiv."],
+["Das *Lachen der *Kinder macht den *Tag schöner.",2,"«Das Lachen» ist ein nominalisiertes Verb. Dazu Kinder und Tag."],
+["Beim *Schwimmen hat *Tim viel *Spass und trifft seine *Freunde.",3,"Schwimmen (nominalisiert), Tim (Name), Spass, Freunde."]
+];
+TX.forEach(m=>{
+  const raw=m[0].split(' '),tokens=raw.map(w=>w.replace(/^\*/,'')),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
+  task.push({typ:'text',stufe:m[1],lv:m[1]===3?2:1,cats:['sg3'],tokens,targets,instr:'Tippe alle Nomen im Text an (auch nominalisierte).',why:m[2]});
+});
+
 /* ---------- Theorie ---------- */
 const SECS=[
 {id:'merkmale',title:'Was ist ein Nomen?',short:'Merkmale',min:6,note:'An die Wortarten anknüpfen: Nomen sind Namenwörter. Beispiele aus dem Klassenzimmer sammeln. Die Artikelprobe nochmals zeigen.',
@@ -135,10 +149,11 @@ const merk=()=>T(['Thema','Merksatz'],[['Erkennen','Artikelprobe: der, die, das,
 GT.chapter({id:'nomen',teil:'wort',nr:2,title:'Nomen',big:'Der Hund, die Katze, das Kind',desc:'Wörter für Lebewesen, Dinge und Gedanken',
  ex:'«'+mk('nomen','Der Hund')+', '+mk('nomen','die Katze')+', '+mk('nomen','das Kind')+'»',
  goals:['Ich erkenne Nomen mit der Artikelprobe.','Ich kenne das Geschlecht (männlich, weiblich, sächlich) und setze den richtigen Artikel.','Ich bilde die Mehrzahl von Nomen.','Ich schreibe Nomen und nominalisierte Wörter richtig gross.','Ich unterscheide Eigennamen, Gattungsnamen, Konkreta und Abstrakta.'],
- cats:C,catTitle:'Welche Themen?',catWord:'Thema',
- types:{artikel:{label:'Artikel einsetzen',short:'der, die oder das',instr:'Welcher Artikel passt?',hint:'Prüfe die Endung (-ung, -chen …) und denke an die Hilfen in der Theorie.',ref:'genus'},
-  mehrzahl:{label:'Mehrzahl bilden',short:'Einzahl und Mehrzahl',instr:'Wähle die richtige Mehrzahl.',hint:'Denke an die Pluralendungen: -e, -er, -en, -s, Umlaut.',ref:'zahl'},
-  gross:{label:'Gross oder klein',short:'Nominalisierung',instr:'Welche Schreibweise ist richtig?',hint:'Suche ein Signalwort: Artikel, beim, zum, etwas, nichts, viel, alles.',ref:'gross'},
+  write:['artikel','mehrzahl','gross'],strict:['gross'], cats:C,catTitle:'Welche Themen?',catWord:'Thema',
+ types:{artikel:{winstr:'Schreibe den passenden Artikel.',label:'Artikel einsetzen',short:'der, die oder das',instr:'Welcher Artikel passt?',hint:'Prüfe die Endung (-ung, -chen …) und denke an die Hilfen in der Theorie.',ref:'genus'},
+  mehrzahl:{winstr:'Schreibe die Mehrzahl.',label:'Mehrzahl bilden',short:'Einzahl und Mehrzahl',instr:'Wähle die richtige Mehrzahl.',hint:'Denke an die Pluralendungen: -e, -er, -en, -s, Umlaut.',ref:'zahl'},
+  gross:{winstr:'Schreibe das Wort richtig: gross oder klein.',label:'Gross oder klein',short:'Nominalisierung',instr:'Welche Schreibweise ist richtig?',hint:'Suche ein Signalwort: Artikel, beim, zum, etwas, nichts, viel, alles.',ref:'gross'},
+  text:{icon:'🔍',label:'Nomen im Text',short:'Alle Nomen in einem Text finden',instr:'Tippe alle Nomen im Text an (auch nominalisierte).',hint:'Artikelprobe: Kann ein Artikel davor stehen?',ref:'merkmale'},
   markieren:{label:'Nomen markieren',short:'Alle Nomen finden',instr:'Tippe alle Nomen an.',hint:'Artikelprobe: Kann ein Artikel davor stehen?',ref:'merkmale'},
   wissen:{label:'Wissen',short:'Begriffe und Regeln',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'arten'}},
  sections:SECS,tasks:task,exercises:EX,merk});

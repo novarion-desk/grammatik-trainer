@@ -72,7 +72,7 @@ const D=[
 ['Ich esse ___ Brot.','frisches',['frische','frischer','frischen'],3,'Ohne Artikel, Akkusativ sächlich: frisches Brot.'],
 ['Wegen des ___ Wetters bleiben wir hier.','schlechten',['schlechte','schlechter','schlechtes'],3,'Genitiv: wegen des schlechten Wetters.']
 ];
-D.forEach(d=>task.push({typ:'endung',stufe:d[3],lv:d[3]===3?2:1,cats:['sg2'],sent:gap(d[0]),opts:[d[1]].concat(d[2]),answer:d[1],why:'<b>'+d[1]+'.</b> '+d[4]}));
+D.forEach(d=>{const base=d[1].replace(/(es|en|er|e)$/,'');task.push({typ:'endung',stufe:d[3],lv:d[3]===3?2:1,cats:['sg2'],sent:gap(d[0]).replace('<span class="gap">_____</span>','<span class="gap">_____</span> <i class="muted">('+base+')</i>'),opts:[d[1]].concat(d[2]),answer:d[1],why:'<b>'+d[1]+'.</b> '+d[4]})});
 
 /* Adjektive erkennen (Option) */
 const E=[
@@ -119,6 +119,22 @@ M.forEach(m=>{
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg3'],tokens,targets,instr:'Tippe alle Adjektive an.',why:m[2]});
 });
 
+
+/* Wortart im Text erkennen */
+const TX=[
+["Der *kleine Hund hat ein *weiches Fell.",1,"Adjektive: kleine, weiches."],
+["Das *rote Auto fährt auf der *nassen Strasse.",1,"Adjektive: rote, nassen."],
+["Die *neue Lehrerin ist sehr *freundlich.",1,"neue und freundlich. «sehr» ist ein Adverb."],
+["Im *dunklen Wald lebt ein *scheuer Fuchs mit *buschigem Schwanz.",2,"dunklen, scheuer, buschigem."],
+["Der Kuchen schmeckt *süss, aber die Suppe ist *salzig.",2,"süss und salzig stehen nach dem Verb und werden nicht verändert."],
+["Sie trägt eine *warme Jacke, weil es *kalt ist.",2,"warme und kalt."],
+["Es war ein *gelungenes Fest mit *leckerem Essen.",3,"gelungenes (vom Partizip) und leckerem."]
+];
+TX.forEach(m=>{
+  const raw=m[0].split(' '),tokens=raw.map(w=>w.replace(/^\*/,'')),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
+  task.push({typ:'text',stufe:m[1],lv:m[1]===3?2:1,cats:['sg3'],tokens,targets,instr:'Tippe alle Adjektive im Text an.',why:m[2]});
+});
+
 const SECS=[
 {id:'merkmale',title:'Was ist ein Adjektiv?',short:'Merkmale',min:6,note:'Adjektive beschreiben Nomen. Steigerungsprobe als Erkennungsmerkmal. Abgrenzung zum Adverb ansprechen.',
  html:()=>'<div class="grid2"><div class="card"><h3>Adjektive beschreiben</h3><p>Sie sagen, <b>wie</b> etwas ist: ein <b>kleiner</b> Hund, ein <b>rotes</b> Auto, ein <b>netter</b> Mensch.</p><p class="muted">Man nennt sie auch Wie-Wörter oder Eigenschaftswörter.</p></div>'+
@@ -163,12 +179,13 @@ const merk=()=>T(['Thema','Merksatz'],[['Erkennen','Adjektive beschreiben und la
 GT.chapter({id:'adjektiv',teil:'wort',nr:5,title:'Adjektiv',big:'Ein kleiner Hund, ein schnelles Auto',desc:'Eigenschaften, Steigerung und Endungen',
  ex:'«Der '+mk('adj','kleine')+' Hund ist '+mk('adj','schneller')+' als die '+mk('adj','alte')+' Katze.»',
  goals:['Ich erkenne Adjektive mit der Steigerungsprobe.','Ich steigere Adjektive (Positiv, Komparativ, Superlativ).','Ich setze die richtige Endung vor dem Nomen.','Ich bilde Gegenteile und Adjektive aus Nomen.'],
- cats:C,catTitle:'Welche Themen?',catWord:'Thema',
- types:{komp:{label:'Steigern',short:'Komparativ und Superlativ',instr:'Wähle die richtige Form.',hint:'Komparativ: -er. Superlativ: am … -sten. Achte auf Umlaut und Sonderformen.',ref:'steigerung'},
+  write:['komp','endung'], cats:C,catTitle:'Welche Themen?',catWord:'Thema',
+ types:{komp:{winstr:'Schreibe die richtige Form.',label:'Steigern',short:'Komparativ und Superlativ',instr:'Wähle die richtige Form.',hint:'Komparativ: -er. Superlativ: am … -sten. Achte auf Umlaut und Sonderformen.',ref:'steigerung'},
   stufe:{label:'Steigerungsstufe bestimmen',short:'Positiv, Komparativ, Superlativ',instr:'In welcher Stufe steht das Adjektiv?',hint:'«als» → Komparativ. «am … -sten» → Superlativ.',ref:'steigerung'},
-  endung:{label:'Endung einsetzen',short:'Adjektiv vor dem Nomen',instr:'Welche Form passt in die Lücke?',hint:'Welches Geschlecht und welchen Fall hat das Nomen?',ref:'endungen'},
+  endung:{winstr:'Schreibe das Adjektiv mit der richtigen Endung.',label:'Endung einsetzen',short:'Adjektiv vor dem Nomen',instr:'Welche Form passt in die Lücke?',hint:'Welches Geschlecht und welchen Fall hat das Nomen?',ref:'endungen'},
   erkennen:{label:'Adjektive erkennen',short:'Adjektiv oder nicht?',instr:'Wähle die richtige Antwort.',hint:'Steigerungsprobe: schön, schöner, am schönsten.',ref:'merkmale'},
   wort:{label:'Gegenteile und Wortbildung',short:'un-, -lich, -ig …',instr:'Wähle die richtige Antwort.',hint:'Schau in der Wortbildung nach.',ref:'wortbildung'},
+  text:{icon:'🔍',label:'Adjektive im Text',short:'Alle Adjektive in einem Text finden',instr:'Tippe alle Adjektive im Text an.',hint:'Wie ist das Nomen? Das Wort davor beschreibt es.',ref:'merkmale'},
   markieren:{label:'Adjektive markieren',short:'Alle Adjektive finden',instr:'Tippe alle Adjektive an.',hint:'Wie ist das Nomen? Das Wort davor beschreibt es.',ref:'merkmale'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

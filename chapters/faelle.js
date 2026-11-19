@@ -289,7 +289,7 @@ const SLIDES=[
 
 /* ================= Merkblatt für Schüler ================= */
 function merk(){
-  return '<h1 style="font-size:1.5rem;margin:0 0 .2rem">Merkblatt: Die 4 Fälle</h1><p class="muted" style="margin:0 0 .8rem">Grammatik Trainer · Wortlehre · Niveau '+GT.S.niv+'</p>'+
+  return ''+
    '<h3>Die vier Fälle und ihre Fragen</h3><div class="tw"><table><tr><th>Fall</th><th>Frage</th><th>Rolle</th><th>Beispiel</th></tr>'+
    [['nom','Wer oder was?','Wer macht etwas?','Der Hund bellt.'],['gen','Wessen?','Besitz, Zugehörigkeit','das Halsband des Hundes'],['dat','Wem?','Empfänger','Ich gebe dem Hund Wasser.'],['akk','Wen oder was?','Ziel der Handlung','Ich sehe den Hund.']].map(r=>'<tr><td class="rh f-'+r[0]+'">'+(FK.indexOf(r[0])+1)+'. '+FN[r[0]]+'</td><td><b>'+r[1]+'</b></td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>').join('')+'</table></div>'+
    '<h3 style="margin-top:.9rem">Die Artikel</h3>'+tabInner('best','static')+'<div style="height:.5rem"></div>'+tabInner('unb','static')+

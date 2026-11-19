@@ -46,6 +46,81 @@ M.forEach(m=>{
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg4'],tokens,targets,instr:'Tippe alle Teile des Verbs an.',why:m[2]});
 });
 
+/* Einsetzen: Verb in Klammer in die verlangte Zeitform setzen (selber schreiben). [Satz mit ___, Infinitiv, Zeit, Antwort, Stufe, Hinweis, accept[]] */
+const E=[
+['Gestern ___ wir im Garten. (spielen)','Präteritum','spielten',1,'Stamm spiel- + -ten.'],
+['Er ___ gern Fussball. (spielen)','Präsens','spielt',1,'er spielt.'],
+['Sie ___ gestern einen Kuchen. (backen)','Präteritum','backte',1,'backen – backte (auch: buk).',['buk']],
+['Wir ___ morgen nach Bern. (fahren)','Futur I','werden fahren',1,'werden + Infinitiv.'],
+['Ich ___ gestern lange ___. (schlafen)','Perfekt','habe geschlafen',1,'haben + Partizip II.'],
+['Du ___ heute sehr früh. (aufstehen)','Präsens','stehst auf',2,'Trennbares Verb: du stehst … auf.'],
+['Sie ___ schon nach Hause ___. (gehen)','Perfekt','ist gegangen',2,'gehen bildet das Perfekt mit sein.'],
+['Er ___ das Buch schon ___, bevor der Film begann. (lesen)','Plusquamperfekt','hatte gelesen',2,'hatte + Partizip II.'],
+['Gestern ___ es den ganzen Tag. (regnen)','Präteritum','regnete',1,'Stamm regn- + -ete.'],
+['Wir ___ Pizza. (essen)','Präteritum','assen',2,'essen – ass – gegessen.'],
+['Nächstes Jahr ___ ich in die Lehre. (gehen)','Futur I','werde gehen',2,'werden + Infinitiv.'],
+['Sie ___ ein Lied. (singen)','Perfekt','hat gesungen',2,'singen – sang – gesungen.'],
+['Als ich ankam, ___ der Zug schon ___. (abfahren)','Plusquamperfekt','war abgefahren',3,'war + Partizip II: Der Zug fuhr früher ab.'],
+['Nachdem sie gegessen ___, gingen sie hinaus. (haben)','Plusquamperfekt','hatten',3,'Nachdem sie gegessen hatten …: Plusquamperfekt von essen.'],
+['Er ___ mir gestern den Weg. (zeigen)','Präteritum','zeigte',1,'Stamm zeig- + -te.'],
+['Ihr ___ das Spiel gewonnen. (haben)','Perfekt','habt',1,'Hilfsverb haben: ihr habt gewonnen.'],
+['Der Hund ___ im Garten. (bellen)','Präteritum','bellte',1,'Stamm bell- + -te.'],
+['Sie ___ gestern spät nach Hause. (kommen)','Präteritum','kam',1,'kommen – kam – gekommen.']
+];
+E.forEach(e=>{
+  // Sätze mit zwei Lücken: Antwort ist beide Wörter, wir zeigen eine Lücke
+  const sent=e[0].replace(/\((.+?)\)/,'<i class="muted">($1)</i>').replace(/___/g,'<span class="gap">_____</span>');
+  const ev=e[0].match(/___/g).length;
+  let ans=e[2],pr=e[1];
+  task.push({typ:'einsetzen',stufe:e[3],lv:e[3]===3?2:1,cats:['sg2'],input:true,accept:e[5]||[],prompt:'Setze das Verb in die Zeitform <b>'+pr+'</b>. '+(ev>1||/ /.test(ans)?'Schreibe alle fehlenden Wörter.':''),sent:sent,answer:ans,why:'<b>'+ans+'.</b> '+e[4]});
+});
+
+/* Umformen: ganzen Satz in andere Zeit schreiben. [Satz, Zielzeit, Lösung, Stufe, Hinweis, accept[]] */
+const U=[
+['Ich spiele Fussball.','Präteritum','Ich spielte Fussball.',1,'spielen: Stamm + -te.'],
+['Sie lacht laut.','Perfekt','Sie hat laut gelacht.',1,'haben + Partizip II.',['Sie hat gelacht laut.']],
+['Wir gehen nach Hause.','Präteritum','Wir gingen nach Hause.',1,'gehen – ging.'],
+['Er kocht Suppe.','Perfekt','Er hat Suppe gekocht.',1,'haben + gekocht.'],
+['Der Hund bellt.','Futur I','Der Hund wird bellen.',1,'werden + Infinitiv.'],
+['Ich lese ein Buch.','Perfekt','Ich habe ein Buch gelesen.',1,'haben + Partizip II.'],
+['Sie fahren nach Zürich.','Perfekt','Sie sind nach Zürich gefahren.',2,'fahren bildet das Perfekt mit sein.'],
+['Er isst einen Apfel.','Präteritum','Er ass einen Apfel.',2,'essen – ass.'],
+['Wir schreiben einen Brief.','Perfekt','Wir haben einen Brief geschrieben.',2,'schreiben – geschrieben.'],
+['Sie kommt zu spät.','Präteritum','Sie kam zu spät.',2,'kommen – kam.'],
+['Ich sehe den Film.','Futur I','Ich werde den Film sehen.',2,'werden + Infinitiv.'],
+['Er steht früh auf.','Präteritum','Er stand früh auf.',3,'Trennbares Verb: stand … auf.'],
+['Sie fährt mit dem Bus.','Plusquamperfekt','Sie war mit dem Bus gefahren.',3,'war + Partizip II.'],
+['Wir spielen draussen.','Plusquamperfekt','Wir hatten draussen gespielt.',3,'hatten + Partizip II.'],
+['Er bringt das Buch zurück.','Perfekt','Er hat das Buch zurückgebracht.',3,'zurückbringen – zurückgebracht.']
+];
+U.forEach(u=>task.push({typ:'umformen',stufe:u[3],lv:u[3]===3?2:1,cats:['sg2'],input:true,accept:u[5]||[],prompt:'Schreibe den Satz im <b>'+u[1]+'</b>.',sent:u[0],answer:u[2],why:'<b>'+u[2]+'</b> '+u[4]}));
+
+/* Zeit wählen: Welche Zeitform passt zur Situation? */
+const ZW=[
+['Du erzählst deiner Kollegin mündlich, was du gestern gemacht hast.',['Perfekt','Präsens','Futur I','Plusquamperfekt'],'Perfekt','Mündlich nehmen wir fürs Vergangene meist das Perfekt.',1],
+['Du schreibst eine Geschichte für den Deutschunterricht.',['Präteritum','Perfekt','Futur I','Präsens'],'Präteritum','In Geschichten steht die Handlung meist im Präteritum.',1],
+['Du sagst, was du am Wochenende vorhast.',['Futur I','Präteritum','Plusquamperfekt','Perfekt'],'Futur I','Zukünftiges: werden + Infinitiv. (Oft reicht auch das Präsens mit «morgen».)',1],
+['Du beschreibst, was gerade passiert.',['Präsens','Perfekt','Präteritum','Futur I'],'Präsens','Das Präsens beschreibt die Gegenwart.',1],
+['Etwas ist <b>vor</b> einem anderen Geschehen in der Vergangenheit passiert. Welche Zeitform zeigt das?',['Plusquamperfekt','Präsens','Futur I','Präteritum'],'Plusquamperfekt','«Nachdem er gegessen hatte, ging er.»',2],
+['Ein Bericht über einen Unfall in der Zeitung (schriftlich, Vergangenheit).',['Präteritum','Futur I','Präsens','Plusquamperfekt'],'Präteritum','Schriftliche Berichte über Vergangenes: meist Präteritum.',2],
+['Du schreibst eine Nachricht an eine Freundin: «Ich ___ gestern im Kino.»',['war','bin','werde sein','wäre'],'war','Hilfsverb sein im Präteritum: ich war. (Auch möglich: ich bin gewesen.)',2],
+['Welche Zeitform passt am besten? «Morgen ___ ich meine Grosseltern.»',['besuche','besuchte','habe besucht','hatte besucht'],'besuche','Das Präsens mit «morgen» drückt die Zukunft aus.',3]
+];
+ZW.forEach(z=>task.push({typ:'zeitwahl',stufe:z[4],lv:z[4]===3?2:1,cats:['sg2'],prompt:z[0],opts:z[1],answer:z[2],why:'<b>'+z[2]+'.</b> '+z[3]}));
+
+/* Verben im Text erkennen */
+const TX=[
+['Gestern *ging Lena in die Stadt. Sie *kaufte ein Geschenk und *traf eine Freundin.',1,'Drei Verben: ging, kaufte, traf.'],
+['Der Hund *rennt durch den Garten und *bellt laut. Die Kinder *lachen.',1,'Drei Verben: rennt, bellt, lachen.'],
+['Wir *haben gestern Fussball *gespielt und *sind danach nach Hause *gegangen.',2,'haben + gespielt, sind + gegangen: je zwei Teile.'],
+['Am Morgen *steht Tim früh *auf. Er *isst Brot und *trinkt Tee.',2,'steht … auf, isst, trinkt.'],
+['Sie *will heute Abend ins Kino *gehen, weil sie den Film *sehen *möchte.',3,'will + gehen, sehen + möchte.']
+];
+TX.forEach(m=>{
+  const raw=m[0].split(' '),tokens=raw.map(w=>w.replace(/^\*/,'')),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
+  task.push({typ:'text',stufe:m[1],lv:m[1]===3?2:1,cats:['sg4'],tokens,targets,instr:'Tippe alle Verben im Text an.',why:m[2]});
+});
+
 /* Wissen */
 const W=[
 ['Wie heisst die Grundform des Verbs (zum Beispiel «lachen») in der Fachsprache?',['Infinitiv (Rohform)','Partizip II','Imperativ','Präteritum'],'Infinitiv (Rohform)','Die Grundform endet meist auf -en: lachen, gehen, sein.','sg4',1],
@@ -128,10 +203,14 @@ const merk=()=>T(['Zeitform','Beispiel','Bildung'],[['Präsens','er lacht','Stam
 GT.chapter({id:'verb',teil:'wort',nr:4,title:'Verb',big:'Er lacht. Er lachte. Er hat gelacht.',desc:'Formen, Zeitformen und Befehlsform',
  ex:'«Er '+mk('verb','lacht')+'. Er '+mk('verb','lachte')+'. Er '+mk('verb','hat gelacht')+'.»',
  goals:['Ich erkenne Verben mit der Konjugationsprobe.','Ich kenne die Grundform (Rohform) und bilde die Personalformen.','Ich kenne die Zeitformen Präsens, Präteritum, Perfekt, Plusquamperfekt und Futur I und erkenne sie im Satz.','Ich bilde Stammformen und das Partizip II.','Ich bilde die Befehlsform (Imperativ).'],
- cats:C,catTitle:'Welche Themen?',catWord:'Thema',
+  write:['person','stamm','zeitwahl'], cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{zeit:{label:'Zeitform bestimmen',short:'Zeitform im Satz',instr:'In welcher Zeitform steht das markierte Verb?',hint:'Achte auf die Bildung: -te? haben/sein + Partizip? hatte/war + Partizip? werden + Infinitiv?',ref:'zeiten'},
-  person:{label:'Personalform',short:'Verb richtig konjugieren',instr:'Welche Form passt in die Lücke?',hint:'Welche Person? Denke an die Endungen -e, -st, -t, -en, -t, -en.',ref:'formen'},
-  stamm:{label:'Stammformen',short:'Präteritum und Partizip II',instr:'Wähle die richtige Form.',hint:'Regelmässig: -te und ge-…-t. Unregelmässig: Ablaut und ge-…-en.',ref:'bildung'},
+  person:{winstr:'Schreibe die passende Form des Verbs.',label:'Personalform',short:'Verb richtig konjugieren',instr:'Welche Form passt in die Lücke?',hint:'Welche Person? Denke an die Endungen -e, -st, -t, -en, -t, -en.',ref:'formen'},
+  stamm:{winstr:'Schreibe die richtige Form.',label:'Stammformen',short:'Präteritum und Partizip II',instr:'Wähle die richtige Form.',hint:'Regelmässig: -te und ge-…-t. Unregelmässig: Ablaut und ge-…-en.',ref:'bildung'},
+  einsetzen:{icon:'✏️',label:'Einsetzen',short:'Verb in die verlangte Zeitform schreiben',instr:'Schreibe die Verbform.',hint:'Welche Zeitform? Zuerst Hilfsverb oder Stammform überlegen.',ref:'zeiten'},
+  umformen:{icon:'🔁',label:'Umformen',short:'Satz in eine andere Zeitform schreiben',instr:'Schreibe den ganzen Satz in der verlangten Zeitform.',hint:'Setze nur das Verb um. Achte auf haben/sein und das Partizip II.',ref:'zeiten'},
+  zeitwahl:{icon:'🕒',label:'Zeit wählen',short:'Welche Zeitform passt zur Situation?',instr:'Welche Zeitform passt?',hint:'Mündlich oder schriftlich? Vorher, jetzt oder später?',ref:'zeiten'},
+  text:{icon:'🔍',label:'Verben im Text',short:'Alle Verben in einem Text finden',instr:'Tippe alle Verben im Text an.',hint:'Konjugationsprobe: Kann ich das Wort nach der Person verändern?',ref:'merkmale'},
   markieren:{label:'Verbteile markieren',short:'Alle Teile des Verbs finden',instr:'Tippe alle Teile des Verbs an.',hint:'Suche Hilfsverb, Modalverb, Partizip, Infinitiv und abgetrennte Vorsilbe.',ref:'zeiten'},
   wissen:{label:'Wissen',short:'Zeitformen, Verbarten, Befehlsform',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'zeiten'}},
  sections:SECS,tasks:task,exercises:EX,merk});
