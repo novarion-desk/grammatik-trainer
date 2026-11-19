@@ -197,6 +197,18 @@ dialog::backdrop{background:rgba(15,23,42,.5)}
 .try{margin:1rem 0;padding:1rem 1.1rem;border:1.5px dashed #a5b4fc;border-radius:var(--radius);background:var(--primary-l)}
 .try .sbox{background:#fff}
 .resetbar{margin-top:1.6rem;padding-top:1rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:flex-end;font-size:.9rem;color:var(--muted)}
+.hero2{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:1.25rem;padding:1.2rem 1.4rem;margin-bottom:1rem}
+.htitle{display:inline-flex;align-items:center;gap:.7rem;background:#2563eb;color:#fff;border-radius:1rem;padding:.5rem 1.2rem .5rem .6rem;font-size:1.7rem;font-weight:700;letter-spacing:-.01em}
+.htitle svg{width:40px;height:40px;flex:none}.hero2 p{margin:.5rem 0 0;color:var(--muted);font-size:1.02rem}
+.hero2 .hr{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}.hero2 .auth{display:flex;gap:.4rem;align-items:center;min-height:44px}
+.cont{display:flex;gap:.9rem;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:1rem;padding:.8rem 1.1rem;margin-bottom:1.2rem}
+.cont .ci{font-size:1.8rem}.cont .cb{flex:1}.cont b{font-size:1.05rem}
+.tbar{height:6px;background:var(--line);border-radius:6px;margin-top:.35rem;width:100%}.tbar i{display:block;height:100%;border-radius:6px}.tbar.big{height:8px}
+.tile.act,.tile.off{border-left:7px solid var(--tc,#4f46e5)}.tile{align-items:center;border-radius:1rem;transition:transform .12s,box-shadow .12s}
+.tile.act:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(30,41,59,.12)}
+.tile::before{display:none}.tile .ti{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.55rem;flex:none}
+.tile{flex-wrap:wrap}.tile .tb{flex:1 1 0;min-width:0}.tile .tbtn{margin-top:.2rem;flex:1 0 100%;flex-wrap:wrap;justify-content:flex-start;padding-left:calc(46px + .9rem)}.tile .tbtn .btn{min-height:44px;padding:0 1rem}.tile .btn.t2{border-color:var(--primary);color:var(--primary)}
+@media (max-width:640px){.tile .tbtn{padding-left:0}}
 .hero{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#eef2ff 0%,#fff 70%);border:1px solid #c7d2fe;border-radius:1.25rem;padding:1.6rem 1.6rem;margin-bottom:1.6rem;box-shadow:var(--shadow)}
 .hero h1{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;color:#312e81}
 .hero p{margin:.3rem 0 0;color:var(--muted);font-size:1.05rem}
@@ -308,7 +320,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 const GT=window.GT={chapters:{},
  WORT:[['Wortarten','wortarten','Nomen, Verb, Adjektiv, Pronomen und Partikel erkennen'],['Nomen','nomen','Wörter für Lebewesen, Dinge und Gedanken'],['Die 4 Fälle','faelle','Nominativ, Genitiv, Dativ und Akkusativ bestimmen'],['Verb','verb','Formen, Zeitformen und Modi'],['Adjektiv','adjektiv','Eigenschaften beschreiben und steigern'],['Pronomen','pronomen','Stellvertreter und Begleiter, auch Artikel'],['Partikel','partikel','Adverb, Konjunktion und Präposition']],
  SATZ:[['Wortlehre und Satzlehre','wl-sl','Wörter und Sätze untersuchen'],['Verbale Teile und Rohform','verbale','Verben im Satz erkennen'],['Verschiebeprobe','verschiebe','Satzglieder durch Umstellen finden'],['Satzarten','satzarten','Sätze nach ihrer Aufgabe unterscheiden'],['Hauptsatz und Nebensatz','hs-ns','Satzgefüge und Nebensatzarten'],['Kommasetzung','komma','Kommaregeln anwenden']],
- register(c){c.catWord=c.catWord||'Fall';this.chapters[c.id]=c;if(GT.autoW)GT.autoW(c);},
+ register(c){c.catWord=c.catWord||'Fall';this.chapters[c.id]=c;if(c.TYPES)Object.keys(c.TYPES).forEach(k=>{if(!c.TYPES[k].icon&&ICONS[k])c.TYPES[k].icon=ICONS[k];});if(GT.autoW)GT.autoW(c);},
  mk:(k,t)=>'<mark class="w f-'+k+'">'+t+'</mark>',
  cap:s=>s.charAt(0).toUpperCase()+s.slice(1),
  shuffle:a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}};
@@ -323,12 +335,12 @@ const catTag=k=>'<span class="tag f-'+k+'">'+CN()[k]+'</span>';
 function setCh(t,v){if(t)S.teil=t;if(v&&v!==S.ch){S.ch=v;S.cfg.types=null;S.cfg.cats=null;}}
 const PK='gt-progress';
 function loadP(){try{return JSON.parse(localStorage.getItem(PK))||{};}catch(e){return {};}}
-function saveP(ok){try{const P=loadP(),c=P[S.ch]||{a:0,r:0};c.a++;if(ok)c.r++;P[S.ch]=c;localStorage.setItem(PK,JSON.stringify(P));}catch(e){}}
+function saveP(ok){try{const P=loadP(),c=P[S.ch]||{a:0,r:0};c.a++;if(ok)c.r++;P[S.ch]=c;localStorage.setItem(PK,JSON.stringify(P));localStorage.setItem('gt-last',S.ch);}catch(e){}}
 const $app=document.getElementById('app'),$head=document.getElementById('head');
 
 const isW=t=>!!(t.input||(t.w&&t.opts&&S.cfg.mode==='write'));
 const normA=(x,strict)=>{x=String(x||'').trim().replace(/[\u2018\u2019]/g,"'").replace(/\s+/g,' ').replace(/[.!?]+$/,'').replace(/ß/g,'ss');return strict?x:x.toLowerCase();};
-function autoW(c){c.TASKS.forEach(t=>{if(t.w===undefined&&t.opts&&(c.writeTypes||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a)&&(/class="gap"/.test(t.sent||'')||/^Wie lautet/.test(t.prompt||''));}if(c.strictTypes&&c.strictTypes.includes(t.typ))t.strict=true;});}
+function autoW(c){c.TASKS.forEach(t=>{if(t.w===undefined&&t.opts&&(c.writeAny||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a);}if(t.w===undefined&&t.opts&&(c.writeTypes||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a)&&(/class="gap"/.test(t.sent||'')||/^Wie lautet/.test(t.prompt||''));}if(c.strictTypes&&c.strictTypes.includes(t.typ))t.strict=true;});}
 GT.autoW=autoW;
 function visibleTasks(){return C().TASKS.filter(t=>t.lv<=lv());}
 function typesAvailable(){return Object.keys(TY()).filter(k=>visibleTasks().some(t=>t.typ===k));}
@@ -348,24 +360,31 @@ function crumb(){
   return m[S.screen];
 }
 function renderHead(){
+  $head.hidden=(S.screen==='start');if(S.screen==='start'){$head.innerHTML='';return;}
   $head.innerHTML='<button class="brand" data-a="home" aria-label="Zur Startseite"><div class="logo"><svg class="logosvg" viewBox="0 0 120 120" width="38" height="38" aria-hidden="true"><rect width="120" height="120" rx="28" fill="#4f46e5"/><path d="M60 30C46 22 28 22 12 28V84C28 78 46 78 60 86Z" fill="#fff"/><path d="M60 30C74 22 92 22 108 28V84C92 78 74 78 60 86Z" fill="#e0e7ff"/><rect x="22" y="40" width="28" height="6" rx="3" fill="#2563eb"/><rect x="22" y="52" width="22" height="6" rx="3" fill="#d97706"/><rect x="22" y="64" width="26" height="6" rx="3" fill="#16a34a"/><rect x="70" y="40" width="28" height="6" rx="3" fill="#7c3aed"/><rect x="70" y="52" width="22" height="6" rx="3" fill="#2563eb"/><rect x="70" y="64" width="26" height="6" rx="3" fill="#d97706"/></svg></div><div><b>Grammatik Trainer</b><span>Wortlehre und Satzlehre</span></div></button>'+
    (S.screen!=='start'?'<button class="btn sm" data-a="back">‹ Zurück</button>':'')+'<div class="crumb">'+crumb()+'</div>'+
    '<span class="lblniv">Niveau</span><div class="seg" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div>'+authBtns();
 }
 function screenStart(){
   const D={A:'Alles, auch die Erweiterungen',B:'Kern und einige Erweiterungen',C:'Der Kern: Grundlagen und Proben'},P=loadP();
+  const EM={wortarten:['🌈','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff']};
   const tile=(key,c,i)=>{
-    const ch=GT.chapters[c[1]];
-    if(!ch)return '<div class="tile off"><span class="n">'+(i+1)+'</span><div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span></div><span class="pill gray">Folgt</span></div>';
+    const ch=GT.chapters[c[1]],em=EM[c[1]]||['📘','#4f46e5','#e0e7ff'];
+    const ico='<div class="ti" style="background:'+em[2]+'">'+em[0]+'</div>';
+    if(!ch)return '<div class="tile off" style="--tc:'+em[1]+'">'+ico+'<div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span></div><span class="pill gray">Folgt</span></div>';
     const p=P[c[1]],pct=p&&p.a?Math.round(p.r/p.a*100):0;
-    return '<div class="tile act"><span class="n">'+(i+1)+'</span><div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span>'+
-     (p&&p.a?'<div class="tp"><div class="bar"><i style="width:'+pct+'%"></i></div><span>'+p.r+' von '+p.a+' richtig ('+pct+' %)</span></div>':'')+
-     '<div class="tbtn">'+(teacherAccess()?'<button class="btn" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'" style="border-color:var(--primary);color:var(--primary)">Folien</button><button class="btn" data-a="sheet" data-t="'+key+'" data-v="'+c[1]+'" style="border-color:var(--primary);color:var(--primary)">Blatt</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div></div>';
+    return '<div class="tile act" style="--tc:'+em[1]+'">'+ico+'<div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span>'+
+     (p&&p.a?'<div class="tbar" title="Auf diesem Gerät gespeichert"><i style="width:'+pct+'%;background:'+em[1]+'"></i></div>':'')+'</div>'+
+     '<div class="tbtn">'+(teacherAccess()?'<button class="btn t2" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'">Folien</button><button class="btn t2" data-a="sheet" data-t="'+key+'" data-v="'+c[1]+'">Blatt</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div>';
   };
   const col=(key,title,sub,L)=>'<section><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>tile(key,c,i)).join('')+'</div></section>';
-  return '<div class="hero"><div><h1>Grammatik Trainer</h1><p>Theorie lesen, Aufgaben lösen, Fehler gezielt wiederholen.</p></div>'+
-   '<div class="heroniv"><span class="lblniv">Dein Niveau</span><div class="seg big" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div><span class="nd">'+D[S.niv]+'</span></div></div>'+
-   '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
+  let last=null;try{last=localStorage.getItem('gt-last');}catch(e){}
+  const lc=last&&GT.chapters[last]&&P[last]&&P[last].a?GT.chapters[last]:null;
+  const lp=lc?Math.round(P[last].r/P[last].a*100):0;
+  const cont=lc?'<div class="cont"><div class="ci">🚀</div><div class="cb"><b>Weiter mit '+lc.title+'</b><div class="tbar big"><i style="width:'+lp+'%;background:var(--primary)"></i></div></div><button class="btn primary" data-a="config" data-t="'+lc.teil+'" data-v="'+last+'">Weiter →</button></div>':'';
+  return '<div class="hero2"><div class="hleft"><div class="htitle">'+LOGOSM+'Grammatik Trainer</div><p>Wörter knacken. Sätze bauen. Fehler finden.</p></div>'+
+   '<div class="hr"><div class="heroniv"><span class="lblniv">Dein Niveau</span><div class="seg big" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div><span class="nd">'+D[S.niv]+'</span></div><div class="auth">'+authBtns()+'</div></div></div>'+cont+
+   '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','🔤 Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','🧩 Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
    (Object.keys(P).length?'<div class="resetbar">'+(S.resetAsk?'<span>Wirklich den ganzen Fortschritt auf diesem Gerät löschen?</span> <button class="btn sm" data-a="resetyes" style="border-color:var(--bad);color:var(--bad)">Ja, löschen</button> <button class="btn sm" data-a="resetno">Abbrechen</button>':'<button class="btn sm" data-a="resetask">Fortschritt zurücksetzen</button>')+'</div>':'');
 }
 function screenLernen(){
@@ -845,11 +864,12 @@ document.addEventListener('submit',async e=>{
 GT.tryW=t=>'<div class="try" data-w="try" data-types="'+t+'"></div>';
 GT.reveal=(label,inner)=>'<div><button class="btn sm" data-a="rev" data-l="'+label+'">'+label+'</button><div class="sol" hidden>'+inner+'</div></div>';
 GT.table=(head,rows,cls)=>'<div class="tw"><table class="'+(cls||'')+'"><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>';
+const ICONS={bestimmen:'🏷️',zuordnen:'🧲',anmalen:'🎨',einsetzen:'✏️',umformen:'🔁',frage:'❓',ersatz:'🔄',artikel:'📰',mehrzahl:'➕',gross:'🔠',komp:'⬆️',stufe:'📶',endung:'✍️',erkennen:'👀',wort:'🧱',personal:'🙋',possessiv:'🏠',praep:'📍',konj:'🔗',adverb:'💨',art:'🧩',rohform:'🔧',zaehlen:'🔢',glied:'🧱',probe:'🧪',satzart:'💬',zeichen:'❗',teilsatz:'🧩',nsart:'🏷️',gefuege:'🪢',komma:'✂️',ja:'✅',person:'🙋',stamm:'🌱',zeit:'🕒',zeitwahl:'🕒',markieren:'🖍️',text:'🔍',wissen:'💡'};
 GT.chapter=function(d){
   const lvOf=x=>x.lv||1;
   const cats=Object.keys(d.cats);
   const catName=Object.fromEntries(cats.map(k=>[k,d.cats[k]]));
-  const TY={};Object.keys(d.types).forEach(k=>TY[k]=Object.assign({ref:d.sections[0].id,hint:d.hint||''},d.types[k]));
+  const TY={};Object.keys(d.types).forEach(k=>TY[k]=Object.assign({icon:ICONS[k],ref:d.sections[0].id,hint:d.hint||''},d.types[k]));
   let id=1;const TASKS=d.tasks.map(t=>Object.assign({id:id++,lv:t.lv||(t.stufe===3?2:1),cats:t.cats||[cats[0]]},t));
   const sec=s=>()=>'<h2>'+s.title+'</h2>'+(typeof s.html==='function'?s.html():s.html);
   const SEC={ziele:()=>'<div class="card"><h3>Das lernst du hier</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+d.goals.map(g=>'<li>'+g+'</li>').join('')+'</ul></div>'};
@@ -870,7 +890,7 @@ GT.chapter=function(d){
   const PRESETS=[['Alles gemischt','Alle Aufgabentypen',allT]].concat(allT.slice(0,3).map(k=>[d.types[k].label,d.types[k].short||'Nur dieser Typ',[k]]));
   if(d.css){const st=document.createElement('style');st.textContent=d.css;document.head.appendChild(st);}
   GT.register({id:d.id,teil:d.teil,nr:d.nr,title:d.title,desc:d.desc,ex:d.ex,cats,catName,catTitle:d.catTitle||'Welche Themen?',catWord:d.catWord||'Thema',
-    writeTypes:d.write||[],strictTypes:d.strict||[],TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>d.merk(),
+    writeTypes:d.write||[],writeAny:d.writeAny||[],strictTypes:d.strict||[],TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>d.merk(),
     SLIDES,widgets:d.widgets||{},actions:d.actions||{}});
 };
 GT.start=function(){

@@ -82,6 +82,11 @@ M.forEach(m=>{
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg2'],tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe alle Wörter des Subjekts an (Wer oder was?).',why:m[2]});
 });
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["umstellen", 1, "sg1", "Stelle den Satz um. Beginne mit «Gestern».", "Tim spielt gestern Fussball.", "Gestern spielt Tim Fussball.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Gestern spielt Tim Fussball.»"], ["umstellen", 1, "sg1", "Stelle den Satz um. Beginne mit «Im Garten».", "Lena liest ein Buch im Garten.", "Im Garten liest Lena ein Buch.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Im Garten liest Lena ein Buch.»"], ["umstellen", 1, "sg1", "Stelle den Satz um. Beginne mit «Heute».", "Ich esse heute Pizza.", "Heute esse ich Pizza.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Heute esse ich Pizza.»"], ["umstellen", 2, "sg1", "Stelle den Satz um. Beginne mit «Im Sommer».", "Wir fahren im Sommer nach Italien.", "Im Sommer fahren wir nach Italien.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Im Sommer fahren wir nach Italien.»"], ["umstellen", 2, "sg1", "Stelle den Satz um. Beginne mit «Am Montag».", "Die Schüler schreiben am Montag einen Test.", "Am Montag schreiben die Schüler einen Test.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Am Montag schreiben die Schüler einen Test.»"], ["umstellen", 2, "sg1", "Stelle den Satz um. Beginne mit «Seit einer Stunde».", "Sie wartet seit einer Stunde auf den Bus.", "Seit einer Stunde wartet sie auf den Bus.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Seit einer Stunde wartet sie auf den Bus.»"], ["umstellen", 3, "sg1", "Stelle den Satz um. Beginne mit «Gestern».", "Er hat gestern seinen Freund besucht.", "Gestern hat er seinen Freund besucht.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Gestern hat er seinen Freund besucht.»"], ["umstellen", 3, "sg1", "Stelle den Satz um. Beginne mit «Nach der Schule».", "Wir gehen nach der Schule ins Kino.", "Nach der Schule gehen wir ins Kino.", [], false, "Das Prädikat bleibt an zweiter Stelle: «Nach der Schule gehen wir ins Kino.»"]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'probe',title:'Die Verschiebeprobe',short:'Verschiebeprobe',min:10,note:'Beispielsatz mit Kärtchen an der Wandtafel umstellen. Die Personalform bleibt immer an zweiter Stelle (Aussagesatz).',
  html:()=>'<p class="lead">Mit der <b>Verschiebeprobe</b> findest du die Satzglieder: Was beim Umstellen zusammenbleibt, ist <b>ein</b> Satzglied.</p>'+
@@ -128,6 +133,7 @@ GT.chapter({id:'verschiebe',teil:'satz',nr:3,title:'Verschiebeprobe und Satzglie
  types:{glied:{label:'Satzglied bestimmen',short:'Subjekt, Prädikat, Objekt, Adverbiale',instr:'Welches Satzglied ist markiert?',hint:'Stelle die passende Frage: Wer? Was tut? Wen? Wem? Wo? Wann?',ref:'subjekt'},
   frage:{label:'Fragen zu den Satzgliedern',short:'Welche Frage passt?',instr:'Wähle die richtige Frage.',hint:'Schau in der Theorie nach.',ref:'objekte'},
   probe:{label:'Verschiebeprobe',short:'Umstellen und Zählen',instr:'Wähle die richtige Antwort.',hint:'Was beim Umstellen zusammenbleibt, ist ein Satzglied.',ref:'probe'},
+  umstellen:{icon:'🔀',label:'Satz umstellen',short:'Mit einem anderen Satzglied beginnen',instr:'Schreibe den umgestellten Satz.',hint:'Das Prädikat bleibt immer an zweiter Stelle.',ref:'probe'},
   markieren:{label:'Subjekt markieren',short:'Wer oder was?',instr:'Tippe alle Wörter des Subjekts an.',hint:'Frage: Wer oder was tut etwas?',ref:'subjekt'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

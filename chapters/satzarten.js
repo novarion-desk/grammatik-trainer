@@ -63,6 +63,11 @@ const W=[
 ];
 W.forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["umformen", 1, "sg3", "Forme den Aussagesatz in einen Fragesatz um.", "Tim kommt morgen.", "Kommt Tim morgen?", [], false, "So wird daraus ein Fragesatz: «Kommt Tim morgen?»"], ["umformen", 1, "sg3", "Forme den Aussagesatz in einen Fragesatz um.", "Du hilfst mir.", "Hilfst du mir?", [], false, "So wird daraus ein Fragesatz: «Hilfst du mir?»"], ["umformen", 1, "sg3", "Forme den Aussagesatz in einen Fragesatz um.", "Sie spielt Klavier.", "Spielt sie Klavier?", [], false, "So wird daraus ein Fragesatz: «Spielt sie Klavier?»"], ["umformen", 1, "sg3", "Forme den Aussagesatz in einen Fragesatz um.", "Ihr habt Hunger.", "Habt ihr Hunger?", [], false, "So wird daraus ein Fragesatz: «Habt ihr Hunger?»"], ["umformen", 2, "sg3", "Forme den Aussagesatz in einen Fragesatz um.", "Wir gehen ins Kino.", "Gehen wir ins Kino?", [], false, "So wird daraus ein Fragesatz: «Gehen wir ins Kino?»"], ["umformen", 2, "sg3", "Forme den Aussagesatz in einen Aufforderungssatz um.", "Du räumst dein Zimmer auf.", "Räum dein Zimmer auf!", ["Räume dein Zimmer auf!"], false, "So wird daraus ein Aufforderungssatz: «Räum dein Zimmer auf!»"], ["umformen", 2, "sg3", "Forme den Aussagesatz in einen Aufforderungssatz um.", "Du machst die Hausaufgaben.", "Mach die Hausaufgaben!", ["Mache die Hausaufgaben!"], false, "So wird daraus ein Aufforderungssatz: «Mach die Hausaufgaben!»"], ["umformen", 3, "sg3", "Forme den Aussagesatz in einen Aufforderungssatz um.", "Du bist leise.", "Sei leise!", [], false, "So wird daraus ein Aufforderungssatz: «Sei leise!»"]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'arten',title:'Die vier Satzarten',short:'Satzarten',min:10,note:'Satzzeichen immer mitnennen. Die Satzart bestimmt Verbstellung und Satzzeichen.',
  html:()=>T(['Satzart','Aufgabe','Satzzeichen','Beispiel'],[['Aussagesatz','etwas mitteilen','.','Der Hund bellt.'],['Fragesatz','etwas fragen','?','Kommst du mit?'],['Aufforderungssatz','etwas verlangen','! oder .','Komm her!'],['Ausrufesatz','ein Gefühl ausdrücken','!','Wie schön das ist!']])},
@@ -100,6 +105,7 @@ GT.chapter({id:'satzarten',teil:'satz',nr:4,title:'Satzarten',big:'Aussage, Frag
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{satzart:{label:'Satzart bestimmen',short:'Aussage, Frage, Aufforderung, Ausruf',instr:'Welche Satzart ist es?',hint:'Was will der Satz? Mitteilen, fragen, auffordern oder ein Gefühl zeigen?',ref:'arten'},
   zeichen:{label:'Satzzeichen',short:'. ? !',instr:'Welches Satzzeichen passt?',hint:'Satzart bestimmen, dann das passende Zeichen wählen.',ref:'arten'},
+  umformen:{icon:'🔁',label:'Sätze umformen',short:'Aussagen zu Fragen und Aufforderungen machen',instr:'Schreibe den umgeformten Satz.',hint:'Frage: Das Prädikat steht an erster Stelle. Aufforderung: ohne «du».',ref:'umformen'},
   wissen:{label:'Wissen und Umformen',short:'Fragen und Aufforderungen bilden',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'umformen'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

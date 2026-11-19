@@ -43,6 +43,11 @@ const Z=[
 ];
 Z.forEach(z=>task.push({typ:'wort',stufe:z[4],lv:1,cats:['sg2'],prompt:z[0],opts:z[1].filter(x=>x!=='–'),answer:z[2],why:z[3]}));
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Der Hund bellt.", "2", [], false, "Der Hund | bellt."], ["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Lena lacht.", "2", [], false, "Lena | lacht."], ["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Tim liest ein Buch.", "3", [], false, "Tim | liest | ein Buch."], ["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Die Katze schläft auf dem Sofa.", "3", [], false, "Die Katze | schläft | auf dem Sofa."], ["zaehlen", 2, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Am Morgen isst Lena ein Brot.", "4", [], false, "Am Morgen | isst | Lena | ein Brot."], ["zaehlen", 2, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Gestern habe ich meinen Freund besucht.", "4", [], false, "Gestern | habe besucht | ich | meinen Freund. «habe besucht» ist ein Satzglied."], ["zaehlen", 3, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Im Sommer fahren wir mit dem Zug nach Italien.", "5", [], false, "Im Sommer | fahren | wir | mit dem Zug | nach Italien."], ["zaehlen", 3, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Nach der Schule spielt Tim mit seinen Freunden Fussball.", "5", [], false, "Nach der Schule | spielt | Tim | mit seinen Freunden | Fussball."]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'unterschied',title:'Wortlehre und Satzlehre',short:'Unterschied',min:8,note:'Zwei Blickwinkel auf denselben Satz: Wortlehre = einzelne Wörter, Satzlehre = Wortgruppen und ihre Aufgabe. Beispielsatz an die Wandtafel und zweimal bestimmen.',
  html:()=>'<div class="grid2"><div class="card"><h3>Wortlehre</h3><p>Wir untersuchen <b>einzelne Wörter</b>: Was für ein Wort ist das?</p><p>Der kleine Hund bellt laut.</p><p>Artikel · Adjektiv · Nomen · Verb · Adverb</p></div>'+
@@ -76,7 +81,9 @@ GT.chapter({id:'wl-sl',teil:'satz',nr:1,title:'Wortlehre und Satzlehre',big:'Wö
  ex:'«[Der kleine Hund] ['+mk('verb','bellt')+'] [laut].»',
  goals:['Ich unterscheide Wortlehre und Satzlehre.','Ich erkenne, wann eine Wortgruppe ein Satz ist.','Ich zähle Wörter und Satzglieder.'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
- types:{wissen:{label:'Wissen',short:'Wortlehre oder Satzlehre',instr:'Wähle die richtige Antwort.',hint:'Wortart = Was ist das Wort? Satzglied = Welche Aufgabe hat es?',ref:'unterschied'},
+ types:{
+  zaehlen:{icon:'🔢',label:'Satzglieder zählen',short:'Wie viele Satzglieder hat der Satz?',instr:'Schreibe die Zahl.',hint:'Mache die Verschiebeprobe: Was lässt sich zusammen verschieben?',ref:'glieder'},
+wissen:{label:'Wissen',short:'Wortlehre oder Satzlehre',instr:'Wähle die richtige Antwort.',hint:'Wortart = Was ist das Wort? Satzglied = Welche Aufgabe hat es?',ref:'unterschied'},
   wort:{label:'Wortart bestimmen',short:'Einzelne Wörter bestimmen',instr:'Tippe das richtige Wort an.',hint:'Wortarten: Nomen, Verb, Adjektiv, Pronomen, Partikel.',ref:'unterschied'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

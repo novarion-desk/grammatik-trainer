@@ -142,6 +142,11 @@ const W=[
 ];
 W.forEach(w=>task.push({typ:'wissen',stufe:w[5]===3?3:(w[5]),lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["befehl", 2, "sg4", "Schreibe die Befehlsform (du).", "lesen → ___!", "Lies", [], false, "Befehlsform von «lesen»."], ["befehl", 2, "sg4", "Schreibe die Befehlsform (du).", "fahren → ___!", "Fahr", ["Fahre"], false, "Befehlsform von «fahren»."], ["befehl", 2, "sg4", "Schreibe die Befehlsform (du).", "geben → ___!", "Gib", [], false, "Befehlsform von «geben»."], ["befehl", 2, "sg4", "Schreibe die Befehlsform (du).", "nehmen → ___!", "Nimm", [], false, "Befehlsform von «nehmen»."], ["befehl", 2, "sg4", "Schreibe die Befehlsform (du).", "sehen → ___!", "Sieh", [], false, "Befehlsform von «sehen»."], ["befehl", 2, "sg4", "Schreibe die Befehlsform (du).", "essen → ___!", "Iss", [], false, "Befehlsform von «essen»."], ["befehl", 1, "sg4", "Schreibe die Befehlsform (du).", "laufen → ___!", "Lauf", ["Laufe"], false, "Befehlsform von «laufen»."], ["befehl", 1, "sg4", "Schreibe die Befehlsform (du).", "spielen → ___!", "Spiel", ["Spiele"], false, "Befehlsform von «spielen»."]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 /* ---------- Theorie ---------- */
 const SECS=[
 {id:'merkmale',title:'Was ist ein Verb?',short:'Merkmale',min:6,note:'Verben nicht nur als Tätigkeiten: regnen, sein, schlafen. Konjugationsprobe wiederholen.',
@@ -211,6 +216,7 @@ GT.chapter({id:'verb',teil:'wort',nr:4,title:'Verb',big:'Er lacht. Er lachte. Er
   umformen:{icon:'🔁',label:'Umformen',short:'Satz in eine andere Zeitform schreiben',instr:'Schreibe den ganzen Satz in der verlangten Zeitform.',hint:'Setze nur das Verb um. Achte auf haben/sein und das Partizip II.',ref:'zeiten'},
   zeitwahl:{icon:'🕒',label:'Zeit wählen',short:'Welche Zeitform passt zur Situation?',instr:'Welche Zeitform passt?',hint:'Mündlich oder schriftlich? Vorher, jetzt oder später?',ref:'zeiten'},
   text:{icon:'🔍',label:'Verben im Text',short:'Alle Verben in einem Text finden',instr:'Tippe alle Verben im Text an.',hint:'Konjugationsprobe: Kann ich das Wort nach der Person verändern?',ref:'merkmale'},
+  befehl:{icon:'❗',label:'Befehlsform',short:'Aufforderungen mit «du» bilden',instr:'Schreibe die Befehlsform.',hint:'Bei einigen Verben wechselt das e zu i: Lies! Gib!',ref:'modi'},
   markieren:{label:'Verbteile markieren',short:'Alle Teile des Verbs finden',instr:'Tippe alle Teile des Verbs an.',hint:'Suche Hilfsverb, Modalverb, Partizip, Infinitiv und abgetrennte Vorsilbe.',ref:'zeiten'},
   wissen:{label:'Wissen',short:'Zeitformen, Verbarten, Befehlsform',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'zeiten'}},
  sections:SECS,tasks:task,exercises:EX,merk});

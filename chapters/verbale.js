@@ -72,6 +72,11 @@ M.forEach(m=>{
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg2'],tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe alle Teile des Prädikats an.',why:m[2]});
 });
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["praedikat", 1, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Er hat gestern gelacht.", "hat gelacht", [], false, "Zum Prädikat gehören alle Verbteile: «hat gelacht»."], ["praedikat", 1, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Sie steht früh auf.", "steht auf", [], false, "Zum Prädikat gehören alle Verbteile: «steht auf»."], ["praedikat", 1, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Wir haben Pizza gegessen.", "haben gegessen", [], false, "Zum Prädikat gehören alle Verbteile: «haben gegessen»."], ["praedikat", 1, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Tim ist gestern nach Bern gefahren.", "ist gefahren", [], false, "Zum Prädikat gehören alle Verbteile: «ist gefahren»."], ["praedikat", 2, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Sie ruft ihre Freundin an.", "ruft an", [], false, "Zum Prädikat gehören alle Verbteile: «ruft an»."], ["praedikat", 2, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Er kann gut singen.", "kann singen", [], false, "Zum Prädikat gehören alle Verbteile: «kann singen»."], ["praedikat", 2, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Ich will heute Fussball spielen.", "will spielen", [], false, "Zum Prädikat gehören alle Verbteile: «will spielen»."], ["praedikat", 3, "sg2", "Schreibe das ganze Prädikat (alle Verbteile).", "Das Kind wird morgen abgeholt.", "wird abgeholt", [], false, "Zum Prädikat gehören alle Verbteile: «wird abgeholt»."]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'rohform',title:'Rohform (Infinitiv)',short:'Rohform',min:8,note:'Rohform = Infinitiv = Grundform. Kevin: Falls im Lehrmittel andere Bezeichnung, hier anpassen. Bildung: Stamm + -en.',
  html:()=>'<p class="lead">Die <b>Rohform</b> (Infinitiv) ist die Grundform des Verbs. So steht es im Wörterbuch.</p>'+T(['Satz','Rohform'],[['Sie lacht.','lachen'],['Er spielte.','spielen'],['Wir sind gegangen.','gehen'],['Er steht früh auf.','aufstehen'],['Du liest.','lesen']])+
@@ -110,6 +115,7 @@ GT.chapter({id:'verbale',teil:'satz',nr:2,title:'Verbale Teile und Rohform',big:
   write:['rohform'], cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{rohform:{winstr:'Schreibe die Rohform.',label:'Rohform bilden',short:'Infinitiv',instr:'Wähle die richtige Rohform.',hint:'Die Rohform endet auf -en. Bei trennbaren Verben zusammenschreiben.',ref:'rohform'},
   zaehlen:{label:'Verbale Teile zählen',short:'Wie viele Teile hat das Prädikat?',instr:'Wähle die richtige Zahl.',hint:'Suche Hilfsverb, Modalverb, Partizip, Rohform und abgetrennte Vorsilbe.',ref:'teile'},
+  praedikat:{icon:'✏️',label:'Prädikat schreiben',short:'Alle Verbteile im Satz notieren',instr:'Schreibe alle Verbteile in der Reihenfolge des Satzes.',hint:'Suche Hilfsverb, Modalverb, Partizip, Infinitiv und abgetrennte Vorsilbe.',ref:'teile'},
   wissen:{label:'Wissen',short:'Prädikat und Satzklammer',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'klammer'},
   markieren:{label:'Prädikat markieren',short:'Alle Verbteile finden',instr:'Tippe alle Teile des Prädikats an.',hint:'Suche alle Verbformen im Satz.',ref:'teile'}},
  sections:SECS,tasks:task,exercises:EX,merk});

@@ -93,6 +93,11 @@ M.forEach(m=>{
   task.push({typ:'markieren',stufe:m[1],lv:1,cats:['sg1'],tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe alle Wörter des Nebensatzes an.',why:m[2]});
 });
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["verbinden", 1, "sg2", "Verbinde die Sätze mit «weil». Setze das Komma.", "Ich bleibe zu Hause. Es regnet.", "Ich bleibe zu Hause, weil es regnet.", [], false, "Nebensatz mit «weil»: Das Verb steht am Schluss."], ["verbinden", 2, "sg2", "Verbinde die Sätze mit «weil». Setze das Komma.", "Er lacht. Er hat einen Witz gehört.", "Er lacht, weil er einen Witz gehört hat.", [], false, "Nebensatz mit «weil»: Das Verb steht am Schluss."], ["verbinden", 1, "sg2", "Verbinde die Sätze mit «wenn». Setze das Komma.", "Wir gehen spazieren. Die Sonne scheint.", "Wir gehen spazieren, wenn die Sonne scheint.", [], false, "Nebensatz mit «wenn»: Das Verb steht am Schluss."], ["verbinden", 2, "sg2", "Verbinde die Sätze mit «weil». Setze das Komma.", "Sie lernt viel. Sie will die Prüfung bestehen.", "Sie lernt viel, weil sie die Prüfung bestehen will.", [], false, "Nebensatz mit «weil»: Das Verb steht am Schluss."], ["verbinden", 2, "sg2", "Verbinde die Sätze mit «dass». Setze das Komma.", "Ich weiss. Du hast recht.", "Ich weiss, dass du recht hast.", [], false, "Nebensatz mit «dass»: Das Verb steht am Schluss."], ["verbinden", 2, "sg2", "Verbinde die Sätze mit «weil». Setze das Komma.", "Tim ist müde. Er hat schlecht geschlafen.", "Tim ist müde, weil er schlecht geschlafen hat.", [], false, "Nebensatz mit «weil»: Das Verb steht am Schluss."], ["verbinden", 3, "sg2", "Verbinde die Sätze mit «sobald». Setze das Komma.", "Ich rufe dich an. Ich bin zu Hause.", "Ich rufe dich an, sobald ich zu Hause bin.", [], false, "Nebensatz mit «sobald»: Das Verb steht am Schluss."], ["verbinden", 1, "sg2", "Verbinde die Sätze mit «weil». Setze das Komma.", "Sie bleibt im Bett. Sie ist krank.", "Sie bleibt im Bett, weil sie krank ist.", [], false, "Nebensatz mit «weil»: Das Verb steht am Schluss."]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'haupt',title:'Hauptsatz und Nebensatz',short:'Haupt- und Nebensatz',min:10,note:'Entscheidend ist die Stellung des Verbs: Hauptsatz = Personalform an Position 2, Nebensatz = Verb am Ende. Nebensatz allein ist kein vollständiger Satz.',
  html:()=>'<div class="grid2"><div class="card"><h3>Hauptsatz</h3><p>Kann <b>allein</b> stehen. Die Personalform steht an <b>zweiter Stelle</b>.</p><p>Ich <b>bleibe</b> zu Hause.</p></div>'+
@@ -135,6 +140,7 @@ GT.chapter({id:'hs-ns',teil:'satz',nr:5,title:'Hauptsatz und Nebensatz',big:'Ich
   konj:{label:'Konjunktionen und Verbstellung',short:'weil, dass, denn …',instr:'Wähle die richtige Antwort.',hint:'Nach weil, dass, obwohl … steht das Verb am Ende.',ref:'stellung'},
   nsart:{label:'Nebensatzart',short:'Grund, Zeit, Zweck …',instr:'Welche Nebensatzart ist markiert?',hint:'Welche Konjunktion? Welche Frage beantwortet der Nebensatz?',ref:'arten'},
   gefuege:{label:'Satzreihe oder Satzgefüge',short:'Satzbau',instr:'Welcher Satzbau liegt vor?',hint:'Hauptsatz + Hauptsatz = Satzreihe. Hauptsatz + Nebensatz = Satzgefüge.',ref:'verbindung'},
+  verbinden:{icon:'🪢',label:'Sätze verbinden',short:'Zwei Sätze zu einem Satzgefüge machen',instr:'Schreibe den neuen Satz mit Komma.',hint:'Die Konjunktion leitet den Nebensatz ein. Das Verb rückt ans Ende.',ref:'verbindung'},
   markieren:{label:'Nebensatz markieren',short:'Nebensatz finden',instr:'Tippe alle Wörter des Nebensatzes an.',hint:'Der Nebensatz beginnt mit einer Konjunktion.',ref:'haupt'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

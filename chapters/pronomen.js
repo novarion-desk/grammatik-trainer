@@ -97,6 +97,11 @@ TX.forEach(m=>{
   task.push({typ:'text',stufe:m[1],lv:m[1]===3?2:1,cats:['sg2'],tokens,targets,instr:'Tippe alle Pronomen im Text an (auch Artikel).',why:m[2]});
 });
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["ersetzen", 1, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Die Katze schläft. → ___ schläft.", "Sie", [], false, "«die Katze» wird durch «sie» ersetzt."], ["ersetzen", 1, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Das Kind lacht. → ___ lacht.", "Es", [], false, "«das Kind» wird durch «es» ersetzt."], ["ersetzen", 1, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Der Hund bellt. → ___ bellt.", "Er", [], false, "«der Hund» wird durch «er» ersetzt."], ["ersetzen", 1, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Tim und Lena spielen. → ___ spielen.", "Sie", [], false, "Mehrzahl: «sie»."], ["ersetzen", 2, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Ich sehe den Hund. → Ich sehe ___.", "ihn", [], false, "Akkusativ männlich: «ihn»."], ["ersetzen", 2, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Ich gebe der Lehrerin das Heft. → Ich gebe ___ das Heft.", "ihr", [], false, "Dativ weiblich: «ihr»."], ["ersetzen", 2, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Das ist Toms Ball. → Das ist ___ Ball.", "sein", [], false, "Possessivpronomen zu «Tom»: «sein»."], ["ersetzen", 2, "sg2", "Ersetze das Nomen durch ein Pronomen.", "Das ist Lenas Rucksack. → Das ist ___ Rucksack.", "ihr", [], false, "Possessivpronomen zu «Lena»: «ihr»."]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'merkmale',title:'Was ist ein Pronomen?',short:'Merkmale',min:6,note:'Pronomen stehen für ein Nomen oder begleiten es. Hier: Artikel gehören in der Schule zu den Pronomen (Artikelwörter). Vorwissen zu Wortarten wiederholen.',
  html:()=>'<div class="grid2"><div class="card"><h3>Pronomen ersetzen oder begleiten</h3><p><b>Anna</b> kommt. → <b>Sie</b> lacht. (ersetzt)</p><p><b>Mein</b> Hund bellt. (begleitet)</p></div>'+
@@ -145,6 +150,7 @@ GT.chapter({id:'pronomen',teil:'wort',nr:6,title:'Pronomen',big:'Er gibt ihr sei
  types:{artikel:{label:'Artikel erkennen',short:'bestimmt oder unbestimmt',instr:'Wähle die richtige Antwort.',hint:'bestimmt: der, die, das · unbestimmt: ein, eine.',ref:'artikel'},
   personal:{winstr:'Schreibe das passende Pronomen.',label:'Personalpronomen',short:'Nomen ersetzen',instr:'Welches Pronomen passt?',hint:'Geschlecht, Zahl und Fall des Nomens beachten. Wen? → Akk. Wem? → Dat.',ref:'personal'},
   possessiv:{winstr:'Schreibe das passende Possessivpronomen.',label:'Possessivpronomen',short:'Wem gehört es?',instr:'Welche Form passt?',hint:'Wer ist der Besitzer? Welches Geschlecht und welchen Fall hat das Nomen?',ref:'possessiv'},
+  ersetzen:{icon:'🔄',label:'Ersetzen',short:'Nomen durch Pronomen ersetzen',instr:'Schreibe das passende Pronomen.',hint:'Welches Wort steht stellvertretend für das Nomen?',ref:'personal'},
   wissen:{label:'Wissen',short:'Pronomenarten',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'weitere'},
   text:{icon:'🔍',label:'Pronomen im Text',short:'Alle Pronomen in einem Text finden',instr:'Tippe alle Pronomen im Text an (auch Artikel).',hint:'Pronomen ersetzen oder begleiten ein Nomen. Artikel gehören auch dazu.',ref:'merkmale'},
   markieren:{label:'Pronomen markieren',short:'Alle Pronomen finden',instr:'Tippe alle Pronomen an.',hint:'Pronomen ersetzen oder begleiten ein Nomen.',ref:'merkmale'}},

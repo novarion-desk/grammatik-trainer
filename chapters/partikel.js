@@ -109,6 +109,11 @@ TX.forEach(m=>{
   task.push({typ:'text',stufe:m[1],lv:m[1]===3?2:1,cats:['sg4'],tokens,targets,instr:'Tippe alle Partikel im Text an.',why:m[2]});
 });
 
+
+/* INPUT-AUFGABEN (selber schreiben) */
+const INP=[["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "oben ↔ ___", "unten", [], false, "Gegenteil des Adverbs «oben»: «unten»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "drinnen ↔ ___", "draussen", [], false, "Gegenteil des Adverbs «drinnen»: «draussen»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "vorne ↔ ___", "hinten", [], false, "Gegenteil des Adverbs «vorne»: «hinten»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "links ↔ ___", "rechts", [], false, "Gegenteil des Adverbs «links»: «rechts»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "hier ↔ ___", "dort", ["da"], false, "Gegenteil des Adverbs «hier»: «dort»."], ["adverbgeg", 2, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "immer ↔ ___", "nie", ["niemals"], false, "Gegenteil des Adverbs «immer»: «nie»."], ["adverbgeg", 2, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "gestern ↔ ___", "morgen", [], false, "Gegenteil des Adverbs «gestern»: «morgen»."], ["adverbgeg", 2, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "vorher ↔ ___", "nachher", ["danach"], false, "Gegenteil des Adverbs «vorher»: «nachher»."]];
+INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'merkmale',title:'Was sind Partikel?',short:'Merkmale',min:6,note:'Partikel = unveränderliche Wörter. Zählprobe: Kann man das Wort verändern (konjugieren, deklinieren, steigern)? Wenn nein: Partikel.',
  html:()=>'<div class="grid2"><div class="card"><h3>Partikel verändern sich nicht</h3><p>Sie haben keine Endungen und keine Zeitformen: <b>und, in, heute, aber, oft</b>.</p></div>'+
@@ -159,6 +164,7 @@ GT.chapter({id:'partikel',teil:'wort',nr:7,title:'Partikel',big:'Und, in, heute,
   adverb:{label:'Adverbien',short:'Wann? Wo? Wie? Warum?',instr:'Wähle die richtige Antwort.',hint:'Stelle die passende Frage.',ref:'adverb'},
   art:{label:'Partikelart bestimmen',short:'Adverb, Präposition oder Konjunktion',instr:'Welche Partikelart ist das markierte Wort?',hint:'Vor einem Nomen: Präposition. Verbindet Sätze: Konjunktion. Beantwortet Wann/Wo/Wie: Adverb.',ref:'merkmale'},
   text:{icon:'🔍',label:'Partikel im Text',short:'Alle Partikel in einem Text finden',instr:'Tippe alle Partikel im Text an.',hint:'Partikel verändern sich nicht.',ref:'merkmale'},
+  adverbgeg:{icon:'↔️',label:'Adverbien: Gegenteile',short:'Adverbien mit gegenteiliger Bedeutung',instr:'Schreibe das Gegenteil.',hint:'Adverbien nennen Ort, Zeit oder Art. Welches Wort passt als Gegensatz?',ref:'adverb'},
   markieren:{label:'Partikel markieren',short:'Alle Partikel finden',instr:'Tippe alle Partikel an.',hint:'Partikel verändern sich nicht.',ref:'merkmale'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

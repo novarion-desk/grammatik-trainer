@@ -347,7 +347,7 @@ const actions={
  uw(b){const w=b.closest('[data-w="uw"]').querySelector('.uw');w.classList.toggle('on');b.textContent=w.classList.contains('on')?'Farben ausblenden':'Fälle einfärben';}
 };
 const glance=()=>'<div class="glance">'+FK.map(k=>'<div class="gl f-'+k+'"><span>'+(FK.indexOf(k)+1)+'. '+FN[k]+'</span><b>'+FQ[k]+'</b></div>').join('')+'</div>';
-GT.register({id:'faelle',teil:'wort',nr:3,title:'Die 4 Fälle',desc:'Nominativ, Genitiv, Dativ und Akkusativ bestimmen',ex:EXF,
+GT.register({id:'faelle',teil:'wort',nr:3,writeAny:['bestimmen','einsetzen'],title:'Die 4 Fälle',desc:'Nominativ, Genitiv, Dativ und Akkusativ bestimmen',ex:EXF,
   cats:FK,catName:FN,catTitle:'Welche Fälle?',TYPES,TASKS,SEC,TOC,PRESETS,REF:[['vier','Die 4 Fälle'],['tabelle','Tabelle'],['proben','Proben']],
   merk,glance,SLIDES,widgets,actions});
 })();

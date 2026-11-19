@@ -105,6 +105,7 @@ const Z=[
 Z.forEach(z=>task.push({typ:'zuordnen',stufe:1,cats:[z[4]],prompt:z[0],opts:z[1],answer:z[2],why:z[3]}));
 
 
+task.forEach(t=>{if(t.typ==='bestimmen'&&t.answer==='Partikel')t.accept=['Adverb','Präposition','Konjunktion'];});
 /* Alle Wortarten im Text bestimmen (anmalen) */
 const AN=[
 [1,"Die|pron Katze|nomen schläft|verb auf|part dem|pron Sofa|nomen."],
@@ -193,7 +194,7 @@ const merk=()=>FAM+'<h3 style="margin-top:.9rem">So bestimmst du die Wortart</h3
 GT.chapter({id:'wortarten',teil:'wort',nr:1,title:'Die fünf Wortarten',big:'Nomen, Verb, Adjektiv, Pronomen, Partikel',desc:'Nomen, Verb, Adjektiv, Pronomen und Partikel erkennen',
  ex:'«'+mk('pron','Die')+' '+mk('adj','kleine')+' '+mk('nomen','Katze')+' '+mk('verb','schläft')+' '+mk('part','dort')+'.»',
  goals:['Ich kenne die fünf Wortarten: Nomen, Verb, Adjektiv, Pronomen und Partikel.','Ich weiss, welche Wortarten sich verändern und welche nicht.','Ich kann Wortarten mit Proben bestimmen (Artikelprobe, Konjugationsprobe, Steigerungsprobe, Ersatzprobe).','Ich kann Wortarten in Sätzen erkennen und bestimmen.'],
- cats:N,catTitle:'Welche Wortarten?',catWord:'Wortart',
+ writeAny:['bestimmen'], cats:N,catTitle:'Welche Wortarten?',catWord:'Wortart',
  types:{bestimmen:{label:'Wortart bestimmen',short:'Wort im Satz bestimmen',instr:'Welche Wortart hat das markierte Wort?',hint:'Mache die Proben: Verändert es sich? Artikel davor? Konjugieren? Steigern? Ersetzt es ein Nomen?',ref:'proben'},
   anmalen:{icon:'🎨',label:'Wortarten im Text',short:'Alle Wortarten in einem Text anmalen',instr:'Wähle eine Wortart und tippe die passenden Wörter an.',hint:'Wende bei jedem Wort die Probe an: Artikelprobe, Konjugationsprobe, Steigerung.',ref:'proben'},
   markieren:{label:'Wörter markieren',short:'Alle Wörter einer Wortart finden',instr:'Tippe die passenden Wörter an.',hint:'Wende bei jedem Wort die passende Probe an.',ref:'proben'},
