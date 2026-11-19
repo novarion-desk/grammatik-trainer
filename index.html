@@ -75,6 +75,7 @@ h2.page{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
 @media (max-width:900px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.grid2,.grid4{grid-template-columns:minmax(0,1fr)}}
 .pill{display:inline-block;font-size:.72rem;font-weight:700;padding:.12rem .55rem;border-radius:6px;background:var(--primary-l);color:var(--primary)}
+.pill.beta{background:#fef3c7;color:#92400e;font-size:.8rem;padding:.2rem .7rem}
 .pill.gray{background:var(--alt);color:var(--muted)}
 .tag{display:inline-block;padding:.05rem .6rem;border-radius:999px;background:var(--b);border:1.5px solid var(--c);color:var(--t);font-weight:700;font-size:.82em;white-space:nowrap}
 mark.w{background:var(--b);color:inherit;box-shadow:inset 0 -3px 0 var(--c);border-radius:.2rem;padding:0 .12em}
@@ -317,7 +318,6 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 <div><label for="lpass">Passwort</label><input id="lpass" type="password" autocomplete="current-password" required></div>
 <div class="lerr" id="lerr" hidden></div>
 <button class="btn primary" id="lbtn" type="submit">Anmelden</button>
-<button class="btn" type="button" data-a="ldemo">Demo ansehen (ohne Anmeldung)</button>
 <button class="btn sm" type="button" data-a="lclose">Schliessen</button></form></dialog>
 <dialog id="settings"><form id="sform" method="dialog" autocomplete="off"><b style="font-size:1.2rem">⚙️ Einstellungen</b>
 <h3>Allgemein</h3>
@@ -395,7 +395,7 @@ function renderHead(){
 }
 function screenStart(){
   const D={A:'Alles, auch die Erweiterungen',B:'Kern und einige Erweiterungen',C:'Der Kern: Grundlagen und Proben'},P=loadP();
-  const EM={wortarten:['🌈','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff']};
+  const EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff']};
   const tile=(key,c,i)=>{
     const ch=GT.chapters[c[1]],em=EM[c[1]]||['📘','#4f46e5','#e0e7ff'];
     const ico='<div class="ti" style="background:'+em[2]+'">'+em[0]+'</div>';
@@ -799,7 +799,7 @@ document.addEventListener('click',e=>{
    case 'back':S.screen=BACK[S.screen]||'start';render();break;
    case 'niv':S.niv=v;try{localStorage.setItem('gt-niv2',v);}catch(x){}S.cfg.types=null;render();break;
    case 'theorie':setCh(b.dataset.t,v);S.screen='lernen';render();break;
-   case 'teach':setCh(b.dataset.t,v);S.screen='teach';S.t.cur=0;render();break;
+   case 'teach':if(!teacherAccess())break;setCh(b.dataset.t,v);S.screen='teach';S.t.cur=0;render();break;
    case 'config':setCh(b.dataset.t,v);S.sheet=false;S.screen='config';render();break;
    case 'sheet':if(!teacherAccess())break;setCh(b.dataset.t,v);S.sheet=true;S.sheetOut=null;S.sheetErr='';S.screen='config';render();break;
    case 'mksheet':makeSheet(v);break;
@@ -838,9 +838,9 @@ document.addEventListener('click',e=>{
    case 'tscale':S.t.scale=(S.t.scale+1)%3;render();break;
    case 'tnotes':S.t.notes=!S.t.notes;render();break;
    case 'tprint':document.querySelectorAll('details.dd[open]').forEach(x=>x.removeAttribute('open'));printTeach(v);break;
-   case 'tlogin':S.loginOpen=true;renderLogin();break;
+   case 'tlogin':if(S.demo)break;S.loginOpen=true;renderLogin();break;
    case 'tlogout':doLogout();break;
-   case 'tsettings':openSettings();break;
+   case 'tsettings':if(!teacherAccess())break;openSettings();break;
    case 'ssave':saveSettings();break;
    case 'sreset':resetProgressAsk();break;
    case 'sclose':document.getElementById('settings').close();break;
@@ -916,6 +916,7 @@ document.addEventListener('keydown',e=>{
 const FBCFG={apiKey:"AIzaSyBHHhgjAvY0D0trm2IMxauhFp-ssw9ooz4",authDomain:"zufallsgenerator-209f3.firebaseapp.com",projectId:"zufallsgenerator-209f3",storageBucket:"zufallsgenerator-209f3.firebasestorage.app",messagingSenderId:"274439019701",appId:"1:274439019701:web:b90892c5745657e39972fc"};
 let auth=null;
 function initAuth(){
+  if(S.demo)return;
   try{
     if(window.firebase){
       if(!firebase.apps.length)firebase.initializeApp(FBCFG);
@@ -924,9 +925,9 @@ function initAuth(){
     }
   }catch(e){auth=null;}
 }
-const teacherAccess=()=>!!(S.user||S.demo);
+const teacherAccess=()=>!!S.user&&!S.demo;
 function authBtns(){
-  if(S.demo)return '<span class="pill">Demo</span><button class="btn sm" data-a="tsettings">⚙️ Einstellungen</button><button class="btn sm" data-a="exitdemo">Demo beenden</button>';
+  if(S.demo)return '<span class="pill beta">Beta</span>';
   if(S.user)return '<span class="pill">Lehrer</span><button class="btn sm" data-a="tsettings">⚙️ Einstellungen</button><button class="btn sm" data-a="tlogout">Abmelden</button>';
   return '<button class="btn sm" data-a="tlogin">Lehrer-Anmeldung</button>';
 }
