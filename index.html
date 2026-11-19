@@ -40,6 +40,7 @@ button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:tran
 .f-akk{--c:#16a34a;--b:#dcfce7;--t:#14532d}
 
 /* Kopf */
+@media (max-width:700px){header{position:static!important}.tchips.sticky{top:0!important}}
 header{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
 .hin{max-width:1000px;margin:0 auto;padding:.6rem 1rem;display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center}
 .brand{display:flex;align-items:center;gap:.6rem;border:0;background:none;padding:0;text-align:left;min-height:44px}
@@ -209,7 +210,7 @@ dialog::backdrop{background:rgba(15,23,42,.5)}
 .hero2 .hr{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}.hero2 .auth{display:flex;gap:.4rem;align-items:center;min-height:44px}
 .cont{display:flex;gap:.9rem;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:1rem;padding:.8rem 1.1rem;margin-bottom:1.2rem}
 .cont .ci{font-size:1.8rem}.cont .cb{flex:1}.cont b{font-size:1.05rem}
-.tbar{height:6px;background:var(--line);border-radius:6px;margin-top:.35rem;width:100%}.tbar i{display:block;height:100%;border-radius:6px}.tbar.big{height:8px}
+.pbar{height:6px;background:var(--line);border-radius:6px;margin-top:.35rem;width:100%}.pbar i{display:block;height:100%;border-radius:6px}.pbar.big{height:8px}
 .tile.act,.tile.off{border-left:7px solid var(--tc,#4f46e5)}.tile{align-items:center;border-radius:1rem;transition:transform .12s,box-shadow .12s}
 .tile.act:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(30,41,59,.12)}
 .tile::before{display:none}.tile .ti{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.55rem;flex:none}
@@ -362,7 +363,7 @@ function wanted(cfg){return cfg.count==='custom'?Math.max(1,Math.min(100,parseIn
 const BACK={teach:'start',lernen:'start',config:'start',round:'config',summary:'config',sheet:'config'};
 function crumb(){
   const t=S.teil==='wort'?'Wortlehre':'Satzlehre',c=t+' › '+C().title;
-  const m={start:'',teach:c+' › Folien',lernen:c+' › Theorie',config:c+' › Üben',round:c+' › Runde',summary:c+' › Auswertung'};
+  const m={start:'',teach:c+' › Folien',lernen:c+' › Theorie',config:c+' › Üben',round:c+' › Runde',summary:c+' › Auswertung',sheet:c+' › Übungsblatt'};
   return m[S.screen];
 }
 function renderHead(){
@@ -380,14 +381,14 @@ function screenStart(){
     if(!ch)return '<div class="tile off" style="--tc:'+em[1]+'">'+ico+'<div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span></div><span class="pill gray">Folgt</span></div>';
     const p=P[c[1]],pct=p&&p.a?Math.round(p.r/p.a*100):0;
     return '<div class="tile act" style="--tc:'+em[1]+'">'+ico+'<div class="tb"><b>'+c[0]+'</b><span class="td">'+c[2]+'</span>'+
-     (p&&p.a?'<div class="tbar" title="Auf diesem Gerät gespeichert"><i style="width:'+pct+'%;background:'+em[1]+'"></i></div>':'')+'</div>'+
+     (p&&p.a?'<div class="pbar" title="Auf diesem Gerät gespeichert"><i style="width:'+pct+'%;background:'+em[1]+'"></i></div>':'')+'</div>'+
      '<div class="tbtn">'+(teacherAccess()?'<button class="btn t2" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'">Folien</button><button class="btn t2" data-a="sheet" data-t="'+key+'" data-v="'+c[1]+'">Blatt</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div>';
   };
   const col=(key,title,sub,L)=>'<section><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>tile(key,c,i)).join('')+'</div></section>';
   let last=null;try{last=localStorage.getItem('gt-last');}catch(e){}
   const lc=last&&GT.chapters[last]&&P[last]&&P[last].a?GT.chapters[last]:null;
   const lp=lc?Math.round(P[last].r/P[last].a*100):0;
-  const cont=lc?'<div class="cont"><div class="ci">🚀</div><div class="cb"><b>Weiter mit '+lc.title+'</b><div class="tbar big"><i style="width:'+lp+'%;background:var(--primary)"></i></div></div><button class="btn primary" data-a="config" data-t="'+lc.teil+'" data-v="'+last+'">Weiter →</button></div>':'';
+  const cont=lc?'<div class="cont"><div class="ci">🚀</div><div class="cb"><b>Weiter mit '+lc.title+'</b><div class="pbar big"><i style="width:'+lp+'%;background:var(--primary)"></i></div></div><button class="btn primary" data-a="config" data-t="'+lc.teil+'" data-v="'+last+'">Weiter →</button></div>':'';
   return '<div class="hero2"><div class="hleft"><div class="htitle">'+LOGOSM+'Grammatik Trainer</div><p>Wörter knacken. Sätze bauen. Fehler finden.</p></div>'+
    '<div class="hr"><div class="heroniv"><span class="lblniv">Dein Niveau</span><div class="seg big" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div><span class="nd">'+D[S.niv]+'</span></div><div class="auth">'+authBtns()+'</div></div></div>'+cont+
    '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','🔤 Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','🧩 Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
