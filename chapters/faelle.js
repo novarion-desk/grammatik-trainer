@@ -14,6 +14,8 @@ const EXF='«'+mk('nom','Der Hund')+' beisst '+mk('akk','den Mann')+'.»';
 const DEF={m:['der','des','dem','den'],f:['die','der','der','die'],n:['das','des','dem','das'],p:['die','der','den','die']};
 const MEIN={m:['mein','meines','meinem','meinen'],f:['meine','meiner','meiner','meine'],n:['mein','meines','meinem','mein'],p:['meine','meiner','meinen','meine']};
 const ADJE={m:['e','en','en','en'],f:['e','en','en','e'],n:['e','en','en','e'],p:['en','en','en','en']};
+const EIN={m:['ein','eines','einem','einen'],f:['eine','einer','einer','eine'],n:['ein','eines','einem','ein']};
+const ADJEE={m:['er','en','en','en'],f:['e','en','en','e'],n:['es','en','en','es']};
 const ADJ=['klein','alt','nett','müde','neugierig','freundlich'];
 const NOUN=[
  {g:'m',f:['Hund','Hundes','Hund','Hund']},{g:'m',f:['Lehrer','Lehrers','Lehrer','Lehrer']},
@@ -39,9 +41,10 @@ const TPL={
 };
 const MAN=['der Mann','des Mannes','dem Mann','den Mann'];
 const sent=(a,mid,b)=>{let s=[a,mid].filter(Boolean).join(' ');if(b)s+=(b==='.'?'.':' '+b);return s;};
+const adjF=(a,e)=>(a.endsWith('e')?a.slice(0,-1):a)+e;
 function build(ci,noun,det,adj,ti){
   const k=FK[ci],T=TPL[k][ti%TPL[k].length],pl=noun.g==='p';
-  const form=c=>[(det==='mein'?MEIN:DEF)[noun.g][c],adj?adj+ADJE[noun.g][c]:'',noun.f[c]].filter(Boolean).join(' ');
+  const form=c=>[(det==='mein'?MEIN:det==='ein'?EIN:DEF)[noun.g][c],adj?adjF(adj,(det==='ein'?ADJEE:ADJE)[noun.g][c]):'',noun.f[c]].filter(Boolean).join(' ');
   const [pre,post]=(pl&&T.pl)?T.pl:T.sg,[spre,spost]=T.sg;
   const start=!pre,fix=s=>start?cap(s):s;
   const g=fix(form(ci));
@@ -49,6 +52,8 @@ function build(ci,noun,det,adj,ti){
     html:sent(pre,'<span class="hl">'+g+'</span>',post),
     plain:sent(pre,g,post),
     gap:sent(pre,'<span class="gap">_____</span>',post),
+    gapE:sent(pre,'<span class="gap">'+fix(['ein___',adj?adjF(adj,'')+'___':'',noun.f[ci]].filter(Boolean).join(' '))+'</span>',post),
+    start,
     repl:sent(spre,fix(MAN[ci]),spost),
     man:fix(MAN[ci]),
     manOpts:MAN.map(fix),
@@ -63,7 +68,10 @@ const TYPES={
  frage:{label:'Frageprobe',instr:'Welche Frage führt zur markierten Gruppe?',hint:'Finde das Verb im Satz. Frage mit dem Verb: Wer …? Wem …? Wen …? Beim Genitiv: Wessen + Nomen?',ref:'proben'},
  ersatz:{label:'Ersatzprobe',instr:'Ersetze die markierte Gruppe durch «der Mann». Welche Form passt in den Satz?',hint:'Setze «der Mann» in den Satz und lies ihn laut: der, des, dem oder den?',ref:'proben'},
  einsetzen:{label:'Artikel einsetzen',instr:'Welche Form passt in die Lücke?',hint:'Frage vom Verb aus: Wer …? Wem …? Wen …? Beim Genitiv: Wessen + Nomen?',ref:'tabelle'},
- anmalen:{label:'Alle Fälle anmalen',instr:'Wähle eine Farbe und tippe die Gruppen an, die in diesem Fall stehen.',hint:'Finde zuerst das Verb und frage von dort aus. Den Genitiv erkennst du an der Frage Wessen + Nomen?',ref:'proben'}
+ anmalen:{label:'Alle Fälle anmalen',instr:'Wähle eine Farbe und tippe die Gruppen an, die in diesem Fall stehen.',hint:'Finde zuerst das Verb und frage von dort aus. Den Genitiv erkennst du an der Frage Wessen + Nomen?',ref:'proben'},
+ praep:{label:'Präposition und Fall',instr:'In welchem Fall steht die markierte Gruppe?',hint:'Die Präposition verlangt den Fall: mit, nach, bei, von, zu, aus = Dativ. für, durch, gegen, ohne, um = Akkusativ. wegen, während, trotz = Genitiv. Wechselpräposition: Wo? = Dativ, Wohin? = Akkusativ.',ref:'praep'},
+ fehler:{label:'Fallfehler korrigieren',instr:'Die markierte Gruppe könnte einen Fall-Fehler haben. Wähle die richtige Form.',hint:'Bestimme den Fall (Präposition oder Verb, dann Frage oder Ersatzprobe). Nicht jeder Satz hat einen Fehler.',ref:'fehler'},
+ endung:{label:'Endungen setzen',instr:'Welche Form passt in die Lücke?',hint:'Fall bestimmen, dann Artikel und Adjektiv aus der Tabelle: nach «ein» endet das Adjektiv meistens auf -en.',ref:'endung'}
 };
 function add(t){t.id=NID++;t.lv=t.lv||(t.stufe===3?2:1);TASKS.push(t);}
 function pick(level,ci,i,off){
@@ -137,12 +145,108 @@ add({typ:'zuordnen',stufe:2,cats:FK.slice(),sent:'',prompt:'Welche Reihenfolge d
  [2,[['Heute gibt'],['der Vater','nom'],['dem Kind','dat'],['einen Apfel','akk','.']]],
  [3,[['Den Brief','akk'],['der Schülerin','gen'],['liest'],['der Lehrer','nom','.']]],
  [2,[['Mein Bruder','nom'],['zeigt'],['der Mutter','dat'],['das neue Handy','akk','.']]],
- [3,[['Die Katze','nom'],['meiner Schwester','gen'],['folgt'],['dem Kind','dat','.']]]
+ [3,[['Die Katze','nom'],['meiner Schwester','gen'],['folgt'],['dem Kind','dat','.']]],
+ [2,[['Nach der Pause','dat'],['gibt'],['die Lehrerin','nom'],['den Schülern','dat'],['die Hausaufgaben','akk','.']]],
+ [2,[['Wir','nom'],['fahren'],['mit dem Bus','dat'],['durch den Tunnel','akk','.']]],
+ [3,[['Wegen des Regens','gen'],['bleibt'],['die Klasse','nom'],['im Schulhaus','dat','.']]]
 ].forEach(r=>{
   const parts=r[1].map(p=>({t:p[0]+(p[2]||''),f:p[1]||null}));
   const cats=[...new Set(parts.filter(p=>p.f).map(p=>p.f))];
   add({typ:'anmalen',stufe:r[0],lv:r[0]===2?2:3,cats,parts,sent:'',
     why:parts.filter(p=>p.f).map(p=>p.t.replace(/\.$/,'')+' → '+FN[p.f]).join(' · ')});
+});
+
+/* ---- NEU: Präpositionen und ihre Fälle ---- */
+const PR=[
+ ['Wir gehen','durch','den Park','.','akk',1],
+ ['Das Geschenk ist','für','die Lehrerin','.','akk',1],
+ ['Er kämpft','gegen','den Gegner','.','akk',1],
+ ['Sie kommt','ohne','ihren Bruder','.','akk',1],
+ ['Wir laufen','um','das Schulhaus','.','akk',1],
+ ['Ich fahre','mit','dem Velo',' zur Schule.','dat',1],
+ ['','Nach','der Pause',' schreiben wir einen Test.','dat',1],
+ ['Er wohnt','bei','seiner Tante','.','dat',1],
+ ['Sie kommt','aus','der Schule','.','dat',1],
+ ['Das Buch ist','von','meiner Schwester','.','dat',1],
+ ['','Seit','dem Montag',' fehlt Tim.','dat',1],
+ ['Wir gehen','zu','unserem Lehrer','.','dat',1],
+ ['Das Kino liegt','gegenüber','dem Bahnhof','.','dat',2],
+ ['','Wegen','des Regens',' fällt der Ausflug aus.','gen',2],
+ ['','Während','der Pause',' spielen wir Fussball.','gen',2],
+ ['','Trotz','des Verbots',' rennt er im Gang.','gen',3],
+ ['','Statt','eines Heftes',' nimmt sie einen Block.','gen',3],
+ ['Man darf','innerhalb','des Schulhauses',' nicht rennen.','gen',3],
+ ['Das Dorf liegt','oberhalb','des Sees','.','gen',3]
+];
+PR.forEach(r=>{
+  const why='«'+r[1].toLowerCase()+'» verlangt den '+FN[r[4]]+'. Ersatzprobe: '+r[1].toLowerCase()+' '+MAN[FK.indexOf(r[4])]+'.';
+  add({typ:'praep',stufe:r[5],lv:r[5],cats:[r[4]],sent:(r[0]?r[0]+' ':'')+r[1]+' <span class="hl">'+r[2]+'</span>'+r[3],opts:FK.map(x=>FN[x]),answer:FN[r[4]],optCat:N2K,why:'<b>'+r[2]+'</b> steht im '+FN[r[4]]+'. '+why});
+});
+/* Wechselpräpositionen: Wo? oder Wohin? */
+[
+ ['Der Stift liegt','auf','dem Tisch','.','dat','Wo liegt der Stift?'],
+ ['Die Katze schläft','unter','dem Bett','.','dat','Wo schläft die Katze?'],
+ ['Wir sitzen','in','der Klasse','.','dat','Wo sitzen wir?'],
+ ['Das Bild hängt','an','der Wand','.','dat','Wo hängt das Bild?'],
+ ['Ich lege den Stift','auf','den Tisch','.','akk','Wohin lege ich den Stift?'],
+ ['Die Katze springt','unter','das Bett','.','akk','Wohin springt die Katze?'],
+ ['Wir gehen','in','die Klasse','.','akk','Wohin gehen wir?'],
+ ['Sie hängt das Bild','an','die Wand','.','akk','Wohin hängt sie das Bild?']
+].forEach(r=>add({typ:'praep',stufe:2,lv:2,cats:[r[4]],sent:r[0]+' '+r[1]+' <span class="hl">'+r[2]+'</span>'+r[3],opts:FK.map(x=>FN[x]),answer:FN[r[4]],optCat:N2K,
+  why:'<b>'+r[5]+'</b> – «'+r[1]+'» ist eine Wechselpräposition. '+(r[4]==='dat'?'Wo? gibt den Dativ.':'Wohin? gibt den Akkusativ.')}));
+/* Wissen: Welchen Fall verlangt die Präposition? */
+[['mit','dat',1],['für','akk',1],['durch','akk',1],['nach','dat',1],['bei','dat',1],['ohne','akk',1],['gegen','akk',1],['aus','dat',1],['von','dat',1],['zu','dat',1],['wegen','gen',2],['während','gen',2],['trotz','gen',3],['statt','gen',3]].forEach(r=>
+  add({typ:'praep',stufe:r[2],lv:r[2],cats:[r[1]],sent:'',prompt:'Welchen Fall verlangt die Präposition <b>«'+r[0]+'»</b>?',opts:FK.map(x=>FN[x]),answer:FN[r[1]],optCat:N2K,why:'«'+r[0]+'» verlangt den '+FN[r[1]]+': '+r[0]+' '+MAN[FK.indexOf(r[1])]+'.'}));
+[['dat','Wo?','Wo steht der Stift? Auf dem Tisch.'],['akk','Wohin?','Wohin legst du den Stift? Auf den Tisch.']].forEach(r=>
+  add({typ:'praep',stufe:2,lv:2,cats:[r[0]],sent:'',prompt:'Eine Wechselpräposition (in, auf, an …) antwortet auf die Frage <b>'+r[1]+'</b> Welchen Fall verlangt sie?',opts:FK.map(x=>FN[x]),answer:FN[r[0]],optCat:N2K,why:r[2]+' → '+FN[r[0]]+'.'}));
+
+/* ---- NEU: Fallfehler finden und korrigieren ---- */
+const FE=[
+ ['Ich helfe','mein Freund',' bei den Hausaufgaben.','meinem Freund',['meinen Freund','meines Freundes'],'dat',1,'Wem helfe ich?'],
+ ['Sie hat sich','ein neuer Rucksack',' gekauft.','einen neuen Rucksack',['einem neuen Rucksack','eines neuen Rucksacks'],'akk',1,'Was hat sie gekauft?'],
+ ['Ich sehe','der Lehrer',' im Gang.','den Lehrer',['dem Lehrer','des Lehrers'],'akk',1,'Wen sehe ich?'],
+ ['Er dankt','seinen Lehrer',' für die Hilfe.','seinem Lehrer',['seines Lehrers','seine Lehrer'],'dat',1,'Wem dankt er?'],
+ ['Das Handy gehört','der Schüler','.','dem Schüler',['den Schüler','des Schülers'],'dat',1,'Wem gehört das Handy?'],
+ ['Ich schenke','mein Bruder',' ein Buch.','meinem Bruder',['meinen Bruder','meines Bruders'],'dat',1,'Wem schenke ich ein Buch?'],
+ ['Das Fahrrad','meine Schwester',' ist neu.','meiner Schwester',['meine Schwester','meinen Schwestern'],'gen',1,'Wessen Fahrrad? Ersatzprobe: das Fahrrad meines Vaters.'],
+ ['Für','meinem Freund',' kaufe ich ein Geschenk.','meinen Freund',['meines Freundes','meine Freund'],'akk',1,'«für» verlangt den Akkusativ.'],
+ ['Nach','die Pause',' schreiben wir einen Test.','der Pause',['die Pause','den Pausen'],'dat',2,'«nach» verlangt den Dativ.'],
+ ['Wir spielen mit','unsere Freunde',' Fussball.','unseren Freunden',['unsere Freunde','unserer Freunde'],'dat',2,'«mit» verlangt den Dativ. Im Dativ Mehrzahl hat das Nomen ein -n.'],
+ ['Wegen','dem schlechten Wetter',' fällt der Ausflug aus.','des schlechten Wetters',['dem schlechten Wetter','den schlechten Wetter'],'gen',2,'«wegen» verlangt den Genitiv. In der Mundart hört man «wegen dem», in der Schriftsprache gilt der Genitiv.'],
+ ['Während','die Ferien',' arbeitet sie im Café.','der Ferien',['die Ferien','den Ferien'],'gen',2,'«während» verlangt den Genitiv.'],
+ ['Ich gehe ohne','meinem Handy',' ins Kino.','mein Handy',['meinem Handy','meines Handys'],'akk',2,'«ohne» verlangt den Akkusativ.'],
+ ['Die Katze springt auf','dem Tisch','.','den Tisch',['dem Tisch','des Tisches'],'akk',2,'Wohin springt die Katze? Wohin? gibt den Akkusativ.'],
+ ['Der Stift liegt auf','den Tisch','.','dem Tisch',['den Tisch','des Tisches'],'dat',2,'Wo liegt der Stift? Wo? gibt den Dativ.'],
+ ['Sie hängt das Bild an','der Wand','.','die Wand',['der Wand','den Wand'],'akk',2,'Wohin hängt sie das Bild? Wohin? gibt den Akkusativ.'],
+ ['Wir sitzen in','die Klasse','.','der Klasse',['die Klasse','den Klasse'],'dat',2,'Wo sitzen wir? Wo? gibt den Dativ.'],
+ ['Man darf innerhalb','dem Schulhaus',' nicht rennen.','des Schulhauses',['dem Schulhaus','den Schulhäusern'],'gen',3,'«innerhalb» verlangt den Genitiv.'],
+ ['Das Dorf liegt oberhalb','dem See','.','des Sees',['dem See','den See'],'gen',3,'«oberhalb» verlangt den Genitiv.'],
+ ['Er hat','ein kleiner Hund',' gekauft.','einen kleinen Hund',['einem kleinen Hund','eines kleinen Hundes'],'akk',3,'Was hat er gekauft? Der Akkusativ männlich endet auf -en: einen kleinen Hund.']
+];
+FE.forEach(r=>{
+  const wrong=r[1];
+  add({typ:'fehler',stufe:r[6],lv:r[6],cats:[r[5]],sent:(r[0]?r[0]+' ':'')+'<span class="hl">'+wrong+'</span>'+r[2],opts:[r[3],wrong].concat(r[4].filter(x=>x!==wrong&&x!==r[3]).slice(0,1)).concat(['Kein Fehler']),answer:r[3],
+    why:'<b>'+r[7]+'</b> → '+r[3]+' ('+FN[r[5]]+'). Die Form «'+wrong+'» ist falsch.'});
+});
+/* Aufgaben ohne Fehler */
+[
+ ['Wir gehen mit','unserer Lehrerin',' ins Museum.',['unsere Lehrerin','unserem Lehrerin','unseren Lehrerin'],'dat',1,'«mit» verlangt den Dativ: mit unserer Lehrerin ist richtig.'],
+ ['Während','der Pause',' spielen wir Fussball.',['die Pause','den Pausen','dem Pause'],'gen',2,'«während» verlangt den Genitiv: während der Pause ist richtig.'],
+ ['Ich sehe','den Lehrer',' im Gang.',['dem Lehrer','der Lehrer','des Lehrers'],'akk',1,'Wen sehe ich? Den Lehrer. Der Satz ist richtig.']
+].forEach(r=>add({typ:'fehler',stufe:r[5],lv:r[5],cats:[r[4]],sent:(r[0]?r[0]+' ':'')+'<span class="hl">'+r[1]+'</span>'+r[2],opts:['Kein Fehler'].concat(r[3]),answer:'Kein Fehler',why:r[6]}));
+
+/* ---- NEU: Endungen bei «ein» und Adjektiv ---- */
+FK.forEach((k,ci)=>{
+  [1,2,3].forEach(level=>{for(let i=0;i<2;i++){
+    const pool=level===1?POOL.m:level===2?NOUN.filter(n=>n.g==='f'||n.g==='n'):NOUN.filter(n=>n.g!=='p');
+    const n=pool[(ci*3+i*2+level)%pool.length],adj=ADJ[(ci+i+level)%ADJ.length];
+    const b=build(ci,n,'ein',adj,i+ci+level);
+    const fx=x=>b.start?cap(x):x;
+    const det=g=>FK.map((_,c)=>fx(EIN[g][c]+' '+adjF(adj,ADJEE[g][c])));
+    const ans=det(n.g)[ci],opts=[ans];
+    [].concat(det(n.g),det('m'),det('f'),det('n')).forEach(x=>{if(opts.length<4&&!opts.includes(x))opts.push(x);});
+    add({typ:'endung',stufe:level,lv:level,cats:[k],sent:b.gapE,opts,answer:ans,why:'<b>'+b.q+'</b> → '+ans+' ('+FN[k]+').'});
+  }});
 });
 
 /* ================= Lernen: Abschnitte ================= */
@@ -178,13 +282,17 @@ const SEC={
   '<li>Ich kenne die vier Fälle: Nominativ, Genitiv, Dativ, Akkusativ.</li>'+
   '<li>Ich kenne die Fragewörter zu den Fällen: Wer oder was? Wessen? Wem? Wen oder was?</li>'+
   '<li>Ich kann mit der Ersatzprobe (Maskulinprobe) den Fall eines Nomens bestimmen.</li>'+
-  '<li>Ich kann Fälle in Sätzen erkennen und bestimmen (z. B. <i>Der Hund läuft.</i> → Nominativ; <i>Ich sehe den Hund.</i> → Akkusativ).</li></ul></div>',
+  '<li>Ich kann Fälle in Sätzen erkennen und bestimmen (z. B. <i>Der Hund läuft.</i> → Nominativ; <i>Ich sehe den Hund.</i> → Akkusativ).</li>'+
+  '<li>Ich weiss, welchen Fall eine Präposition verlangt, und kenne die Wechselpräpositionen (Wo? oder Wohin?).</li>'+
+  '<li>Ich finde Fallfehler und korrigiere sie.</li>'+
+  '<li>Ich setze bei «ein» und Adjektiv die richtigen Endungen.</li></ul></div>',
  wozu:()=>'<h2>Wozu gibt es Fälle?</h2><p class="sub" style="margin-top:0">Fälle zeigen, welche Rolle ein Wort im Satz spielt.</p>'+
   '<div class="grid2"><div class="card"><h3>Die Form verrät die Rolle</h3>'+
   '<p class="sent">«'+mk('nom','Der Hund')+' beisst '+mk('akk','den Mann')+'.»</p><p class="sent">«'+mk('akk','Den Mann')+' beisst '+mk('nom','der Hund')+'.»</p>'+
   '<p>Die Wörter stehen anders, die Bedeutung bleibt gleich: Der Hund beisst, der Mann wird gebissen. Das siehst du nur an der Form des Artikels: <b>der</b> oder <b>den</b>.</p></div>'+
   '<div class="card"><h3>Vergleich mit Englisch</h3><p class="sent">The dog bites the man.<br>The man bites the dog.</p>'+
   '<p>Im Englischen entscheidet die <b>Wortstellung</b>. Im Deutschen entscheidet die <b>Form</b> des Wortes. Darum dürfen wir im Deutschen freier umstellen.</p><p class="muted">Im Englischen gibt es Fälle nur noch bei Pronomen: <i>he sees him</i>.</p></div></div>'+
+  '<div class="callout info"><b>Mundart und Schriftsprache:</b> In der Mundart sagen wir «s Velo vom Vater» (mit «von» und Dativ). In der Schrift steht der Genitiv: «das Velo '+mk('gen','des Vaters')+'». Wie zeigen andere Sprachen, wem etwas gehört?</div>'+
   '<div class="callout">Ein Fall sagt dir nicht, <b>wo</b> ein Wort steht, sondern <b>welche Rolle</b> es spielt.</div>',
  vier:()=>'<h2>Die vier Fälle und ihre Fragen</h2><div class="grid4">'+[
    ['nom','1. Fall','Wer macht es? Worum geht es?','«'+mk('nom','Der Hund')+' bellt.»'],
@@ -200,6 +308,8 @@ const SEC={
   '<tr><td class="rh f-dat">Dativ (3. Fall)</td><td>lat. casus dativus = Wemfall</td><td><b>Wem?</b></td></tr>'+
   '<tr><td class="rh f-akk">Akkusativ (4. Fall)</td><td>lat. casus accusativus = Wenfall</td><td><b>Wen oder was?</b></td></tr>'+
   '<tr><td><b>deklinieren</b></td><td>lat. declinare = abwandeln, beugen</td><td>Nomen und Begleiter nach Fall und Zahl verändern.</td></tr>'+
+  '<tr><td><b>Präposition</b></td><td>lat. praepositio = Voranstellung</td><td>Verhältniswort (mit, für, wegen). Sie verlangt einen Fall.</td></tr>'+
+  '<tr><td><b>Wechselpräposition</b></td><td></td><td>Verlangt Dativ (Wo?) oder Akkusativ (Wohin?): in, auf, an, unter …</td></tr>'+
   '<tr><td><b>Ersatzprobe</b> (Maskulinprobe)</td><td>lat. masculinum = männlich</td><td>Das Nomen durch «der Mann» ersetzen, damit man den Fall sieht.</td></tr></table></div>',
  tabelle:()=>'<h2>Die Artikel in den 4 Fällen</h2><div data-w="tab" data-kind="best" data-focus="all" data-same="0">'+tabInner('best','all','0')+'</div>'+
   '<p class="muted" style="margin-top:.6rem">Nur beim männlichen Nomen unterscheiden sich alle vier Fälle. Bei weiblichen und sächlichen Nomen und in der Mehrzahl sehen mehrere Fälle gleich aus. Im Dativ Mehrzahl hat das Nomen oft ein -n (den Kindern).</p>'+tryW('einsetzen'),
@@ -226,6 +336,32 @@ const SEC={
    ['Das Haus <span class="grp">der Eltern</span> ist gross.','Das Haus '+mk('gen','des Mannes')+' ist gross.','gen','des']
   ].map(x=>'<div class="card"><p class="sent">«'+x[0]+'»</p>'+REVEAL('Mit «der Mann» ersetzen','<p>«'+x[1]+'»</p><p>«'+x[3]+'» → '+tag(x[2])+'</p>')+'</div>').join('')+'</div>'+
   tryW('ersatz')+'<h3 class="pr" id="p-umstell">Probe 3: Die Umstellprobe</h3><div data-w="uw">'+umstellHTML()+'</div>',
+ praep:()=>'<h2>Präpositionen und ihre Fälle</h2><p class="sub" style="margin-top:0">Eine Präposition (Verhältniswort) verlangt einen bestimmten Fall. Die Gruppe nach ihr steht in diesem Fall.</p>'+
+  '<div class="grid3">'+[
+   ['akk','Immer Akkusativ',['durch','für','gegen','ohne','um'],'«Wir gehen '+mk('akk','durch den Park')+'.»'],
+   ['dat','Immer Dativ',['aus','ausser','bei','mit','nach','seit','von','zu','gegenüber'],'«Ich fahre '+mk('dat','mit dem Velo')+' zur Schule.»'],
+   ['gen','Genitiv',['wegen','während','trotz','statt','innerhalb','ausserhalb','oberhalb','unterhalb'],'«'+mk('gen','Wegen des Regens')+' fällt der Ausflug aus.»']
+  ].map(d=>'<div class="card f-'+d[0]+'" style="background:var(--b);border:2px solid var(--c);color:var(--t)"><h3 style="margin:0 0 .3rem">'+FN[d[0]]+'</h3><b>'+d[1]+'</b><p style="margin:.4rem 0">'+d[2].map(x=>'<span class="tag f-'+d[0]+'">'+x+'</span>').join(' ')+'</p><p class="sent" style="margin:.3rem 0 0">'+d[3]+'</p></div>').join('')+'</div>'+
+  '<div class="card" style="margin-top:.8rem;border-top:5px solid #0d9488"><h3 style="margin:0 0 .3rem">🔀 Wechselpräpositionen: Wo? oder Wohin?</h3><p>'+['an','auf','hinter','in','neben','über','unter','vor','zwischen'].map(x=>'<span class="tag f-art">'+x+'</span>').join(' ')+'</p>'+
+   '<div class="grid2"><div><p>'+tag('dat')+' <b>Wo?</b> – Der Stift liegt '+mk('dat','auf dem Tisch')+'.</p></div><div><p>'+tag('akk')+' <b>Wohin?</b> – Ich lege den Stift '+mk('akk','auf den Tisch')+'.</p></div></div></div>'+
+  '<div class="callout info"><b>Zusammenziehungen:</b> am = an dem, im = in dem, beim = bei dem, vom = von dem, zum = zu dem, zur = zu der, ins = in das, ans = an das.</div>'+
+  '<div class="callout"><b>Genitiv:</b> In der Mundart sagt man oft «wegen dem Regen». In der Schriftsprache steht der Genitiv: «wegen des Regens».</div>'+
+  '<div class="callout info">📖 <b>Im Lehrmittel heisst das …</b> «Präpositionalgruppe». Mehr zur Präposition als Wortart findest du im Kapitel Partikel. Hier geht es nur um den Fall, den sie verlangt.</div>'+tryW('praep'),
+ fehler:()=>'<h2>Fallfehler finden und korrigieren</h2><p class="sub" style="margin-top:0">Fallfehler passieren oft nach einer Präposition oder bei Verben wie helfen und danken. So findest du sie:</p>'+
+  '<div class="card"><ol class="steps"><li><b>Gruppe markieren</b>, die falsch klingt (Artikel + Nomen).</li><li><b>Den Fall bestimmen:</b> Verb oder Präposition suchen, dann fragen. Oder die Ersatzprobe mit «der Mann» machen.</li><li><b>Form korrigieren</b> und den Satz laut lesen.</li></ol></div>'+
+  '<div class="tw" style="margin-top:.8rem"><table><tr><th>Falsch</th><th>Richtig</th><th>Warum?</th></tr>'+
+  [['Ich helfe <s>mein Freund</s>.','Ich helfe '+mk('dat','meinem Freund')+'.','helfen: Wem helfe ich? Dativ'],
+   ['Sie sieht <s>der Lehrer</s>.','Sie sieht '+mk('akk','den Lehrer')+'.','Wen sieht sie? Akkusativ'],
+   ['Wir spielen mit <s>unsere Freunde</s>.','Wir spielen mit '+mk('dat','unseren Freunden')+'.','mit: Dativ, Mehrzahl mit -n'],
+   ['Wegen <s>dem Regen</s> bleiben wir da.',mk('gen','Wegen des Regens')+' bleiben wir da.','wegen: Genitiv'],
+   ['Die Katze springt auf <s>dem Tisch</s>.','Die Katze springt auf '+mk('akk','den Tisch')+'.','Wohin? Akkusativ']].map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>'+
+  '<div class="callout"><b>Achtung:</b> Nicht jeder Satz hat einen Fehler. Prüfe zuerst, bevor du etwas änderst.</div>'+tryW('fehler'),
+ endung:()=>'<h2>Endungen bei «ein» und Adjektiv</h2><p class="sub" style="margin-top:0">Ein Nomen mit Adjektiv ändert Artikel und Adjektiv. Zuerst den Fall bestimmen, dann die Endung setzen.</p>'+
+  '<div class="tw"><table><tr><th>Fall</th><th>männlich</th><th>weiblich</th><th>sächlich</th></tr>'+
+  FK.map((k,c)=>'<tr><td class="rh f-'+k+'">'+FN[k]+'<br><span style="font-weight:400;font-size:.85em">'+FQ[k]+'</span></td>'+['m','f','n'].map(g=>{const nf={m:['Hund','Hundes','Hund','Hund'],f:['Katze','Katze','Katze','Katze'],n:['Kind','Kindes','Kind','Kind']}[g];return '<td>'+EIN[g][c]+' <b>klein'+ADJEE[g][c]+'</b> '+nf[c]+'</td>';}).join('')+'</tr>').join('')+'</table></div>'+
+  '<div class="grid2" style="margin-top:.8rem"><div class="card"><h3>Merke</h3><ul><li>Das Adjektiv endet meistens auf <b>-en</b>.</li><li>Ausnahmen: Nominativ männlich <b>-er</b>, Nominativ und Akkusativ weiblich <b>-e</b>, Nominativ und Akkusativ sächlich <b>-es</b>.</li></ul></div>'+
+  '<div class="card"><h3>So gehst du vor</h3><ol class="steps"><li>Fall bestimmen (Frage oder Präposition).</li><li>Mit «der Mann» die Form des Artikels prüfen.</li><li>Endung des Adjektivs aus der Tabelle setzen.</li></ol></div></div>'+
+  '<div class="callout info">Beispiel: «Sie hat '+mk('akk','einen kleinen Hund')+' gekauft.» (Wen oder was? Akkusativ, männlich: einen kleinen)</div>'+tryW('endung'),
  stolper:()=>'<h2>Stolpersteine</h2><div class="grid3">'+[
    ['1 · Dativ und Genitiv bei weiblichen Nomen','«Ich helfe '+mk('dat','der Nachbarin')+'.» (Dativ)<br>«Das Fahrrad '+mk('gen','der Nachbarin')+'.» (Genitiv)','Hilfe: Ersatzprobe mit «dem Mann» und «des Mannes».'],
    ['2 · Nominativ und Akkusativ sehen gleich aus','«'+mk('nom','Die Katze')+' jagt '+mk('akk','die Maus')+'.»','Bei weiblich, sächlich und Mehrzahl gleich. Hilfe: Mit dem Verb fragen: Wer jagt? Wen jagt sie?'],
@@ -242,9 +378,9 @@ const SEC={
   '<p class="muted">Die Ersatzprobe funktioniert genauso: «dem kleinen Mädchen» → «dem kleinen Mann» → Dativ. Fast alle Adjektive enden auf -en.</p>'+
   (lv()>=3?'<h3 style="margin-top:1rem">Nur Niveau A: Nominativ nach «sein» und «werden»</h3><p>«Er ist '+mk('nom','ein guter Lehrer')+'.» «Sie wird '+mk('nom','Ärztin')+'.» Nach «sein», «werden» und «bleiben» steht wieder der Nominativ.</p>':'')+'</div></div>'
 };
-const TOC=[['ziele','Lernziele'],['wozu','Wozu Fälle?'],['vier','Die 4 Fälle'],['begriffe','Begriffe'],['tabelle','Artikel-Tabelle'],['proben','Proben'],['stolper','Stolpersteine'],['check','Ausprobieren'],['erweiterung','Erweiterung',2]];
+const TOC=[['ziele','Lernziele'],['wozu','Wozu Fälle?'],['vier','Die 4 Fälle'],['begriffe','Begriffe'],['tabelle','Artikel-Tabelle'],['proben','Proben'],['stolper','Stolpersteine'],['praep','Präpositionen'],['fehler','Fallfehler'],['endung','Endungen'],['check','Ausprobieren'],['erweiterung','Erweiterung',2]];
 
-const PRESETS=[['Alles gemischt','Alle Aufgabentypen',['bestimmen','zuordnen','frage','ersatz','einsetzen','anmalen']],['Fälle bestimmen','Fall im Satz erkennen und anmalen',['bestimmen','anmalen']],['Proben','Frageprobe und Ersatzprobe',['frage','ersatz']],['Wissen und Formen','Fälle, Fragen, Artikel',['zuordnen','einsetzen']]];
+const PRESETS=[['Alles gemischt','Alle Aufgabentypen',['bestimmen','zuordnen','frage','ersatz','einsetzen','anmalen','praep','fehler','endung']],['Präpositionen und Fehler','Fall nach Präposition, Fallfehler',['praep','fehler']],['Endungen','Artikel und Adjektiv',['endung']],['Fälle bestimmen','Fall im Satz erkennen und anmalen',['bestimmen','anmalen']],['Proben','Frageprobe und Ersatzprobe',['frage','ersatz']],['Wissen und Formen','Fälle, Fragen, Artikel',['zuordnen','einsetzen']]];
 
 /* ================= Lehrerteil: Folien aus denselben Bausteinen ================= */
 const PARTS=()=>SEC.proben().split('<h3 class="pr" id="p-');
@@ -257,9 +393,12 @@ const UEB=[
  ['Bestimme die Fälle: «Den Ball wirft der Torwart.»','Den Ball '+tag('akk')+' · der Torwart '+tag('nom')+' (Wer wirft?)',1],
  ['Setze in den richtigen Fall: «Ich gebe [der Mann] das Buch.»','<b>dem Mann</b> – '+tag('dat')+' (Wem gebe ich das Buch?)',1],
  ['Setze in den richtigen Fall: «Das ist das Auto [meine Mutter].»','<b>meiner Mutter</b> – '+tag('gen')+' (Wessen Auto? Ersatzprobe: das Auto meines Vaters)',1],
- ['Bestimme den Fall von «dem kleinen Mädchen»: «Er hilft dem kleinen Mädchen.» <span class="pill">B/A</span>',tag('dat')+' Wem hilft er? Ersatzprobe: dem kleinen Mann.',2]
+ ['Bestimme den Fall von «dem kleinen Mädchen»: «Er hilft dem kleinen Mädchen.» <span class="pill">B/A</span>',tag('dat')+' Wem hilft er? Ersatzprobe: dem kleinen Mann.',2],
+ ['Welchen Fall verlangt «mit»? Setze ein: «Ich spiele mit [mein Bruder].»','<b>mit meinem Bruder</b> – '+tag('dat')+' («mit» verlangt immer den Dativ)',1],
+ ['Korrigiere: «Wegen dem Regen fällt der Ausflug aus.»','<b>Wegen des Regens</b> – '+tag('gen')+' («wegen» verlangt den Genitiv)',2],
+ ['Wo oder wohin? «Die Katze springt auf [der Tisch].» Setze in den richtigen Fall.','<b>auf den Tisch</b> – Wohin? '+tag('akk'),2]
 ];
-const uebHTML=()=>'<ol class="ex">'+UEB.filter(u=>u[2]<=lv()).map(u=>'<li>'+u[0]+'<div class="po wl"></div><div class="noprint">'+REVEAL('Lösung zeigen',u[1])+'</div></li>').join('')+'</ol>';
+const uebHTML=()=>'<div class="noprint"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam vorne lösen:</b> Drei Aufgaben zu den Fällen. Klasse antworten lassen, mit Frage oder Ersatzprobe begründen, dann «Nächste Aufgabe». Mit «Alle drei neu» kommen drei frische.</div>'+[1,2,3].map(()=>tryW('bestimmen,frage,ersatz,einsetzen,praep,fehler,endung')).join('')+'<div style="margin:.8rem 0"><button class="btn" data-a="tall">🔄 Alle drei neu</button></div><h3 style="margin-top:1.2rem">Zum Aufschreiben</h3></div>'+'<ol class="ex">'+UEB.filter(u=>u[2]<=lv()).map(u=>'<li>'+u[0]+'<div class="po wl"></div><div class="noprint">'+REVEAL('Lösung zeigen',u[1])+'</div></li>').join('')+'</ol>';
 const MERKSLIDE=()=>'<div class="tw"><table><tr><th>Fall</th><th>Frage</th><th>Rolle</th><th>Ersatzprobe</th></tr>'+
  [['nom','Wer oder was?','Wer macht es? Worum geht es?','<b>der</b> Mann'],['gen','Wessen?','Besitz und Zugehörigkeit','<b>des</b> Mannes'],['dat','Wem?','Empfänger','<b>dem</b> Mann'],['akk','Wen oder was?','Ziel der Handlung','<b>den</b> Mann']]
  .map((r,i)=>'<tr><td class="rh f-'+r[0]+'">'+(i+1)+'. '+FN[r[0]]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>').join('')+'</table></div>'+
@@ -280,6 +419,9 @@ const SLIDES=[
 {id:'ersatz',title:'Probe 2: Die Ersatzprobe (Maskulinprobe)',min:10,p:'h',note:'Wichtigste Probe für weibliche und sächliche Nomen, weil dort Dativ und Genitiv oder Nominativ und Akkusativ gleich aussehen. Jedes Beispiel zuerst von der Klasse ersetzen lassen.',html:probe(2)},
 {id:'umstell',title:'Probe 3: Die Umstellprobe',min:6,p:'h',note:'Zuerst die Sätze ohne Farbe lesen und fragen, wer was macht. Dann «Fälle einfärben». Das Wer-Wort steht nicht immer vorne, der Fall bleibt aber gleich.',html:probe(3)},
 {id:'stolper',title:'Stolpersteine',min:6,p:'h',note:'Pro Stolperstein etwa eine Minute. Lass die Schülerinnen und Schüler ein eigenes Beispiel bilden.',html:()=>SEC.stolper()},
+{id:'praep',title:'Präpositionen und ihre Fälle',min:10,p:'h',note:'Die Präposition verlangt den Fall. Zuerst die drei Gruppen im Chor lesen, dann die Wechselpräpositionen mit Wo? und Wohin? an der Tafel mit Gesten zeigen (Stift liegt / Stift legen). Die Präposition als Wortart gehört ins Kapitel Partikel.',html:()=>SEC.praep()},
+{id:'fehler',title:'Fallfehler finden und korrigieren',min:10,p:'h',note:'Nicht jeder Satz hat einen Fehler. Die Klasse liest den Satz laut, bestimmt den Fall mit Frage oder Ersatzprobe und korrigiert die Form.',html:()=>SEC.fehler()},
+{id:'endung',title:'Endungen bei «ein» und Adjektiv',min:8,p:'h',lv:2,note:'Erst den Fall bestimmen, dann die Endung aus der Tabelle. Ab Niveau B sichtbar.',html:()=>SEC.endung()},
 {id:'tippen',title:'Fall antippen',min:8,p:'',note:'Variante: alle notieren zuerst auf dem Mini-Whiteboard, dann tippt eine Schülerin den Fall. Das Feedback nennt die Frage; sie von der Klasse wiederholen lassen.',html:()=>'<p class="lead">Bestimme den Fall der markierten Wörter. Tippe auf die richtige Antwort.</p>'+tryW('bestimmen')+tryW('bestimmen')},
 {id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort mit der Frage oder der Ersatzprobe begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:uebHTML},
 {id:'erweiterung',title:'Erweiterung für Niveau A und B',min:8,lv:2,p:'h',note:'Nur ab Niveau B sichtbar. Der Nominativ nach «sein» erscheint nur auf Niveau A.',html:()=>SEC.erweiterung()},
@@ -288,7 +430,7 @@ const SLIDES=[
 ];
 
 /* ================= Merkblatt für Schüler ================= */
-function merk(){
+function merk0(){
   return ''+
    '<h3>Die vier Fälle und ihre Fragen</h3><div class="tw"><table><tr><th>Fall</th><th>Frage</th><th>Rolle</th><th>Beispiel</th></tr>'+
    [['nom','Wer oder was?','Wer macht etwas?','Der Hund bellt.'],['gen','Wessen?','Besitz, Zugehörigkeit','das Halsband des Hundes'],['dat','Wem?','Empfänger','Ich gebe dem Hund Wasser.'],['akk','Wen oder was?','Ziel der Handlung','Ich sehe den Hund.']].map(r=>'<tr><td class="rh f-'+r[0]+'">'+(FK.indexOf(r[0])+1)+'. '+FN[r[0]]+'</td><td><b>'+r[1]+'</b></td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>').join('')+'</table></div>'+
@@ -298,6 +440,15 @@ function merk(){
    '<li><b>Umstellprobe:</b> Der Fall bleibt gleich, auch wenn das Wort an einer anderen Stelle steht.</li></ol>'+
    '<h3>Stolpersteine</h3><ul><li>Weiblich, sächlich, Mehrzahl: Nominativ und Akkusativ sehen gleich aus. Mit dem Verb fragen.</li><li>Dativ und Genitiv bei weiblichen Nomen sehen gleich aus (der Nachbarin). Ersatzprobe: dem Mann oder des Mannes?</li><li>Dativ Mehrzahl hat ein -n (den Kindern).</li></ul>';
 }
+
+const merk=()=>merk0()+
+ '<h3 style="margin-top:.9rem">Präpositionen und ihre Fälle</h3><div class="tw"><table><tr><th>Fall</th><th>Präpositionen</th></tr>'+
+ '<tr><td class="rh f-akk">Akkusativ</td><td>durch, für, gegen, ohne, um</td></tr>'+
+ '<tr><td class="rh f-dat">Dativ</td><td>aus, ausser, bei, mit, nach, seit, von, zu, gegenüber</td></tr>'+
+ '<tr><td class="rh f-gen">Genitiv</td><td>wegen, während, trotz, statt, innerhalb, ausserhalb, oberhalb, unterhalb</td></tr>'+
+ '<tr><td class="rh f-art">Wechsel</td><td>an, auf, hinter, in, neben, über, unter, vor, zwischen: <b>Wo?</b> = Dativ, <b>Wohin?</b> = Akkusativ</td></tr></table></div>'+
+ '<h3>Fallfehler finden</h3><ol><li>Gruppe markieren.</li><li>Fall bestimmen (Präposition oder Verb, dann Frage oder Ersatzprobe).</li><li>Form korrigieren und laut lesen. Nicht jeder Satz hat einen Fehler.</li></ol>'+
+ '<h3>Endungen bei «ein» und Adjektiv</h3><p>Das Adjektiv endet meistens auf <b>-en</b>. Ausnahmen: Nominativ männlich <b>-er</b> (ein kleiner Hund), Nominativ und Akkusativ weiblich <b>-e</b> (eine kleine Katze), Nominativ und Akkusativ sächlich <b>-es</b> (ein kleines Kind).</p>';
 
 /* ================= Widgets des Lehrerteils ================= */
 const widgets={
@@ -347,7 +498,7 @@ const actions={
  uw(b){const w=b.closest('[data-w="uw"]').querySelector('.uw');w.classList.toggle('on');b.textContent=w.classList.contains('on')?'Farben ausblenden':'Fälle einfärben';}
 };
 const glance=()=>'<div class="glance">'+FK.map(k=>'<div class="gl f-'+k+'"><span>'+(FK.indexOf(k)+1)+'. '+FN[k]+'</span><b>'+FQ[k]+'</b></div>').join('')+'</div>';
-GT.register({id:'faelle',teil:'wort',nr:3,writeAny:['bestimmen','einsetzen'],title:'Die 4 Fälle',desc:'Nominativ, Genitiv, Dativ und Akkusativ bestimmen',ex:EXF,
-  cats:FK,catName:FN,catTitle:'Welche Fälle?',TYPES,TASKS,SEC,TOC,PRESETS,REF:[['vier','Die 4 Fälle'],['tabelle','Tabelle'],['proben','Proben']],
+GT.register({id:'faelle',teil:'wort',nr:3,writeAny:['bestimmen','einsetzen','endung','fehler'],title:'Die 4 Fälle',desc:'Nominativ, Genitiv, Dativ und Akkusativ bestimmen',ex:EXF,
+  cats:FK,catName:FN,catTitle:'Welche Fälle?',TYPES,TASKS,SEC,TOC,PRESETS,REF:[['vier','Die 4 Fälle'],['tabelle','Tabelle'],['proben','Proben'],['praep','Präpositionen'],['fehler','Fallfehler'],['endung','Endungen']],
   merk,glance,SLIDES,widgets,actions});
 })();

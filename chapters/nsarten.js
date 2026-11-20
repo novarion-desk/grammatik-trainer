@@ -139,7 +139,7 @@ const EX=[
  ['Wandle um: «Vor der Abreise reinigten wir das Haus.»','Bevor wir abreisten, reinigten wir das Haus.',3]
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['6 Arten','Konjunktional-, Relativ-, indirekter Frage-, uneingeleiteter Nebensatz, Infinitiv- und Partizipialsatz.'],['Verb','Eingeleitet: am Schluss. Uneingeleitet: vorne. Infinitiv/Partizipialsatz: keine Personalform.'],['Falle','Modalverb + Infinitiv ohne «zu» ist kein Infinitivsatz.']]);
-GT.chapter({id:'nsarten',teil:'satz',nr:8,title:'Arten der Nebensätze',big:'Ich weiss, dass er kommt',desc:'Formale Arten, Relativsatz, Infinitivsatz und Bedeutung',
+GT.chapter({id:'nsarten',teil:'satz',nr:9,title:'Arten der Nebensätze',big:'Ich weiss, dass er kommt',desc:'Formale Arten, Relativsatz, Infinitivsatz und Bedeutung',
  ex:'«Sie hofft, die Prüfung zu bestehen.»',
  goals:['Ich unterscheide die sechs formalen Nebensatzarten.','Ich forme uneingeleitete und eingeleitete Nebensätze um.','Ich erkenne Relativsätze und Infinitivsätze.','Ich bestimme die Bedeutung von Nebensätzen (Zeit, Grund, Bedingung …).','Ich wandle überladene Sätze um (ab B).'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',

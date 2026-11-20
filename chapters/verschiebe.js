@@ -139,7 +139,7 @@ const SECS=[
 {id:'probe',title:'Die Verschiebeprobe',short:'Verschiebeprobe',min:10,note:'Beispielsatz mit Kärtchen an der Wandtafel umstellen. Hier noch keine Namen der Satzglieder: Es geht nur darum, die Glieder zu finden. Das konjugierte Verb (Personalform) bleibt im Aussagesatz an zweiter Stelle.',
  html:()=>'<div style="display:flex;gap:.8rem;align-items:center;padding:.8rem 1rem;border-radius:12px;background:#dbeafe;border:2px solid #2563eb;color:#1e3a8a"><span style="font-size:2.2rem">🔀</span><div><b style="font-size:1.15rem">Was zusammenbleibt, ist ein Satzglied.</b></div></div><p class="lead" style="margin-top:.8rem">Mit der <b>Verschiebeprobe</b> (auch <b>Umstellprobe</b>) findest du die Satzglieder: Was beim Umstellen zusammenbleibt, ist <b>ein</b> Satzglied.</p>'+
  '<div class="card"><p>Der kleine Hund bellt laut.</p><p>Laut bellt der kleine Hund.</p><p>Bellt der kleine Hund laut? <span class="muted">(Frage)</span></p></div>'+
- '<div class="callout"><b>Regeln:</b> 1. Das konjugierte Verb (die Personalform) bleibt im Aussagesatz an zweiter Stelle. 2. Wörter, die zusammenbleiben, sind <b>ein</b> Satzglied. 3. Der Satz muss danach noch Sinn ergeben.</div>'},
+ '<div class="callout"><b>Regeln:</b> 1. Das konjugierte Verb (die Personalform) bleibt im Aussagesatz an zweiter Stelle. 2. Wörter, die zusammenbleiben, sind <b>ein</b> Satzglied. 3. Der Satz muss danach noch Sinn ergeben.</div><div class="callout info">📖 <b>Im Lehrmittel heisst das …</b> «Vorfeldprobe». Gemeint ist dasselbe: Du verschiebst ein Satzglied an den Anfang des Satzes.</div>'},
 {id:'abtrennen',title:'Satzglieder abtrennen',short:'Satzglieder abtrennen',min:10,note:'Schritt für Schritt: Satz umstellen, prüfen, was zusammenbleibt, dann senkrechte Striche zwischen die Satzglieder setzen. Zweiteilige Verben (hat … gelacht, fährt … ab) zählen als ein Satzglied, auch wenn die Teile getrennt stehen.',
  html:()=>'<p class="lead">Setze zwischen den Satzgliedern einen <b>senkrechten Strich</b>.</p>'+
  '<ol class="steps"><li>Stelle den Satz mehrmals um.</li><li>Was immer zusammenbleibt, ist ein Satzglied.</li><li>Setze zwischen die Satzglieder einen Strich.</li></ol>'+
@@ -153,7 +153,7 @@ const SECS=[
   ['4 · Satz muss Sinn ergeben','«Laut bellt der Hund.»','Ein Satz mit anderer Bedeutung ist keine richtige Umstellung.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0">'+x[2]+'</p></div>').join('')+'</div>'},
 {id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:4,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
- html:()=>T(['Begriff','Bedeutung'],[['Verschiebeprobe','Verfahren, um Satzglieder zu finden (auch Umstellprobe)'],['Satzglied','Wort oder Wortgruppe, die beim Umstellen zusammenbleibt'],['Personalform','konjugiertes Verb']])}
+ html:()=>T(['Begriff','Bedeutung'],[['Verschiebeprobe','Verfahren, um Satzglieder zu finden (auch Umstellprobe)'],['Satzglied','Wort oder Wortgruppe, die beim Umstellen zusammenbleibt'],['Personalform','konjugiertes Verb'],['Vorfeldprobe','anderer Name für die Verschiebeprobe (im Lehrmittel)']])}
 ];
 const EX=[
  ['Stelle den Satz zweimal um: «Der Hund bellt laut.»','Laut bellt der Hund. · Bellt der Hund laut?',1],

@@ -190,7 +190,7 @@ const EX=[
  ['Satzverbindung oder Satzgefüge? «Der Hund bellt, und die Katze schläft.»','Satzverbindung',2]
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['Hauptsatz','Kann allein stehen. Verb an zweiter Stelle.'],['Nebensatz','Beginnt mit einer Konjunktion. Verb am Ende. Kommt nicht allein vor.'],['Satzverbindung','Hauptsatz + Hauptsatz (und, aber, oder, denn).'],['Satzgefüge','Hauptsatz + Nebensatz (weil, dass, obwohl, wenn, damit …).'],['Komma','Zwischen Haupt- und Nebensatz steht immer ein Komma.'],['Teilsatz','Jeder Teil eines zusammengesetzten Satzes.'],['Einleitewort','Relativpronomen (der, die, das), Fragewort (wer, wann, warum) oder unterordnende Konjunktion (weil, dass, obwohl, wenn).']]);
-GT.chapter({id:'hs-ns',teil:'satz',nr:6,title:'Hauptsatz, Nebensatz und Satzgefüge',big:'Ich bleibe, weil ich müde bin',desc:'Satzverbindung, Satzgefüge, Einleitewörter und Verbstellung',
+GT.chapter({id:'hs-ns',teil:'satz',nr:7,title:'Hauptsatz, Nebensatz und Satzgefüge',big:'Ich bleibe, weil ich müde bin',desc:'Satzverbindung, Satzgefüge, Einleitewörter und Verbstellung',
  ex:'«Ich bleibe zu Hause, weil ich krank bin.»',
  goals:['Ich unterscheide Hauptsatz und Nebensatz.','Ich erkenne Satzverbindung und Satzgefüge.','Ich erkenne Einleitewörter von Nebensätzen.','Ich bilde Satzverbindungen und Satzgefüge aus zwei einfachen Sätzen.','Ich stelle das Verb im Nebensatz richtig.'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
