@@ -172,6 +172,7 @@ const merk=()=>'<h3>🔀 Die Verschiebeprobe</h3><p>Mit der <b>Verschiebeprobe</
 GT.chapter({id:'verschiebe',teil:'satz',nr:2,title:'Die Verschiebeprobe',big:'Der Hund | bellt | laut',desc:'Satzglieder durch Umstellen finden und abtrennen',
  ex:'«Der Hund | bellt | laut.»',
  goals:['Ich stelle einen Satz auf mehrere Arten um und lasse die Personalform an zweiter Stelle.','Ich erkenne, was beim Umstellen zusammenbleibt: ein Satzglied.','Ich setze zwischen die Satzglieder einen Strich und zähle sie.','Ich weiss, dass ein Verb aus mehreren Teilen (hat … gelacht) nur ein Satzglied ist.','Ich schreibe den Fachbegriff «Verschiebeprobe» richtig.'],
+ tryTypes:'trenn',
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{trenn:{icon:'✂️',label:'Satzglieder trennen',short:'Zwischen zwei Wörtern antippen',instr:'Tippe zwischen zwei Wörter, wo eine Satzgliedgrenze liegt.',hint:'Was beim Umstellen zusammenbleibt, ist ein Satzglied. Das Verb kann aus zwei Teilen bestehen.',ref:'abtrennen'},
   probe:{label:'Zählen und Umstellen',short:'Satzglieder zählen, richtig umstellen',instr:'Wähle die richtige Antwort.',hint:'Was beim Umstellen zusammenbleibt, ist ein Satzglied.',ref:'probe'},

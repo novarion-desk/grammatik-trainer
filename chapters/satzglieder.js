@@ -247,7 +247,7 @@ const SGI=[
 ['adv','🧩','Adverbiale','Wann? Wo? Wie? Warum?','Wort oder Wortgruppe ohne Präposition: gestern, dort, leider.'],
 ['att','🏷️','Attribut (kein Satzglied)','Was für ein …?','Beifügung zu einem Nomen: der freche Hund.']];
 const SL=(k,emo,name,frage,lead,steps,head,rows,callouts)=>
- '<div class="f-'+k+'">'+
+ '<div class="f-'+k+'" style="--sc:var(--c);--sb:var(--b);--st:var(--t)">'+
  '<div style="display:flex;gap:.9rem;align-items:center;padding:.8rem 1rem;border-radius:12px;background:var(--b);border:2px solid var(--c);color:var(--t)"><span style="font-size:2.4rem">'+emo+'</span><div><span class="tag f-'+k+'" style="font-size:1rem">'+name+'</span><div style="font-size:1.3rem;font-weight:800;margin-top:.15rem">'+frage+'</div></div></div>'+
  '<p class="lead" style="margin:.8rem 0">'+lead+'</p>'+
  '<div class="grid2"><div class="card" style="border-top:5px solid var(--c)"><h3 style="margin:0 0 .3rem">🔍 So findest du es</h3><ol class="steps" style="margin:0">'+steps.map(x=>'<li>'+x+'</li>').join('')+'</ol></div>'+

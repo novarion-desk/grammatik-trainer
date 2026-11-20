@@ -110,7 +110,20 @@ mark.w{background:var(--b);color:inherit;box-shadow:inset 0 -3px 0 var(--c);bord
 .toc button{flex:0 0 auto;min-height:44px;border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:.3rem .9rem;font-weight:600;font-size:.85rem;color:var(--muted)}
 .toc button:hover{border-color:var(--primary);color:var(--primary)}
 .sec{scroll-margin-top:120px;margin-bottom:1.6rem}
-.sec>h2{font-size:1.3rem;font-weight:800;margin-bottom:.6rem}
+.sec{--sc:#4f46e5;--sb:#eef2ff;--st:#312e81}
+.sec>h2{font-size:1.3rem;font-weight:800;margin-bottom:.8rem;display:flex;align-items:center;gap:.7rem;padding:.7rem 1.1rem;border-radius:14px;background:var(--sb);color:var(--st);border-left:8px solid var(--sc);box-shadow:0 1px 3px rgba(15,23,42,.06)}
+.sec>h2::before{content:var(--se,'📘');font-size:1.7rem;line-height:1}
+.sec .lead{background:linear-gradient(90deg,var(--sb),rgba(255,255,255,0));padding:.7rem 1rem;border-radius:12px;border-left:5px solid var(--sc)}
+.sec table th{background:var(--sb);color:var(--st);border-bottom:2px solid var(--sc)}
+.sec table td:first-child{font-weight:700}
+.sec tbody tr:nth-child(even) td{background:rgba(148,163,184,.08)}
+.sec .card:not([style]){border-top:5px solid var(--sc);border-radius:14px}
+.sec .callout{border-left:6px solid #f59e0b;border-radius:12px}.sec .callout.info{border-left-color:var(--sc)}
+.sec .steps li::before{background:var(--sc)}
+.sec ul li::marker{color:var(--sc)}
+.sec h3{color:var(--st)}
+.thero{display:flex;gap:1.1rem;align-items:center;padding:1.2rem 1.4rem;border-radius:18px;background:linear-gradient(120deg,var(--hb),#fff);border:2px solid var(--hc);margin-bottom:1rem}
+.thero .hi{font-size:3rem;line-height:1}.thero .hk{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--hc)}.thero .ht{font-size:1.7rem;font-weight:800;line-height:1.2}.thero .hd{color:var(--muted);margin-top:.15rem}
 .sec h3.pr{font-size:1.1rem;margin:1.2rem 0 .5rem}
 .sent{font-size:1.2rem;margin:.3rem 0 .6rem}
 .fcard{border:2px solid var(--c);background:var(--b);border-radius:var(--radius);padding:.9rem 1rem}
@@ -310,6 +323,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 #login input,#settings input{min-height:48px;border:1.5px solid var(--line2);border-radius:var(--radius-s);padding:.4rem .8rem;width:100%}
 #login label,#settings label{font-size:.85rem;font-weight:600;color:var(--muted)}
 .lerr{padding:.6rem .8rem;border-radius:var(--radius-s);background:var(--bad-l);border:1px solid #fecaca;color:#7f1d1d;font-size:.9rem}
+.mvflow{gap:.5rem;margin-top:.4rem}.mvb{border:2px solid #4f46e5;background:#eef2ff;color:#312e81;border-radius:12px;padding:.45rem .8rem;font-size:1rem;font-weight:700;cursor:pointer}.mvb.fixed{border-color:#dc2626;background:#fee2e2;color:#7f1d1d;cursor:default}.mvb:hover:not(.fixed){background:#e0e7ff}.mvsent{margin-top:.7rem;font-size:1.15rem;font-weight:700}.shake{animation:shk .35s}@keyframes shk{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 .cutflow{gap:0;align-items:center;line-height:2.4}.cutflow .cw{padding:.2rem .15rem}.gap{min-width:30px;height:44px;border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}.gap i{display:block;width:3px;height:26px;border-radius:2px;background:var(--line2);opacity:.55;transition:all .12s}.gap:hover i{opacity:1;height:34px}.gap.sel i{background:var(--primary);opacity:1;height:38px;width:4px}.gap.right i{background:var(--ok);opacity:1;height:38px;width:4px}.gap.wrong i{background:var(--bad);opacity:1;height:38px;width:4px}.gap.miss i{background:var(--ok);opacity:1;height:38px;width:4px;background:repeating-linear-gradient(var(--ok) 0 5px,transparent 5px 8px)}
 .chip.tok{border-style:solid;border-color:var(--line2)}
 .chip.tok.sel{background:var(--primary-l);border-color:var(--primary);color:#312e81}
@@ -408,7 +422,7 @@ function renderHead(){
 }
 function screenStart(){
   const D={A:'Alles, auch die Erweiterungen',B:'Kern und einige Erweiterungen',C:'Der Kern: Grundlagen und Proben'},P=loadP();
-  const EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzglieder:['🏷️','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff'],zgs:['🧵','#4f46e5','#e0e7ff'],nsarten:['🌿','#4f46e5','#e0e7ff']};
+  const EM=GT.EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzglieder:['🏷️','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff'],zgs:['🧵','#4f46e5','#e0e7ff'],nsarten:['🌿','#4f46e5','#e0e7ff']};
   const tile=(key,c,i)=>{
     const ch=GT.chapters[c[1]],em=EM[c[1]]||['📘','#4f46e5','#e0e7ff'];
     const ico='<div class="ti" style="background:'+em[2]+'">'+em[0]+'</div>';
@@ -428,12 +442,22 @@ function screenStart(){
    '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','🔤 Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','🧩 Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
    (Object.keys(P).length?'<div class="resetbar">'+(S.resetAsk?'<span>Wirklich den ganzen Fortschritt auf diesem Gerät löschen?</span> <button class="btn sm" data-a="resetyes" style="border-color:var(--bad);color:var(--bad)">Ja, löschen</button> <button class="btn sm" data-a="resetno">Abbrechen</button>':'<button class="btn sm" data-a="resetask">Fortschritt zurücksetzen</button>')+'</div>':'');
 }
+const PAL=[['#4f46e5','#eef2ff','#312e81'],['#2563eb','#dbeafe','#1e3a8a'],['#16a34a','#dcfce7','#14532d'],['#d97706','#fef3c7','#78350f'],['#db2777','#fce7f3','#831843'],['#0891b2','#cffafe','#164e63'],['#7c3aed','#ede9fe','#4c1d95'],['#dc2626','#fee2e2','#7f1d1d']];
+const SEMO={ziele:'🎯',check:'✅',stolper:'⚠️',fachbegriffe:'🔤',probe:'🔀',abtrennen:'✂️',satz:'💬',verb:'⚙️',farben:'🎨',vorgehen:'🧭',unterschied:'⚖️',glieder:'🧩',praedikat:'⚙️',subjekt:'👤',ao:'🎯',do:'🤝',go:'🏛️',pg:'🧭',adverbiale:'🧩',attribut:'🏷️',pradikativ:'💡',wortkette:'🔧',begriffe:'📚',merk:'📌'};
+const SEFB=['📘','🔎','✏️','💡','🧠','📌','🧩','🚀'];
+function secTheme(id,i){
+  const fix={stolper:3,fachbegriffe:6,check:2,ziele:0};
+  const p=PAL[fix[id]!==undefined?fix[id]:(i%PAL.length)];
+  return '--sc:'+p[0]+';--sb:'+p[1]+';--st:'+p[2]+';--se:&quot;'+(SEMO[id]||SEFB[i%SEFB.length])+'&quot;';
+}
 function screenLernen(){
   const vis=C().TOC.filter(t=>!t[2]||lv()>=t[2]);
+  const em=(GT.EM&&GT.EM[S.ch])||['📘','#4f46e5','#e0e7ff'];
+  const hero='<div class="thero" style="--hc:'+em[1]+';--hb:'+em[2]+'"><div class="hi">'+em[0]+'</div><div><div class="hk">'+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Kapitel '+C().nr+'</div><div class="ht">'+C().title+'</div><div class="hd">'+(C().desc||'')+'</div></div></div>';
   return '<div class="toc" id="toc">'+vis.map(t=>'<button data-a="toc" data-v="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'+
-   '<div class="topbar"><h2 class="page" style="margin:0">'+C().title+': Theorie</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="merk">Merkblatt drucken</button><button class="btn sm primary" data-a="config">Übung zusammenstellen →</button></div></div>'+
+   hero+'<div class="topbar"><h2 class="page" style="margin:0">Theorie</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="merk">Merkblatt drucken</button><button class="btn sm" data-a="dmerk">Merkblatt (.docx)</button><button class="btn sm primary" data-a="config">Übung zusammenstellen →</button></div></div>'+
    (C().glance?C().glance():'')+
-   vis.map(t=>'<section class="sec" id="s-'+t[0]+'">'+C().SEC[t[0]]()+'</section>').join('')+
+   vis.map((t,i)=>'<section class="sec" id="s-'+t[0]+'" style="'+secTheme(t[0],i)+'">'+C().SEC[t[0]]()+'</section>').join('')+
    '<div class="card" style="text-align:center"><b>Bereit zum Üben?</b><p class="muted">Jetzt die Aufgaben zu «'+C().title+'» lösen.</p><button class="btn primary" data-a="config">Übung zusammenstellen →</button></div>';
 }
 const PRESETS=[['Alles gemischt','Alle Aufgabentypen',['bestimmen','zuordnen','frage','ersatz','einsetzen','anmalen']],['Fälle bestimmen','Fall im Satz erkennen und anmalen',['bestimmen','anmalen']],['Proben','Frageprobe und Ersatzprobe',['frage','ersatz']],['Wissen und Formen','Fälle, Fragen, Artikel',['zuordnen','einsetzen']]];
@@ -565,9 +589,13 @@ function render(){
 }
 function renderTry(el){
   const types=el.dataset.types.split(',');
-  const cf=el.dataset.cats?el.dataset.cats.split(','):null;const pool=visibleTasks().filter(t=>types.includes(t.typ)&&(!cf||t.cats.some(c=>cf.includes(c))));if(!pool.length){el.hidden=true;return;}
+  const cf=el.dataset.cats?el.dataset.cats.split(','):null;const pool=visibleTasks().filter(t=>types.includes(t.typ)&&(t.opts||t.cuts)&&(!cf||t.cats.some(c=>cf.includes(c))));if(!pool.length){el.hidden=true;return;}
   let t,n=0;do{t=pool[Math.floor(Math.random()*pool.length)];n++;}while(String(t.id)===el.dataset.tid&&pool.length>1&&n<20);
-  el.dataset.tid=t.id;el._t=t;el._o=shuffle(t.opts);
+  el.dataset.tid=t.id;el._t=t;
+  if(t.cuts){el._sel=new Set();delete el.dataset.done;
+    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">Tippe zwischen zwei Wörter, wo ein Satzglied endet.</div><div class="flow cutflow">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="tcut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem"><button class="btn primary" data-a="tchk">Überprüfen</button></div>';
+    return;}
+  el._o=shuffle(t.opts);
   el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div><div class="opts">'+
    el._o.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="tpick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div>';
 }
@@ -576,6 +604,31 @@ function tryPick(b){
   const t=el._t,i=Number(b.dataset.i),ok=el._o[i]===t.answer;
   el.querySelectorAll('.opt').forEach((x,j)=>{x.disabled=true;if(el._o[j]===t.answer)x.classList.add('right');else if(j===i)x.classList.add('wrong');});
   el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
+}
+const LOWW=new Set(['der','die','das','den','dem','des','ein','eine','einen','einem','mein','meine','meinen','meinem','unser','unsere','wir','ich','du','er','sie','es','ihr','nach','am','im','mit','in','auf','gestern','heute','morgen','leider','dann','jetzt']);
+const VERBPART=new Set(['verloren','ab','gewonnen','geschaut','ein','gelacht','gespielt']);
+function tChunks(t){const ch=[];let c=[];t.tokens.forEach((w,i)=>{c.push(w);if(t.cuts.includes(i)){ch.push(c);c=[];}});ch.push(c);return ch;}
+function tFixed(t,ch){const f=new Set([1]);const l=ch.length-1;if(l>1&&ch[l].length===1&&VERBPART.has(ch[l][0].toLowerCase()))f.add(l);return f;}
+function tMoveHTML(el){
+  const t=el._t,ch=tChunks(t),fx=tFixed(t,ch),ord=el._ord||ch.map((_,i)=>i);
+  const words=ord.map((ci,p)=>{const ws=ch[ci].slice();if(p===0)ws[0]=ws[0][0].toUpperCase()+ws[0].slice(1);else if(ci===0&&LOWW.has(ws[0].toLowerCase()))ws[0]=ws[0][0].toLowerCase()+ws[0].slice(1);return ws.join(' ');});
+  return '<div class="mvbox"><div class="instr" style="margin-top:.8rem">Jetzt verschieben: Tippe ein Satzglied an. Es springt an den Anfang. Das Verb bleibt an zweiter Stelle.</div><div class="flow mvflow">'+ord.map((ci,p)=>'<button class="mvb'+(fx.has(ci)?' fixed':'')+'" data-a="tmv" data-i="'+ci+'">'+words[p]+'</button>').join('')+'</div><div class="mvsent">'+words.join(' ')+'.</div><div style="margin-top:.5rem"><button class="btn sm" data-a="tmvreset">↺ Ursprünglicher Satz</button></div></div>';
+}
+function tryCut(b){const el=b.closest('[data-w="try"]');if(el.dataset.done)return;const i=Number(b.dataset.i);if(el._sel.has(i))el._sel.delete(i);else el._sel.add(i);b.classList.toggle('sel',el._sel.has(i));}
+function tryCheck(b){
+  const el=b.closest('[data-w="try"]');if(el.dataset.done)return;el.dataset.done='1';const t=el._t,tg=new Set(t.cuts);
+  const ok=[...tg].every(i=>el._sel.has(i))&&[...el._sel].every(i=>tg.has(i));
+  el.querySelectorAll('.gap').forEach(g=>{const i=Number(g.dataset.i);g.disabled=true;if(el._sel.has(i)&&tg.has(i))g.classList.add('right');else if(el._sel.has(i))g.classList.add('wrong');else if(tg.has(i))g.classList.add('miss');});
+  el.querySelector('.actions').remove();el._ord=null;
+  el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig getrennt!':'✗ Nicht ganz richtig.')+'</b> '+(ok?'':'Die roten Striche fehlen. ')+t.why+'</div>'+(ok?tMoveHTML(el):'')+'<div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
+}
+function tryMove(b,reset){
+  const el=b.closest('[data-w="try"]'),t=el._t,ch=tChunks(t),fx=tFixed(t,ch);
+  if(reset){el._ord=null;}
+  else{const ci=Number(b.dataset.i);if(fx.has(ci)){const m=el.querySelector('.mvsent');m.classList.add('shake');setTimeout(()=>m.classList.remove('shake'),400);return;}
+    const rest=ch.map((_,i)=>i).filter(i=>i!==ci);const vb=rest.filter(i=>fx.has(i)&&i===1);
+    el._ord=[ci].concat(vb,rest.filter(i=>!vb.includes(i)));}
+  el.querySelector('.mvbox').outerHTML=tMoveHTML(el);
 }
 function initTry(root){(root||document).querySelectorAll('[data-w="try"]').forEach(renderTry);}
 function openRef(sec){
@@ -750,7 +803,8 @@ function screenSheet(){
   const o=S.sheetOut;if(!o)return screenConfig();
   return '<div class="topbar"><h2 class="page" style="margin:0">Übungsblatt: '+esc(o.title)+'</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="back">‹ Einstellungen</button><button class="btn sm" data-a="mksheet" data-v="preview">'+(o.src==='ai'?'Neu erstellen':'Neu mischen')+'</button></div></div>'+
    (o.src==='ai'?'<div class="callout noprint">Von der KI erstellt. Bitte die Aufgaben und Lösungen vor dem Einsatz kurz prüfen.</div>':'')+
-   '<div class="btnrow"><button class="btn primary" data-a="psheet" data-v="ws">Arbeitsblatt drucken</button><button class="btn" data-a="psheet" data-v="sol">Lösungsblatt drucken</button><button class="btn" data-a="psheet" data-v="both">Beides drucken</button></div>'+
+   '<div class="card"><b>🖨️ Drucken oder als PDF speichern</b><div class="btnrow" style="margin:.5rem 0 .2rem"><button class="btn primary" data-a="psheet" data-v="ws">Arbeitsblatt (PDF / Druck)</button><button class="btn" data-a="psheet" data-v="sol">Lösungsblatt (PDF / Druck)</button><button class="btn" data-a="psheet" data-v="both">Beides (PDF / Druck)</button></div><div class="muted" style="font-size:.85rem">Im Druckdialog bei «Drucker» die Option «Als PDF speichern» wählen.</div>'+
+   '<b style="display:block;margin-top:.8rem">📝 Als Word-Datei (.docx) zum Anpassen</b><div class="btnrow" style="margin:.5rem 0 0"><button class="btn" data-a="dsheet" data-v="ws">Arbeitsblatt (.docx)</button><button class="btn" data-a="dsheet" data-v="sol">Lösungsblatt (.docx)</button><button class="btn" data-a="dsheet" data-v="both">Beides (.docx)</button></div></div>'+
    '<div class="card" style="background:#fff"><div class="muted" style="font-size:.8rem;margin-bottom:.4rem">Arbeitsblatt (Vorschau)</div>'+o.ws+'</div>'+
    '<div class="card" style="background:#fff"><div class="muted" style="font-size:.8rem;margin-bottom:.4rem">Lösungsblatt (Vorschau)</div>'+o.sol+'</div>';
 }
@@ -827,8 +881,15 @@ document.addEventListener('click',e=>{
    case 'sheet':if(!teacherAccess())break;setCh(b.dataset.t,v);S.sheet=true;S.sheetOut=null;S.sheetErr='';S.screen='config';render();break;
    case 'mksheet':makeSheet(v);break;
    case 'psheet':printSheet(v);break;
+   case 'dsheet':docxSheet(v);break;
+   case 'dmerk':docxMerk();break;
+   case 'tdocx':document.querySelectorAll('details.dd[open]').forEach(x=>x.removeAttribute('open'));docxTeach(v);break;
    case 'tpick':tryPick(b);break;
    case 'tall':{b.closest('.noprint').querySelectorAll('[data-w="try"]').forEach(e=>{delete e.dataset.done;renderTry(e);});break;}
+   case 'tcut':tryCut(b);break;
+   case 'tchk':tryCheck(b);break;
+   case 'tmv':tryMove(b,false);break;
+   case 'tmvreset':tryMove(b,true);break;
    case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
    case 'resetask':S.resetAsk=true;render();break;
    case 'resetno':S.resetAsk=false;render();break;
@@ -933,7 +994,7 @@ function screenTeach(){
   const bar='<div class="tbar"><div class="seg"><button data-a="tmode" data-v="slides" class="'+(T.mode==='slides'?'on':'')+'">Folien</button><button data-a="tmode" data-v="overview" class="'+(T.mode==='overview'?'on':'')+'">Übersicht</button></div>'+
    (T.mode==='slides'?'<button class="btn sm primary" data-a="tpres" title="Vollbild, wie in PowerPoint (Esc beendet)">▶ Präsentieren</button>':'')+'<button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tnotes">Hinweise: '+(T.notes?'an':'aus')+'</button>'+
    '<span class="tsp"></span><span class="muted tinfo">'+V.length+' Folien · ca. '+tot+' Min.</span>'+
-   '<details class="dd"><summary class="btn sm">Drucken ▾</summary><div class="ddm"><button class="btn sm" data-a="tprint" data-v="h">Übersicht für das Heft</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt</button><button class="btn sm" data-a="tprint" data-v="u">Gemeinsame Übungen</button></div></details>'+
+   '<details class="dd"><summary class="btn sm">Drucken ▾</summary><div class="ddm"><button class="btn sm" data-a="tprint" data-v="h">Übersicht für das Heft</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt</button><button class="btn sm" data-a="tprint" data-v="u">Gemeinsame Übungen</button><hr style="margin:.3rem 0;border:0;border-top:1px solid var(--line)"><button class="btn sm" data-a="tdocx" data-v="h">Übersicht für das Heft (.docx)</button><button class="btn sm" data-a="tdocx" data-v="m">Merkblatt (.docx)</button><button class="btn sm" data-a="tdocx" data-v="u">Gemeinsame Übungen (.docx)</button></div></details>'+
    '<button class="btn sm primary" data-a="sheet" data-t="'+S.teil+'" data-v="'+S.ch+'">Übungsblatt erstellen</button></div>';
   if(T.pres&&T.mode==='slides'){
     const s=V[T.cur];
@@ -964,14 +1025,27 @@ function doPrint(html){
   const done=()=>document.body.classList.remove('pm');window.addEventListener('afterprint',done,{once:true});
   try{window.print();}catch(e){done();}
 }
-function printTeach(mode){
-  const c=C();let h;
-  if(mode==='m')h=wrapPrint('Merkblatt',c.title,c.merk());
-  else{
-    const name=mode==='u'?'Übungsblatt':'Übersicht für das Heft';
-    h=wrapPrint(name,c.title,slidesVis().filter(s=>(s.p||'').includes(mode)).map(s=>'<section class="ps"><h2 style="font-size:1.15rem">'+s.title+'</h2>'+(s.print?s.print():stripH(s.html()))+'</section>').join(''));
-  }
-  doPrint(h);
+function teachInner(mode){
+  const c=C();
+  if(mode==='m')return ['Merkblatt',c.merk()];
+  return [mode==='u'?'Übungsblatt':'Übersicht für das Heft',slidesVis().filter(s=>(s.p||'').includes(mode)).map(s=>'<section class="ps"><h2 style="font-size:1.15rem">'+s.title+'</h2>'+(s.print?s.print():stripH(s.html()))+'</section>').join('')];
+}
+function printTeach(mode){const [name,inner]=teachInner(mode);doPrint(wrapPrint(name,C().title,inner));}
+/* ---- Word-Export (.docx) ---- */
+function docxSub(kind){return kind+' · '+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+(getSet().school?' · '+getSet().school:'');}
+function docxName(kind,title){return (kind+'_'+title).replace(/[^A-Za-z0-9äöüÄÖÜéèàß]+/g,'_').replace(/^_|_$/g,'')+'.docx';}
+async function exportDocx(secs,file){
+  document.body.style.cursor='progress';
+  try{await GT.docxExport(secs,file);}
+  catch(e){alert('Der Word-Export hat nicht geklappt: '+(e.message||e));}
+  document.body.style.cursor='';
+}
+function docxMerk(){const t=C().title;exportDocx([{html:C().merk(),title:t,sub:docxSub('Merkblatt')}],docxName('Merkblatt',t));}
+function docxTeach(mode){const [name,inner]=teachInner(mode);const t=C().title;exportDocx([{html:inner,title:t,sub:docxSub(name)}],docxName(name,t));}
+function docxSheet(w){
+  const o=S.sheetOut;if(!o)return;
+  const kind=(S.src==='ai'?'KI-Übungsblatt':'Übungsblatt'),a={html:o.ws,title:o.title,sub:docxSub(kind)},b={html:o.sol,title:o.title,sub:docxSub('Lösungsblatt')};
+  exportDocx(w==='ws'?[a]:w==='sol'?[b]:[a,b],docxName(w==='ws'?kind:w==='sol'?'Loesungsblatt':kind+'_mit_Loesung',o.title));
 }
 document.addEventListener('input',e=>{if(e.target.id==='wfield'){const b=document.getElementById('checkBtn');if(b)b.disabled=!e.target.value.trim();}});
 document.addEventListener('keydown',e=>{
@@ -1039,11 +1113,11 @@ GT.chapter=function(d){
   const SEC={ziele:()=>'<div class="card"><h3>Das lernst du hier</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+d.goals.map(g=>'<li>'+g+'</li>').join('')+'</ul></div>'};
   const secs=d.sections.filter(s=>!s.teacherOnly);
   secs.forEach(s=>SEC[s.id]=sec(s));
-  SEC.check=()=>'<h2>Probier es aus</h2><p class="sub" style="margin-top:0">Gemischte Aufgaben zum Ausprobieren. Nach jeder Antwort siehst du die Lösung.</p>'+GT.tryW(Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(','));
+  SEC.check=()=>'<h2>Probier es aus</h2><p class="sub" style="margin-top:0">'+(d.tryTypes?'Trenne die Satzglieder. Nach der Überprüfung kannst du die Satzglieder verschieben.':'Gemischte Aufgaben zum Ausprobieren. Nach jeder Antwort siehst du die Lösung.')+'</p>'+GT.tryW(d.tryTypes||Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(','));
   const TOC=[['ziele','Lernziele']].concat(secs.map(s=>[s.id,s.short||s.title,s.lv>1?s.lv:undefined])).concat([['check','Ausprobieren']]);
-  const tryAll=Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
+  const tryAll=d.tryTypes||Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
   const ex=d.exercises||[];
-  const liveTypes=Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
+  const liveTypes=d.tryTypes||Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
   const exLive=()=>(liveTypes?'<div class="noprint"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam vorne lösen:</b> Drei Aufgaben zum Thema dieses Kapitels. Klasse antworten lassen, Antwort begründen, dann «Nächste Aufgabe». Mit «Neue Aufgaben» kommen drei frische.</div>'+[1,2,3].map(()=>GT.tryW(liveTypes,d.liveCats&&d.liveCats.join(','))).join('')+'<div style="margin:.8rem 0"><button class="btn" data-a="tall">🔄 Alle drei neu</button></div><h3 style="margin-top:1.2rem">Zum Aufschreiben</h3></div>':'')+exHTML();
   const exHTML=()=>'<ol class="ex">'+ex.filter(u=>(u[2]||1)<=lv()).map(u=>'<li>'+u[0]+'<div class="po wl"></div><div class="noprint">'+GT.reveal('Lösung zeigen',u[1])+'</div></li>').join('')+'</ol>';
   const SLIDES=[{id:'titel',title:d.title,min:3,p:'h',note:d.noteTitel||'Lernziele laut lesen. Das Niveau oben bestimmt, wie viel Erweiterung eingeblendet wird.',
@@ -1051,7 +1125,7 @@ GT.chapter=function(d){
    .concat(d.sections.map(s=>({id:s.id,title:s.title,min:s.min||5,lv:s.lv,p:s.p===undefined?'h':s.p,note:s.note,html:typeof s.html==='function'?s.html:()=>s.html,print:s.print})))
    .concat(ex.length?[{id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:exLive}]:[])
    .concat([{id:'merkblatt',title:'Merkblatt',min:4,p:'hm',note:'Als Merkblatt drucken (Menü «Merkblatt drucken») oder abschreiben lassen.',html:()=>d.merk()},
-            {id:'check',title:'Abschluss-Check',min:5,p:'',note:'Als Exit-Ticket einzeln lösen lassen. Das Ergebnis zeigt, wo noch Lücken sind.',html:()=>'<p class="lead">Tippe jeweils die richtige Antwort.</p>'+[1,2,3,4].map(()=>GT.tryW(tryAll)).join('')}]);
+            {id:'check',title:'Abschluss-Check',min:5,p:'',note:'Als Exit-Ticket einzeln lösen lassen. Das Ergebnis zeigt, wo noch Lücken sind.',html:()=>'<p class="lead">'+(d.tryTypes?'Trenne die Satzglieder.':'Tippe jeweils die richtige Antwort.')+'</p>'+[1,2,3,4].map(()=>GT.tryW(tryAll)).join('')}]);
   const allT=Object.keys(d.types);
   const PRESETS=[['Alles gemischt','Alle Aufgabentypen',allT]].concat(allT.slice(0,3).map(k=>[d.types[k].label,d.types[k].short||'Nur dieser Typ',[k]]));
   if(d.css){const st=document.createElement('style');st.textContent=d.css;document.head.appendChild(st);}
@@ -1067,6 +1141,7 @@ GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
 })();
 
 </script>
+<script src="docx-export.js"></script>
 <script src="chapters/wortarten.js"></script>
 <script src="chapters/nomen.js"></script>
 <script src="chapters/verb.js"></script>
