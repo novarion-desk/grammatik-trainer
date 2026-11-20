@@ -225,7 +225,7 @@ dialog::backdrop{background:rgba(15,23,42,.5)}
 .heroniv .nd{font-size:.85rem;color:var(--muted)}
 .colh{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.7rem;border-bottom:2px solid var(--line);padding-bottom:.4rem}
 .colh h2{font-size:1.35rem;font-weight:800;margin:0}.colh span{color:var(--muted);font-size:.9rem}
-.tiles{display:grid;gap:.7rem}
+.tiles{display:grid;gap:.7rem}.teilh{margin:.6rem 0 0;font-size:.95rem;font-weight:800;color:var(--muted);text-transform:none}
 .tile{position:relative;display:flex;gap:.9rem;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:.9rem 1rem .9rem 1.1rem;overflow:hidden}
 .tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--line2)}
 .tile.act{box-shadow:var(--shadow)}.tile.act::before{background:var(--primary)}
@@ -310,6 +310,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 #login input,#settings input{min-height:48px;border:1.5px solid var(--line2);border-radius:var(--radius-s);padding:.4rem .8rem;width:100%}
 #login label,#settings label{font-size:.85rem;font-weight:600;color:var(--muted)}
 .lerr{padding:.6rem .8rem;border-radius:var(--radius-s);background:var(--bad-l);border:1px solid #fecaca;color:#7f1d1d;font-size:.9rem}
+.cutflow{gap:0;align-items:center;line-height:2.4}.cutflow .cw{padding:.2rem .15rem}.gap{min-width:30px;height:44px;border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}.gap i{display:block;width:3px;height:26px;border-radius:2px;background:var(--line2);opacity:.55;transition:all .12s}.gap:hover i{opacity:1;height:34px}.gap.sel i{background:var(--primary);opacity:1;height:38px;width:4px}.gap.right i{background:var(--ok);opacity:1;height:38px;width:4px}.gap.wrong i{background:var(--bad);opacity:1;height:38px;width:4px}.gap.miss i{background:var(--ok);opacity:1;height:38px;width:4px;background:repeating-linear-gradient(var(--ok) 0 5px,transparent 5px 8px)}
 .chip.tok{border-style:solid;border-color:var(--line2)}
 .chip.tok.sel{background:var(--primary-l);border-color:var(--primary);color:#312e81}
 .chip.tok.right{background:var(--ok-l);border-color:var(--ok)}.chip.tok.wrong{background:var(--bad-l);border-color:var(--bad)}.chip.tok.miss{border:2px dashed var(--ok)}
@@ -358,7 +359,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 'use strict';
 const GT=window.GT={chapters:{},
  WORT:[['Wortarten','wortarten','Nomen, Verb, Adjektiv, Pronomen und Partikel erkennen'],['Nomen','nomen','Wörter für Lebewesen, Dinge und Gedanken'],['Die 4 Fälle','faelle','Nominativ, Genitiv, Dativ und Akkusativ bestimmen'],['Verb','verb','Formen, Zeitformen und Modi'],['Adjektiv','adjektiv','Eigenschaften beschreiben und steigern'],['Pronomen','pronomen','Stellvertreter und Begleiter, auch Artikel'],['Partikel','partikel','Adverb, Konjunktion und Präposition']],
- SATZ:[['Wortlehre und Satzlehre','wl-sl','Wörter und Sätze untersuchen'],['Verbale Teile und Rohform','verbale','Verben im Satz erkennen'],['Verschiebeprobe','verschiebe','Satzglieder durch Umstellen finden'],['Satzarten','satzarten','Sätze nach ihrer Aufgabe unterscheiden'],['Hauptsatz und Nebensatz','hs-ns','Satzgefüge und Nebensatzarten'],['Kommasetzung','komma','Kommaregeln anwenden']],
+ SATZ:[['#','Teil 1 · Satzglieder und Satzarten'],['Wortlehre und Satzlehre','wl-sl','Wörter und Sätze untersuchen'],['Verbale Teile und verbale Wortkette','verbale','Verbale Teile benennen, Infinitivprobe'],['Verschiebeprobe und Satzglieder','verschiebe','Satzglieder bestimmen'],['Satzarten und Satzbau','satzarten','Satzarten, einfacher und zusammengesetzter Satz'],['#','Teil 2 · Zusammengesetzte Sätze'],['Hauptsatz, Nebensatz und Satzgefüge','hs-ns','Satzverbindung, Satzgefüge, Einleitewörter'],['Zusammengezogener Satz','zgs','Gemeinsames Satzglied nur einmal nennen'],['#','Teil 3 · Nebensätze und Komma'],['Arten der Nebensätze','nsarten','Formale Arten, Relativsatz, Bedeutung'],['Kommasetzung','komma','Kommaregeln anwenden']],
  register(c){c.catWord=c.catWord||'Fall';this.chapters[c.id]=c;if(c.TYPES)Object.keys(c.TYPES).forEach(k=>{if(!c.TYPES[k].icon&&ICONS[k])c.TYPES[k].icon=ICONS[k];});if(GT.autoW)GT.autoW(c);},
  mk:(k,t)=>'<mark class="w f-'+k+'">'+t+'</mark>',
  cap:s=>s.charAt(0).toUpperCase()+s.slice(1),
@@ -406,7 +407,7 @@ function renderHead(){
 }
 function screenStart(){
   const D={A:'Alles, auch die Erweiterungen',B:'Kern und einige Erweiterungen',C:'Der Kern: Grundlagen und Proben'},P=loadP();
-  const EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff']};
+  const EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff'],zgs:['🧵','#4f46e5','#e0e7ff'],nsarten:['🌿','#4f46e5','#e0e7ff']};
   const tile=(key,c,i)=>{
     const ch=GT.chapters[c[1]],em=EM[c[1]]||['📘','#4f46e5','#e0e7ff'];
     const ico='<div class="ti" style="background:'+em[2]+'">'+em[0]+'</div>';
@@ -416,7 +417,7 @@ function screenStart(){
      (p&&p.a?'<div class="pbar" title="Auf diesem Gerät gespeichert"><i style="width:'+pct+'%;background:'+em[1]+'"></i></div>':'')+'</div>'+
      '<div class="tbtn">'+(teacherAccess()?'<button class="btn t2" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'">Folien</button><button class="btn t2" data-a="sheet" data-t="'+key+'" data-v="'+c[1]+'">Übungsblatt</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div>';
   };
-  const col=(key,title,sub,L)=>'<section><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>tile(key,c,i)).join('')+'</div></section>';
+  const col=(key,title,sub,L)=>'<section><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>c[0]==='#'?'<h3 class="teilh">'+c[1]+'</h3>':tile(key,c,i)).join('')+'</div></section>';
   let last=null;try{last=localStorage.getItem('gt-last');}catch(e){}
   const lc=last&&GT.chapters[last]&&P[last]&&P[last].a?GT.chapters[last]:null;
   const lp=lc?Math.round(P[last].r/P[last].a*100):0;
@@ -479,6 +480,8 @@ function screenRound(){
   if(t.typ==='anmalen'){
     body='<div class="instr">'+T.instr+'</div><div class="brush">'+CK().map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+CN()[k]+'</button>').join('')+'</div>'+
      '<div class="flow">'+t.parts.map((p,i)=>p.f?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
+  }else if(t.cuts){
+    body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow cutflow">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="cut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div>';
   }else if(t.tokens){
     body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="tok" data-i="'+i+'">'+x+'</button>').join('')+'</div>';
   }else if(isW(t)){
@@ -505,6 +508,11 @@ function checkRound(){
     mine=need.map(i=>(R.paint[i]?CN()[R.paint[i]]:'–')).join(', ');right=need.map(i=>CN()[t.parts[i].f]).join(', ');
     need.forEach(i=>{if(R.paint[i]!==t.parts[i].f)conf=[t.parts[i].f,R.paint[i]];});
     document.querySelectorAll('.chip,.brush button').forEach(b=>b.disabled=true);
+  }else if(t.cuts){
+    const tg=new Set(t.cuts);ok=[...tg].every(i=>R.sel.has(i))&&[...R.sel].every(i=>tg.has(i));
+    document.querySelectorAll('.gap').forEach(b=>{const i=Number(b.dataset.i);b.disabled=true;if(R.sel.has(i)&&tg.has(i))b.classList.add('right');else if(R.sel.has(i))b.classList.add('wrong');else if(tg.has(i))b.classList.add('miss');});
+    const cutTxt=set=>t.tokens.map((x,i)=>x+(set.has(i)?' |':'')).join(' ');
+    mine=cutTxt(R.sel);right=cutTxt(tg);
   }else if(t.tokens){
     if(!R.sel.size)return;
     const tg=new Set(t.targets);ok=t.tokens.every((_,i)=>R.sel.has(i)===tg.has(i));
@@ -608,6 +616,8 @@ function sheetItem(t){
     q=t.parts.map(p=>p.f?'<u>'+esc(p.t)+'</u>':esc(p.t)).join(' ');
     a=t.parts.filter(p=>p.f).map(p=>esc(p.t.replace(/[.,]$/,''))+' → '+esc(CN()[p.f])).join('; ');
     instr='Bestimme die unterstrichenen Wörter und schreibe die Bezeichnung darüber.';kind='para';
+  }else if(t.cuts){
+    q=esc(t.tokens.join(' '));a=esc(t.tokens.map((x,i)=>x+(t.cuts.includes(i)?' |':'')).join(' '));instr=t.instr||instr;kind='para';
   }else if(t.tokens){
     q=t.tokens.map((x,i)=>t.targets.includes(i)?x:x).join(' ');q=esc(q);
     a=t.targets.map(i=>esc(t.tokens[i])).join(', ');instr=t.instr||instr;kind='para';
@@ -834,6 +844,7 @@ document.addEventListener('click',e=>{
    case 'paint':{const R=S.R;if(R.answered)return;const i=b.dataset.i;CK().forEach(k=>b.classList.remove('f-'+k,'p-'+k));
      if(R.paint[i]===R.brush){delete R.paint[i];}else{R.paint[i]=R.brush;b.classList.add('f-'+R.brush,'p-'+R.brush);}
      const need=R.tasks[R.i].parts.filter(p=>p.f).length;document.getElementById('checkBtn').disabled=Object.keys(R.paint).length<need;break;}
+   case 'cut':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=false;break;}
    case 'tok':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=!R.sel.size;break;}
    case 'hint':{const h=document.getElementById('hintBox');h.hidden=!h.hidden;break;}
    case 'check':checkRound();break;
@@ -1063,6 +1074,8 @@ GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
 <script src="chapters/verschiebe.js"></script>
 <script src="chapters/satzarten.js"></script>
 <script src="chapters/hs-ns.js"></script>
+<script src="chapters/zgs.js"></script>
+<script src="chapters/nsarten.js"></script>
 <script src="chapters/komma.js"></script>
 <script src="chapters/faelle.js"></script>
 <script>if('serviceWorker' in navigator&&location.protocol.startsWith('http')&&!/[?&]demo/.test(location.search)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}

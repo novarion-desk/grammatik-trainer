@@ -1,4 +1,4 @@
-/* Kapitel Satzlehre 6: Kommasetzung. */
+/* Kapitel Satzlehre 8: Kommasetzung. */
 (function(){
 'use strict';
 const GT=window.GT,mk=GT.mk,tryW=GT.tryW,T=GT.table;
@@ -97,7 +97,7 @@ const EX=[
  ['Schreibe einen Satz mit Aufzählung und einen mit «weil».','Beispiel: Ich esse Äpfel, Birnen und Trauben. Ich bleibe, weil ich müde bin.',2]
 ];
 const merk=()=>T(['Regel','Beispiel'],[['Aufzählung (nicht vor und/oder)','Äpfel<b>,</b> Birnen <b>und</b> Bananen'],['Nebensatz','Ich weiss<b>,</b> dass er kommt.<br>Weil ich müde bin<b>,</b> gehe ich.'],['aber, denn, sondern','Ich will<b>,</b> aber ich kann nicht.'],['Relativsatz / Einschub','Der Mann<b>,</b> der dort steht<b>,</b> …'],['Anrede, Ausruf','Lukas<b>,</b> komm! · Ach<b>,</b> schade!'],['Infinitiv mit um … zu','Sie lernt<b>,</b> um zu bestehen.']]);
-GT.chapter({id:'komma',teil:'satz',nr:6,title:'Kommasetzung',big:'Ich weiss, dass er kommt',desc:'Kommaregeln anwenden',
+GT.chapter({id:'komma',teil:'satz',nr:8,title:'Kommasetzung',big:'Ich weiss, dass er kommt',desc:'Kommaregeln anwenden',
  ex:'«Ich weiss, dass er kommt.»',
  goals:['Ich setze das Komma in Aufzählungen.','Ich setze das Komma zwischen Haupt- und Nebensatz.','Ich setze Kommas beim Relativsatz, bei der Anrede und beim Ausruf.'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
