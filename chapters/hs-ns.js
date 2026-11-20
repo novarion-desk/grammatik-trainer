@@ -114,7 +114,7 @@ const NS=[
 ['Es regnet, aber wir gehen hinaus.',0,1,'Zwei Hauptsätze mit «aber»: kein Nebensatz.'],
 ['Weil es regnet, bleiben wir zu Hause.',1,1,'«Weil es regnet» ist ein Nebensatz.'],
 ['Der Bus kommt spät, denn der Verkehr ist dicht.',0,2,'«denn» verbindet Hauptsätze: kein Nebensatz.'],
-['Falls es kalt wird, ziehe die Jacke an, die dort liegt.',1,3,'Zwei Nebensätze: «Falls es kalt wird» und «die dort liegt».'],
+['Falls es kalt wird, nimm die Jacke, die dort liegt.',1,3,'Zwei Nebensätze: «Falls es kalt wird» und «die dort liegt».'],
 ['Tim spielt Gitarre, Mia singt.',0,1,'Zwei Hauptsätze: kein Nebensatz.']
 ];
 NS.forEach(n=>task.push({typ:'hatns',stufe:n[2],lv:n[2]===3?2:1,cats:['sg1'],sent:'«'+n[0]+'»',opts:['Ja','Nein'],answer:n[1]?'Ja':'Nein',why:'<b>'+(n[1]?'Ja':'Nein')+'.</b> '+n[3]}));
@@ -122,7 +122,7 @@ NS.forEach(n=>task.push({typ:'hatns',stufe:n[2],lv:n[2]===3?2:1,cats:['sg1'],sen
 const WS=[
 ['Jeder einfache Satz ist ein …',['Hauptsatz','Nebensatz','Satzfragment','Teilsatz mit Einleitewort'],'Hauptsatz','Jeder einfache Satz ist ein Hauptsatz.','sg1',1],
 ['Der Nebensatz kommt nur vor im …',['zusammengesetzten Satz','einfachen Satz','Satzfragment','Ausruf'],'zusammengesetzten Satz','Der Nebensatz kann nur im zusammengesetzten Satz auftreten.','sg1',1],
-['Ein Nebensatz ist …',['unselbständig und hat ein eigenes Subjekt und Prädikat','selbständig und hat kein Prädikat','ein einzelnes Wort','immer ein Satzglied ohne Verb'],'unselbständig und hat ein eigenes Subjekt und Prädikat','Auch der Nebensatz weist Prädikat, Subjekt und andere Satzglieder auf.','sg1',2],
+['Ein Nebensatz ist …',['unselbständig und hat in der Regel eine eigene Personalform','selbständig und hat kein Prädikat','ein einzelnes Wort','immer ein Satzglied ohne Verb'],'unselbständig und hat in der Regel eine eigene Personalform','Auch der Nebensatz weist Prädikat, Subjekt und andere Satzglieder auf.','sg1',2],
 ['Wo steht die Personalform im Nebensatz?',['am Schluss','an zweiter Stelle','an erster Stelle','in der Mitte'],'am Schluss','Im Nebensatz steht das konjugierte Verb am Schluss.','sg1',1],
 ['Wo steht die Personalform im Aussage-Hauptsatz?',['an zweiter Stelle','am Schluss','an erster Stelle','an dritter Stelle'],'an zweiter Stelle','Im Hauptsatz steht sie an zweiter Stelle.','sg1',1],
 ['Ein Nebensatz ist meistens ein zum Satz erweitertes …',['Satzglied','Wort','Komma','Verb'],'Satzglied','Er hat im Satz die Aufgabe eines Satzglieds (z. B. Zeit oder Grund).','sg1',3],
@@ -147,7 +147,6 @@ SV.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:t
 const FH=[
 ["fach",1,"sg5","Hans geht und ich komme. Dies ist eine …","Das ist eine …","Satzverbindung",["Satzverbindung (SV)","Satzreihe"],true,"Zwei Hauptsätze: Satzverbindung (SV)."],
 ["fach",1,"sg5","Ein Hauptsatz und ein Nebensatz bilden ein …","Das ist ein …","Satzgefüge",["Satzgefüge (SG)"],true,"Hauptsatz + Nebensatz: Satzgefüge (SG)."],
-["fach",1,"sg5","Nebensätze und Hauptsätze unterscheidet man bei … (Satzart).","Man unterscheidet sie bei …","Satzgefügen",["Satzgefüge","Satzgefügen"],true,"Haupt- und Nebensatz gibt es im Satzgefüge."],
 ["fach",1,"sg5","Im Nebensatz steht das konjugierte Verb am …","Das Verb steht am …","Schluss",["Satzende","Ende"],true,"Im Nebensatz steht die Personalform am Schluss."],
 ["fach",2,"sg5","Jeder einfache Satz ist ein …","Er ist ein …","Hauptsatz",["Der Hauptsatz"],true,"Jeder einfache Satz ist ein Hauptsatz."],
 ["fach",2,"sg5","Jeder Teil eines zusammengesetzten Satzes heisst …","Er heisst …","Teilsatz",["Der Teilsatz"],true,"Teilsatz."],
@@ -158,7 +157,7 @@ FH.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:t
 const SECS=[
 {id:'haupt',title:'Hauptsatz und Nebensatz',short:'Haupt- und Nebensatz',min:10,note:'Entscheidend ist die Stellung des Verbs: Hauptsatz = Personalform an Position 2, Nebensatz = Verb am Ende. Jeder einfache Satz ist ein Hauptsatz. Der Nebensatz kommt nur im zusammengesetzten Satz vor und ist meist ein zum Satz erweitertes Satzglied.',
  html:()=>'<div class="grid2"><div class="card"><h3>Hauptsatz</h3><p>Jeder einfache Satz ist ein Hauptsatz. Er kann <b>allein</b> stehen. Die Personalform steht im Aussagesatz an <b>zweiter Stelle</b>.</p><p>Ich <b>bleibe</b> zu Hause.</p></div>'+
- '<div class="card"><h3>Nebensatz</h3><p>Er kommt nur im <b>zusammengesetzten Satz</b> vor und ist <b>unselbständig</b>. Das Verb steht am <b>Satzende</b>. Auch er hat Subjekt und Prädikat.</p><p>…, weil ich krank <b>bin</b>.</p></div></div>'+
+ '<div class="card"><h3>Nebensatz</h3><p>Er kommt nur im <b>zusammengesetzten Satz</b> vor und ist <b>unselbständig</b>. Das Verb steht am <b>Satzende</b>. Meist hat auch er Subjekt und Prädikat (Ausnahmen: Infinitiv- und Partizipialsätze, Teil 3).</p><p>…, weil ich krank <b>bin</b>.</p></div></div>'+
  '<div class="callout">Der Nebensatz ist meist ein zum Satz erweitertes <b>Satzglied</b>: «Vor der Abreise reinigten wir …» wird zu «Bevor wir abreisten, reinigten wir …».</div>'+
  '<div class="callout">Hauptsatz und Nebensatz werden durch ein <b>Komma</b> getrennt: «Ich bleibe zu Hause<b>,</b> weil ich krank bin.»</div>'},
 {id:'verbindung',title:'Satzverbindung und Satzgefüge',short:'Satzverbindung und Satzgefüge',min:10,note:'Satzverbindung (SV) = mehrere Hauptsätze, auch Satzreihe genannt. Satzgefüge (SG) = Haupt- und Nebensatz. Beides sind zusammengesetzte Sätze. Der zusammengezogene Satz folgt im nächsten Kapitel.',
@@ -191,7 +190,7 @@ const EX=[
  ['Satzverbindung oder Satzgefüge? «Der Hund bellt, und die Katze schläft.»','Satzverbindung',2]
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['Hauptsatz','Kann allein stehen. Verb an zweiter Stelle.'],['Nebensatz','Beginnt mit einer Konjunktion. Verb am Ende. Kommt nicht allein vor.'],['Satzverbindung','Hauptsatz + Hauptsatz (und, aber, oder, denn).'],['Satzgefüge','Hauptsatz + Nebensatz (weil, dass, obwohl, wenn, damit …).'],['Komma','Zwischen Haupt- und Nebensatz steht immer ein Komma.'],['Teilsatz','Jeder Teil eines zusammengesetzten Satzes.'],['Einleitewort','Relativpronomen (der, die, das), Fragewort (wer, wann, warum) oder unterordnende Konjunktion (weil, dass, obwohl, wenn).']]);
-GT.chapter({id:'hs-ns',teil:'satz',nr:5,title:'Hauptsatz, Nebensatz und Satzgefüge',big:'Ich bleibe, weil ich müde bin',desc:'Satzverbindung, Satzgefüge, Einleitewörter und Verbstellung',
+GT.chapter({id:'hs-ns',teil:'satz',nr:6,title:'Hauptsatz, Nebensatz und Satzgefüge',big:'Ich bleibe, weil ich müde bin',desc:'Satzverbindung, Satzgefüge, Einleitewörter und Verbstellung',
  ex:'«Ich bleibe zu Hause, weil ich krank bin.»',
  goals:['Ich unterscheide Hauptsatz und Nebensatz.','Ich erkenne Satzverbindung und Satzgefüge.','Ich erkenne Einleitewörter von Nebensätzen.','Ich bilde Satzverbindungen und Satzgefüge aus zwei einfachen Sätzen.','Ich stelle das Verb im Nebensatz richtig.'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',

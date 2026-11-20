@@ -73,7 +73,7 @@ M.forEach(m=>{
 });
 
 
-/* ---- NEU: verbale Wortkette (Infinitivprobe) ---- */
+/* ---- NEU: Rohform des Satzes (verbale Wortkette) ---- */
 const WK=[
 ['Welche verbale Wortkette gehört zu «Wir räumen den Klassenraum auf.»?',['Den Klassenraum aufräumen.','Wir den Klassenraum aufräumen.','Räumen den Klassenraum auf.','Den Klassenraum aufräumt.'],'Den Klassenraum aufräumen.','Subjekt weglassen, die Personalform in den Infinitiv setzen und die abgetrennte Vorsilbe wieder anhängen: aufräumen.','sg4',1],
 ['Welche verbale Wortkette gehört zu «Sie ruft ihre Freundin an.»?',['Ihre Freundin anrufen.','Sie ihre Freundin anrufen.','Ruft ihre Freundin an.','Ihre Freundin anruft.'],'Ihre Freundin anrufen.','Subjekt weg, Verb in den Infinitiv: anrufen.','sg4',1],
@@ -83,8 +83,8 @@ const WK=[
 ['Welche verbale Wortkette gehört zu «Wir müssen heute früher gehen.»?',['Heute früher gehen müssen.','Heute früher müssen gehen.','Wir heute früher gehen müssen.','Müssen heute früher gehen.'],'Heute früher gehen müssen.','Modalverb und Rohform: «gehen müssen» am Schluss.','sg4',3],
 ['Welche verbale Wortkette gehört zu «Der Zug wird in Zürich kontrolliert.»?',['In Zürich kontrolliert werden.','In Zürich kontrollieren.','Der Zug in Zürich kontrolliert werden.','Wird in Zürich kontrolliert.'],'In Zürich kontrolliert werden.','Hilfsverb «werden» und Partizip bleiben als Teile erhalten.','sg4',3],
 ['Wozu braucht man verbale Wortketten oft?',['für Anleitungen und Hinweise','für Fragen','für Briefe an Freunde','für Nebensätze'],'für Anleitungen und Hinweise','Zum Beispiel «Vor Gebrauch schütteln.» Sie sind kurz und neutral.','sg4',1],
-['Was gehört <b>nicht</b> in eine verbale Wortkette?',['das Subjekt','der Infinitiv','die Objekte','die Satzglieder des Ortes'],'das Subjekt','Man lässt das Subjekt weg.','sg4',1],
-['Wie heisst eine verbale Wortkette noch?',['Infinitivprobe','Verschiebeprobe','Ersatzprobe','Artikelprobe'],'Infinitivprobe','Infinitivprobe = verbale Wortkette = Rohform eines Satzes.','sg4',1]
+['Welches Satzglied lässt man weg, wenn man die verbale Wortkette bildet?',['das Subjekt','die Objekte','die Adverbiale','das Verb'],'das Subjekt','Man lässt das Subjekt weg und setzt das Verb in den Infinitiv.','sg4',1],
+['Wie heisst die verbale Wortkette noch?',['Rohform des Satzes','Verschiebeprobe','Ersatzprobe','Artikelprobe'],'Rohform des Satzes','Die verbale Wortkette ist die Rohform eines Satzes: Infinitiv am Ende, ohne Subjekt.','sg4',1]
 ];
 WK.forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
 const WI=[
@@ -97,14 +97,30 @@ const WI=[
 ["wortkette",2,"sg4","Bilde die verbale Wortkette (Rohform des Satzes).","Die Schüler schalten ihre Handys aus.","Die Handys ausschalten",["Ihre Handys ausschalten"],false,"Subjekt weglassen, Vorsilbe anhängen: ausschalten."],
 ["wortkette",3,"sg4","Bilde die verbale Wortkette (Rohform des Satzes).","Wir müssen heute früher gehen.","Heute früher gehen müssen",[],false,"Beide verbalen Teile stehen am Ende: gehen müssen."],
 ["wortkette",3,"sg4","Bilde die verbale Wortkette (Rohform des Satzes).","Der Zug wird in Zürich kontrolliert.","In Zürich kontrolliert werden",[],false,"Partizip und «werden» bleiben: kontrolliert werden."],
-["fach",1,"sg6","Rohform eines Satzes, zum Beispiel «den Hörer abnehmen».","Das heisst …","verbale Wortkette",["Verbale Wortkette","Infinitivprobe","Die verbale Wortkette"],true,"Die Rohform eines Satzes heisst verbale Wortkette (auch Infinitivprobe)."],
-["fach",1,"sg6","Anderes Wort für die verbale Wortkette.","Das andere Wort heisst …","Infinitivprobe",["Die Infinitivprobe"],true,"Infinitivprobe = verbale Wortkette."],
+["fach",1,"sg6","Rohform eines Satzes, zum Beispiel «den Hörer abnehmen».","Das heisst …","verbale Wortkette",["Verbale Wortkette","Die verbale Wortkette","Rohform des Satzes","Rohform eines Satzes"],true,"Die Rohform eines Satzes heisst verbale Wortkette oder Rohform des Satzes."],
+["fach",1,"sg6","Anderes Wort für die verbale Wortkette.","Das andere Wort heisst …","Rohform des Satzes",["Rohform eines Satzes","Satzrohform","Die Rohform des Satzes"],true,"Rohform des Satzes = verbale Wortkette."],
 ["fach",1,"sg6","Anderes Wort für die Grundform des Verbs.","Das andere Wort heisst …","Infinitiv",["Der Infinitiv","Rohform"],true,"Infinitiv = Grundform = Rohform."],
 ["fach",1,"sg6","Beim Verb «fortfahren» ist «fort» ein …","«fort» ist ein …","Verbzusatz",["Der Verbzusatz"],true,"Der abgetrennte Teil heisst Verbzusatz: Er fährt fort."],
 ["fach",2,"sg6","Das konjugierte Verb heisst auch …","Das andere Wort heisst …","Personalform",["die Personalform","finites Verb","finite Form","finite Verbform"],true,"Personalform = konjugiertes Verb = finites Verb."],
 ["fach",2,"sg6","Verbale Teile sind: Personalform, Infinitiv, Verbzusatz und …","Das fehlende Wort heisst …","Partizip",["das Partizip","Partizip II"],true,"Verbale Teile: Personalform, Infinitiv, Partizip, Verbzusatz."]
 ];
 WI.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'.</b> '+r[8]}));
+
+const RS=[
+['Wo steht das Verb in der Rohform eines Satzes?',['am Ende, in der Grundform','an zweiter Stelle, in der Personalform','an erster Stelle','es fehlt ganz'],'am Ende, in der Grundform','In der Rohform stehen alle Satzglieder lose beieinander, das Verb steht in der Grundform am Schluss.','sg4',1],
+['Was ist in der Rohform eines Satzes noch <b>nicht</b> festgelegt?',['Zeitform, Person und Satzart','die Satzglieder','das Verb','der Inhalt'],'Zeitform, Person und Satzart','Erst durch das Konjugieren und das Verschieben entsteht ein Satz.','sg4',2],
+['Aus der Rohform «mein Bruder – gestern – ein neues Fahrrad – kaufen» wird ein Aussagesatz im Präteritum:',['Mein Bruder kaufte gestern ein neues Fahrrad.','Mein Bruder gestern kaufte ein neues Fahrrad.','Mein Bruder kauft gestern ein neues Fahrrad.','Mein Bruder kaufen gestern ein neues Fahrrad.'],'Mein Bruder kaufte gestern ein neues Fahrrad.','Verb in die Personalform setzen (kaufte) und an die zweite Stelle stellen.','sg4',2],
+['Aus derselben Rohform wird ein Fragesatz:',['Kaufte mein Bruder gestern ein neues Fahrrad?','Mein Bruder kaufte gestern ein neues Fahrrad.','Gestern mein Bruder kaufte ein neues Fahrrad?','Kaufen mein Bruder gestern ein neues Fahrrad?'],'Kaufte mein Bruder gestern ein neues Fahrrad?','Bei der Ja-Nein-Frage steht die Personalform an erster Stelle.','sg4',2],
+['Aus derselben Rohform wird ein Nebensatz:',['…, weil mein Bruder gestern ein neues Fahrrad kaufte.','…, weil mein Bruder kaufte gestern ein neues Fahrrad.','…, weil kaufte mein Bruder gestern ein neues Fahrrad.','…, weil mein Bruder gestern kaufen ein neues Fahrrad.'],'…, weil mein Bruder gestern ein neues Fahrrad kaufte.','Im Nebensatz steht die Personalform am Schluss.','sg4',3],
+['Wozu braucht man die Rohform eines Satzes?',['um alle Verbteile zu finden und die Grundform des Verbs herzuleiten','um Nomen zu zählen','um Satzzeichen zu setzen','um Fälle zu bestimmen'],'um alle Verbteile zu finden und die Grundform des Verbs herzuleiten','Sie hilft, den verbalen Teil eindeutig zu bestimmen.','sg4',2]
+];
+RS.forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+[
+["rohsatz",1,"sg4","Bilde aus der Rohform einen Aussagesatz im Präsens.","der Bus – heute – früher – abfahren","Der Bus fährt heute früher ab.",["Heute fährt der Bus früher ab."],false,"Personalform bilden (fährt), an die zweite Stelle setzen. «ab» bleibt am Schluss."],
+["rohsatz",1,"sg4","Bilde aus der Rohform einen Aussagesatz im Präteritum.","mein Bruder – gestern – ein neues Fahrrad – kaufen","Mein Bruder kaufte gestern ein neues Fahrrad.",["Gestern kaufte mein Bruder ein neues Fahrrad."],false,"Personalform «kaufte» an zweiter Stelle."],
+["rohsatz",2,"sg4","Bilde aus der Rohform einen Fragesatz im Präsens.","du – morgen – mitkommen","Kommst du morgen mit?",[],false,"Ja-Nein-Frage: Personalform an erster Stelle, «mit» bleibt am Schluss."],
+["rohsatz",2,"sg4","Bilde aus der Rohform einen Aussagesatz im Perfekt.","wir – gestern – ins Kino – gehen","Wir sind gestern ins Kino gegangen.",["Gestern sind wir ins Kino gegangen."],false,"Perfekt: «sind» an zweiter Stelle, «gegangen» am Schluss."]
+].forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
 
 /* ---- NEU: verbale Teile benennen ---- */
 const VB=[
@@ -137,17 +153,19 @@ const SECS=[
  html:()=>'<p class="lead">Das Prädikat besteht aus <b>einem oder mehreren verbalen Teilen</b>.</p>'+
  T(['Fall','Beispiel','Teile'],[['Einfaches Verb','Anna <b>lacht</b>.','1'],['Hilfsverb + Partizip II','Anna <b>hat</b> gestern <b>gelacht</b>.','2'],['Trennbares Verb','Er <b>steht</b> früh <b>auf</b>.','2'],['Modalverb + Rohform','Sie <b>will</b> heute <b>kommen</b>.','2'],['werden + Rohform','Es <b>wird</b> regnen.','2'],['Hilfsverb + Rohform + Rohform','Sie <b>hat</b> <b>kommen</b> <b>wollen</b>.','3']])+
  '<div class="callout"><b>Achtung:</b> Zwischen den Teilen können andere Satzglieder stehen: «Er <b>hat</b> gestern im Park Fussball <b>gespielt</b>.»</div>'},
-{id:'wortkette',title:'Die verbale Wortkette (Infinitivprobe)',short:'Verbale Wortkette',min:12,note:'Die verbale Wortkette ist die Rohform eines Satzes. So bildet man sie: Subjekt weglassen, die Personalform in den Infinitiv setzen und ans Ende stellen, abgetrennte Vorsilbe wieder anhängen. Anderes Wort: Infinitivprobe.',
- html:()=>'<p class="lead">Die <b>verbale Wortkette</b> ist die <b>Rohform eines Satzes</b>. Anderes Wort: <b>Infinitivprobe</b>.</p>'+
- '<ol class="steps"><li>Das <b>Subjekt</b> weglassen.</li><li>Die <b>Personalform</b> in den <b>Infinitiv</b> setzen und an den Schluss stellen.</li><li>Eine abgetrennte <b>Vorsilbe</b> (Verbzusatz) wieder anhängen.</li></ol>'+
- T(['Satz','Verbale Wortkette'],[['Der Hausmeister rollte den Teppich aus.','Den Teppich ausrollen.'],['Wir räumen den Klassenraum auf.','Den Klassenraum aufräumen.'],['Der Zug wird in Zürich kontrolliert.','In Zürich kontrolliert werden.']])+
- '<div class="callout">Verbale Wortketten braucht man oft für <b>Anleitungen und Hinweise</b>: «Vor Gebrauch schütteln.»</div>'},
+{id:'wortkette',title:'Die Rohform des Satzes (verbale Wortkette)',short:'Rohform des Satzes',min:12,note:'Rohform eines Satzes (Satzrohform): die noch nicht ausformulierte Grundstruktur. Alle Satzglieder stehen lose beieinander, das Verb steht in der Grundform am Ende. Zeitform, Person und Satzart sind noch nicht festgelegt. Lässt man das Subjekt weg, entsteht die verbale Wortkette (Anleitungen, Hinweise). Nutzen: verbale Teile bestimmen, Grundform herleiten, zeigen, dass die Personalform die Wortstellung steuert.',
+ html:()=>'<p class="lead">Die <b>Rohform eines Satzes</b> ist die Grundstruktur: Alle Satzglieder stehen lose beieinander, das Verb steht in der <b>Grundform am Ende</b>. Zeitform, Person und Satzart sind noch nicht festgelegt.</p>'+
+ '<div class="card"><p><b>Rohform:</b> mein Bruder – gestern – ein neues Fahrrad – kaufen</p></div>'+
+ T(['Satzart','Satz'],[['Aussagesatz (Präteritum)','Mein Bruder <b>kaufte</b> gestern ein neues Fahrrad.'],['Aussagesatz (umgestellt)','Gestern <b>kauft</b> mein Bruder ein neues Fahrrad.'],['Fragesatz','<b>Kaufte</b> mein Bruder gestern ein neues Fahrrad?'],['Nebensatz','…, weil mein Bruder gestern ein neues Fahrrad <b>kaufte</b>.']])+
+ '<div class="callout">Erst durch das <b>Konjugieren</b> (Personalform bilden) und das <b>Verschieben</b> an die richtige Stelle entsteht ein vollständiger Satz. Die Position der Personalform steuert die Wortstellung: 1., 2. oder letzte Stelle.</div>'+
+ '<h3>Die verbale Wortkette</h3><p>Lässt du das <b>Subjekt</b> weg und setzt das Verb in den <b>Infinitiv</b>, erhältst du die <b>verbale Wortkette</b> (auch hier: Rohform des Satzes). Man braucht sie für <b>Anleitungen und Hinweise</b>.</p>'+
+ T(['Satz','Verbale Wortkette'],[['Der Hausmeister rollte den Teppich aus.','Den Teppich ausrollen.'],['Wir räumen den Klassenraum auf.','Den Klassenraum aufräumen.'],['Der Zug wird in Zürich kontrolliert.','In Zürich kontrolliert werden.']])},
 {id:'klammer',title:'Die Satzklammer',short:'Satzklammer',lv:2,min:8,note:'Ab Niveau B. Die Satzklammer ist ein Bild: Der erste Teil des Prädikats steht an Position 2, der zweite am Ende. Dazwischen das Mittelfeld.',
  html:()=>'<p class="lead">Die Teile des Prädikats bilden eine <b>Klammer</b> um den Rest des Satzes.</p>'+
  '<div class="card"><p style="font-size:1.1rem">Er <b>hat</b> gestern im Park mit seinem Freund Fussball <b>gespielt</b>.</p><p class="muted">Erster Teil an Position 2 · Mittelfeld · zweiter Teil am Satzende</p></div>'+
  T(['Satzart','Wo steht das Verb?'],[['Aussagesatz','Personalform an zweiter Stelle, weitere Teile am Ende'],['Ja-/Nein-Frage','Personalform am Satzanfang'],['Nebensatz (weil, dass …)','Alle Verbteile am Satzende']])},
 {id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
- html:()=>T(['Begriff','Bedeutung'],[['Personalform','konjugiertes (finites) Verb'],['Infinitiv','Grundform, Rohform des Verbs'],['Partizip','Verbform wie gespielt, gesehen'],['Verbzusatz','abgetrennte Vorsilbe (fortfahren: fort)'],['Verbale Wortkette','Rohform eines Satzes, auch Infinitivprobe']])},
+ html:()=>T(['Begriff','Bedeutung'],[['Personalform','konjugiertes (finites) Verb'],['Infinitiv','Grundform, Rohform des Verbs'],['Partizip','Verbform wie gespielt, gesehen'],['Verbzusatz','abgetrennte Vorsilbe (fortfahren: fort)'],['Rohform des Satzes','Satz mit allen Satzgliedern und dem Verb in der Grundform am Ende; ohne Subjekt: verbale Wortkette']])},
 {id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Typische Fehler: Teile vergessen, Verbpartikel nicht erkennen.',
  html:()=>'<div class="grid3">'+[
   ['1 · Ein Teil vergessen','«Er <b>hat</b> gestern <b>gelacht</b>.»','Beide Teile unterstreichen.'],
@@ -159,7 +177,7 @@ const SECS=[
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('rohform,zaehlen')}
 ];
 const EX=[
- ['Bilde die verbale Wortkette: «Wir räumen den Klassenraum auf.»','Den Klassenraum aufräumen.',1],
+ ['Bilde die verbale Wortkette (Rohform ohne Subjekt): «Wir räumen den Klassenraum auf.»','Den Klassenraum aufräumen.',1],
  ['Nenne die verbalen Teile: «Er hat gestern gelacht.»','Personalform: hat · Partizip: gelacht',1],
  ['Schreibe die Rohform: sie lacht, wir gingen, er hat gelesen, du fährst.','lachen · gehen · lesen · fahren',1],
  ['Unterstreiche alle Teile des Prädikats: «Er hat gestern lange geschlafen.»','hat · geschlafen',1],
@@ -169,14 +187,15 @@ const EX=[
  ['Bilde einen Satz mit dem Verb «aufstehen» im Präsens.','Beispiel: Ich stehe um sieben Uhr auf.',2],
  ['Wo steht das Verb? «Ich weiss, dass er morgen kommt.»','Im Nebensatz am Satzende: kommt.',2]
 ];
-const merk=()=>T(['Thema','Merksatz'],[['Rohform','Grundform des Verbs: lachen, gehen, aufstehen. Endet meist auf -en.'],['Verbale Wortkette','Rohform eines Satzes (Infinitivprobe): Subjekt weg, Infinitiv ans Ende. Den Teppich ausrollen.'],['Verbale Teile','Personalform, Infinitiv, Partizip, Verbzusatz. Sie haben einen festen Platz.'],['Prädikat','Sagt, was geschieht. Besteht aus einem oder mehreren verbalen Teilen.'],['Mehrere Teile','haben/sein + Partizip II · Modalverb + Rohform · trennbares Verb · werden + Rohform'],['Satzklammer','Die Teile des Prädikats umschliessen den Rest des Satzes.'],['Stellung','Aussagesatz: Verb an Position 2 · Nebensatz: Verb am Ende']]);
-GT.chapter({id:'verbale',teil:'satz',nr:2,title:'Verbale Teile und verbale Wortkette',big:'Er hat gestern gelacht',desc:'Verbale Teile benennen und die verbale Wortkette bilden',
+const merk=()=>T(['Thema','Merksatz'],[['Rohform','Grundform des Verbs: lachen, gehen, aufstehen. Endet meist auf -en.'],['Rohform des Satzes','Alle Satzglieder lose, Verb in der Grundform am Ende. Ohne Subjekt: verbale Wortkette (Den Teppich ausrollen).'],['Verbale Teile','Personalform, Infinitiv, Partizip, Verbzusatz. Sie haben einen festen Platz.'],['Prädikat','Sagt, was geschieht. Besteht aus einem oder mehreren verbalen Teilen.'],['Mehrere Teile','haben/sein + Partizip II · Modalverb + Rohform · trennbares Verb · werden + Rohform'],['Satzklammer','Die Teile des Prädikats umschliessen den Rest des Satzes.'],['Stellung','Aussagesatz: Verb an Position 2 · Nebensatz: Verb am Ende']]);
+GT.chapter({id:'verbale',teil:'satz',nr:4,title:'Verbale Teile und Rohform des Satzes',big:'Er hat gestern gelacht',desc:'Verbale Teile benennen, Rohform des Satzes und verbale Wortkette bilden',
  ex:'«Er '+mk('verb','hat')+' gestern '+mk('verb','gelacht')+'.»',
- goals:['Ich bilde die Rohform eines Verbs.','Ich nenne die verbalen Teile: Personalform, Infinitiv, Partizip, Verbzusatz.','Ich finde alle verbalen Teile im Satz.','Ich bilde die verbale Wortkette (Infinitivprobe).','Ich erkenne die Satzklammer.'],
+ goals:['Ich bilde die Rohform eines Verbs.','Ich nenne die verbalen Teile: Personalform, Infinitiv, Partizip, Verbzusatz.','Ich finde alle verbalen Teile im Satz.','Ich weiss, was die Rohform eines Satzes ist, und kann sie bilden (auch als verbale Wortkette).','Ich erkenne die Satzklammer.'],
   write:['rohform'], cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{rohform:{winstr:'Schreibe die Rohform.',label:'Rohform bilden',short:'Infinitiv',instr:'Wähle die richtige Rohform.',hint:'Die Rohform endet auf -en. Bei trennbaren Verben zusammenschreiben.',ref:'rohform'},
   zaehlen:{label:'Verbale Teile zählen',short:'Wie viele Teile hat das Prädikat?',instr:'Wähle die richtige Zahl.',hint:'Suche Hilfsverb, Modalverb, Partizip, Rohform und abgetrennte Vorsilbe.',ref:'teile'},
   praedikat:{icon:'✏️',label:'Prädikat schreiben',short:'Alle Verbteile im Satz notieren',instr:'Schreibe alle Verbteile in der Reihenfolge des Satzes.',hint:'Suche Hilfsverb, Modalverb, Partizip, Infinitiv und abgetrennte Vorsilbe.',ref:'teile'},
+  rohsatz:{icon:'🧩',label:'Aus der Rohform einen Satz bilden',short:'Personalform bilden und verschieben',instr:'Bilde den Satz.',hint:'Verb konjugieren und an die richtige Stelle setzen.',ref:'wortkette'},
   wortkette:{icon:'⛓️',label:'Verbale Wortkette bilden',short:'Rohform des Satzes',instr:'Schreibe die verbale Wortkette.',winstr:'Schreibe die verbale Wortkette.',hint:'Subjekt weglassen, Verb in den Infinitiv, ans Ende stellen, Vorsilbe anhängen.',ref:'wortkette'},
   fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'},
   wissen:{label:'Wissen',short:'Verbale Teile, Wortkette und Satzklammer',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'klammer'},

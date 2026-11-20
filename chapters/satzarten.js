@@ -182,7 +182,7 @@ const EX=[
 ];
 const merk=()=>T(['Satzart','Satzzeichen','Beispiel'],[['Aussagesatz','.','Der Hund bellt.'],['Fragesatz','?','Kommst du mit?'],['Aufforderungssatz','! oder .','Komm her!'],['Ausrufesatz (Zusatz)','!','Wie schön das ist!']])+T(['Satzbau','Merkmal'],[['Einfacher Satz','eine Personalform, kann lang sein'],['Zusammengesetzter Satz','mindestens zwei Teilsätze'],['Satzfragment','keine Personalform']])+
  '<ul><li>Ja-/Nein-Frage: Verb an erster Stelle.</li><li>Ergänzungsfrage: Fragewort + Verb an zweiter Stelle.</li><li>Aufforderung: Befehlsform, Verb vorne.</li></ul>';
-GT.chapter({id:'satzarten',teil:'satz',nr:4,title:'Satzarten und Satzbau',big:'Aussage, Frage, Aufforderung',desc:'Grundfunktionen, einfacher und zusammengesetzter Satz, Satzfragment',
+GT.chapter({id:'satzarten',teil:'satz',nr:5,title:'Satzarten und Satzbau',big:'Aussage, Frage, Aufforderung',desc:'Grundfunktionen, einfacher und zusammengesetzter Satz, Satzfragment',
  ex:'«Kommst du mit?» · «Komm mit!» · «Wie schön!»',
  goals:['Ich kenne die drei Grundfunktionen der Rede: Aussage, Frage, Aufforderung.','Ich setze das richtige Satzzeichen und forme Sätze um.','Ich erkenne einfache und zusammengesetzte Sätze und zähle die Personalformen.','Ich erkenne Satzfragmente und baue sie zu ganzen Sätzen aus.'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',

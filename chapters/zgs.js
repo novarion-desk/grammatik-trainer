@@ -11,10 +11,10 @@ const E=[
 ['Anna kocht und deckt den Tisch.',0,1,'«Anna» ist Subjekt beider Teile, wird aber nur einmal genannt.'],
 ['Tim liest ein Buch und schreibt eine Geschichte.',0,1,'«Tim» ist das gemeinsame Subjekt.'],
 ['Wir kochen Pasta und essen sie gemeinsam.',0,1,'«Wir» ist das gemeinsame Subjekt.'],
-['Ich kenne und mag diesen Sänger.',1,2,'«diesen Sänger» ist das gemeinsame Objekt (Akkusativobjekt).'],
+['Lena kocht und Tim isst die Suppe.',1,2,'«die Suppe» ist das gemeinsame Objekt. Die Subjekte und die Verben sind verschieden.'],
 ['Tim holt den Ball und Mia den Schläger.',2,2,'Das Prädikat «holt» steht nur einmal: Mia [holt] den Schläger.'],
 ['Anna spielt Gitarre und Lena Klavier.',2,2,'Das Prädikat «spielt» wird im zweiten Teil weggelassen.'],
-['Er hat das Buch gelesen und die Notizen geschrieben.',3,3,'Das Hilfsverb «hat» steht nur einmal: …und [hat] die Notizen geschrieben.']
+['Anna hat gestern gelacht und Tim geweint.',3,3,'Das Hilfsverb «hat» steht nur einmal: …und Tim [hat] geweint. Die Subjekte sind verschieden.']
 ];
 E.forEach(e=>task.push({typ:'erkenne',stufe:e[2],lv:e[2]===3?2:1,cats:['sg1'],prompt:'Welches Satzglied wird nur einmal genannt?<br>«'+e[0]+'»',opts:SG,answer:SG[e[1]],why:'<b>'+SG[e[1]]+'.</b> '+e[3]}));
 
@@ -33,7 +33,7 @@ const Z=[
 ['Wir räumen auf. Wir putzen die Tafel.','Wir räumen auf und putzen die Tafel.',[],1,'Das Subjekt «Wir» steht nur einmal.'],
 ['Anna holt Brot. Tim holt Milch.','Anna holt Brot und Tim Milch.',['Anna holt Brot, Tim Milch.','Anna holt Brot, und Tim Milch.'],2,'Das Prädikat «holt» steht nur einmal.'],
 ['Ich habe das Heft vergessen. Ich habe den Stift vergessen.','Ich habe das Heft und den Stift vergessen.',[],2,'Subjekt, Hilfsverb und Partizip werden nur einmal genannt.'],
-['Lea malt ein Bild. Noah malt ein Bild.','Lea und Noah malen ein Bild.',[],2,'Das Objekt steht nur einmal, die Personalform wird zu «malen».']
+['Lea mag Pizza. Noah mag Pasta.','Lea mag Pizza und Noah Pasta.',['Lea mag Pizza, Noah Pasta.','Lea mag Pizza, und Noah Pasta.'],2,'Das Prädikat «mag» steht nur einmal.']
 ];
 Z.forEach(z=>task.push({typ:'zieh',stufe:z[3],lv:1,cats:['sg2'],input:true,prompt:'Ziehe die beiden Sätze zu einem Satz zusammen.',sent:z[0],answer:z[1],accept:z[2],why:'<b>'+z[1]+'</b> '+z[4]}));
 
@@ -60,7 +60,7 @@ const SECS=[
  T(['Satzverbindung','Zusammengezogener Satz'],[['Anna kocht, und Anna deckt den Tisch.','Anna kocht und deckt den Tisch.'],['Tim holt den Ball, und Mia holt den Schläger.','Tim holt den Ball und Mia den Schläger.']])+
  '<div class="callout">Das Komma vor «und» entfällt meistens: «Anna kocht und deckt den Tisch.»</div>'},
 {id:'erkennen',title:'Das gemeinsame Satzglied',short:'Gemeinsames Satzglied',min:8,note:'Vier Möglichkeiten: Subjekt, Objekt, Prädikat, Hilfsverb. Zum Erkennen: Fehlt in einem Teil das Subjekt (oder ein anderes Glied), das man aus dem anderen Teil ergänzen kann?',
- html:()=>T(['Gemeinsam','Beispiel'],[['Subjekt','<b>Anna</b> kocht und deckt den Tisch.'],['Objekt','Ich kenne und mag <b>diesen Sänger</b>.'],['Prädikat','Tim <b>holt</b> den Ball und Mia den Schläger.'],['Hilfsverb','Er <b>hat</b> das Buch gelesen und die Notizen geschrieben.']])+
+ html:()=>T(['Gemeinsam','Beispiel'],[['Subjekt','<b>Anna</b> kocht und deckt den Tisch.'],['Objekt','Lena kocht und Tim isst <b>die Suppe</b>.'],['Prädikat','Tim <b>holt</b> den Ball und Mia den Schläger.'],['Hilfsverb','Anna <b>hat</b> gelacht und Tim geweint.']])+
  '<div class="callout"><b>Probe:</b> Ergänze das fehlende Glied im zweiten Teil. Ergibt sich ein vollständiger Satz, liegt ein ZGS vor.</div>'},
 {id:'falsch',title:'Falsche Zusammenziehungen',short:'Falsche Zusammenziehungen',lv:2,min:8,note:'Ab Niveau B. Das gemeinsame Satzglied muss für beide Verben formal passen: helfen + Dativ, unterstützen + Akkusativ; Hilfsverb sein/haben.',
  html:()=>T(['Falsch','Richtig','Grund'],[['Er hilft und unterstützt seinen Freund.','Er hilft seinem Freund und unterstützt ihn.','helfen + Dativ, unterstützen + Akkusativ'],['Sie ist aufgestanden und geduscht.','Sie ist aufgestanden und hat geduscht.','sein und haben: Hilfsverb wiederholen']])+
@@ -74,7 +74,7 @@ const EX=[
  ['Berichtige: «Er hilft und unterstützt seinen Freund.»','Er hilft seinem Freund und unterstützt ihn.',3]
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['ZGS','Ein gemeinsames Satzglied wird nur einmal genannt.'],['Gemeinsam','Subjekt, Objekt, Prädikat oder Hilfsverb.'],['Achtung','Verschiedene Fälle oder Hilfsverben: nicht zusammenziehen.']]);
-GT.chapter({id:'zgs',teil:'satz',nr:6,title:'Zusammengezogener Satz',big:'Anna kocht und deckt den Tisch',desc:'Gemeinsames Satzglied erkennen und Sätze zusammenziehen',
+GT.chapter({id:'zgs',teil:'satz',nr:7,title:'Zusammengezogener Satz',big:'Anna kocht und deckt den Tisch',desc:'Gemeinsames Satzglied erkennen und Sätze zusammenziehen',
  ex:'«Anna kocht und deckt den Tisch.»',
  goals:['Ich erkenne den zusammengezogenen Satz.','Ich nenne das gemeinsame Satzglied.','Ich ziehe Sätze zusammen.','Ich berichtige falsche Zusammenziehungen (ab B).'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',

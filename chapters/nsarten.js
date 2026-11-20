@@ -19,7 +19,7 @@ const A=[
 ['Sie hofft, die Prüfung zu bestehen.',4,2,'Es gibt keine Personalform und kein Subjekt: Infinitiv mit «zu».'],
 ['Er ging weg, ohne ein Wort zu sagen.',4,2,'Infinitiv mit «zu», ohne eigenes Subjekt.'],
 ['Von der Sonne geblendet, blieb er stehen.',5,3,'Das Partizip «geblendet» steht ohne Personalform: Partizipialsatz.'],
-['Müde von der Arbeit, ging er heim.',5,3,'Partizipialsatz ohne Personalform.']
+['Vom Regen durchnässt, kamen wir an.',5,3,'Das Partizip «durchnässt» steht ohne Personalform und ohne Subjekt: Partizipialsatz.']
 ];
 A.forEach(a=>task.push({typ:'form',stufe:a[2],lv:a[2]===3?2:1,cats:['sg1'],prompt:'Welche Art Nebensatz liegt vor?<br>«'+a[0]+'»',opts:FO,answer:FO[a[1]],why:'<b>'+FO[a[1]]+'.</b> '+a[3]}));
 
@@ -28,7 +28,7 @@ const W=[
 ['Wo steht die Personalform im uneingeleiteten Nebensatz?',['an erster oder zweiter Stelle','am Schluss','in der Mitte','nirgends'],'an erster oder zweiter Stelle','Ohne Einleitewort steht das Verb vorne: «Wäre ich reich …», «Ich glaube, er kommt.»','sg1',2],
 ['Welcher Nebensatz hat keine Personalform?',['Infinitivsatz und Partizipialsatz','Konjunktionalsatz','Relativsatz','indirekter Fragesatz'],'Infinitivsatz und Partizipialsatz','Sie enthalten nur Infinitiv bzw. Partizip.','sg1',2],
 ['Womit beginnt ein Relativsatz?',['mit einem Relativpronomen oder Relativadverb','mit «und»','mit einem Verb','mit einem Fragezeichen'],'mit einem Relativpronomen oder Relativadverb','der, die, das, welcher, wo …','sg1',1],
-['Bei welchen Nebensätzen ist das Komma grundsätzlich freiwillig?',['Infinitivsatz und Partizipialsatz','Konjunktionalsatz','Relativsatz','indirekter Fragesatz'],'Infinitivsatz und Partizipialsatz','Bei Infinitiv- und Partizipialsätzen ist das Komma meist freiwillig, ausser es hilft beim Lesen.','sg1',3]
+['Wann steht bei einer Infinitivgruppe immer ein Komma?',['bei «um … zu», «ohne … zu» und «statt … zu»','bei jedem Infinitiv mit «zu»','nie','nur nach dem Verb «hoffen»'],'bei «um … zu», «ohne … zu» und «statt … zu»','Mit «um, ohne, statt, anstatt, ausser, als» steht das Komma immer. Sonst ist es bei Infinitivgruppen meist freiwillig.','sg1',3]
 ];
 W.forEach(w=>task.push({typ:'form',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
 
@@ -110,7 +110,7 @@ const H=[
 H.forEach(h=>task.push({typ:'fach',stufe:h[5],lv:1,cats:['sg7'],input:true,prompt:h[0],sent:h[1],answer:h[2],accept:h[3],strict:true,why:'<b>'+h[2]+'.</b> '+h[4]}));
 
 const SECS=[
-{id:'formen',title:'Die sechs Arten der Nebensätze',short:'Formale Arten',min:15,note:'Formal unterscheidet man sechs Nebensatzarten. Entscheidend sind Einleitewort, Verbstellung und Komma. Infinitiv- und Partizipialsätze haben keine Personalform; das Komma ist dort grundsätzlich freiwillig.',
+{id:'formen',title:'Die sechs Arten der Nebensätze',short:'Formale Arten',min:15,note:'Formal unterscheidet man sechs Nebensatzarten. Entscheidend sind Einleitewort, Verbstellung und Komma. Infinitiv- und Partizipialsätze haben keine Personalform. Bei Infinitivgruppen mit um, ohne, statt, anstatt, ausser, als steht das Komma immer, sonst ist es meist freiwillig.',
  html:()=>T(['Art','Merkmal','Verb','Beispiel'],[['Konjunktionalsatz','unterordnende Konjunktion','am Schluss','Ich weiss, <b>dass</b> er kommt.'],['Relativsatz','Relativpronomen / -adverb','am Schluss','Die Frau, <b>die</b> ich traf, …'],['Indirekter Fragesatz','Fragewort oder «ob»','am Schluss','Sag mir, <b>wann</b> du kommst.'],['Uneingeleiteter Nebensatz','kein Einleitewort','1. oder 2. Stelle','<b>Wäre</b> ich reich, würde ich reisen.'],['Infinitivsatz','«zu» + Infinitiv, kein Subjekt','keine Personalform','Sie hofft, die Prüfung <b>zu bestehen</b>.'],['Partizipialsatz','Partizip, kein Subjekt','keine Personalform','Von der Sonne <b>geblendet</b>, blieb er stehen.']])},
 {id:'umformen',title:'Uneingeleitet und eingeleitet umformen',short:'Umformen',min:8,note:'Ein uneingeleiteter Nebensatz lässt sich mit Konjunktion umformen (und umgekehrt): Wäre ich reich = Wenn ich reich wäre. Ich glaube, er kommt = Ich glaube, dass er kommt.',
  html:()=>T(['Uneingeleitet','Eingeleitet'],[['<b>Wäre</b> ich reich, würde ich reisen.','<b>Wenn</b> ich reich wäre, würde ich reisen.'],['Ich glaube, er hat recht.','Ich glaube, <b>dass</b> er recht hat.']])+'<div class="callout">Beim Umformen wandert die Personalform ans <b>Satzende</b> (eingeleitet) oder nach <b>vorne</b> (uneingeleitet).</div>'},
@@ -131,7 +131,7 @@ const EX=[
  ['Wandle um: «Vor der Abreise reinigten wir das Haus.»','Bevor wir abreisten, reinigten wir das Haus.',3]
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['6 Arten','Konjunktional-, Relativ-, indirekter Frage-, uneingeleiteter Nebensatz, Infinitiv- und Partizipialsatz.'],['Verb','Eingeleitet: am Schluss. Uneingeleitet: vorne. Infinitiv/Partizipialsatz: keine Personalform.'],['Falle','Modalverb + Infinitiv ohne «zu» ist kein Infinitivsatz.']]);
-GT.chapter({id:'nsarten',teil:'satz',nr:7,title:'Arten der Nebensätze',big:'Ich weiss, dass er kommt',desc:'Formale Arten, Relativsatz, Infinitivsatz und Bedeutung',
+GT.chapter({id:'nsarten',teil:'satz',nr:8,title:'Arten der Nebensätze',big:'Ich weiss, dass er kommt',desc:'Formale Arten, Relativsatz, Infinitivsatz und Bedeutung',
  ex:'«Sie hofft, die Prüfung zu bestehen.»',
  goals:['Ich unterscheide die sechs formalen Nebensatzarten.','Ich forme uneingeleitete und eingeleitete Nebensätze um.','Ich erkenne Relativsätze und Infinitivsätze.','Ich bestimme die Bedeutung von Nebensätzen (Zeit, Grund, Bedingung …).','Ich wandle überladene Sätze um (ab B).'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
