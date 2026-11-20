@@ -5,6 +5,8 @@ const GT=window.GT,T=GT.table;
 const C={sg1:'Formale Arten',sg2:'Umformen',sg3:'Relativsatz',sg4:'Infinitivsatz',sg5:'Bedeutung (Zeit, Grund …)',sg6:'Sätze umwandeln',sg7:'Fachbegriffe'};
 const task=[];
 const FO=['Konjunktionalsatz','Relativsatz','Indirekter Fragesatz','Uneingeleiteter Nebensatz','Infinitivsatz','Partizipialsatz'];
+const FO5=FO.slice(0,5);
+const HI=()=>GT.lv()>=3; /* Niveau A: Partizipialsatz und Fachnamen */
 
 /* 1 Formale Arten */
 const A=[
@@ -21,7 +23,7 @@ const A=[
 ['Von der Sonne geblendet, blieb er stehen.',5,3,'Das Partizip «geblendet» steht ohne Personalform: Partizipialsatz.'],
 ['Vom Regen durchnässt, kamen wir an.',5,3,'Das Partizip «durchnässt» steht ohne Personalform und ohne Subjekt: Partizipialsatz.']
 ];
-A.forEach(a=>task.push({typ:'form',stufe:a[2],lv:a[2]===3?2:1,cats:['sg1'],prompt:'Welche Art Nebensatz liegt vor?<br>«'+a[0]+'»',opts:FO,answer:FO[a[1]],why:'<b>'+FO[a[1]]+'.</b> '+a[3]}));
+A.forEach(a=>task.push({typ:'form',stufe:a[2],lv:a[1]===5?3:(a[2]===3?2:1),cats:['sg1'],prompt:'Welche Art Nebensatz liegt vor?<br>«'+a[0]+'»',opts:a[1]===5?FO:FO5,answer:FO[a[1]],why:'<b>'+FO[a[1]]+'.</b> '+a[3]}));
 
 const W=[
 ['Wo steht die Personalform im Konjunktionalsatz?',['am Schluss','an erster Stelle','an zweiter Stelle','gar nicht'],'am Schluss','Eingeleitete Nebensätze haben das Verb am Schluss.','sg1',1],
@@ -30,7 +32,7 @@ const W=[
 ['Womit beginnt ein Relativsatz?',['mit einem Relativpronomen oder Relativadverb','mit «und»','mit einem Verb','mit einem Fragezeichen'],'mit einem Relativpronomen oder Relativadverb','der, die, das, welcher, wo …','sg1',1],
 ['Wann steht bei einer Infinitivgruppe immer ein Komma?',['bei «um … zu», «ohne … zu» und «statt … zu»','bei jedem Infinitiv mit «zu»','nie','nur nach dem Verb «hoffen»'],'bei «um … zu», «ohne … zu» und «statt … zu»','Mit «um, ohne, statt, anstatt, ausser, als» steht das Komma immer. Sonst ist es bei Infinitivgruppen meist freiwillig.','sg1',3]
 ];
-W.forEach(w=>task.push({typ:'form',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+W.forEach(w=>task.push({typ:'form',stufe:w[5],lv:/Partizipialsatz/.test(w[2]+w[1].join())?3:(w[5]===3?2:1),cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
 
 /* 2 Umformen */
 const U=[
@@ -67,7 +69,9 @@ const I=[
 I.forEach(i=>task.push({typ:'inf',stufe:i[2],lv:i[2]===3?2:1,cats:['sg4'],prompt:'Enthält der Satz einen Infinitivsatz?<br>«'+i[0]+'»',opts:['Ja','Nein'],answer:i[1]?'Ja':'Nein',why:'<b>'+(i[1]?'Ja':'Nein')+'.</b> '+i[3]}));
 
 /* 5 Bedeutung */
-const BD=['Zeit (Temporalsatz)','Grund (Kausalsatz)','Bedingung (Konditionalsatz)','Folge (Konsekutivsatz)','Zweck (Finalsatz)','Einräumung (Konzessivsatz)','Art und Weise (Modalsatz)','Vergleich (Komparativsatz)'];
+const BDL=[['Zeit','Temporalsatz'],['Grund','Kausalsatz'],['Bedingung','Konditionalsatz'],['Folge','Konsekutivsatz'],['Zweck','Finalsatz'],['Einräumung','Konzessivsatz'],['Art und Weise','Modalsatz'],['Vergleich','Komparativsatz']];
+const BD=BDL.map(x=>x[0]);
+const NM=i=>HI()?BDL[i][0]+' ('+BDL[i][1]+')':BDL[i][0];
 const B=[
 ['Als wir ankamen, war das Essen fertig.',0,1],
 ['Ich bleibe zu Hause, weil ich krank bin.',1,1],
@@ -87,6 +91,10 @@ const B=[
 B.forEach((b,k)=>{const o=[b[1]];let j=1;while(o.length<4){const c=(b[1]+j*(k%2?3:1))%8;if(!o.includes(c))o.push(c);j++;}
  const opts=o.map(x=>BD[x]);const off=k%4;const sh=opts.slice(off).concat(opts.slice(0,off));
  task.push({typ:'bedeut',stufe:b[2],lv:b[2]===3?2:1,cats:['sg5'],prompt:'Welche Bedeutung hat der Nebensatz?<br>«'+b[0]+'»',opts:sh,answer:BD[b[1]],why:'<b>'+BD[b[1]]+'.</b> Frage nach der Bedeutung: Wann? Warum? Unter welcher Bedingung? Mit welchem Ziel? Trotz welchem Umstand?'});});
+/* Niveau A: Fachnamen der Bedeutungsarten */
+[['Als wir ankamen, war das Essen fertig.',0],['Ich bleibe zu Hause, weil ich krank bin.',1],['Falls es regnet, bleiben wir zu Hause.',2],['Er rannte so schnell, dass er ausser Atem war.',3],['Sie lernt, damit sie die Prüfung besteht.',4],['Obwohl es regnet, gehen wir hinaus.',5],['Er half mir, indem er die Tasche trug.',6],['Sie singt schöner, als ich gedacht hatte.',7]].forEach((b,k)=>{const idx=[b[1]];let j=1;while(idx.length<4){const c=(b[1]+j*(k%2?3:1))%8;if(!idx.includes(c))idx.push(c);j++;}
+ const opts=idx.map(x=>BDL[x][1]);const off=k%4;const sh=opts.slice(off).concat(opts.slice(0,off));
+ task.push({typ:'bedeut',stufe:3,lv:3,cats:['sg5'],prompt:'Wie heisst der Nebensatz mit seinem Fachnamen?<br>«'+b[0]+'»',opts:sh,answer:BDL[b[1]][1],why:'<b>'+BDL[b[1]][1]+'</b> = Nebensatz der Bedeutung «'+BDL[b[1]][0]+'».'});});
 
 /* 6 Umwandeln (ab B) */
 const V=[
@@ -107,11 +115,11 @@ const H=[
 ['Ein Nebensatz, der einen Zweck ausdrückt, heisst …','Er heisst …','Finalsatz',['Zwecksatz'],'Finalsatz (Zwecksatz).',2],
 ['Ein anderes Wort für unterordnende Konjunktion lautet …','Das andere Wort heisst …','Subjunktion',['die Subjunktion','Die Subjunktion'],'Subjunktion.',2]
 ];
-H.forEach(h=>task.push({typ:'fach',stufe:h[5],lv:1,cats:['sg7'],input:true,prompt:h[0],sent:h[1],answer:h[2],accept:h[3],strict:true,why:'<b>'+h[2]+'.</b> '+h[4]}));
+H.forEach(h=>task.push({typ:'fach',stufe:h[5],lv:/Partizipialsatz|Finalsatz|Subjunktion/.test(h[2])?3:1,cats:['sg7'],input:true,prompt:h[0],sent:h[1],answer:h[2],accept:h[3],strict:true,why:'<b>'+h[2]+'.</b> '+h[4]}));
 
 const SECS=[
 {id:'formen',title:'Die sechs Arten der Nebensätze',short:'Formale Arten',min:15,note:'Formal unterscheidet man sechs Nebensatzarten. Entscheidend sind Einleitewort, Verbstellung und Komma. Infinitiv- und Partizipialsätze haben keine Personalform. Bei Infinitivgruppen mit um, ohne, statt, anstatt, ausser, als steht das Komma immer, sonst ist es meist freiwillig.',
- html:()=>T(['Art','Merkmal','Verb','Beispiel'],[['Konjunktionalsatz','unterordnende Konjunktion','am Schluss','Ich weiss, <b>dass</b> er kommt.'],['Relativsatz','Relativpronomen / -adverb','am Schluss','Die Frau, <b>die</b> ich traf, …'],['Indirekter Fragesatz','Fragewort oder «ob»','am Schluss','Sag mir, <b>wann</b> du kommst.'],['Uneingeleiteter Nebensatz','kein Einleitewort','1. oder 2. Stelle','<b>Wäre</b> ich reich, würde ich reisen.'],['Infinitivsatz','«zu» + Infinitiv, kein Subjekt','keine Personalform','Sie hofft, die Prüfung <b>zu bestehen</b>.'],['Partizipialsatz','Partizip, kein Subjekt','keine Personalform','Von der Sonne <b>geblendet</b>, blieb er stehen.']])},
+ html:()=>T(['Art','Merkmal','Verb','Beispiel'],[['Konjunktionalsatz','unterordnende Konjunktion','am Schluss','Ich weiss, <b>dass</b> er kommt.'],['Relativsatz','Relativpronomen / -adverb','am Schluss','Die Frau, <b>die</b> ich traf, …'],['Indirekter Fragesatz','Fragewort oder «ob»','am Schluss','Sag mir, <b>wann</b> du kommst.'],['Uneingeleiteter Nebensatz','kein Einleitewort','1. oder 2. Stelle','<b>Wäre</b> ich reich, würde ich reisen.'],['Infinitivsatz','«zu» + Infinitiv, kein Subjekt','keine Personalform','Sie hofft, die Prüfung <b>zu bestehen</b>.'],].concat(HI()?[['Partizipialsatz','Partizip, kein Subjekt','keine Personalform','Von der Sonne <b>geblendet</b>, blieb er stehen.']]:[]))},
 {id:'umformen',title:'Uneingeleitet und eingeleitet umformen',short:'Umformen',min:8,note:'Ein uneingeleiteter Nebensatz lässt sich mit Konjunktion umformen (und umgekehrt): Wäre ich reich = Wenn ich reich wäre. Ich glaube, er kommt = Ich glaube, dass er kommt.',
  html:()=>T(['Uneingeleitet','Eingeleitet'],[['<b>Wäre</b> ich reich, würde ich reisen.','<b>Wenn</b> ich reich wäre, würde ich reisen.'],['Ich glaube, er hat recht.','Ich glaube, <b>dass</b> er recht hat.']])+'<div class="callout">Beim Umformen wandert die Personalform ans <b>Satzende</b> (eingeleitet) oder nach <b>vorne</b> (uneingeleitet).</div>'},
 {id:'relativ',title:'Der Relativsatz',short:'Relativsatz',min:8,note:'Relativsatz: Relativpronomen (der, die, das, welcher) oder Relativadverb (wo). Er bezieht sich auf ein Bezugswort im Hauptsatz und steht zwischen Kommas.',
@@ -119,11 +127,11 @@ const SECS=[
 {id:'infinitiv',title:'Der Infinitivsatz und die Modalverb-Falle',short:'Infinitivsatz',min:8,note:'Infinitivsatz: Infinitiv mit «zu», kein eigenes Subjekt. Falle: Modalverb + Infinitiv ohne «zu» (will gehen, muss lernen) ist das Prädikat und kein Infinitivsatz.',
  html:()=>T(['Satz','Art'],[['Er hofft, früh <b>zu gehen</b>.','Infinitivsatz'],['Er kam, <b>um zu helfen</b>.','Infinitivsatz'],['Er <b>will</b> früh <b>gehen</b>.','Prädikat (Modalverb + Infinitiv), kein Infinitivsatz']])},
 {id:'bedeutung',title:'Nebensätze nach ihrer Bedeutung',short:'Zeit, Grund, Bedingung …',min:12,note:'Die Bedeutung erkennt man an der Konjunktion und an der Frage: Wann? Warum? Unter welcher Bedingung? Mit welcher Folge? Zu welchem Zweck? Trotz welchem Umstand? Auf welche Art? Mit welchem Vergleich? Unterordnende Konjunktion = Subjunktion.',
- html:()=>T(['Bedeutung','Konjunktionen','Beispiel'],[['Zeit','als, wenn, nachdem, bevor, bis, während, seit','<b>Als</b> wir ankamen, war das Essen fertig.'],['Grund','weil, da','Ich bleibe, <b>weil</b> ich krank bin.'],['Bedingung','wenn, falls','<b>Falls</b> es regnet, bleiben wir hier.'],['Folge','sodass, so … dass','Er rannte so schnell, <b>dass</b> er ausser Atem war.'],['Zweck','damit, um … zu','Sie lernt, <b>damit</b> sie besteht.'],['Einräumung','obwohl, obgleich, auch wenn','<b>Obwohl</b> es regnet, gehen wir hinaus.'],['Art und Weise','indem, ohne dass','Er half, <b>indem</b> er die Tasche trug.'],['Vergleich','als, wie, als ob, je … desto','Sie singt schöner, <b>als</b> ich dachte.']])},
+ html:()=>T(['Bedeutung','Konjunktionen','Beispiel'],[[NM(0),'als, wenn, nachdem, bevor, bis, während, seit','<b>Als</b> wir ankamen, war das Essen fertig.'],[NM(1),'weil, da','Ich bleibe, <b>weil</b> ich krank bin.'],[NM(2),'wenn, falls','<b>Falls</b> es regnet, bleiben wir hier.'],[NM(3),'sodass, so … dass','Er rannte so schnell, <b>dass</b> er ausser Atem war.'],[NM(4),'damit, um … zu','Sie lernt, <b>damit</b> sie besteht.'],[NM(5),'obwohl, obgleich, auch wenn','<b>Obwohl</b> es regnet, gehen wir hinaus.'],[NM(6),'indem, ohne dass','Er half, <b>indem</b> er die Tasche trug.'],[NM(7),'als, wie, als ob, je … desto','Sie singt schöner, <b>als</b> ich dachte.']])},
 {id:'umwandeln',title:'Überladene Sätze umwandeln',short:'Sätze umwandeln',lv:2,min:8,note:'Ab Niveau B. Ein überladener Satz mit langen Satzgliedern wird übersichtlicher als Satzgefüge: Aus «Wegen des Regens …» wird «Weil es regnete, …».',
  html:()=>T(['Überladen','Satzgefüge'],[['Wegen des starken Regens am Morgen fiel das Spiel aus.','<b>Weil</b> es am Morgen stark <b>regnete</b>, fiel das Spiel aus.'],['Vor der Abreise reinigten wir das Haus.','<b>Bevor</b> wir <b>abreisten</b>, reinigten wir das Haus.']])},
 {id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
- html:()=>T(['Begriff','Bedeutung'],[['Konjunktionalsatz','Nebensatz mit unterordnender Konjunktion (Subjunktion)'],['Relativsatz','Nebensatz mit Relativpronomen'],['Indirekter Fragesatz','Nebensatz mit Fragewort oder «ob»'],['Uneingeleiteter Nebensatz','Nebensatz ohne Einleitewort'],['Infinitivsatz','Nebensatz mit «zu» + Infinitiv'],['Partizipialsatz','Nebensatz mit Partizip']])}
+ html:()=>T(['Begriff','Bedeutung'],[['Konjunktionalsatz','Nebensatz mit unterordnender Konjunktion'+(HI()?' (Subjunktion)':'')],['Relativsatz','Nebensatz mit Relativpronomen'],['Indirekter Fragesatz','Nebensatz mit Fragewort oder «ob»'],['Uneingeleiteter Nebensatz','Nebensatz ohne Einleitewort'],['Infinitivsatz','Nebensatz mit «zu» + Infinitiv'],['Partizipialsatz','Nebensatz mit Partizip']].filter(x=>HI()||x[0]!=='Partizipialsatz'))}
 ];
 const EX=[
  ['Welche Art Nebensatz? «Sie hofft, die Prüfung zu bestehen.»','Infinitivsatz',1],
