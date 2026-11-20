@@ -185,7 +185,7 @@ const EX=[
  ['Unterstreiche das Prädikat: «Wir wollen morgen ins Kino gehen.»','wollen · gehen',1],
  ['Wie viele Teile hat das Prädikat? «Sie hat gestern kommen wollen.»','3 Teile',2],
  ['Bilde einen Satz mit dem Verb «aufstehen» im Präsens.','Beispiel: Ich stehe um sieben Uhr auf.',2],
- ['Wo steht das Verb? «Ich weiss, dass er morgen kommt.»','Im Nebensatz am Satzende: kommt.',2]
+ ['Wo steht die Personalform? «Gestern hat mein Bruder lange geschlafen.»','An zweiter Stelle: hat. Der weitere Verbteil «geschlafen» steht am Schluss.',2]
 ];
 const merk=()=>T(['Thema','Merksatz'],[['Rohform','Grundform des Verbs: lachen, gehen, aufstehen. Endet meist auf -en.'],['Rohform des Satzes','Alle Satzglieder lose, Verb in der Grundform am Ende. Ohne Subjekt: verbale Wortkette (Den Teppich ausrollen).'],['Verbale Teile','Personalform, Infinitiv, Partizip, Verbzusatz. Sie haben einen festen Platz.'],['Prädikat','Sagt, was geschieht. Besteht aus einem oder mehreren verbalen Teilen.'],['Mehrere Teile','haben/sein + Partizip II · Modalverb + Rohform · trennbares Verb · werden + Rohform'],['Satzklammer','Die Teile des Prädikats umschliessen den Rest des Satzes.'],['Stellung','Aussagesatz: Verb an Position 2 · Nebensatz: Verb am Ende']]);
 GT.chapter({id:'verbale',teil:'satz',nr:4,title:'Verbale Teile und Rohform des Satzes',big:'Er hat gestern gelacht',desc:'Verbale Teile benennen, Rohform des Satzes und verbale Wortkette bilden',

@@ -317,6 +317,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 .chip.tok.right::after{content:' ✓'}.chip.tok.wrong::after{content:' ✗'}
 .f-nomen{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-verb{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adj{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-pron{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-part{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-art{--c:#0891b2;--b:#cffafe;--t:#164e63}
 .f-sg1{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-sg2{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-sg3{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-sg4{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-sg5{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-sg6{--c:#0891b2;--b:#cffafe;--t:#164e63}.f-sg0{--c:#64748b;--b:#f1f5f9;--t:#334155}
+.f-adv{--c:#db2777;--b:#fce7f3;--t:#831843}.f-att{--c:#64748b;--b:#f1f5f9;--t:#334155}
 @media print{.po{display:block!important}.noprint,#merk button,#merk .try{display:none!important}#merk .sol[hidden]{display:block!important}#merk .uw .u{background:var(--b);box-shadow:inset 0 -3px 0 var(--c)}#merk .card{box-shadow:none}}
 </style>
 </head>
@@ -564,7 +565,7 @@ function render(){
 }
 function renderTry(el){
   const types=el.dataset.types.split(',');
-  const pool=visibleTasks().filter(t=>types.includes(t.typ));if(!pool.length){el.hidden=true;return;}
+  const cf=el.dataset.cats?el.dataset.cats.split(','):null;const pool=visibleTasks().filter(t=>types.includes(t.typ)&&(!cf||t.cats.some(c=>cf.includes(c))));if(!pool.length){el.hidden=true;return;}
   let t,n=0;do{t=pool[Math.floor(Math.random()*pool.length)];n++;}while(String(t.id)===el.dataset.tid&&pool.length>1&&n<20);
   el.dataset.tid=t.id;el._t=t;el._o=shuffle(t.opts);
   el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div><div class="opts">'+
@@ -827,6 +828,7 @@ document.addEventListener('click',e=>{
    case 'mksheet':makeSheet(v);break;
    case 'psheet':printSheet(v);break;
    case 'tpick':tryPick(b);break;
+   case 'tall':{b.closest('.noprint').querySelectorAll('[data-w="try"]').forEach(e=>{delete e.dataset.done;renderTry(e);});break;}
    case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
    case 'resetask':S.resetAsk=true;render();break;
    case 'resetno':S.resetAsk=false;render();break;
@@ -1023,7 +1025,7 @@ document.addEventListener('submit',async e=>{
   }catch(x){err.textContent='Anmeldung fehlgeschlagen. Bitte E-Mail und Passwort prüfen.';err.hidden=false;}
   finally{btn.disabled=false;btn.textContent='Anmelden';}
 });
-GT.tryW=t=>'<div class="try" data-w="try" data-types="'+t+'"></div>';
+GT.tryW=(t,c)=>'<div class="try" data-w="try" data-types="'+t+'"'+(c?' data-cats="'+c+'"':'')+'></div>';
 GT.reveal=(label,inner)=>'<div><button class="btn sm" data-a="rev" data-l="'+label+'">'+label+'</button><div class="sol" hidden>'+inner+'</div></div>';
 GT.table=(head,rows,cls)=>'<div class="tw"><table class="'+(cls||'')+'"><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>';
 const ICONS={bestimmen:'🏷️',zuordnen:'🧲',anmalen:'🎨',einsetzen:'✏️',umformen:'🔁',frage:'❓',ersatz:'🔄',artikel:'📰',mehrzahl:'➕',gross:'🔠',komp:'⬆️',stufe:'📶',endung:'✍️',erkennen:'👀',wort:'🧱',personal:'🙋',possessiv:'🏠',praep:'📍',konj:'🔗',adverb:'💨',art:'🧩',rohform:'🔧',zaehlen:'🔢',glied:'🧱',probe:'🧪',satzart:'💬',zeichen:'❗',teilsatz:'🧩',nsart:'🏷️',gefuege:'🪢',komma:'✂️',ja:'✅',person:'🙋',stamm:'🌱',zeit:'🕒',zeitwahl:'🕒',markieren:'🖍️',text:'🔍',wissen:'💡'};
@@ -1041,11 +1043,13 @@ GT.chapter=function(d){
   const TOC=[['ziele','Lernziele']].concat(secs.map(s=>[s.id,s.short||s.title,s.lv>1?s.lv:undefined])).concat([['check','Ausprobieren']]);
   const tryAll=Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
   const ex=d.exercises||[];
+  const liveTypes=Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
+  const exLive=()=>(liveTypes?'<div class="noprint"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam vorne lösen:</b> Drei Aufgaben zum Thema dieses Kapitels. Klasse antworten lassen, Antwort begründen, dann «Nächste Aufgabe». Mit «Neue Aufgaben» kommen drei frische.</div>'+[1,2,3].map(()=>GT.tryW(liveTypes,d.liveCats&&d.liveCats.join(','))).join('')+'<div style="margin:.8rem 0"><button class="btn" data-a="tall">🔄 Alle drei neu</button></div><h3 style="margin-top:1.2rem">Zum Aufschreiben</h3></div>':'')+exHTML();
   const exHTML=()=>'<ol class="ex">'+ex.filter(u=>(u[2]||1)<=lv()).map(u=>'<li>'+u[0]+'<div class="po wl"></div><div class="noprint">'+GT.reveal('Lösung zeigen',u[1])+'</div></li>').join('')+'</ol>';
   const SLIDES=[{id:'titel',title:d.title,min:3,p:'h',note:d.noteTitel||'Lernziele laut lesen. Das Niveau oben bestimmt, wie viel Erweiterung eingeblendet wird.',
      html:()=>'<p class="kicker">'+(d.teil==='wort'?'I. Wortlehre':'II. Satzlehre')+' · Kapitel '+d.nr+'</p><p class="big">'+(d.big||d.title)+'</p><div class="grid2">'+SEC.ziele()+'<div class="card noprint"><h3>Ablauf</h3><ol>'+secs.filter(s=>!s.lv||s.lv<=lv()).map(s=>'<li>'+(s.short||s.title)+'</li>').join('')+'<li>Üben und Abschluss-Check</li></ol></div></div>'}]
    .concat(d.sections.map(s=>({id:s.id,title:s.title,min:s.min||5,lv:s.lv,p:s.p===undefined?'h':s.p,note:s.note,html:typeof s.html==='function'?s.html:()=>s.html,print:s.print})))
-   .concat(ex.length?[{id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:exHTML}]:[])
+   .concat(ex.length?[{id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:exLive}]:[])
    .concat([{id:'merkblatt',title:'Merkblatt',min:4,p:'hm',note:'Als Merkblatt drucken (Menü «Merkblatt drucken») oder abschreiben lassen.',html:()=>d.merk()},
             {id:'check',title:'Abschluss-Check',min:5,p:'',note:'Als Exit-Ticket einzeln lösen lassen. Das Ergebnis zeigt, wo noch Lücken sind.',html:()=>'<p class="lead">Tippe jeweils die richtige Antwort.</p>'+[1,2,3,4].map(()=>GT.tryW(tryAll)).join('')}]);
   const allT=Object.keys(d.types);

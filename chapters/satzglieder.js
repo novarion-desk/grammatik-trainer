@@ -237,43 +237,94 @@ const M3=[
 const MI={p:['sg2','Tippe alle Wörter des Prädikats an (alle Teile des Verbs).'],ao:['sg3','Tippe alle Wörter des Akkusativobjekts an (Wen oder was?).'],do:['sg3','Tippe alle Wörter des Dativobjekts an (Wem?).'],adv:['sg4','Tippe das Adverbiale an (Wörter ohne Präposition: Wann? Wo?).']};
 M3.forEach(m=>{const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
   task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:[MI[m[2]][0]],tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:MI[m[2]][1],why:m[3]});});
+const SGI=[
+['nom','👤','Subjekt','Wer oder was?','Sagt, wer oder was etwas tut oder ist. Steht im Nominativ.'],
+['verb','⚙️','Prädikat','Was geschieht?','Alle Teile des Verbs. Die Personalform steht an zweiter Stelle.'],
+['akk','🎯','Akkusativobjekt (AO)','Wen oder was?','Wer oder was von der Handlung betroffen ist.'],
+['dat','🤝','Dativobjekt (DO)','Wem?','Wem etwas gegeben, gezeigt oder geholfen wird.'],
+['gen','🏛️','Genitivobjekt','Wessen?','Selten und gehoben: Wir gedenken der Opfer.'],
+['art','🧭','Präpositionalgefüge','Präposition + Wörter','Beginnt mit in, auf, mit, nach, für … und sagt Ort, Zeit, Art oder Grund.'],
+['adv','🧩','Adverbiale','Wann? Wo? Wie? Warum?','Wort oder Wortgruppe ohne Präposition: gestern, dort, leider.'],
+['att','🏷️','Attribut (kein Satzglied)','Was für ein …?','Beifügung zu einem Nomen: der freche Hund.']];
+const SL=(k,emo,name,frage,lead,steps,head,rows,callouts)=>
+ '<div class="f-'+k+'">'+
+ '<div style="display:flex;gap:.9rem;align-items:center;padding:.8rem 1rem;border-radius:12px;background:var(--b);border:2px solid var(--c);color:var(--t)"><span style="font-size:2.4rem">'+emo+'</span><div><span class="tag f-'+k+'" style="font-size:1rem">'+name+'</span><div style="font-size:1.3rem;font-weight:800;margin-top:.15rem">'+frage+'</div></div></div>'+
+ '<p class="lead" style="margin:.8rem 0">'+lead+'</p>'+
+ '<div class="grid2"><div class="card" style="border-top:5px solid var(--c)"><h3 style="margin:0 0 .3rem">🔍 So findest du es</h3><ol class="steps" style="margin:0">'+steps.map(x=>'<li>'+x+'</li>').join('')+'</ol></div>'+
+ '<div class="card" style="border-top:5px solid var(--c)"><h3 style="margin:0 0 .3rem">✏️ Beispiele</h3>'+rows.map(r=>'<p style="margin:.25rem 0">'+r+'</p>').join('')+'</div></div>'+
+ (head?'<div style="margin-top:.8rem">'+head+'</div>':'')+
+ callouts.map(c=>'<div class="callout" style="margin-top:.7rem;background:var(--b);border-color:var(--c);color:var(--t)">'+c+'</div>').join('')+'</div>';
+const MKS=(k,t)=>mk(k,t);
+
 const SECS=[
-{id:'praedikat',title:'Das Prädikat',short:'Prädikat',min:8,note:'Das Prädikat besteht aus allen Teilen des Verbs. Die Personalform steht im Aussagesatz an zweiter Stelle, weitere Teile stehen am Schluss. Ein zweiteiliges Prädikat ist trotzdem nur ein Satzglied. Die Frage «Was geschieht?» hilft beim Finden.',
- html:()=>'<p class="lead">Das <b>Prädikat</b> besteht aus <b>allen Teilen des Verbs</b>. Es sagt, was geschieht oder was jemand tut.</p>'+
- T(['Satz','Prädikat','Besonderheit'],[['Der Hund <b>bellt</b>.','bellt','ein Teil'],['Anna <b>hat</b> gelacht.','hat … gelacht','zwei Teile, getrennt'],['Der Bus <b>fährt</b> heute früher <b>ab</b>.','fährt … ab','Verbzusatz am Schluss'],['Sie <b>will</b> morgen früh <b>aufstehen</b>.','will … aufstehen','Modalverb + Infinitiv']])+
- '<div class="callout"><b>Frage:</b> Was geschieht? Was tut jemand? · <b>Merke:</b> Die Personalform steht im Aussagesatz an zweiter Stelle, die übrigen Teile stehen am Schluss. Alle Teile zusammen sind <b>ein</b> Satzglied.</div>'},
-{id:'subjekt',title:'Das Subjekt',short:'Subjekt',min:8,note:'Das Subjekt steht im Nominativ. Frage: Wer oder was? Probe: Es lässt sich durch er, sie, es oder sie (Mehrzahl) ersetzen. Das Prädikat richtet sich nach dem Subjekt. Das Subjekt steht nicht immer am Satzanfang.',
- html:()=>'<p class="lead">Das <b>Subjekt</b> sagt, <b>wer oder was</b> etwas tut oder ist. Es steht im <b>Nominativ</b>.</p>'+
- T(['Satz','Frage','Subjekt'],[['Der Hund bellt.','Wer bellt?','Der Hund'],['Gestern spielte der kleine Junge Fussball.','Wer spielte?','der kleine Junge'],['Im Garten blühen die roten Rosen.','Was blüht?','die roten Rosen']])+
- '<div class="callout"><b>Ersatzprobe:</b> Das Subjekt lässt sich durch <b>er, sie, es</b> (Mehrzahl: sie) ersetzen: «Der Hund bellt.» – «<b>Er</b> bellt.»<br><b>Merke:</b> Das Subjekt steht nicht immer am Satzanfang. Das Prädikat richtet sich nach ihm: Ich lache, du lachst, die Kinder lachen.</div>'},
-{id:'ao',title:'Das Akkusativobjekt',short:'Akkusativobjekt (AO)',min:8,note:'Frage: Wen oder was? Ersatzprobe: ihn, sie, es. Kürzel AO wie in der Prüfung. Akkusativobjekte sind häufiger als Dativ- und Genitivobjekte.',
- html:()=>'<p class="lead">Das <b>Akkusativobjekt (AO)</b> fragt: <b>Wen oder was?</b> Es steht im <b>Akkusativ</b>.</p>'+
- T(['Satz','Frage','Akkusativobjekt'],[['Anna liest ein Buch.','Was liest Anna?','ein Buch'],['Ich sehe den Hund.','Wen sehe ich?','den Hund'],['Der Trainer lobt die ganze Mannschaft.','Wen lobt der Trainer?','die ganze Mannschaft']])+
- '<div class="callout"><b>Ersatzprobe:</b> Das Akkusativobjekt lässt sich durch <b>ihn, sie, es</b> ersetzen: «Ich sehe den Hund.» – «Ich sehe <b>ihn</b>.»<br>Ein Objekt steht <b>nie im Nominativ</b>.</div>'},
-{id:'do',title:'Das Dativobjekt',short:'Dativobjekt (DO)',min:8,note:'Frage: Wem? Ersatzprobe: ihm, ihr, ihnen. Typische Verben: helfen, gehören, danken, gefallen, schenken, zeigen. Manche Verben haben zwei Objekte (Dativ und Akkusativ).',
- html:()=>'<p class="lead">Das <b>Dativobjekt (DO)</b> fragt: <b>Wem?</b> Es steht im <b>Dativ</b>.</p>'+
- T(['Satz','Frage','Dativobjekt'],[['Er hilft dem Freund.','Wem hilft er?','dem Freund'],['Mein Handy gehört meiner Schwester.','Wem gehört das Handy?','meiner Schwester'],['Die Aufgabe gefällt allen Schülern.','Wem gefällt die Aufgabe?','allen Schülern']])+
- '<div class="callout"><b>Ersatzprobe:</b> Das Dativobjekt lässt sich durch <b>ihm, ihr, ihnen</b> ersetzen: «Er hilft dem Freund.» – «Er hilft <b>ihm</b>.»</div>'+
- '<div class="callout">Manche Verben haben <b>zwei Objekte</b>: «Er gibt <b>dem Freund</b> (DO) <b>das Buch</b> (AO).»</div>'},
-{id:'go',title:'Das Genitivobjekt',short:'Genitivobjekt',min:5,note:'Frage: Wessen? Kommt selten vor und wirkt gehoben (gedenken, bedürfen, sich erinnern an Wessen …). Achtung: «Wessen?» fragt auch nach Genitivattributen (das Haus des Nachbarn). Nur kurz behandeln.',
- html:()=>'<p class="lead">Das <b>Genitivobjekt</b> fragt: <b>Wessen?</b> Es steht im <b>Genitiv</b> und kommt <b>selten</b> vor.</p>'+
- T(['Satz','Frage','Genitivobjekt'],[['Wir gedenken der Opfer.','Wessen gedenken wir?','der Opfer'],['Der Richter bezichtigt den Mann des Diebstahls.','Wessen bezichtigt er ihn?','des Diebstahls']])+
- '<div class="callout"><b>Achtung:</b> «Wessen?» fragt auch nach einem <b>Attribut</b>: «das Haus <b>des Nachbarn</b>» (Wessen Haus?). Das ist kein Objekt.</div>'},
-{id:'pg',title:'Präpositionalgefüge',short:'Präpositionalgefüge',min:10,note:'Ein Präpositionalgefüge beginnt mit einer Präposition und enthält alle Wörter, die dazugehören. Es wird entweder vom Verb verlangt (warten auf, sich freuen auf) oder sagt etwas über Ort, Zeit, Art oder Grund.',
- html:()=>'<p class="lead">Ein <b>Präpositionalgefüge</b> beginnt mit einer <b>Präposition</b> (in, auf, mit, für, nach, am …) und enthält alle Wörter, die dazugehören.</p>'+
- T(['Beispiel','Präposition','Aufgabe im Satz'],[['<b>auf dem Pausenplatz</b> spielen','auf','Ort (Wo?)'],['<b>am Freitag</b> treffen','an (am)','Zeit (Wann?)'],['<b>mit dem Bus</b> fahren','mit','Art und Weise (Wie?)'],['<b>wegen des Schnees</b>','wegen','Grund (Warum?)'],['warten <b>auf den Bus</b>','auf','vom Verb verlangt (Präpositionalobjekt)']])+
- '<div class="callout">Das Präpositionalgefüge gehört zu den Satzgliedern. Es bleibt beim Verschieben zusammen: «<b>Nach der Pause</b> schreibt die Klasse einen Test.»</div>'},
-{id:'adverbiale',title:'Adverbiale (Wörter und Wortgruppen ohne Präposition)',short:'Adverbiale',min:8,note:'Wörter oder Wortgruppen ohne Präposition wie gestern, heute, dort, leider, dann, gestern Abend, nächste Woche. In deinen Lösungen steht dafür «Adverb» (Partikel). Wichtig: Satzglied, aber kein Objekt und kein Präpositionalgefüge.',
- html:()=>'<p class="lead">Auch <b>einzelne Wörter oder Wortgruppen</b> ohne Präposition können ein Satzglied sein: <b>Adverbiale</b> (zum Beispiel «gestern», «dann», «gestern Abend»).</p>'+
- T(['Frage','Beispiel'],[['Wann?','<b>Gestern</b> regnete es. · <b>Dann</b> ruft sie an.'],['Wo?','Die Kinder warten <b>draussen</b>.'],['Wie? (Einstellung)','<b>Leider</b> hat der Bus Verspätung.']])+
- '<div class="callout">Ein Adverbiale kann man oft <b>weglassen</b>, der Satz bleibt vollständig. Subjekt und Prädikat braucht jeder Satz.</div>'},
-{id:'attribut',title:'Das Attribut',short:'Attribut',min:10,note:'Das Attribut ist kein eigenes Satzglied. Es gehört immer zu einem Nomen und bleibt beim Verschieben bei ihm. Frage: Was für ein …? Der Artikel zählt hier auch als Attribut (wie in deinem Blatt).',
- html:()=>'<p class="lead">Ein Satzglied besteht aus einem <b>Kern</b> (oft ein Nomen) und <b>Attributen</b> (Beifügungen). Frage: <b>Was für ein …?</b></p>'+
- T(['Satzglied','Kern','Attribute'],[['der freche Hund','Hund','der, freche'],['ein spannendes Buch','Buch','ein, spannendes'],['das Haus am See','Haus','das, am See'],['die lauten Föhnstürme der letzten Nacht','Föhnstürme','die, lauten, der letzten Nacht']])+
- '<div class="callout">Das Attribut lässt sich <b>nicht allein verschieben</b>. Es zählt darum nie als eigenes Satzglied: «Der freche Hund bellt.» hat <b>zwei</b> Satzglieder.</div>'+
- '<p class="muted">Ein Satzglied kann mehrere Attribute haben. Ein Attribut kann aus einem Wort oder aus mehreren Wörtern bestehen.</p>'},
-{id:'pradikativ',title:'Gleichsetzungsnominativ (Prädikativ)',short:'Gleichsetzungsnominativ',lv:3,min:6,note:'Nur Niveau A. Nominativ nach «sein, werden, bleiben». Das ist kein Objekt, weil Objekte nie im Nominativ stehen.',
- html:()=>'<div class="card"><h3>Gleichsetzungsnominativ (Prädikativ)</h3><p>Nach <b>sein, werden, bleiben</b> steht ein zweiter Nominativ.</p><p>Anna <b>ist</b> [Lehrerin]. · Er <b>wird</b> [müde]. · Sie <b>bleibt</b> [freundlich].</p><p class="muted">Frage: Wer oder was ist Anna? – Lehrerin. Das ist kein Objekt: Objekte stehen nie im Nominativ.</p></div>'},
+{id:'farben',title:'Die Satzglieder und ihre Farben',short:'Farben',min:6,note:'Überblick mit Farbcode. Diese Farben verwenden wir auf allen Folien und im Merkblatt. Jedes Satzglied wird danach auf einer eigenen Folie genau erklärt. Das Attribut ist kein eigenes Satzglied, es gehört zu einem Nomen.',
+ html:()=>'<p class="lead">Jedes Satzglied hat eine eigene <b>Farbe</b>, eine eigene <b>Frage</b> und ein eigenes Zeichen.</p>'+
+ '<div class="grid2">'+SGI.map(x=>'<div class="card f-'+x[0]+'" style="border-left:6px solid var(--c);background:var(--b);color:var(--t)"><div style="display:flex;gap:.6rem;align-items:center"><span style="font-size:1.8rem">'+x[1]+'</span><div><span class="tag f-'+x[0]+'">'+x[2]+'</span><br><b>'+x[3]+'</b></div></div><p style="margin:.4rem 0 0">'+x[4]+'</p></div>').join('')+'</div>'+
+ '<div class="callout info">🏷️ Das <b>Attribut</b> ist <b>kein</b> Satzglied. Es gehört zu einem Nomen und bleibt beim Verschieben bei ihm.</div>'},
+{id:'praedikat',title:'Das Prädikat',short:'Prädikat',min:12,note:'Das Prädikat besteht aus allen Teilen des Verbs. Die Personalform steht im Aussagesatz an zweiter Stelle, weitere Teile stehen am Schluss. Ein mehrteiliges Prädikat ist trotzdem nur ein Satzglied. Zuerst das Prädikat suchen, weil es den festen Platz hat. Tipp: Satz in eine Frage umwandeln, das erste Wort ist die Personalform.',
+ html:()=>SL('verb','⚙️','Prädikat','Was geschieht? Was tut jemand?',
+ 'Das <b>Prädikat</b> besteht aus <b>allen Teilen des Verbs</b>. Es ist das Herz des Satzes: Ohne Prädikat gibt es keinen Satz.',
+ ['<b>Personalform</b> finden: Wandle den Satz in eine Frage um. Das erste Wort ist die Personalform. «Der Hund bellt laut.» → «<b>Bellt</b> der Hund laut?»','Weitere Verbteile suchen: Partizip, Infinitiv oder Verbzusatz stehen oft am <b>Schluss</b>.','Alle Teile zusammen sind <b>ein</b> Satzglied.'],
+ T(['Satz','Prädikat','Aufbau'],[['Der Hund '+mk('verb','bellt')+' laut.','bellt','einteilig'],['Anna '+mk('verb','hat')+' gestern '+mk('verb','gelacht')+'.','hat … gelacht','Hilfsverb + Partizip'],['Sie '+mk('verb','will')+' früh '+mk('verb','aufstehen')+'.','will … aufstehen','Modalverb + Infinitiv'],['Der Bus '+mk('verb','fährt')+' heute früher '+mk('verb','ab')+'.','fährt … ab','Verb + Verbzusatz'],['Wir '+mk('verb','werden')+' morgen '+mk('verb','gewinnen')+'.','werden … gewinnen','Zukunft']]),
+ ['Der Hund '+mk('verb','bellt')+'.','Tim '+mk('verb','spielt')+' Fussball.',mk('verb','Kommst')+' du mit?'],
+ ['⚠️ <b>Achtung:</b> Es genügt nicht, nur «hat» zu markieren. Auch «gelacht» gehört zum Prädikat.','🔎 <b>Merke:</b> Die Personalform steht im Aussagesatz an <b>zweiter Stelle</b>, im Fragesatz an erster.'])},
+{id:'subjekt',title:'Das Subjekt',short:'Subjekt',min:12,note:'Das Subjekt steht im Nominativ. Frage: Wer oder was? Probe: Es lässt sich durch er, sie, es oder sie (Mehrzahl) ersetzen. Das Prädikat richtet sich nach dem Subjekt (Person und Zahl). Das Subjekt steht nicht immer am Satzanfang. Bei «Es regnet.» ist «es» das Subjekt.',
+ html:()=>SL('nom','👤','Subjekt','Wer oder was?',
+ 'Das <b>Subjekt</b> sagt, <b>wer oder was</b> etwas tut oder ist. Es steht im <b>Nominativ</b>.',
+ ['Zuerst das <b>Prädikat</b> suchen.','Frage: <b>Wer oder was</b> + Prädikat? «Wer bellt?» – der Hund.','<b>Ersatzprobe:</b> er, sie, es, sie (Mehrzahl) einsetzen. «<b>Er</b> bellt.»','<b>Kontrolle:</b> Das Prädikat richtet sich nach dem Subjekt: Der Hund bellt, die Hunde bellen.'],
+ T(['Satz','Frage','Subjekt'],[['Der Hund bellt.','Wer bellt?',mk('nom','Der Hund')],['Gestern spielte der kleine Junge Fussball.','Wer spielte?',mk('nom','der kleine Junge')],['Im Garten blühen die roten Rosen.','Was blüht?',mk('nom','die roten Rosen')],['Es regnet.','Was regnet?',mk('nom','Es')],['Kommt Tim heute mit?','Wer kommt?',mk('nom','Tim')]]),
+ [mk('nom','Der Hund')+' bellt.','Heute spielt '+mk('nom','mein Bruder')+' Gitarre.',mk('nom','Die Schüler')+' schreiben einen Test.'],
+ ['⚠️ <b>Achtung:</b> Das Subjekt steht <b>nicht immer</b> am Satzanfang: «Gestern spielte <b>der Hund</b>.»','🔎 <b>Merke:</b> Das Subjekt steht immer im Nominativ. Ein Objekt steht nie im Nominativ.'])},
+{id:'ao',title:'Das Akkusativobjekt',short:'Akkusativobjekt (AO)',min:12,note:'Frage: Wen oder was? Ersatzprobe: ihn, sie, es. Kürzel AO wie in der Prüfung. Akkusativobjekte sind häufiger als Dativ- und Genitivobjekte. Es gibt Verben ohne Objekt (lachen, schlafen).',
+ html:()=>SL('akk','🎯','Akkusativobjekt (AO)','Wen oder was?',
+ 'Das <b>Akkusativobjekt (AO)</b> sagt, <b>wen oder was</b> die Handlung betrifft. Es steht im <b>Akkusativ</b>.',
+ ['<b>Prädikat</b> und <b>Subjekt</b> suchen.','Frage: <b>Wen oder was</b> + Subjekt + Prädikat? «Was liest Anna?» – ein Buch.','<b>Ersatzprobe:</b> ihn, sie, es einsetzen. «Anna liest <b>es</b>.»','Prüfe: Es ist <b>nicht</b> das Subjekt und beginnt <b>nicht</b> mit einer Präposition.'],
+ T(['Satz','Frage','Akkusativobjekt'],[['Anna liest ein Buch.','Was liest Anna?',mk('akk','ein Buch')],['Ich sehe den Hund.','Wen sehe ich?',mk('akk','den Hund')],['Der Trainer lobt die ganze Mannschaft.','Wen lobt der Trainer?',mk('akk','die ganze Mannschaft')],['Den Ball wirft Tim.','Was wirft Tim?',mk('akk','Den Ball')]]),
+ ['Anna liest '+mk('akk','ein Buch')+'.','Wir sehen '+mk('akk','den Film')+'.','Er kauft '+mk('akk','ein neues Handy')+'.'],
+ ['⚠️ <b>Achtung:</b> Manche Verben haben <b>kein</b> Objekt: «Tim lacht.» «Anna schläft.»','🔎 <b>Merke:</b> Ein Objekt steht <b>nie im Nominativ</b>. Es kann auch am Satzanfang stehen: «<b>Den Ball</b> wirft Tim.»'])},
+{id:'do',title:'Das Dativobjekt',short:'Dativobjekt (DO)',min:12,note:'Frage: Wem? Ersatzprobe: ihm, ihr, ihnen. Typische Verben: helfen, gehören, danken, gefallen, schenken, zeigen, antworten. Manche Verben haben zwei Objekte (Dativ und Akkusativ). Mit Präposition (mit dem Bus) ist es ein Präpositionalgefüge, kein Dativobjekt.',
+ html:()=>SL('dat','🤝','Dativobjekt (DO)','Wem?',
+ 'Das <b>Dativobjekt (DO)</b> sagt, <b>wem</b> etwas gegeben, gezeigt oder geholfen wird. Es steht im <b>Dativ</b>.',
+ ['<b>Prädikat</b> und <b>Subjekt</b> suchen.','Frage: <b>Wem</b> + Prädikat? «Wem hilft er?» – dem Freund.','<b>Ersatzprobe:</b> ihm, ihr, ihnen einsetzen. «Er hilft <b>ihm</b>.»','Prüfe: Es beginnt <b>nicht</b> mit einer Präposition.'],
+ T(['Satz','Frage','Dativobjekt'],[['Er hilft dem Freund.','Wem hilft er?',mk('dat','dem Freund')],['Mein Handy gehört meiner Schwester.','Wem gehört das Handy?',mk('dat','meiner Schwester')],['Die Aufgabe gefällt allen Schülern.','Wem gefällt die Aufgabe?',mk('dat','allen Schülern')],['Anna gibt ihrem Bruder das Buch.','Wem gibt Anna das Buch?',mk('dat','ihrem Bruder')+' (und '+mk('akk','das Buch')+')']]),
+ ['Er hilft '+mk('dat','dem Freund')+'.','Ich danke '+mk('dat','dir')+'.','Der Lehrer zeigt '+mk('dat','der Klasse')+' '+mk('akk','ein Video')+'.'],
+ ['⚠️ <b>Achtung:</b> «mit <b>dem Bus</b>» steht auch im Dativ, beginnt aber mit einer Präposition. Das ist ein <b>Präpositionalgefüge</b>, kein Dativobjekt.','🔎 <b>Merke:</b> Manche Verben haben <b>zwei Objekte</b>: «Er gibt <b>dem Freund</b> (DO) <b>das Buch</b> (AO).»'])},
+{id:'go',title:'Das Genitivobjekt',short:'Genitivobjekt',min:8,note:'Frage: Wessen? Ersatzprobe: seiner, ihrer. Kommt selten vor und wirkt gehoben (gedenken, bedürfen). Achtung: «Wessen?» fragt auch nach Genitivattributen (das Haus des Nachbarn). Nur kurz behandeln.',
+ html:()=>SL('gen','🏛️','Genitivobjekt','Wessen?',
+ 'Das <b>Genitivobjekt</b> antwortet auf die Frage <b>Wessen?</b> Es steht im <b>Genitiv</b> und kommt <b>selten</b> vor. Man hört es vor allem in gehobener Sprache.',
+ ['<b>Prädikat</b> und <b>Subjekt</b> suchen.','Frage: <b>Wessen</b> + Subjekt + Prädikat? «Wessen gedenken wir?» – der Opfer.','Prüfe: Es hängt <b>am Verb</b>. Hängt es an einem Nomen, ist es ein Attribut.','Typische Verben: <b>gedenken, bedürfen, sich erinnern, beschuldigen</b>.'],
+ T(['Satz','Frage','Genitivobjekt'],[['Wir gedenken der Opfer.','Wessen gedenken wir?',mk('gen','der Opfer')],['Er bedarf deiner Hilfe.','Wessen bedarf er?',mk('gen','deiner Hilfe')],['Der Richter bezichtigt den Mann des Diebstahls.','Wessen bezichtigt er ihn?',mk('gen','des Diebstahls')]]),
+ ['Wir gedenken '+mk('gen','der Opfer')+'.','Er bedarf '+mk('gen','deiner Hilfe')+'.'],
+ ['⚠️ <b>Achtung:</b> «Wessen?» fragt auch nach einem <b>Attribut</b>: «das Haus <b>des Nachbarn</b>» (Wessen Haus?). Das ist kein Objekt, sondern gehört zum Nomen «Haus».','🔎 <b>Merke:</b> Das Genitivobjekt ist selten. Meist ist ein Satzglied im Genitiv ein Attribut.'])},
+{id:'pg',title:'Präpositionalgefüge',short:'Präpositionalgefüge',min:14,note:'Ein Präpositionalgefüge beginnt mit einer Präposition und enthält alle Wörter, die dazugehören. Es sagt etwas über Ort, Zeit, Art oder Grund oder wird vom Verb verlangt (warten auf, sich freuen auf). Kontraktionen: am = an dem, im = in dem, zum = zu dem. Die Liste der Präpositionen auswendig kennen.',
+ html:()=>SL('art','🧭','Präpositionalgefüge','Beginnt mit einer Präposition',
+ 'Ein <b>Präpositionalgefüge</b> beginnt mit einer <b>Präposition</b> und enthält <b>alle Wörter</b>, die dazugehören. Es bleibt beim Verschieben zusammen.',
+ ['Präposition suchen (Liste unten).','Alle Wörter dazunehmen, bis das Nomen zu Ende ist: «in dem kleinen Park».','Fragen: <b>Wo? Wann? Wie? Warum?</b> – oder das Verb verlangt es (warten <b>auf</b> den Bus).','<b>Verschiebeprobe:</b> Das Ganze lässt sich zusammen verschieben.'],
+ '<div class="card f-art" style="background:var(--b);color:var(--t);border:2px dashed var(--c)"><b>Häufige Präpositionen:</b> '+['an','auf','aus','bei','durch','für','gegen','in','mit','nach','ohne','seit','über','um','unter','von','vor','wegen','zu','zwischen'].map(x=>'<span class="tag f-art">'+x+'</span>').join(' ')+'</div>'+
+ T(['Beispiel','Präposition','Aufgabe'],[[mk('art','auf dem Pausenplatz')+' spielen','auf','Ort (Wo?)'],[mk('art','am Freitag')+' treffen','an (am)','Zeit (Wann?)'],[mk('art','mit dem Bus')+' fahren','mit','Art und Weise (Wie?)'],[mk('art','wegen des Schnees')+' zu spät kommen','wegen','Grund (Warum?)'],['warten '+mk('art','auf den Bus'),'auf','vom Verb verlangt']]),
+ [mk('art','Nach der Pause')+' schreibt die Klasse einen Test.','Wir fahren '+mk('art','mit dem Zug')+' '+mk('art','nach Zürich')+'.','Sie freut sich '+mk('art','auf die Ferien')+'.'],
+ ['⚠️ <b>Achtung:</b> Eine Präposition allein ist kein Satzglied. Die dazugehörigen Wörter gehören mit: «<b>in dem kleinen Park</b>».','🔎 <b>Merke:</b> «am» = an dem, «im» = in dem, «zum» = zu dem, «beim» = bei dem. Sie beginnen mit einer Präposition.'])},
+{id:'adverbiale',title:'Adverbiale (Wörter und Wortgruppen ohne Präposition)',short:'Adverbiale',min:12,note:'Wörter oder Wortgruppen ohne Präposition wie gestern, heute, dort, leider, dann, gestern Abend, nächste Woche. In den Lösungen steht dafür «Adverb» (Partikel). Wichtig: Satzglied, aber kein Objekt und kein Präpositionalgefüge. Mit Präposition (am Freitag) ist es ein Präpositionalgefüge.',
+ html:()=>SL('adv','🧩','Adverbiale','Wann? Wo? Wie? Warum?',
+ 'Ein <b>Adverbiale</b> ist ein Wort oder eine Wortgruppe <b>ohne Präposition</b>, die Ort, Zeit, Art oder Grund angibt.',
+ ['<b>Prädikat</b>, <b>Subjekt</b> und Objekte suchen.','Wörter übrig? Frage: <b>Wann? Wo? Wie? Warum?</b>','Prüfe: Es beginnt <b>nicht</b> mit einer Präposition.','<b>Verschiebeprobe:</b> Das Adverbiale lässt sich leicht verschieben.'],
+ T(['Frage','Art','Beispiele'],[['Wann?','Zeit',mk('adv','gestern')+' · '+mk('adv','dann')+' · '+mk('adv','nächste Woche')+' · '+mk('adv','jeden Morgen')],['Wo?','Ort',mk('adv','dort')+' · '+mk('adv','draussen')+' · '+mk('adv','hier')],['Wie?','Art und Weise',mk('adv','leider')+' · '+mk('adv','langsam')+' · '+mk('adv','plötzlich')],['Warum?','Grund',mk('adv','deshalb')+' · '+mk('adv','darum')]]),
+ [mk('adv','Gestern')+' regnete es.','Die Kinder warten '+mk('adv','draussen')+'.',mk('adv','Leider')+' hat der Bus Verspätung.'],
+ ['⚠️ <b>Achtung:</b> «gestern» ist ein Adverbiale, «am Freitag» ein <b>Präpositionalgefüge</b>. Mit Präposition = Präpositionalgefüge.','🔎 <b>Merke:</b> Ein Adverbiale kann man oft <b>weglassen</b>, der Satz bleibt vollständig. Subjekt und Prädikat braucht jeder Satz.'])},
+{id:'attribut',title:'Das Attribut',short:'Attribut',min:12,note:'Das Attribut ist kein eigenes Satzglied. Es gehört immer zu einem Nomen und bleibt beim Verschieben bei ihm. Frage: Was für ein …? Der Artikel zählt hier auch als Attribut (wie im Unterrichtsblatt).',
+ html:()=>SL('att','🏷️','Attribut (kein Satzglied)','Was für ein …?',
+ 'Ein Satzglied besteht aus einem <b>Kern</b> (oft ein Nomen) und <b>Attributen</b> (Beifügungen). Das Attribut sagt, <b>was für</b> ein Nomen es ist.',
+ ['Kern suchen: das Nomen im Satzglied.','Frage: <b>Was für ein …?</b> (Welches? Wessen?)','Prüfe: Das Attribut lässt sich <b>nicht allein</b> verschieben.','Ein Satzglied kann <b>mehrere</b> Attribute haben.'],
+ T(['Satzglied','Kern','Attribute'],[['der freche Hund','Hund','der, freche'],['ein spannendes Buch','Buch','ein, spannendes'],['das Haus am See','Haus','das, am See'],['das Haus des Nachbarn','Haus','das, des Nachbarn'],['die lauten Föhnstürme der letzten Nacht','Föhnstürme','die, lauten, der letzten Nacht']]),
+ ['Der '+mk('att','freche')+' Hund bellt. (<b>2</b> Satzglieder)','Mein '+mk('att','grosser')+' Bruder spielt Gitarre.'],
+ ['⚠️ <b>Achtung:</b> «Der freche Hund bellt.» hat <b>zwei</b> Satzglieder (Der freche Hund · bellt), nicht drei.','🔎 <b>Merke:</b> Das Attribut bleibt beim Nomen. Es zählt nie als eigenes Satzglied.'])},
+{id:'pradikativ',title:'Gleichsetzungsnominativ (Prädikativ)',short:'Gleichsetzungsnominativ',lv:3,min:8,note:'Nur Niveau A. Nominativ nach «sein, werden, bleiben». Das ist kein Objekt, weil Objekte nie im Nominativ stehen.',
+ html:()=>SL('nom','💡','Gleichsetzungsnominativ','Wer oder was ist Anna?',
+ 'Nach <b>sein, werden, bleiben</b> steht ein <b>zweiter Nominativ</b>. Er setzt das Subjekt mit etwas gleich.',
+ ['Prädikat finden: <b>ist, wird, bleibt</b>.','Subjekt finden: Wer oder was?','Frage: <b>Wer oder was ist</b> das Subjekt?','Prüfe: Es ist ein <b>Nominativ</b>, also <b>kein</b> Objekt.'],
+ T(['Satz','Frage','Gleichsetzungsnominativ'],[['Anna ist Lehrerin.','Wer ist Anna?',mk('nom','Lehrerin')],['Er wird Pilot.','Was wird er?',mk('nom','Pilot')],['Sie bleibt meine Freundin.','Was bleibt sie?',mk('nom','meine Freundin')]]),
+ ['Anna ist '+mk('nom','Lehrerin')+'.','Er wird '+mk('nom','Pilot')+'.'],
+ ['🔎 <b>Merke:</b> Objekte stehen <b>nie</b> im Nominativ. Darum ist der Gleichsetzungsnominativ kein Objekt.'])},
 {id:'vorgehen',title:'So findest du die Satzglieder',short:'Vorgehen',min:8,note:'Immer in dieser Reihenfolge: Prädikat zuerst, weil es den festen Platz hat und die Stellen eröffnet. Dann Subjekt, dann Objekte.',
  html:()=>'<p class="lead">Suche die Satzglieder immer in dieser Reihenfolge:</p><ol class="steps"><li><b>Prädikat</b> suchen: alle Teile, die zum Verb gehören. Es hat einen festen Platz.</li><li><b>Subjekt</b> suchen: Wer oder was …? (Nominativ)</li><li><b>Akkusativobjekt</b> suchen: Wen oder was …?</li><li><b>Dativobjekt</b> suchen: Wem …?</li><li><b>Genitivobjekt</b> suchen: Wessen …? (selten)</li><li><b>Präpositionalgefüge</b> suchen: Präposition + die Wörter, die dazugehören.</li></ol><div class="callout">Zuerst prüfen: Was lässt sich beim Umstellen zusammen verschieben? Das sind die Satzglieder.</div>'},
 {id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
@@ -291,7 +342,8 @@ const SECS=[
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('glied,frage,probe')}
 ];
 const EX=[
- ['Stelle den Satz zweimal um: «Der Hund bellt laut.»','Laut bellt der Hund. · Bellt der Hund laut?',1],
+ ['Finde das Prädikat: «Anna hat gestern im Garten gelacht.»','hat … gelacht',1],
+ ['Finde das Subjekt: «Gestern spielte der kleine Junge Fussball.»','der kleine Junge (Wer spielte?)',1],
  ['Finde die Satzglieder: «Anna liest heute im Garten ein Buch.»','Anna · liest · heute · im Garten · ein Buch',1],
  ['Bestimme: «Er hilft dem Freund.»','Er (Subjekt) · hilft (Prädikat) · dem Freund (Dativobjekt)',1],
  ['Bestimme: «Wir sehen den Film.»','Wir (Subjekt) · sehen (Prädikat) · den Film (Akkusativobjekt)',1],
@@ -300,11 +352,24 @@ const EX=[
  ['Welche Wörter sind Attribute? «Mein grosser Bruder spielt Gitarre.»','Mein · grosser',2],
  ['Schreibe einen Satz mit Subjekt, Prädikat, Dativobjekt und Akkusativobjekt.','Beispiel: Anna gibt dem Bruder ein Buch.',2]
 ];
-const merk=()=>T(['Satzglied','Frage','Beispiel'],[['Subjekt','Wer oder was? (Nominativ)','<b>Der Hund</b> bellt.'],['Prädikat','alle verbalen Teile, Personalform an zweiter Stelle','Der Hund <b>bellt</b>.'],['Akkusativobjekt (AO)','Wen oder was?','Er sieht <b>den Hund</b>.'],['Dativobjekt (DO)','Wem?','Er hilft <b>dem Hund</b>.'],['Genitivobjekt','Wessen?','Wir gedenken <b>der Opfer</b>.'],['Präpositionalgefüge','beginnt mit einer Präposition','Er wartet <b>auf den Bus</b>.'],['Adverbiale','einzelnes Wort: Wann? Wo?','<b>Gestern</b> regnete es.'],['Attribut','Was für ein …? (kein Satzglied)','der <b>freche</b> Hund']])+
- '<ul><li>Verschiebeprobe: Was zusammenbleibt, ist <b>ein</b> Satzglied.</li><li>Die Personalform steht im Aussagesatz an zweiter Stelle.</li><li>Ein Objekt steht nie im Nominativ.</li><li>Das Subjekt steht nicht immer an erster Stelle.</li></ul>';
+const merk=()=>'<h3>🎨 Die Satzglieder auf einen Blick</h3>'+T(['Satzglied','Frage','Ersatzprobe','Beispiel'],[
+ ['👤 Subjekt','Wer oder was?','er, sie, es',mk('nom','Der Hund')+' bellt.'],
+ ['⚙️ Prädikat','Was geschieht?','–','Der Hund '+mk('verb','bellt')+'.'],
+ ['🎯 Akkusativobjekt (AO)','Wen oder was?','ihn, sie, es','Er sieht '+mk('akk','den Hund')+'.'],
+ ['🤝 Dativobjekt (DO)','Wem?','ihm, ihr, ihnen','Er hilft '+mk('dat','dem Hund')+'.'],
+ ['🏛️ Genitivobjekt','Wessen?','seiner, ihrer','Wir gedenken '+mk('gen','der Opfer')+'.'],
+ ['🧭 Präpositionalgefüge','Wo? Wann? Wie? Warum?','–','Er wartet '+mk('art','auf den Bus')+'.'],
+ ['🧩 Adverbiale','Wann? Wo? Wie? Warum? (ohne Präposition)','–',mk('adv','Gestern')+' regnete es.'],
+ ['🏷️ Attribut (kein Satzglied)','Was für ein …?','–','der '+mk('att','freche')+' Hund']])+
+ '<h3>⚙️ Das Prädikat</h3>'+T(['Aufbau','Beispiel','Prädikat'],[['einteilig','Der Hund bellt.','bellt'],['Hilfsverb + Partizip','Anna hat gelacht.','hat … gelacht'],['Modalverb + Infinitiv','Sie will aufstehen.','will … aufstehen'],['Verb + Verbzusatz','Der Bus fährt ab.','fährt … ab']])+
+ '<p>Die Personalform steht im Aussagesatz an <b>zweiter Stelle</b>. Alle Verbteile zusammen sind <b>ein</b> Satzglied.</p>'+
+ '<h3>🔍 So gehst du vor</h3><ol><li><b>Verschiebeprobe:</b> Was bleibt beim Umstellen zusammen?</li><li><b>Prädikat</b> suchen (alle Verbteile).</li><li><b>Subjekt</b> suchen: Wer oder was + Prädikat?</li><li><b>Akkusativobjekt</b>: Wen oder was?</li><li><b>Dativobjekt</b>: Wem?</li><li><b>Genitivobjekt</b>: Wessen? (selten)</li><li><b>Präpositionalgefüge</b>: Präposition + zugehörige Wörter.</li><li><b>Adverbiale</b>: Was übrig bleibt, ohne Präposition: Wann? Wo? Wie? Warum?</li></ol>'+
+ '<h3>🧭 Häufige Präpositionen</h3><p>an, auf, aus, bei, durch, für, gegen, in, mit, nach, ohne, seit, über, um, unter, von, vor, wegen, zu, zwischen. (am = an dem, im = in dem, zum = zu dem)</p>'+
+ '<h3>⚠️ Stolpersteine</h3><ul><li>Das Subjekt steht <b>nicht immer</b> am Satzanfang.</li><li>Ein Objekt steht <b>nie im Nominativ</b>.</li><li>Das Attribut ist <b>kein</b> Satzglied: «Der freche Hund bellt.» hat 2 Satzglieder.</li><li>Mit Präposition (am Freitag, mit dem Bus) ist es ein <b>Präpositionalgefüge</b>, auch wenn der Fall Dativ ist.</li><li>Zweiteiliges Prädikat: «hat … gelacht» ist <b>ein</b> Satzglied.</li><li>«Wessen?» fragt auch nach einem Attribut (das Haus <b>des Nachbarn</b>).</li></ul>'+
+ '<h3>🔤 Fachbegriffe</h3><p>Verschiebeprobe · Satzglied · Subjekt · Prädikat · Akkusativobjekt (AO) · Dativobjekt (DO) · Genitivobjekt · Präpositionalgefüge · Adverbiale · Attribut · Nominativ · Akkusativ · Dativ · Genitiv</p>';
 GT.chapter({id:'satzglieder',teil:'satz',nr:3,title:'Die Satzglieder benennen',big:'[Der Hund] [bellt] [laut]',desc:'Prädikat, Subjekt, Objekte, Präpositionalgefüge, Adverbiale, Attribut',
  ex:'«[Der Hund] [bellt] [laut].»',
- goals:['Ich finde zuerst die Satzglieder mit der Verschiebeprobe.','Ich bestimme Subjekt und Prädikat.','Ich bestimme Akkusativ-, Dativ- und Genitivobjekt.','Ich erkenne Präpositionalgefüge und Adverbiale.','Ich erkenne Attribute und weiss, dass sie kein eigenes Satzglied sind.'],
+ goals:['Ich finde zuerst das Prädikat (alle Verbteile) und dann das Subjekt.','Ich bestimme Akkusativ-, Dativ- und Genitivobjekt mit den Fragen Wen oder was? / Wem? / Wessen? und mit der Ersatzprobe.','Ich erkenne ein Präpositionalgefüge an der Präposition und nehme alle zugehörigen Wörter dazu.','Ich erkenne Adverbiale und frage nach Zeit, Ort, Art und Weise und Grund.','Ich weiss, dass ein Attribut zu einem Nomen gehört und kein eigenes Satzglied ist.','Ich bestimme alle Satzglieder eines Satzes in der richtigen Reihenfolge.'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'},
   glied:{label:'Satzglied bestimmen',short:'Subjekt, Prädikat, Objekte, Präpositionalgefüge, Adverbiale',instr:'Welches Satzglied ist markiert?',hint:'Stelle die passende Frage: Wer? Was tut? Wen? Wem? Wo? Wann?',ref:'subjekt'},

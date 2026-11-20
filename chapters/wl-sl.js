@@ -71,15 +71,67 @@ FB2.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:
 const INP=[["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Der Hund bellt.", "2", [], false, "Der Hund | bellt."], ["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Lena lacht.", "2", [], false, "Lena | lacht."], ["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Tim liest ein Buch.", "3", [], false, "Tim | liest | ein Buch."], ["zaehlen", 1, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Die Katze schläft auf dem Sofa.", "3", [], false, "Die Katze | schläft | auf dem Sofa."], ["zaehlen", 2, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Am Morgen isst Lena ein Brot.", "4", [], false, "Am Morgen | isst | Lena | ein Brot."], ["zaehlen", 2, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Gestern habe ich meinen Freund besucht.", "4", [], false, "Gestern | habe besucht | ich | meinen Freund. «habe besucht» ist ein Satzglied."], ["zaehlen", 3, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Im Sommer fahren wir mit dem Zug nach Italien.", "5", [], false, "Im Sommer | fahren | wir | mit dem Zug | nach Italien."], ["zaehlen", 3, "sg2", "Wie viele Satzglieder hat der Satz? Schreibe die Zahl.", "Nach der Schule spielt Tim mit seinen Freunden Fussball.", "5", [], false, "Nach der Schule | spielt | Tim | mit seinen Freunden | Fussball."]];
 INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
 
+/* ---- NEU: Satz und Verb ---- */
+const A3=[
+['Welches Wort ist die <b>Personalform</b>? «Die Kinder spielen draussen.»',['spielen','Kinder','draussen','Die'],'spielen','«spielen» richtet sich nach «die Kinder» (Mehrzahl).','sg3',1],
+['Welches Wort ist die <b>Personalform</b>? «Anna lacht laut.»',['lacht','Anna','laut'],'lacht','Zu «Anna» passt «lacht» (er/sie/es).','sg3',1],
+['Welches Wort ist die <b>Personalform</b>? «Wir gehen heute ins Kino.»',['gehen','Wir','heute','Kino'],'gehen','Zu «wir» passt «gehen».','sg3',1],
+['Welches Wort ist die <b>Personalform</b>? «Du hast gestern gewonnen.»',['hast','gewonnen','Du','gestern'],'hast','«hast» ändert sich mit der Person (ich habe, du hast). «gewonnen» ändert sich nicht.','sg3',2],
+['Was ist der <b>Infinitiv</b> von «sie lacht»?',['lachen','gelacht','lacht','lachte'],'lachen','Der Infinitiv ist die Grundform, wie im Wörterbuch.','sg3',1],
+['Was ist der <b>Infinitiv</b> von «wir spielten»?',['spielen','gespielt','spielte','spielst'],'spielen','Der Infinitiv endet meist auf -en.','sg3',1],
+['Was ist der <b>Infinitiv</b> von «du liest»?',['lesen','gelesen','liest','las'],'lesen','Grundform: lesen.','sg3',2],
+['Woran erkennst du die <b>Personalform</b>?',['Sie ändert sich mit der Person: ich lache, du lachst.','Sie endet immer auf -en.','Sie steht immer am Schluss.','Sie wird grossgeschrieben.'],'Sie ändert sich mit der Person: ich lache, du lachst.','Die Personalform passt sich der Person an. Der Infinitiv bleibt gleich.','sg3',1],
+['Welcher Satz hat <b>keine Personalform</b>?',['Im grossen Garten','Es regnet.','Komm her!','Wir lachen.'],'Im grossen Garten','Ohne Personalform ist es kein vollständiger Satz.','sg3',1],
+['Welche Wortgruppe ist <b>kein Satz</b>, weil das Verb fehlt?',['Der alte Mann im Park','Der alte Mann sitzt im Park.','Sitzt der alte Mann im Park?','Setz dich in den Park!'],'Der alte Mann im Park','Es fehlt die Personalform des Verbs.','sg3',1],
+['Wie viele Personalformen hat der Satz? «Anna lacht und Tim weint.»',['2','1','3','4'],'2','lacht · weint. Jede Personalform gehört zu einem eigenen Satzteil.','sg3',3],
+['«Anna <b>hat</b> gestern <b>gelacht</b>.» Welches Wort ist die Personalform?',['hat','gelacht','gestern','Anna'],'hat','«hat» ändert sich mit der Person (ich habe, du hast). «gelacht» bleibt gleich.','sg3',2],
+['Was ist <b>kein</b> Merkmal eines Satzes?',['Er besteht aus nur einem Wort.','Er enthält eine Personalform.','Er beginnt mit einem Grossbuchstaben.','Er endet mit einem Satzzeichen.'],'Er besteht aus nur einem Wort.','Ein vollständiger Satz braucht mindestens eine Personalform und meist ein Subjekt.','sg3',2]
+];
+A3.forEach(a=>task.push({typ:'wissen',stufe:a[5],lv:a[5]===3?2:1,cats:[a[4]],prompt:a[0],opts:a[1],answer:a[2],why:a[3]}));
+[
+["fach",1,"sg4","Das konjugierte Verb heisst mit dem Fachwort …","Das Verb, das sich nach der Person richtet, heisst …","Personalform",["Die Personalform"],true,"Personalform = Verb, das sich nach Person und Zahl richtet."],
+["fach",1,"sg4","Die Grundform des Verbs heisst …","Die Grundform des Verbs heisst …","Infinitiv",["Der Infinitiv"],true,"Infinitiv = Grundform (lachen, spielen)."]
+].forEach(r=>task.push({typ:r[0],stufe:r[1],lv:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+
 const SECS=[
 {id:'unterschied',title:'Unterschied: Wortlehre und Satzlehre',short:'Unterschied',min:10,note:'Einstieg in die Satzlehre: Zwei Blickwinkel auf denselben Satz. Wortlehre (Morphologie) fragt nach dem einzelnen Wort und seiner Form. Satzlehre (Syntax) fragt nach dem Bau des Satzes und den Satzgliedern.',
  html:()=>'<div class="grid2"><div class="card"><h3>Wortlehre (Morphologie)</h3><p>Wir untersuchen <b>einzelne Wörter</b> und ihre Form: Was für ein Wort ist das?</p><p>Der kleine Hund bellt laut.</p><p class="muted">Wortart, Geschlecht, Fall, Zahl, Zeitform, Steigerung.</p></div>'+
  '<div class="card"><h3>Satzlehre (Syntax)</h3><p>Wir untersuchen den <b>Bau des Satzes</b>: Welche Aufgabe haben die Wortgruppen?</p><p>[Der kleine Hund] [bellt] [laut].</p><p class="muted">Satzglieder, Satzarten, Haupt- und Nebensatz.</p></div></div>'+
  T(['Frage','Gehört zur …'],[['Welche Wortart ist «schnell»?','Wortlehre'],['Welches Geschlecht hat «das Handy»?','Wortlehre'],['In welcher Zeitform steht «sie lachte»?','Wortlehre'],['Welches Satzglied ist «dem Lehrer»?','Satzlehre'],['Wie viele Satzglieder hat der Satz?','Satzlehre'],['Ist es ein Haupt- oder ein Nebensatz?','Satzlehre']])+
  '<div class="callout">Ein Satzglied kann aus <b>mehreren Wörtern</b> bestehen: «Der kleine Hund» ist <b>ein</b> Satzglied (aber drei Wörter).</div>'},
-{id:'satz',title:'Was ist ein Satz?',short:'Satz',min:6,note:'Ein Satz hat mindestens ein Subjekt und ein Prädikat, ausser bei Ausrufen (Hilfe!) und Aufforderungen (Komm!).',
- html:()=>'<div class="card"><h3>Ein Satz …</h3><ul class="steps"><li>hat ein <b>Prädikat</b> (Verb in der Personalform),</li><li>meist auch ein <b>Subjekt</b> (Wer oder was?),</li><li>beginnt <b>gross</b> und endet mit einem <b>Satzzeichen</b>.</li></ul></div>'+
- '<div class="grid2" style="margin-top:.8rem"><div class="card"><h3>Ein Satz</h3><p>Anna lacht.</p><p>Wir spielen Fussball.</p></div><div class="card"><h3>Kein Satz</h3><p>Im grossen Garten</p><p>Der alte Mann</p></div></div>'},
+{id:'satz',title:'Was ist ein Satz?',short:'Satz',min:12,note:'Ein Satz teilt etwas Vollständiges mit. Vier Merkmale: Personalform, Subjekt (wer oder was handelt), sinnvolle Aussage, Grossbuchstabe und Satzzeichen. Das Verb ist das Herz des Satzes: Ohne Personalform gibt es keinen Satz. Ausnahmen sind Ausrufe («Hilfe!») und Wörter wie «Danke!». Gemeinsam mit Beispielen an der Tafel sammeln: Satz oder Nicht-Satz?',
+ html:()=>'<div style="display:flex;gap:.8rem;align-items:center;padding:.8rem 1rem;border-radius:12px;background:#fef3c7;border:2px solid #d97706;color:#78350f"><span style="font-size:2.2rem">💬</span><div><b style="font-size:1.15rem">Ein Satz teilt etwas Vollständiges mit.</b><br>Man kann ihn verstehen, ohne etwas zu ergänzen.</div></div>'+
+ '<h3 style="margin:1rem 0 .4rem">Vier Merkmale</h3><div class="grid2">'+[
+  ['f-verb','❤️','1 · Eine Personalform','Das Verb ist das <b>Herz</b> des Satzes. Es sagt, was geschieht. Die Personalform richtet sich nach der Person: ich lache, du lachst, wir lachen.'],
+  ['f-nomen','👤','2 · Wer oder was?','Im Satz steht, <b>wer oder was</b> etwas tut: «<b>Anna</b> lacht.» Dieser Teil heisst Subjekt. Bei Aufforderungen wie «Komm her!» ist er mitgedacht (du).'],
+  ['f-adj','✅','3 · Ein vollständiger Sinn','Der Satz ist eine <b>Aussage</b>, eine <b>Frage</b> oder eine <b>Aufforderung</b>. Man braucht keine weiteren Wörter, um ihn zu verstehen.'],
+  ['f-part','🔠','4 · Gross und Satzzeichen','Das erste Wort schreibt man <b>gross</b>. Am Schluss steht ein <b>Punkt</b>, ein <b>Fragezeichen</b> oder ein <b>Ausrufezeichen</b>.']
+ ].map(x=>'<div class="card f-'+x[0].slice(2)+'" style="border-left:6px solid var(--c);background:var(--b);color:var(--t)"><h3 style="margin:0 0 .3rem;color:var(--t)">'+x[1]+' '+x[2]+'</h3><p style="margin:0">'+x[3]+'</p></div>').join('')+'</div>'+
+ '<h3 style="margin:1rem 0 .4rem">Satz oder kein Satz?</h3>'+
+ T(['Wortgruppe','Satz?','Warum?'],[
+  ['Anna <b>lacht</b>.','✅ ja','Personalform «lacht» und wer lacht: Anna.'],
+  ['Wir <b>spielen</b> Fussball.','✅ ja','Personalform «spielen», Subjekt «wir».'],
+  ['<b>Spielst</b> du heute Fussball?','✅ ja','Auch eine Frage ist ein Satz.'],
+  ['<b>Komm</b> her!','✅ ja','Aufforderung: Personalform «komm», gemeint ist «du».'],
+  ['Im grossen Garten','❌ nein','Es fehlt das Verb in der Personalform.'],
+  ['Der alte Mann im Park','❌ nein','Es fehlt das Verb: Was tut der Mann?'],
+  ['Gestern Abend gelacht','❌ nein','«gelacht» ist keine Personalform: Es fehlt «hat» und wer gelacht hat.'],
+  ['Hilfe!','⚠️ Ausnahme','Ausruf mit einem Wort. Er teilt etwas mit, ist aber kein vollständiger Satz.']])+
+ '<div class="callout">🔎 <b>Merke:</b> Fehlt die Personalform, ist es kein Satz. Das Verb ist das Wichtigste.</div>'},
+{id:'verb',title:'Das Verb im Satz',short:'Verb',min:12,note:'Das Verb genauer anschauen: Infinitiv (Grundform) und Personalform (richtet sich nach der Person). Personenprobe: Setze eine andere Person ein, das Wort, das sich verändert, ist die Personalform. Bei zusammengesetzten Formen (hat gelacht) ist nur der erste Teil die Personalform. Hier noch keine Satzglieder benennen.',
+ html:()=>'<div style="display:flex;gap:.8rem;align-items:center;padding:.8rem 1rem;border-radius:12px;background:var(--b);border:2px solid var(--c);color:var(--t)" class="f-verb"><span style="font-size:2.2rem">⚙️</span><div><b style="font-size:1.15rem">Das Verb ist das Herz des Satzes.</b><br>Es sagt, was geschieht: eine Tätigkeit, ein Vorgang oder ein Zustand.</div></div>'+
+ '<div class="grid3" style="margin-top:.8rem">'+[
+  ['🏃','Tätigkeit','laufen, schreiben, lachen, spielen'],['🌧️','Vorgang','regnen, wachsen, schmelzen'],['🛋️','Zustand','sein, bleiben, liegen, wohnen']
+ ].map(x=>'<div class="card f-verb" style="text-align:center;background:var(--b);color:var(--t)"><div style="font-size:1.8rem">'+x[0]+'</div><b>'+x[1]+'</b><p class="muted" style="margin:.2rem 0 0">'+x[2]+'</p></div>').join('')+'</div>'+
+ '<h3 style="margin:1rem 0 .4rem">Infinitiv und Personalform</h3>'+
+ '<div class="grid2"><div class="card"><h3>📖 Infinitiv (Grundform)</h3><p>So steht das Verb im Wörterbuch. Es ändert sich nie.</p><p><span class="tag f-part">lachen</span> <span class="tag f-part">spielen</span> <span class="tag f-part">lesen</span></p></div>'+
+ '<div class="card"><h3>🎯 Personalform</h3><p>Sie <b>richtet sich nach der Person</b> (und der Zahl) und ändert sich.</p><p><span class="tag f-verb">lache</span> <span class="tag f-verb">lachst</span> <span class="tag f-verb">lacht</span></p></div></div>'+
+ T(['Person','Infinitiv: lachen','Personalform'],[['ich','lachen','ich <b>lache</b>'],['du','lachen','du <b>lachst</b>'],['er / sie / es','lachen','sie <b>lacht</b>'],['wir','lachen','wir <b>lachen</b>'],['ihr','lachen','ihr <b>lacht</b>'],['sie (Mehrzahl)','lachen','sie <b>lachen</b>']])+
+ '<h3 style="margin:1rem 0 .4rem">So findest du die Personalform</h3>'+
+ '<ol class="steps"><li><b>Personenprobe:</b> Setze eine andere Person ein. «Die Kinder lachen.» → «Ich lache.» Das Wort, das sich ändert, ist die Personalform.</li><li><b>Zeitprobe:</b> Setze eine andere Zeit ein. «Anna lacht.» → «Anna lachte.» Auch hier ändert sich die Personalform.</li><li>Merke: Ein Verb in der Grundform («lachen») oder als Partizip («gelacht») ist <b>keine</b> Personalform.</li></ol>'+
+ '<h3 style="margin:1rem 0 .4rem">Wenn das Verb aus mehreren Teilen besteht</h3>'+
+ T(['Satz','Personalform','weiterer Verbteil'],[['Anna <b>lacht</b> laut.','lacht','–'],['Anna <b>hat</b> laut <b>gelacht</b>.','hat','gelacht (Partizip)'],['Anna <b>will</b> heute <b>lachen</b>.','will','lachen (Infinitiv)'],['Der Bus <b>fährt</b> früher <b>ab</b>.','fährt','ab (Verbzusatz)']])+
+ '<div class="callout">🔎 <b>Merke:</b> Ein Satz hat mindestens eine <b>Personalform</b>. Weitere Verbteile stehen oft am Schluss. Alle gehören zum selben Verb.</div>'},
 {id:'glieder',title:'Die Satzglieder im Überblick',short:'Satzglieder',min:10,note:'Hier nur ein Überblick. Details folgen in den Kapiteln «Die Verschiebeprobe» und «Die Satzglieder benennen». Farbcode (blau, rot, grün, orange, violett, türkis) wird dort eingeführt.',
  html:()=>T(['Satzglied','Frage','Beispiel'],[['Subjekt','Wer oder was?','<b>Der Hund</b> bellt.'],['Prädikat','Was geschieht?','Der Hund <b>bellt</b>.'],['Akkusativobjekt','Wen oder was?','Anna liest <b>ein Buch</b>.'],['Dativobjekt','Wem?','Er hilft <b>dem Freund</b>.'],['Präpositionalgefüge','beginnt mit einer Präposition','Sie spielen <b>im Garten</b>.'],['Adverbiale','einzelnes Wort: Wann? Wo?','Er kommt <b>heute</b>.']])},
 {id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:6,note:'Verwechslung Wortart/Satzglied häufig. Zwei Fragen stellen: Was für ein Wort? Welche Aufgabe im Satz?',
@@ -93,17 +145,26 @@ const SECS=[
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('wissen,wort')}
 ];
 const EX=[
- ['Wie viele Wörter und wie viele Satzglieder hat: «Der kleine Hund bellt laut.»?','5 Wörter · 3 Satzglieder',1],
- ['Ist «Im Garten» ein Satz?','Nein, es fehlt ein Prädikat.',1],
- ['Gehört «Subjekt» zur Wortlehre oder zur Satzlehre?','Zur Satzlehre.',1],
- ['Gib bei «Anna liest ein Buch.» Wortart und Satzglied von «liest» an.','Wortart: Verb · Satzglied: Prädikat',1],
- ['Schreibe einen Satz mit drei Satzgliedern.','Beispiel: Tim spielt Fussball.',2],
- ['Erkläre den Unterschied zwischen Wortart und Satzglied.','Wortart: Was ist das Wort? Satzglied: Welche Aufgabe hat es im Satz?',2]
+ ['Gehört die Frage «Welche Wortart ist das Wort?» zur Wortlehre oder zur Satzlehre?','Zur Wortlehre (Morphologie).',1],
+ ['Gehört die Frage «Wie ist der Satz gebaut?» zur Wortlehre oder zur Satzlehre?','Zur Satzlehre (Syntax).',1],
+ ['Ist «Im Garten» ein Satz? Begründe.','Nein, es fehlt die Personalform des Verbs.',1],
+ ['Unterstreiche die Personalform: «Die Kinder spielen draussen.»','spielen',1],
+ ['Schreibe den Infinitiv: «sie lacht», «wir spielten», «du liest».','lachen · spielen · lesen',1],
+ ['Setze ein: ich … , du … , wir … (lachen)','ich lache · du lachst · wir lachen',1],
+ ['Warum ist «Der alte Mann im Park» kein Satz? Ergänze ihn zu einem Satz.','Es fehlt das Verb. Beispiel: Der alte Mann sitzt im Park.',2],
+ ['Finde die Personalform und den weiteren Verbteil: «Anna hat gestern gelacht.»','Personalform: hat · weiterer Teil: gelacht',2],
+ ['Schreibe selber drei Sätze: eine Aussage, eine Frage, eine Aufforderung. Markiere die Personalform.','Beispiel: Tim spielt Fussball. · Spielt Tim Fussball? · Spiel Fussball!',2]
 ];
-const merk=()=>T(['Thema','Merksatz'],[['Wortlehre (Morphologie)','Wortarten: Nomen, Verb, Adjektiv, Pronomen, Partikel.'],['Satzlehre (Syntax)','Satzbau: Satzglieder, Satzarten, Haupt- und Nebensatz.'],['Satzglied','Ein Wort oder mehrere Wörter, die beim Umstellen zusammenbleiben.'],['Satz','Hat ein Prädikat, meist ein Subjekt und ein Satzzeichen am Ende.']]);
+const merk=()=>'<h3>🔤 Wortlehre und Satzlehre</h3>'+T(['Bereich','Fachwort','Frage','Beispiel'],[['Wortlehre','Morphologie','Was für ein Wort ist das? Welche Form hat es?','Wortart, Geschlecht, Fall, Zahl, Zeitform, Steigerung'],['Satzlehre','Syntax','Wie ist der Satz gebaut?','Satzglieder, Satzarten, Haupt- und Nebensatz']])+
+ '<h3>💬 Was ist ein Satz?</h3><ul><li>Ein Satz hat eine <b>Personalform</b> (das Verb, das sich nach der Person richtet).</li><li>Es steht darin, <b>wer oder was</b> etwas tut (Subjekt).</li><li>Er ist eine <b>Aussage</b>, <b>Frage</b> oder <b>Aufforderung</b> mit vollständigem Sinn.</li><li>Das erste Wort schreibt man <b>gross</b>, am Schluss steht ein <b>Satzzeichen</b>.</li><li>Fehlt die Personalform, ist es <b>kein Satz</b> («Im grossen Garten»).</li></ul>'+
+ T(['Wortgruppe','Satz?','Grund'],[['Anna lacht.','ja','Personalform «lacht»'],['Spielst du Fussball?','ja','Frage mit Personalform'],['Komm her!','ja','Aufforderung'],['Der alte Mann im Park','nein','Verb fehlt'],['Gestern Abend gelacht','nein','«gelacht» ist keine Personalform']])+
+ '<h3>⚙️ Das Verb</h3>'+T(['Begriff','Bedeutung','Beispiel'],[['Infinitiv','Grundform, ändert sich nie','lachen, spielen'],['Personalform','richtet sich nach Person und Zahl','ich lache, du lachst, wir lachen'],['Partizip','Form für zusammengesetzte Zeiten','gelacht, gespielt'],['Verbzusatz','Teil, der am Schluss steht','Der Bus fährt früher <b>ab</b>.']])+
+ '<h3>🔎 So findest du die Personalform</h3><ol><li>Personenprobe: Setze eine andere Person ein. Was sich ändert, ist die Personalform.</li><li>Zeitprobe: Setze eine andere Zeit ein. «lacht» wird «lachte».</li><li>Infinitiv und Partizip sind keine Personalformen.</li></ol>'+
+ '<h3>⚠️ Satzglied und Wortart</h3><p>Die <b>Wortart</b> sagt, was für ein Wort es ist (Nomen, Verb …). Das <b>Satzglied</b> sagt, welche Aufgabe eine Wortgruppe im Satz hat. Ein Satzglied kann aus mehreren Wörtern bestehen: «Der kleine Hund» ist <b>ein</b> Satzglied.</p>';
 GT.chapter({id:'wl-sl',teil:'satz',nr:1,title:'Wortlehre und Satzlehre',big:'Wörter und Sätze untersuchen',desc:'Wortart oder Satzglied: was ist der Unterschied?',
  ex:'«[Der kleine Hund] ['+mk('verb','bellt')+'] [laut].»',
- goals:['Ich unterscheide Wortlehre (Morphologie) und Satzlehre (Syntax) und ordne Fragen dem richtigen Bereich zu.','Ich erkenne, wann eine Wortgruppe ein Satz ist.','Ich zähle Wörter und Satzglieder.'],
+ goals:['Ich erkläre, was die Wortlehre (Morphologie) und die Satzlehre (Syntax) untersuchen, und ordne Fragen dem richtigen Bereich zu.','Ich erkläre, was ein Satz ist: Er hat eine Personalform, sagt, wer oder was etwas tut, und endet mit einem Satzzeichen.','Ich erkenne die Personalform eines Verbs und unterscheide sie vom Infinitiv.','Ich entscheide, ob eine Wortgruppe ein Satz ist, und begründe es.'],
+ liveCats:['sg1','sg3','sg4'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{
   zaehlen:{icon:'🔢',label:'Satzglieder zählen',short:'Wie viele Satzglieder hat der Satz?',instr:'Schreibe die Zahl.',hint:'Mache die Verschiebeprobe: Was lässt sich zusammen verschieben?',ref:'glieder'},

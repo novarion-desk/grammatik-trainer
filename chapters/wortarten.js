@@ -234,7 +234,7 @@ const EX=[
  ['Welche Wortart hat diese Merkmale? «konjugierbar» · «steigerbar» · «festes Geschlecht» · «unveränderbar»','Verb · Adjektiv · Nomen · Partikel',1],
  ['Schreibe die Fachbegriffe: anderes Wort für Verb, Adjektiv, Nomen, Pronomen, Artikel.','Zeitwort · Eigenschaftswort · Hauptwort · Fürwort · Begleiter',1],
  ['Schreibe je ein Nomen, ein Verb und ein Adjektiv zum Thema Schule.','Zum Beispiel: Lehrerin (Nomen), lernen (Verb), müde (Adjektiv)',1],
- ['Bestimme alle Wortarten: «Das Buch, das ich lese, ist spannend.»','Das (Pronomen/Artikel) · Buch (Nomen) · das (Pronomen, Relativpronomen) · ich (Pronomen) · lese (Verb) · ist (Verb) · spannend (Adjektiv)',2]
+ ['Bestimme alle Wortarten: «Mein Bruder liest heute ein spannendes Buch.»','Mein (Pronomen/Begleiter) · Bruder (Nomen) · liest (Verb) · heute (Partikel) · ein (Artikel) · spannendes (Adjektiv) · Buch (Nomen)',2]
 ];
 const merk=()=>FAM+'<p style="margin-top:.7rem"><b>Merke:</b> Die Bedeutung zählt nicht, nur wie sich ein Wort verändern lässt.</p><h3 style="margin-top:.9rem">So bestimmst du die Wortart</h3><ol><li>Verändert es sich? Nein → Partikel.</li><li>Artikel davor? → Nomen.</li><li>Konjugieren? → Verb.</li><li>Steigern? → Adjektiv (auch Sandwichprobe: der schöne Hund).</li><li>Ersetzt oder begleitet es ein Nomen? → Pronomen (auch Listenprobe).</li></ol>'+
  '<h3>Stolpersteine</h3><ul><li>Das Lesen, die Arbeit: Mit Artikel ist es ein Nomen.</li><li>Er singt schön: «schön» bleibt ein Adjektiv.</li><li>Artikel (der, die, das, ein) gehören zu den Pronomen.</li></ul>';
