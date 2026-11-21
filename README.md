@@ -18,3 +18,6 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 ### Präsentieren-Modus (Lehrer, Folien)
 Knopf «▶ Präsentieren» in der Folien-Leiste: Vollbild, Folie wird automatisch auf die Bildschirmgrösse skaliert. Bedienung: Pfeiltasten/Leertaste/Klick rechts/Wischen = weiter, Klick links = zurück, N = Hinweise ein/aus, Esc = beenden. Auf iPad/iPhone ohne echten Browser-Vollbild (Seite füllt den Bildschirm).
+
+## Feedback
+Der Knopf «💬 Feedback» öffnet ein externes, anonymes Formular bei Tally (Fehler, Wünsche, Inhalte). Nur dann werden Angaben gesendet – zusammen mit App-Name, Version und Gerätetyp. Namen werden nicht abgefragt.

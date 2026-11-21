@@ -1077,7 +1077,8 @@ function initAuth(){
   }catch(e){auth=null;}
 }
 const teacherAccess=()=>!!S.user&&!S.demo;
-function authBtns(){
+function authBtns(){return '<button class="btn sm" onclick="openAppFeedback()" title="Feedback: Fehler melden, Wünsche äussern">💬 Feedback</button>'+authBtns0();}
+function authBtns0(){
   if(S.demo)return '<span class="pill beta">Beta</span>';
   if(S.user)return '<span class="pill">Lehrer</span><button class="btn sm" data-a="tsettings">⚙️ Einstellungen</button><button class="btn sm" data-a="tlogout">Abmelden</button>';
   return '<button class="btn sm" data-a="tlogin">Lehrer-Anmeldung</button>';
@@ -1161,5 +1162,9 @@ GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
 <script src="chapters/faelle.js"></script>
 <script>if('serviceWorker' in navigator&&location.protocol.startsWith('http')&&!/[?&]demo/.test(location.search)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 GT.start();</script>
+<script>
+/* Feedback: öffnet das anonyme Tally-Formular (App, Version und Gerät werden mitgegeben, keine Personendaten) */
+function openAppFeedback(){var q=new URLSearchParams({app:'grammatik-trainer',version:'2026-11-21',geraet:(navigator.userAgent||'').slice(0,120)});window.open('https://tally.so/r/GeR9re?'+q.toString(),'_blank','noopener');}
+</script>
 </body>
 </html>
