@@ -21,3 +21,6 @@ Knopf «▶ Präsentieren» in der Folien-Leiste: Vollbild, Folie wird automatis
 
 ## Feedback
 Der Knopf «💬 Feedback» öffnet ein externes, anonymes Formular bei Tally (Fehler, Wünsche, Inhalte). Nur dann werden Angaben gesendet – zusammen mit App-Name, Version und Gerätetyp. Namen werden nicht abgefragt.
+
+## Zurück-Geste
+Die Zurück-Taste bzw. -Geste (Handy, iPad) geht einen Schritt zurück (z. B. Aufgaben → Einstellung → Start, offene Fenster schliessen) und schliesst die App erst auf dem Startbildschirm.
