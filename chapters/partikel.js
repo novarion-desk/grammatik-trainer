@@ -263,7 +263,7 @@ const SECS=[
 {id:'abgrenzung',title:'Adjektiv oder Adverb?',short:'Abgrenzung',lv:2,min:8,note:'Ab Niveau B. Adjektiv: steigerbar und mit Endung vor dem Nomen. Adverb: unveränderlich.',
  html:()=>'<div class="grid2"><div class="card"><h3>Adjektiv</h3><p>Das <b>schnelle</b> Auto. (vor dem Nomen, mit Endung)</p><p>Das Auto ist <b>schnell</b>. (nach «sein»)</p><p>Er rennt <b>schnell</b>. (beim Verb, bleibt unverändert)</p></div>'+
  '<div class="card"><h3>Adverb</h3><p>Er kommt <b>heute</b>. (keine Endung)</p><p>Sie wohnt <b>dort</b>. (nicht steigerbar)</p></div></div>'},
-{id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Typische Verwechslungen: das/dass, seit/seid, wieder/wider.',
+{id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Typische Verwechslungen: das/dass, seit/seid, wieder/wider, als/wenn/wann.',
  html:()=>'<div class="grid3">'+[
   ['1 · Präposition oder Verbzusatz?','«Das Buch liegt <b>auf</b> dem Tisch.» (Präposition)<br>«Mach die Tür <b>auf</b>.» («aufmachen» ist ein trennbares Verb, «auf» ist der Verbzusatz.)','Eine Präposition braucht ein Nomen danach.'],
   ['2 · das oder dass?','«Ich weiss, <b>dass</b> er kommt.»','dass: leitet einen Nebensatz ein. Probe: dieses/welches → das.'],
@@ -273,7 +273,8 @@ const SECS=[
   ['6 · Kurzformen','«im, zum, vom, beim»','im = in dem, zum = zu dem. Die Kurzform ist alltäglich, die lange Form betont das Wort.'],
   ['7 · als, wenn oder wann?','«<b>Als</b> ich klein war, wohnten wir in Bern.» (einmalig) / «Jedes Mal, <b>wenn</b> es regnet, nehme ich den Schirm.» (wiederholt) / «<b>Wann</b> kommst du?» (Frage)','als = einmal in der Vergangenheit. wenn = immer wieder oder in der Zukunft. wann = Frage nach der Zeit.'],,
   ['8 · deshalb oder weil?','«Ich bin krank, <b>deshalb</b> bleibe ich zu Hause.» / «Ich bleibe zu Hause, <b>weil</b> ich krank <b>bin</b>.»','Nach «deshalb, darum, trotzdem» (Adverbien) steht das Verb an zweiter Stelle. Nach «weil, obwohl» (Konjunktionen) steht es am Ende.'],,
-  ['9 · Mundart-Fallen','Nicht: «wegen dem Regen», «dem Vater sein Auto». Sondern: «wegen des Regens», «das Auto des Vaters» (oder «vom Vater»).','In der Schriftsprache steht nach «wegen» der Genitiv. Der Dativ ist umgangssprachlich. «dem Vater sein Auto» schreibt man nicht.']
+  ['9 · Mundart-Fallen','Nicht: «wegen dem Regen», «dem Vater sein Auto». Sondern: «wegen des Regens», «das Auto des Vaters» (oder «vom Vater»).','In der Schriftsprache steht nach «wegen» der Genitiv. Der Dativ ist umgangssprachlich. «dem Vater sein Auto» schreibt man nicht.'],
+  ['10 · wieder oder wider?','«Ich sehe dich <b>wieder</b>.» (nochmals) / «Er <b>wider</b>spricht mir.» (gegen)','wieder = nochmals, erneut. wider = gegen (widersprechen, der Widerstand, wider Willen).']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('praep,konj,art')}
 ];
 const EX=[
@@ -291,7 +292,9 @@ const EX=[
  ['Verbinde mit «deshalb»: Ich bin müde. Ich gehe schlafen.','Ich bin müde, deshalb gehe ich schlafen.',2],
  ['Verbinde mit «weil»: Ich bin müde. Ich gehe schlafen.','Ich gehe schlafen, weil ich müde bin.',2],
  ['Korrigiere: «Wegen dem Regen bleiben wir hier.»','Wegen des Regens bleiben wir hier.',2],
- ['Korrigiere: «Das ist dem Vater sein Auto.»','Das ist das Auto des Vaters. (oder: das Auto vom Vater)',2]
+ ['Korrigiere: «Das ist dem Vater sein Auto.»','Das ist das Auto des Vaters. (oder: das Auto vom Vater)',2],
+ ['Setze ein: Er hat den Test ___ bestanden. (nochmals)','wieder',1],
+ ['Setze ein: Sie ___spricht ihrem Bruder. (gegen)','wider',2]
 ];
 const merk=()=>T(['Art','Beispiele','Merksatz'],[['Partikel','und, in, heute, aber','Sie verändern sich nicht.'],['Präposition','in, auf, mit, für, wegen','Steht vor einem Nomen und verlangt einen Fall.'],['Konjunktion','und, aber, weil, dass, obwohl','Verbindet Wörter und Sätze. Nebenordnend (und, oder, aber, denn, sondern): Verb bleibt. Unterordnend (weil, dass, obwohl): Verb am Ende.'],['Adverb','heute, hier, gern, deshalb','Beantwortet Wann? Wo? Wie? Warum?'],['Interjektion','ach, aua, hurra, hey','Drückt ein Gefühl aus oder ruft jemanden an. Danach steht ein Komma oder Ausrufezeichen.']])+
  T(['Fall','Präpositionen'],[['Akkusativ','durch, für, gegen, ohne, um'],['Dativ','aus, bei, mit, nach, seit, von, zu'],['Genitiv','wegen, während, trotz'],['Wechsel (Wo? Dat. · Wohin? Akk.)','an, auf, in, über, unter, vor, hinter, neben, zwischen']]);

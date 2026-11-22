@@ -166,7 +166,8 @@ const SECS=[
   ['3 · «als» oder «wie»?','«grösser <b>als</b>», «so gross <b>wie</b>»','Komparativ + als, gleich = so … wie.'],
   ['4 · Unregelmässige Steigerung','«gut – besser – am besten»','Nicht «guter» oder «mehr gut».'],
   ['5 · Umlaut','«alt – älter – am ältesten»','Viele einsilbige Adjektive bekommen einen Umlaut.'],
-  ['6 · Nicht steigerbar','«tot, leer, rund»','Diese Adjektive steigert man nicht.']
+  ['6 · Nicht steigerbar','«tot, leer, rund»','Diese Adjektive steigert man nicht.'],
+  ['7 · Auch Adverbien lassen sich steigern','«gern – <b>lieber</b> – am <b>liebsten</b>» / «viel – <b>mehr</b> – am <b>meisten</b>» / «bald – <b>eher</b> – am <b>ehesten</b>»','Diese Wörter steigert man unregelmässig. Nicht: «gerner», «vieler», «am gernsten».']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('komp,stufe,endung')}
 ];
 const EX=[
@@ -177,7 +178,9 @@ const EX=[
  ['Bilde das Gegenteil: freundlich, möglich, ehrlich.','unfreundlich · unmöglich · unehrlich',2],
  ['Bilde ein Adjektiv aus: Mut, Gefahr, Freund.','mutig · gefährlich · freundlich',2],
  ['Schreibe je einen Satz mit Komparativ und Superlativ von «klein».','Beispiel: Mia ist kleiner als Tim. Anna ist am kleinsten.',2],
- ['Erkläre: «Sie singt schön.» Ist «schön» ein Adjektiv?','Ja: Es steht beim Verb und bleibt unverändert, lässt sich aber steigern (schöner).',3]
+ ['Erkläre: «Sie singt schön.» Ist «schön» ein Adjektiv?','Ja: Es steht beim Verb und bleibt unverändert, lässt sich aber steigern (schöner).',3],
+ ['Steigere: gern, viel, bald.','gern – lieber – am liebsten · viel – mehr – am meisten · bald – eher – am ehesten',2],
+ ['Korrigiere: «Ich esse am gernsten Pizza.»','Ich esse am liebsten Pizza.',2]
 ];
 const merk=()=>T(['Thema','Merksatz'],[['Erkennen','Adjektive beschreiben und lassen sich meist steigern.'],['Steigerung','Positiv: schnell · Komparativ: schneller · Superlativ: am schnellsten'],['Unregelmässig','gut – besser – am besten · viel – mehr – am meisten · gern – lieber – am liebsten'],['Vergleich','grösser als · so gross wie'],['Endungen','Vor dem Nomen braucht das Adjektiv eine Endung; nach «sein» nicht.'],['Nach dem Artikel','-e im Nominativ sowie im Akkusativ weiblich und sächlich, sonst -en (Mehrzahl immer -en).'],['Wortbildung','un-, -lich, -ig, -isch, -bar, -sam, -voll']]);
 const UEM={'merkmale':{types:'erkennen',cats:'sg3'},'steigerung':{types:'komp,stufe',cats:'sg1'},'endungen':{types:'endung',cats:'sg2'},'ohneartikel':{types:'endung',cats:'sg2'},'wortbildung':{types:'wort',cats:'sg4'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});

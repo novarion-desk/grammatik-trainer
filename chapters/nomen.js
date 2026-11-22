@@ -262,7 +262,10 @@ const SECS=[
   ['3 · Adjektiv oder Nomen?','«Ein <b>grosses</b> Problem.» (Adjektiv)<br>«Etwas <b>Grosses</b>.» (Nomen)','Vor einem Nomen bleibt das Adjektiv klein.'],
   ['4 · Mehrzahl bei -er und -chen','«die Lehrer», «die Mädchen»','Diese Nomen bleiben in der Mehrzahl gleich.'],
   ['5 · Mehrzahl mit Umlaut','«Haus → Häuser», «Baum → Bäume»','Der Umlaut verrät oft die Mehrzahl.'],
-  ['6 · Nomen in Mundart und Schrift','Mundart: «s Velo»; Schriftsprache: «das Velo»','In der Schrift gilt der Artikel der Standardsprache.']
+  ['6 · Nomen in Mundart und Schrift','Mundart: «s Velo»; Schriftsprache: «das Velo»','In der Schrift gilt der Artikel der Standardsprache.'],
+  ['7 · Zeitangaben: gross oder klein?','«heute <b>A</b>bend», «gestern <b>N</b>achmittag» / «<b>a</b>bends», «<b>m</b>ontags» / «am <b>M</b>ontag»','Nach «heute, gestern, morgen» und nach «am» wird die Tageszeit gross. Mit «-s» am Ende (abends, montags) ist es ein Adverb und klein.'],,
+  ['8 · Nomen mit -n / -en (n-Deklination)','«der Junge – des <b>Jungen</b> – dem <b>Jungen</b> – den <b>Jungen</b>» / «der Student – den <b>Studenten</b>» / «der Mensch – dem <b>Menschen</b>»','Einige männliche Nomen haben in allen Fällen ausser dem Nominativ die Endung -n oder -en. Nicht: «den Student», «dem Junge».'],,
+  ['9 · Zusammengesetzte Nomen','«Käse<b>kuchen</b>» (nicht «Käse Kuchen») / «Arbeit<b>s</b>zeit», «Geburt<b>s</b>tag» / «Schulhaus», «Blume<b>n</b>vase»','Zusammengesetzte Nomen schreibt man zusammen. Dazwischen steht manchmal ein Fugenelement (-s, -n, -es). Das Geschlecht bestimmt das letzte Wort: die Zeit → die Arbeitszeit.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('artikel,mehrzahl,gross')}
 ];
 const EX=[
@@ -275,7 +278,11 @@ const EX=[
  ['Schreibe zwei Sätze mit dem Wort «Bank». Das Wort hat in jedem Satz eine andere Bedeutung.','Zum Beispiel: Wir sitzen auf der Bank. – Sie bringt das Geld zur Bank.',1],
  ['Nur Einzahl oder nur Mehrzahl? Ferien, Durst, Eltern, Geduld.','Nur Mehrzahl: Ferien, Eltern · Nur Einzahl: Durst, Geduld',1],
  ['Bilde zusammengesetzte Nomen mit Artikel: Schule + Haus, Hand + Tasche, Garten + Tisch.','das Schulhaus · die Handtasche · der Gartentisch',1],
- ['Wähle ein Nomen mit -ung, -heit oder -keit und schreibe einen Satz.','Zum Beispiel: Die Wohnung ist hell. (-ung → die)',2]
+ ['Wähle ein Nomen mit -ung, -heit oder -keit und schreibe einen Satz.','Zum Beispiel: Die Wohnung ist hell. (-ung → die)',2],
+ ['Schreibe richtig: heute (abend), (montags), am (montag).','heute Abend · montags · am Montag',1],
+ ['Setze den Fall ein: Ich helfe dem (Student).','Ich helfe dem Studenten.',2],
+ ['Bilde den Akkusativ: Wir besuchen den (Junge).','Wir besuchen den Jungen.',2],
+ ['Schreibe zusammen: Käse + Kuchen, Arbeit + Zeit, Schule + Haus.','Käsekuchen · Arbeitszeit · Schulhaus',2]
 ];
 const merk=()=>T(['Thema','Merksatz'],[['Erkennen','Artikelprobe: der, die, das, ein, eine. Nomen schreibt man gross.'],['Geschlecht','männlich der · weiblich die · sächlich das. Lerne Nomen mit Artikel.'],['Endungen','-ung, -heit, -keit, -schaft, -in → die · -chen, -lein → das'],['Mehrzahl','-e, -e mit Umlaut, -er, -n/-en, -s, nur Umlaut, gleich'],['Gross','Verben und Adjektive werden nach Artikel, beim/zum/im, etwas, nichts, viel, alles zu Nomen.'],['Arten','Nomen nennen Lebewesen, Dinge, Gedachtes · Eigennamen und Gattungsnamen'],['Zusammensetzung','Das letzte Wort bestimmt den Artikel: das Haus → das Schulhaus.'],['Homonyme','Gleiche Schreibung oder Aussprache, andere Bedeutung: die Bank, der See / die See'],['Nur Einzahl / Mehrzahl','Durst, Geduld · Ferien, Eltern'],['Fachwörter','Nomen = Hauptwort · Artikel = Begleiter · Genus = Geschlecht · Numerus = Zahl · Kasus = Fall · deklinieren']]);
 const UEM={'genus':{types:'artikel',cats:'sg1'},'zahl':{types:'mehrzahl,singpl',cats:'sg2'},'gross':{types:'gross',cats:'sg3'},'homonyme':{types:'homonym',cats:'sg5'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
