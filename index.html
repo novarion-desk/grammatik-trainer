@@ -326,7 +326,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 #login label,#settings label{font-size:.85rem;font-weight:600;color:var(--muted)}
 .lerr{padding:.6rem .8rem;border-radius:var(--radius-s);background:var(--bad-l);border:1px solid #fecaca;color:#7f1d1d;font-size:.9rem}
 .mvflow{gap:.5rem;margin-top:.4rem}.mvb{border:2px solid #4f46e5;background:#eef2ff;color:#312e81;border-radius:12px;padding:.45rem .8rem;font-size:1rem;font-weight:700;cursor:pointer}.mvb.fixed{border-color:#dc2626;background:#fee2e2;color:#7f1d1d;cursor:default}.mvb:hover:not(.fixed){background:#e0e7ff}.mvsent{margin-top:.7rem;font-size:1.15rem;font-weight:700}.shake{animation:shk .35s}@keyframes shk{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.cutflow{gap:0;align-items:center;line-height:2.4}.cutflow .cw{padding:.2rem .15rem}.gap{min-width:30px;height:44px;border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}.gap i{display:block;width:3px;height:26px;border-radius:2px;background:var(--line2);opacity:.55;transition:all .12s}.gap:hover i{opacity:1;height:34px}.gap.sel i{background:var(--primary);opacity:1;height:38px;width:4px}.gap.right i{background:var(--ok);opacity:1;height:38px;width:4px}.gap.wrong i{background:var(--bad);opacity:1;height:38px;width:4px}.gap.miss i{background:var(--ok);opacity:1;height:38px;width:4px;background:repeating-linear-gradient(var(--ok) 0 5px,transparent 5px 8px)}
+.kf .gap i{width:9px;height:9px;border-radius:50%;opacity:.3}.kf .gap:hover i{height:9px;opacity:.8}.kf .gap::after{content:',';font:800 2rem/1 inherit;display:none}.kf .gap.sel i,.kf .gap.right i,.kf .gap.wrong i,.kf .gap.miss i{display:none}.kf .gap.sel::after,.kf .gap.right::after,.kf .gap.wrong::after,.kf .gap.miss::after{display:block}.kf .gap.sel::after{color:var(--primary)}.kf .gap.right::after,.kf .gap.miss::after{color:var(--ok)}.kf .gap.wrong::after{color:var(--bad)}.kf .gap.miss::after{text-decoration:underline}.ksent{font-size:1.15em;margin-top:.3rem}.cutflow{gap:0;align-items:center;line-height:2.4}.cutflow .cw{padding:.2rem .15rem}.gap{min-width:30px;height:44px;border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}.gap i{display:block;width:3px;height:26px;border-radius:2px;background:var(--line2);opacity:.55;transition:all .12s}.gap:hover i{opacity:1;height:34px}.gap.sel i{background:var(--primary);opacity:1;height:38px;width:4px}.gap.right i{background:var(--ok);opacity:1;height:38px;width:4px}.gap.wrong i{background:var(--bad);opacity:1;height:38px;width:4px}.gap.miss i{background:var(--ok);opacity:1;height:38px;width:4px;background:repeating-linear-gradient(var(--ok) 0 5px,transparent 5px 8px)}
 .chip.tok{border-style:solid;border-color:var(--line2)}
 .chip.tok.sel{background:var(--primary-l);border-color:var(--primary);color:#312e81}
 .chip.tok.right{background:var(--ok-l);border-color:var(--ok)}.chip.tok.wrong{background:var(--bad-l);border-color:var(--bad)}.chip.tok.miss{border:2px dashed var(--ok)}
@@ -514,7 +514,7 @@ function screenRound(){
     body='<div class="instr">'+T.instr+'</div><div class="brush">'+CK().map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+CN()[k]+'</button>').join('')+'</div>'+
      '<div class="flow">'+t.parts.map((p,i)=>p.f?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
   }else if(t.cuts){
-    body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow cutflow">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="cut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div>';
+    body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow cutflow'+(t.typ==='ktap'?' kf':'')+'">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="cut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div>';
   }else if(t.tokens){
     body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="tok" data-i="'+i+'">'+x+'</button>').join('')+'</div>';
   }else if(isW(t)){
@@ -544,7 +544,7 @@ function checkRound(){
   }else if(t.cuts){
     const tg=new Set(t.cuts);ok=[...tg].every(i=>R.sel.has(i))&&[...R.sel].every(i=>tg.has(i));
     document.querySelectorAll('.gap').forEach(b=>{const i=Number(b.dataset.i);b.disabled=true;if(R.sel.has(i)&&tg.has(i))b.classList.add('right');else if(R.sel.has(i))b.classList.add('wrong');else if(tg.has(i))b.classList.add('miss');});
-    const cutTxt=set=>t.tokens.map((x,i)=>x+(set.has(i)?' |':'')).join(' ');
+    const cutTxt=set=>t.tokens.map((x,i)=>x+(set.has(i)?(t.typ==='ktap'?',':' |'):'')).join(' ');
     mine=cutTxt(R.sel);right=cutTxt(tg);
   }else if(t.tokens){
     if(!R.sel.size)return;
@@ -602,7 +602,7 @@ function renderTry(el){
   let t,n=0;do{t=pool[Math.floor(Math.random()*pool.length)];n++;}while(String(t.id)===el.dataset.tid&&pool.length>1&&n<20);
   el.dataset.tid=t.id;el._t=t;
   if(t.cuts){el._sel=new Set();delete el.dataset.done;
-    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">Tippe zwischen zwei Wörter, wo ein Satzglied endet.</div><div class="flow cutflow">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="tcut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem"><button class="btn primary" data-a="tchk">Überprüfen</button></div>';
+    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+(t.typ==='ktap'?'Tippe zwischen zwei Wörter, wo ein Komma stehen muss. Nenne dann das Signalwort und die Regel.':'Tippe zwischen zwei Wörter, wo ein Satzglied endet.')+'</div><div class="flow cutflow'+(t.typ==='ktap'?' kf':'')+'">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="tcut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem"><button class="btn primary" data-a="tchk">Überprüfen</button></div>';
     return;}
   el._o=shuffle(t.opts);
   el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div><div class="opts">'+
@@ -629,6 +629,7 @@ function tryCheck(b){
   const ok=[...tg].every(i=>el._sel.has(i))&&[...el._sel].every(i=>tg.has(i));
   el.querySelectorAll('.gap').forEach(g=>{const i=Number(g.dataset.i);g.disabled=true;if(el._sel.has(i)&&tg.has(i))g.classList.add('right');else if(el._sel.has(i))g.classList.add('wrong');else if(tg.has(i))g.classList.add('miss');});
   el.querySelector('.actions').remove();el._ord=null;
+  if(t.typ==='ktap'){el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig gesetzt!':'✗ Nicht ganz.')+'</b> '+(ok?'':'Grün = hier fehlt ein Komma, rot = hier steht keins. ')+'<div class="ksent">'+t.full+'</div></div><div style="margin:.5rem 0">'+GT.reveal('Signalwort und Regel zeigen',t.why)+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';return;}
   el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig getrennt!':'✗ Nicht ganz richtig.')+'</b> '+(ok?'':'Die roten Striche fehlen. ')+t.why+'</div>'+(ok?tMoveHTML(el):'')+'<div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
 }
 function tryMove(b,reset){
@@ -680,7 +681,7 @@ function sheetItem(t){
     a=t.parts.filter(p=>p.f).map(p=>esc(p.t.replace(/[.,]$/,''))+' → '+esc(CN()[p.f])).join('; ');
     instr='Bestimme die unterstrichenen Wörter und schreibe die Bezeichnung darüber.';kind='para';
   }else if(t.cuts){
-    q=esc(t.tokens.join(' '));a=esc(t.tokens.map((x,i)=>x+(t.cuts.includes(i)?' |':'')).join(' '));instr=t.instr||instr;kind='para';
+    q=esc(t.tokens.join(' '));a=esc(t.tokens.map((x,i)=>x+(t.cuts.includes(i)?(t.typ==='ktap'?',':' |'):'')).join(' '));instr=t.typ==='ktap'?'Setze die fehlenden Kommas. Unterstreiche das Signalwort.':(t.instr||instr);kind='para';
   }else if(t.tokens){
     q=t.tokens.map((x,i)=>t.targets.includes(i)?x:x).join(' ');q=esc(q);
     a=t.targets.map(i=>esc(t.tokens[i])).join(', ');instr=t.instr||instr;kind='para';
