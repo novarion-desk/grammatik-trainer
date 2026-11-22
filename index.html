@@ -215,6 +215,7 @@ dialog::backdrop{background:rgba(15,23,42,.5)}
 .mh{position:sticky;top:0;z-index:2;background:var(--surface);padding:.8rem 1rem;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between}
 .mb{padding:1rem;overflow-y:auto}
 #merk{display:none}
+.uechips{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 .7rem}.uechips .btn.on{background:var(--primary);color:#fff;border-color:var(--primary)}
 .try{margin:1rem 0;padding:1rem 1.1rem;border:1.5px dashed #a5b4fc;border-radius:var(--radius);background:var(--primary-l)}
 .try .sbox{background:#fff}
 .resetbar{margin-top:1.6rem;padding-top:1rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:flex-end;font-size:.9rem;color:var(--muted)}
@@ -267,6 +268,7 @@ dialog::backdrop{background:rgba(15,23,42,.5)}
 .wsh ol{margin:.2rem 0 .4rem;padding-left:1.7rem}.wsh li{margin:.55rem 0;line-height:1.6;break-inside:avoid}.wsh .wl{border-bottom:1px solid #64748b;height:1.7rem;margin-top:.25rem}
 .wsh .wo{display:flex;flex-wrap:wrap;gap:.2rem 1.4rem;margin-top:.2rem}.wsh .wo span::before{content:'☐ ';font-size:1.1em}.wsh u{text-decoration-thickness:2px;text-underline-offset:3px}
 .wsh .nm{display:flex;gap:2rem;font-size:.95rem;margin-bottom:.4rem}.wsh .nm span{flex:1;border-bottom:1px solid #64748b;padding-bottom:.1rem}.wsh .leg{font-size:.85rem;color:#475569;margin:.2rem 0}
+.pt{float:right;font-size:.8rem;color:#475569;margin-left:.6rem;white-space:nowrap}.wsh .tot{font-size:.95rem;margin:.2rem 0 .5rem}.tlab{font-weight:700;margin:.6rem 0 .3rem;color:#475569}.tchips{display:flex;flex-wrap:wrap;gap:.45rem}.tchips button{border:1.5px solid var(--line2);background:#fff;border-radius:.75rem;padding:.55rem .8rem;min-height:44px;font:inherit;cursor:pointer;color:inherit}.tchips button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
 .wsh .sol li{margin:.25rem 0}.wsh .sol b{color:#14532d}
 .pg{width:100%;border-collapse:collapse}.pg td{padding:0;border:0}.pg .sp{height:1.4cm}
 .phead{display:flex;align-items:center;gap:.7rem;border-bottom:3px solid #4f46e5;padding-bottom:.55rem;margin-bottom:.9rem}.phead b{display:block;font-size:1.5rem;line-height:1.15;color:#0f172a}.phead span{font-size:.85rem;color:#475569}
@@ -408,9 +410,11 @@ function stufeOk(t,s){return s==='mix'?true:t.stufe===Number(s);}
 function wanted(cfg){return cfg.count==='custom'?Math.max(1,Math.min(100,parseInt(cfg.custom,10)||10)):parseInt(cfg.count,10);}
 
 /* ================= Rendering ================= */
-const BACK={teach:'start',lernen:'start',config:'start',round:'config',summary:'config',sheet:'config'};
+const BACK={teach:'start',lernen:'start',config:'start',round:'config',summary:'config',sheet:'config',test:'start'};
+function backOf(){if(S.screen==='sheet'&&S.sheetFrom==='test')return 'test';if(S.R&&S.R.test&&(S.screen==='round'||S.screen==='summary'))return 'test';return BACK[S.screen]||'start';}
 function crumb(){
   const t=S.teil==='wort'?'Wortlehre':'Satzlehre',c=t+' › '+C().title;
+  if(S.screen==='test'||(S.screen==='sheet'&&S.sheetFrom==='test')||(S.R&&S.R.test&&(S.screen==='round'||S.screen==='summary')))return 'Testvorbereitung'+(S.screen==='round'?' › Test':S.screen==='summary'?' › Auswertung':S.screen==='sheet'?' › Übungsprüfung':'');
   const m={start:'',teach:c+' › Folien',lernen:c+' › Theorie',config:c+' › Üben',round:c+' › Runde',summary:c+' › Auswertung',sheet:c+' › Übungsblatt'};
   return m[S.screen];
 }
@@ -439,6 +443,7 @@ function screenStart(){
   const cont=lc?'<div class="cont"><div class="ci">🚀</div><div class="cb"><b>Weiter mit '+lc.title+'</b><div class="pbar big"><i style="width:'+lp+'%;background:var(--primary)"></i></div></div><button class="btn primary" data-a="config" data-t="'+lc.teil+'" data-v="'+last+'">Weiter →</button></div>':'';
   return '<div class="hero2"><div class="hleft"><div class="htitle">'+LOGOSM+'Grammatik Trainer</div><p>Wörter knacken. Sätze bauen. Fehler finden.</p></div>'+
    '<div class="hr"><div class="heroniv"><span class="lblniv">Dein Niveau</span><div class="seg big" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div><span class="nd">'+D[S.niv]+'</span></div><div class="auth">'+authBtns()+'</div></div></div>'+cont+
+   '<div class="cont"><div class="ci">📝</div><div class="cb"><b>Testvorbereitung</b><div class="muted" style="font-size:.9rem">Mehrere Kapitel mischen, Punkte sammeln, Übungsprüfung ausdrucken</div></div><button class="btn primary" data-a="testopen">Starten →</button></div>'+
    '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','🔤 Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','🧩 Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
    (Object.keys(P).length?'<div class="resetbar">'+(S.resetAsk?'<span>Wirklich den ganzen Fortschritt auf diesem Gerät löschen?</span> <button class="btn sm" data-a="resetyes" style="border-color:var(--bad);color:var(--bad)">Ja, löschen</button> <button class="btn sm" data-a="resetno">Abbrechen</button>':'<button class="btn sm" data-a="resetask">Fortschritt zurücksetzen</button>')+'</div>':'');
 }
@@ -496,11 +501,14 @@ function updateAvail(){
 
 /* ---- Runde ---- */
 function startRound(tasks,title){
-  S.R={tasks,i:0,hist:[],title:title||'Runde',answered:false,choice:null,paint:{},sel:new Set(),brush:CK()[0],hint:false,order:null};
+  const isT=tasks.some(t=>t._ch);if(isT)S.ch=tasks[0]._ch;
+  S.R={tasks,i:0,hist:[],title:title||'Runde',answered:false,choice:null,paint:{},sel:new Set(),brush:CK()[0],hint:false,order:null,test:isT,t0:Date.now(),timer:!!(isT&&S.test&&S.test.timer)};
+  clearInterval(window._tclk);if(S.R.timer)window._tclk=setInterval(()=>{const e=document.getElementById('clk');if(!e||!S.R){clearInterval(window._tclk);return;}const sec=Math.floor((Date.now()-S.R.t0)/1000);e.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');},500);
   S.screen='round';render();
 }
 function screenRound(){
-  const R=S.R,t=R.tasks[R.i],T=TY()[t.typ],total=R.tasks.length;
+  const R=S.R;if(R.test){S.ch=R.tasks[R.i]._ch;if(R.bi!==R.i){R.bi=R.i;R.brush=CK()[0];}}
+  const t=R.tasks[R.i],T=TY()[t.typ],total=R.tasks.length;
   let body='';
   if(t.typ==='anmalen'){
     body='<div class="instr">'+T.instr+'</div><div class="brush">'+CK().map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+CN()[k]+'</button>').join('')+'</div>'+
@@ -516,8 +524,8 @@ function screenRound(){
     body='<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'<div class="sbox">'+t.sent+'</div>')+
      '<div class="opts">'+R.order.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="pick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
   }
-  return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div><span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+'</span></div>'+
-   '<div class="prog"><span>'+(R.i+1)+' / '+total+' · '+R.hist.filter(h=>h.ok).length+' ✓</span><div class="bar"><i style="width:'+((R.i+1)/total*100)+'%"></i></div></div></div>'+
+  return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div>'+(R.test?'<span class="pill gray">'+C().title+'</span> ':'')+'<span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+(R.test?' · '+tPts(t)+' P.':'')+'</span></div>'+
+   '<div class="prog"><span>'+(R.i+1)+' / '+total+' · '+(R.test?R.hist.reduce((a,h)=>a+(h.ok?tPts(h.t):0),0)+' Punkte':R.hist.filter(h=>h.ok).length+' ✓')+(R.timer?' · <b id="clk">0:00</b>':'')+'</span><div class="bar"><i style="width:'+((R.i+1)/total*100)+'%"></i></div></div></div>'+
    body+'<div class="hint" id="hintBox" hidden>'+T.hint+'</div><div id="fb" role="status" aria-live="polite"></div>'+
    '<div class="actions"><div><button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button></div>'+
    '<div><button class="btn primary" id="checkBtn" data-a="check" disabled>Überprüfen</button><button class="btn ok" id="nextBtn" data-a="next" hidden>'+(R.i+1<total?'Nächste Aufgabe →':'Auswertung anzeigen')+'</button></div></div></div>';
@@ -565,6 +573,7 @@ function nextRound(){
 }
 function qText(t){return t.prompt||t.sent||(t.tokens?t.tokens.join(' '):'')||(t.parts?t.parts.map(p=>p.t).join(' '):'');}
 function screenSummary(){
+  if(S.R.test){clearInterval(window._tclk);return screenTestSummary();}
   const H=S.R.hist,tot=H.length,ok=H.filter(h=>h.ok).length,pct=tot?Math.round(ok/tot*100):0;
   const grp=(keyf,labf)=>{const m={};H.forEach(h=>{const k=keyf(h);(m[k]=m[k]||{o:0,n:0,l:labf(h)});m[k].n++;if(h.ok)m[k].o++;});return Object.values(m).sort((a,b)=>a.o/a.n-b.o/b.n);};
   const card=g=>g.map(x=>{const p=Math.round(x.o/x.n*100),col=p>=80?'var(--ok)':p>=50?'var(--warn)':'var(--bad)';return '<div class="cat"><div class="top"><span>'+x.l+'</span><span style="color:'+col+'">'+x.o+' / '+x.n+' ('+p+' %)</span></div><div class="b"><i style="width:'+p+'%;background:'+col+'"></i></div></div>';}).join('');
@@ -583,13 +592,13 @@ function screenSummary(){
 }
 function render(){
   renderHead();
-  $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary,sheet:screenSheet})[S.screen]();
+  $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary,sheet:screenSheet,test:screenTest})[S.screen]();
   initTry(document);mountWidgets(document);window.scrollTo(0,0);renderLogin();
   const pr=!!(S.screen==='teach'&&S.t.pres&&S.t.mode==='slides');document.body.classList.toggle('presing',pr);if(pr){fitPres();presWake();}else if(S.t.pres&&S.screen!=='teach'){S.t.pres=false;}
 }
 function renderTry(el){
   const types=el.dataset.types.split(',');
-  const cf=el.dataset.cats?el.dataset.cats.split(','):null;const pool=visibleTasks().filter(t=>types.includes(t.typ)&&(t.opts||t.cuts)&&(!cf||t.cats.some(c=>cf.includes(c))));if(!pool.length){el.hidden=true;return;}
+  const cf=el.dataset.cats?el.dataset.cats.split(','):null;const af=el.dataset.ans?el.dataset.ans.split('|'):null;const pool=visibleTasks().filter(t=>types.includes(t.typ)&&(t.opts||t.cuts)&&(!cf||t.cats.some(c=>cf.includes(c)))&&(!af||af.includes(String(t.answer))));if(!pool.length){el.hidden=true;return;}
   let t,n=0;do{t=pool[Math.floor(Math.random()*pool.length)];n++;}while(String(t.id)===el.dataset.tid&&pool.length>1&&n<20);
   el.dataset.tid=t.id;el._t=t;
   if(t.cuts){el._sel=new Set();delete el.dataset.done;
@@ -642,7 +651,7 @@ function openRef(sec){
 /* ================= Merkblatt (Druck) ================= */
 const LOGOSM='<svg viewBox="0 0 120 120" width="34" height="34" aria-hidden="true"><rect width="120" height="120" rx="28" fill="#4f46e5"/><path d="M60 30C46 22 28 22 12 28V84C28 78 46 78 60 86Z" fill="#fff"/><path d="M60 30C74 22 92 22 108 28V84C92 78 74 78 60 86Z" fill="#e0e7ff"/><rect x="22" y="40" width="28" height="6" rx="3" fill="#2563eb"/><rect x="22" y="52" width="22" height="6" rx="3" fill="#d97706"/><rect x="22" y="64" width="26" height="6" rx="3" fill="#16a34a"/><rect x="70" y="40" width="28" height="6" rx="3" fill="#7c3aed"/><rect x="70" y="52" width="22" height="6" rx="3" fill="#2563eb"/><rect x="70" y="64" width="26" height="6" rx="3" fill="#d97706"/></svg>';
 function wrapPrint(kind,title,inner){
-  return '<table class="pg"><thead><tr><td><div class="sp"></div></td></tr></thead><tbody><tr><td><div class="phead">'+LOGOSM+'<div><b>'+title+'</b><span>'+kind+' · '+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+(getSet().school?' · '+esc(getSet().school):'')+'</span></div></div><div class="pbody">'+inner+'</div></td></tr></tbody><tfoot><tr><td><div class="sp"></div></td></tr></tfoot></table>';
+  return '<table class="pg"><thead><tr><td><div class="sp"></div></td></tr></thead><tbody><tr><td><div class="phead">'+LOGOSM+'<div><b>'+title+'</b><span>'+kind+' · '+(S.sheetFrom==='test'&&S.screen==='sheet'?'Grammatik':S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+(getSet().school?' · '+esc(getSet().school):'')+'</span></div></div><div class="pbody">'+inner+'</div></td></tr></tbody><tfoot><tr><td><div class="sp"></div></td></tr></tfoot></table>';
 }
 function printMerk(){
   document.getElementById('merk').innerHTML=wrapPrint('Merkblatt',C().title,C().merk());document.body.classList.add('pm');
@@ -801,7 +810,7 @@ async function makeSheet(mode){
 }
 function screenSheet(){
   const o=S.sheetOut;if(!o)return screenConfig();
-  return '<div class="topbar"><h2 class="page" style="margin:0">Übungsblatt: '+esc(o.title)+'</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="back">‹ Einstellungen</button><button class="btn sm" data-a="mksheet" data-v="preview">'+(o.src==='ai'?'Neu erstellen':'Neu mischen')+'</button></div></div>'+
+  return '<div class="topbar"><h2 class="page" style="margin:0">'+(S.sheetFrom==='test'?'Übungsprüfung':'Übungsblatt')+': '+esc(o.title)+'</h2><div class="btnrow" style="margin:0"><button class="btn sm" data-a="back">‹ '+(S.sheetFrom==='test'?'Testvorbereitung':'Einstellungen')+'</button><button class="btn sm" data-a="mksheet" data-v="preview">'+(o.src==='ai'?'Neu erstellen':'Neu mischen')+'</button></div></div>'+
    (o.src==='ai'?'<div class="callout noprint">Von der KI erstellt. Bitte die Aufgaben und Lösungen vor dem Einsatz kurz prüfen.</div>':'')+
    '<div class="card"><b>🖨️ Drucken oder als PDF speichern</b><div class="btnrow" style="margin:.5rem 0 .2rem"><button class="btn primary" data-a="psheet" data-v="ws">Arbeitsblatt (PDF / Druck)</button><button class="btn" data-a="psheet" data-v="sol">Lösungsblatt (PDF / Druck)</button><button class="btn" data-a="psheet" data-v="both">Beides (PDF / Druck)</button></div><div class="muted" style="font-size:.85rem">Im Druckdialog bei «Drucker» die Option «Als PDF speichern» wählen.</div>'+
    '<b style="display:block;margin-top:.8rem">📝 Als Word-Datei (.docx) zum Anpassen</b><div class="btnrow" style="margin:.5rem 0 0"><button class="btn" data-a="dsheet" data-v="ws">Arbeitsblatt (.docx)</button><button class="btn" data-a="dsheet" data-v="sol">Lösungsblatt (.docx)</button><button class="btn" data-a="dsheet" data-v="both">Beides (.docx)</button></div></div>'+
@@ -810,11 +819,83 @@ function screenSheet(){
 }
 function printSheet(w){
   const o=S.sheetOut;if(!o)return;
-  const kind=(S.src==='ai'?'KI-Übungsblatt':'Übungsblatt');
+  const kind=(S.sheetFrom==='test'?'Übungsprüfung':S.src==='ai'?'KI-Übungsblatt':'Übungsblatt');
   const a=wrapPrint(kind,o.title,o.ws),b=wrapPrint('Lösungsblatt',o.title,o.sol);
   doPrint(w==='ws'?a:w==='sol'?b:a+b);
 }
 
+
+/* ================= Testvorbereitung (Schüler: Kapitel mischen, Punkte, Übungsprüfung) ================= */
+function withCh(id,fn){const o=S.ch;S.ch=id;try{return fn();}finally{S.ch=o;}}
+const tPts=t=>Math.max(1,Math.min(3,Number(t.stufe)||1));
+function testInit(){if(!S.test)S.test={chs:new Set(),count:'20',custom:20,timer:false};}
+function testWanted(){const T=S.test;return T.count==='custom'?Math.max(1,Math.min(60,parseInt(T.custom,10)||20)):parseInt(T.count,10);}
+function testAvail(){let n=0;S.test.chs.forEach(id=>{if(GT.chapters[id])n+=withCh(id,()=>visibleTasks().length);});return n;}
+function testBuild(){
+  testInit();const pools=[...S.test.chs].filter(id=>GT.chapters[id]).map(id=>withCh(id,()=>shuffle(visibleTasks().map(t=>Object.assign({},t,{_ch:id})))));
+  const want=testWanted(),pick=[];let i=0;
+  while(pick.length<want&&pools.some(p=>p.length)){const p=pools[i++%pools.length];if(p.length)pick.push(p.shift());}
+  return shuffle(pick);
+}
+function testInfo(){
+  const T=S.test,el=document.getElementById('tinfo');if(!el)return;
+  const n=T.chs.size?testAvail():0,want=testWanted();
+  el.innerHTML=!T.chs.size?'<div class="avail none">Wähle mindestens ein Kapitel.</div>':n<want?'<div class="avail warn">Es gibt nur '+n+' passende Aufgaben. Der Test hat deshalb '+n+' statt '+want+' Aufgaben.</div>':'<div class="avail">'+n+' Aufgaben verfügbar. Der Test hat '+want+' Aufgaben.</div>';
+  ['tStartBtn','tSheetBtn'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=!T.chs.size||n===0;});
+}
+function screenTest(){
+  testInit();const T=S.test;
+  const chips=arr=>arr.filter(c=>c[0]!=='#'&&GT.chapters[c[1]]).map(c=>'<button type="button" data-a="tch" data-v="'+c[1]+'" class="'+(T.chs.has(c[1])?'on':'')+'" aria-pressed="'+T.chs.has(c[1])+'">'+c[0]+'</button>').join('');
+  const ids=arr=>arr.filter(c=>c[0]!=='#'&&GT.chapters[c[1]]).map(c=>c[1]).join(',');
+  const cnt=['10','20','30','custom'].map(v=>'<button type="button" data-a="tcount" data-v="'+v+'" class="'+(T.count===v?'on':'')+'">'+(v==='custom'?'Eigene Anzahl':v)+'</button>').join('');
+  const mode='<button type="button" data-a="tmode2" data-v="write" class="'+(S.cfg.mode==='write'?'on':'')+'">Selber schreiben</button><button type="button" data-a="tmode2" data-v="choose" class="'+(S.cfg.mode==='choose'?'on':'')+'">Auswählen</button>';
+  setTimeout(testInfo,0);
+  return '<h2 class="page">Testvorbereitung</h2><p class="sub">Wähle die Kapitel, die in deinem Test vorkommen. Die Aufgaben werden gemischt. Niveau '+S.niv+' ist eingestellt. Jede Aufgabe gibt Punkte: einfach 1, mittel 2, schwierig 3.</p>'+
+   '<div class="card"><h3>Kapitel <span><button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.WORT)+'">Wortlehre alle/keine</button> <button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.SATZ)+'">Satzlehre alle/keine</button></span></h3>'+
+   '<div class="tlab">🔤 Wortlehre</div><div class="tchips">'+chips(GT.WORT)+'</div><div class="tlab">🧩 Satzlehre</div><div class="tchips">'+chips(GT.SATZ)+'</div>'+
+   '<h3>Anzahl Aufgaben</h3><div class="tchips">'+cnt+'<input id="tcustom" type="number" inputmode="numeric" min="1" max="60" value="'+T.custom+'" aria-label="Eigene Anzahl" '+(T.count==='custom'?'':'hidden')+' style="width:90px;min-height:46px;border:1.5px solid var(--line2);border-radius:.75rem;padding:.3rem .6rem;text-align:center"></div>'+
+   '<h3>Antwort</h3><div class="tchips">'+mode+'</div>'+
+   '<h3>Weitere Einstellung</h3><div class="tchips"><button type="button" data-a="ttimer" class="'+(T.timer?'on':'')+'" aria-pressed="'+T.timer+'">⏱ Stoppuhr anzeigen</button></div>'+
+   '<div id="tinfo" style="margin-top:.8rem"></div>'+
+   '<div class="actions"><button type="button" class="btn" id="tSheetBtn" data-a="tsheet">🖨 Übungsprüfung als Blatt (mit Lösungen)</button><button type="button" class="btn primary" id="tStartBtn" data-a="tstart">Test starten →</button></div></div>';
+}
+document.addEventListener('input',e=>{if(e.target.id==='tcustom'){testInit();S.test.custom=e.target.value;testInfo();}});
+function screenTestSummary(){
+  const R=S.R,H=R.hist;if(!R.t1)R.t1=Date.now();
+  let got=0,max=0;const per={};
+  H.forEach(h=>{const p=tPts(h.t),k=h.t._ch;max+=p;if(h.ok)got+=p;const q=per[k]=per[k]||{g:0,m:0,n:0,r:0,k};q.m+=p;q.n++;if(h.ok){q.g+=p;q.r++;}});
+  const pct=max?Math.round(got/max*100):0,secs=Math.round((R.t1-R.t0)/1000);
+  const rows=Object.values(per).sort((a,b)=>a.g/a.m-b.g/b.m);
+  const bars=rows.map(x=>{const q=Math.round(x.g/x.m*100),col=q>=80?'var(--ok)':q>=50?'var(--warn)':'var(--bad)';return '<div class="cat"><div class="top"><span>'+GT.chapters[x.k].title+'</span><span style="color:'+col+'">'+x.g+' von '+x.m+' Punkten</span></div><div class="b"><i style="width:'+q+'%;background:'+col+'"></i></div></div>';}).join('');
+  const wrong=H.filter(h=>!h.ok),weak=rows.find(x=>x.g<x.m);
+  return '<div class="card"><div class="sumhead"><div class="muted" style="font-weight:700">Auswertung Testvorbereitung</div><div class="score">'+got+' von '+max+' Punkten</div><div class="muted">'+(pct>=80?'Sehr gut, du bist sicher.':pct>=50?'Gut, einige Stellen noch üben.':'Hier lohnt sich noch etwas Übung.')+(R.timer?' · Zeit: '+Math.floor(secs/60)+' min '+secs%60+' s':'')+'</div></div>'+
+   '<h3>Nach Kapitel (schwächstes zuerst)</h3><div class="grid3" style="margin:.5rem 0 1.2rem">'+bars+'</div>'+
+   '<div class="actions" style="justify-content:flex-start;margin:1.2rem 0">'+(wrong.length?'<button class="btn primary" data-a="retry">Fehler gezielt wiederholen ('+wrong.length+')</button>':'')+
+   '<button class="btn" data-a="again">Neuer Test</button>'+(weak?'<button class="btn" data-a="theorie" data-t="'+GT.chapters[weak.k].teil+'" data-v="'+weak.k+'">Theorie: '+GT.chapters[weak.k].title+'</button>':'')+'<button class="btn" data-a="home">Zur Übersicht</button></div>'+
+   '<h3>Alle Aufgaben</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+GT.chapters[h.t._ch].title+' · '+withCh(h.t._ch,()=>TY()[h.t.typ].label)+'</b> '+(h.ok?'· richtig':'· falsch')+' · '+(h.ok?tPts(h.t):0)+' von '+tPts(h.t)+' P.<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
+}
+function testSheetHTML(tasks){
+  let n=0,ws='',so='',tot=0;
+  const byC=[];tasks.forEach(t=>{let g=byC.find(x=>x.ch===t._ch);if(!g)byC.push(g={ch:t._ch,list:[]});g.list.push(t);});
+  byC.forEach(g=>withCh(g.ch,()=>{
+    const hd='<h3>'+esc(C().title)+'</h3>';ws+=hd;so+=hd;
+    if(g.ch==='faelle'||g.ch==='wortarten')ws+='<p class="leg">Bezeichnungen: '+CK().map(k=>esc(CN()[k])).join(' · ')+'</p>';
+    const groups=[];g.list.forEach(t=>{const it=sheetItem(t);it.p=tPts(t);let x=groups.find(y=>y.typ===it.typ);if(!x)groups.push(x={typ:it.typ,instr:it.instr,list:[]});x.list.push(it);});
+    groups.forEach(x=>{
+      ws+='<p class="wi"><b>'+esc((TY()[x.typ]||{label:x.typ}).label)+':</b> '+x.instr+'</p><ol start="'+(n+1)+'">';so+='<ol class="sol" start="'+(n+1)+'">';
+      x.list.forEach(it=>{tot+=it.p;ws+='<li><span class="pt">'+it.p+' P.</span>'+it.q+(it.opts?'<div class="wo">'+it.opts.map(o=>'<span>'+esc(o)+'</span>').join('')+'</div>':'<div class="wl"></div>')+'</li>';so+='<li><b>'+it.a+'</b> <span class="pt">'+it.p+' P.</span></li>';n++;});
+      ws+='</ol>';so+='</ol>';
+    });
+  }));
+  const head='<div class="nm"><span>Name:</span><span>Klasse:</span><span>Datum:</span></div><p class="tot"><b>Total: '+tot+' Punkte</b> · erreicht: ______ von '+tot+'</p>';
+  return{ws:'<div class="wsh">'+head+ws+'</div>',sol:'<div class="wsh"><p class="wi">Lösungen und Punkte (Total: '+tot+' Punkte)</p>'+so+'</div>',n,tot};
+}
+function makeTestSheet(){
+  testInit();const tk=testBuild();if(!tk.length)return;
+  const h=testSheetHTML(tk),names=[...S.test.chs].filter(id=>GT.chapters[id]).map(id=>GT.chapters[id].title);
+  S.sheetOut={title:names.length>3?names.slice(0,3).join(', ')+' u. a.':names.join(', '),ws:h.ws,sol:h.sol,src:'pool'};
+  S.sheetFrom='test';S.screen='sheet';render();
+}
 
 /* ================= Einstellungen (Lehrer; KI-Schlüssel wie im Sek Planer) ================= */
 const KEYF=[['gemini','geminiKey'],['claude','claudeKey'],['openai','openaiKey'],['mistral','mistralKey']];
@@ -872,14 +953,22 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('[data-a]');if(!b||!b.dataset.a)return;
   const a=b.dataset.a,v=b.dataset.v;
   switch(a){
-   case 'home':S.screen='start';S.sheet=false;render();break;
-   case 'back':S.screen=BACK[S.screen]||'start';render();break;
+   case 'home':clearInterval(window._tclk);S.screen='start';S.sheet=false;S.sheetFrom='';render();break;
+   case 'back':if(S.screen==='round')clearInterval(window._tclk);S.screen=backOf();render();break;
    case 'niv':S.niv=v;try{localStorage.setItem('gt-niv2',v);}catch(x){}S.cfg.types=null;render();break;
    case 'theorie':setCh(b.dataset.t,v);S.screen='lernen';render();break;
    case 'teach':if(!teacherAccess())break;setCh(b.dataset.t,v);S.screen='teach';S.t.cur=0;render();break;
    case 'config':setCh(b.dataset.t,v);S.sheet=false;S.screen='config';render();break;
-   case 'sheet':if(!teacherAccess())break;setCh(b.dataset.t,v);S.sheet=true;S.sheetOut=null;S.sheetErr='';S.screen='config';render();break;
-   case 'mksheet':makeSheet(v);break;
+   case 'sheet':if(!teacherAccess())break;S.sheetFrom='';setCh(b.dataset.t,v);S.sheet=true;S.sheetOut=null;S.sheetErr='';S.screen='config';render();break;
+   case 'testopen':testInit();S.screen='test';S.sheetFrom='';render();break;
+   case 'tch':{testInit();const k=b.dataset.v;if(S.test.chs.has(k))S.test.chs.delete(k);else S.test.chs.add(k);b.classList.toggle('on',S.test.chs.has(k));b.setAttribute('aria-pressed',S.test.chs.has(k));testInfo();break;}
+   case 'tgrp':{testInit();const ids=v.split(',');const all=ids.every(k=>S.test.chs.has(k));ids.forEach(k=>all?S.test.chs.delete(k):S.test.chs.add(k));document.querySelectorAll('.tchips [data-a="tch"]').forEach(x=>{const on=S.test.chs.has(x.dataset.v);x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);});testInfo();break;}
+   case 'tcount':{testInit();S.test.count=v;document.querySelectorAll('[data-a="tcount"]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));const ci=document.getElementById('tcustom');if(ci)ci.hidden=v!=='custom';testInfo();break;}
+   case 'tmode2':{S.cfg.mode=v;document.querySelectorAll('[data-a="tmode2"]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));break;}
+   case 'ttimer':{testInit();S.test.timer=!S.test.timer;b.classList.toggle('on',S.test.timer);b.setAttribute('aria-pressed',S.test.timer);break;}
+   case 'tstart':{const tk=testBuild();if(!tk.length)return;startRound(tk,'Test');break;}
+   case 'tsheet':{makeTestSheet();break;}
+   case 'mksheet':if(S.sheetFrom==='test'){makeTestSheet();break;}makeSheet(v);break;
    case 'psheet':printSheet(v);break;
    case 'dsheet':docxSheet(v);break;
    case 'dmerk':docxMerk();break;
@@ -890,6 +979,7 @@ document.addEventListener('click',e=>{
    case 'tchk':tryCheck(b);break;
    case 'tmv':tryMove(b,false);break;
    case 'tmvreset':tryMove(b,true);break;
+   case 'uetype':{const box=b.closest('.uebox'),el=box.querySelector('[data-w="try"]');el.dataset.types=b.dataset.t;box.querySelectorAll('[data-a="uetype"]').forEach(x=>x.classList.toggle('on',x===b));delete el.dataset.done;renderTry(el);break;}
    case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
    case 'resetask':S.resetAsk=true;render();break;
    case 'resetno':S.resetAsk=false;render();break;
@@ -912,12 +1002,12 @@ document.addEventListener('click',e=>{
    case 'hint':{const h=document.getElementById('hintBox');h.hidden=!h.hidden;break;}
    case 'check':checkRound();break;
    case 'next':nextRound();break;
-   case 'stop':S.screen='config';render();break;
+   case 'stop':clearInterval(window._tclk);S.screen=(S.R&&S.R.test)?'test':'config';render();break;
    case 'ref':openRef(v);break;
    case 'refsec':openRef(v);break;
    case 'closeRef':document.getElementById('ref').close();break;
    case 'retry':{const w=S.R.hist.filter(h=>!h.ok).map(h=>h.t);startRound(shuffle(w),'Wiederholung');break;}
-   case 'again':S.screen='config';render();break;
+   case 'again':S.screen=(S.R&&S.R.test)?'test':'config';render();break;
    case 'tmode':S.t.mode=v;S.t.cur=0;render();break;
    case 'tpres':presOn();break;
    case 'tpresx':presOff();break;
@@ -1032,7 +1122,7 @@ function teachInner(mode){
 }
 function printTeach(mode){const [name,inner]=teachInner(mode);doPrint(wrapPrint(name,C().title,inner));}
 /* ---- Word-Export (.docx) ---- */
-function docxSub(kind){return kind+' · '+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+(getSet().school?' · '+getSet().school:'');}
+function docxSub(kind){return kind+' · '+(S.sheetFrom==='test'&&S.screen==='sheet'?'Grammatik':S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Niveau '+S.niv+(getSet().school?' · '+getSet().school:'');}
 function docxName(kind,title){return (kind+'_'+title).replace(/[^A-Za-z0-9äöüÄÖÜéèàß]+/g,'_').replace(/^_|_$/g,'')+'.docx';}
 async function exportDocx(secs,file){
   document.body.style.cursor='progress';
@@ -1044,7 +1134,7 @@ function docxMerk(){const t=C().title;exportDocx([{html:C().merk(),title:t,sub:d
 function docxTeach(mode){const [name,inner]=teachInner(mode);const t=C().title;exportDocx([{html:inner,title:t,sub:docxSub(name)}],docxName(name,t));}
 function docxSheet(w){
   const o=S.sheetOut;if(!o)return;
-  const kind=(S.src==='ai'?'KI-Übungsblatt':'Übungsblatt'),a={html:o.ws,title:o.title,sub:docxSub(kind)},b={html:o.sol,title:o.title,sub:docxSub('Lösungsblatt')};
+  const kind=(S.sheetFrom==='test'?'Übungsprüfung':S.src==='ai'?'KI-Übungsblatt':'Übungsblatt'),a={html:o.ws,title:o.title,sub:docxSub(kind)},b={html:o.sol,title:o.title,sub:docxSub('Lösungsblatt')};
   exportDocx(w==='ws'?[a]:w==='sol'?[b]:[a,b],docxName(w==='ws'?kind:w==='sol'?'Loesungsblatt':kind+'_mit_Loesung',o.title));
 }
 document.addEventListener('input',e=>{if(e.target.id==='wfield'){const b=document.getElementById('checkBtn');if(b)b.disabled=!e.target.value.trim();}});
@@ -1100,7 +1190,7 @@ document.addEventListener('submit',async e=>{
   }catch(x){err.textContent='Anmeldung fehlgeschlagen. Bitte E-Mail und Passwort prüfen.';err.hidden=false;}
   finally{btn.disabled=false;btn.textContent='Anmelden';}
 });
-GT.tryW=(t,c)=>'<div class="try" data-w="try" data-types="'+t+'"'+(c?' data-cats="'+c+'"':'')+'></div>';
+GT.tryW=(t,c,a)=>'<div class="try" data-w="try" data-types="'+t+'"'+(c?' data-cats="'+c+'"':'')+(a?' data-ans="'+a+'"':'')+'></div>';
 GT.reveal=(label,inner)=>'<div><button class="btn sm" data-a="rev" data-l="'+label+'">'+label+'</button><div class="sol" hidden>'+inner+'</div></div>';
 GT.table=(head,rows,cls)=>'<div class="tw"><table class="'+(cls||'')+'"><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>';
 const ICONS={bestimmen:'🏷️',zuordnen:'🧲',anmalen:'🎨',einsetzen:'✏️',umformen:'🔁',frage:'❓',ersatz:'🔄',artikel:'📰',mehrzahl:'➕',gross:'🔠',komp:'⬆️',stufe:'📶',endung:'✍️',erkennen:'👀',wort:'🧱',personal:'🙋',possessiv:'🏠',praep:'📍',konj:'🔗',adverb:'💨',art:'🧩',rohform:'🔧',zaehlen:'🔢',glied:'🧱',probe:'🧪',satzart:'💬',zeichen:'❗',teilsatz:'🧩',nsart:'🏷️',gefuege:'🪢',komma:'✂️',ja:'✅',person:'🙋',stamm:'🌱',zeit:'🕒',zeitwahl:'🕒',markieren:'🖍️',text:'🔍',wissen:'💡'};
@@ -1123,7 +1213,12 @@ GT.chapter=function(d){
   const exHTML=()=>'<ol class="ex">'+ex.filter(u=>(u[2]||1)<=lv()).map(u=>'<li>'+u[0]+'<div class="po wl"></div><div class="noprint">'+GT.reveal('Lösung zeigen',u[1])+'</div></li>').join('')+'</ol>';
   const SLIDES=[{id:'titel',title:d.title,min:3,p:'h',note:d.noteTitel||'Lernziele laut lesen. Das Niveau oben bestimmt, wie viel Erweiterung eingeblendet wird.',
      html:()=>'<p class="kicker">'+(d.teil==='wort'?'I. Wortlehre':'II. Satzlehre')+' · Kapitel '+d.nr+'</p><p class="big">'+(d.big||d.title)+'</p><div class="grid2">'+SEC.ziele()+'<div class="card noprint"><h3>Ablauf</h3><ol>'+secs.filter(s=>!s.lv||s.lv<=lv()).map(s=>'<li>'+(s.short||s.title)+'</li>').join('')+'<li>Üben und Abschluss-Check</li></ol></div></div>'}]
-   .concat(d.sections.map(s=>({id:s.id,title:s.title,min:s.min||5,lv:s.lv,p:s.p===undefined?'h':s.p,note:s.note,html:typeof s.html==='function'?s.html:()=>s.html,print:s.print})))
+   .concat([].concat(...d.sections.map(s=>{const base={id:s.id,title:s.title,min:s.min||5,lv:s.lv,p:s.p===undefined?'h':s.p,note:s.note,html:typeof s.html==='function'?s.html:()=>s.html,print:s.print};
+     if(!s.uebung)return [base];
+     const u=s.uebung,tys=String(u.types).split(',').filter(k=>TY[k]);
+     const chips=tys.length>1?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="'+tys.join(',')+'">Alle Aufgaben</button>'+tys.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'">'+(TY[k].icon||'')+' '+TY[k].label+'</button>').join('')+'</div>':'';
+     return [base,{id:s.id+'-ue',title:'Übung: '+(u.title||s.short||s.title),min:u.min||5,lv:u.lv||s.lv,p:'',note:u.note||'Gemeinsam vorne lösen: Klasse antworten lassen, Antwort begründen, dann «Nächste Aufgabe». Oben kann man den Aufgabentyp wählen.',
+       html:()=>'<div class="noprint uebox"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam üben:</b> Eine Aufgabe nach der anderen. Antwort begründen lassen, dann «Nächste Aufgabe».</div>'+chips+GT.tryW(tys.join(','),u.cats,u.ans)+'</div>'}];})))
    .concat(ex.length?[{id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:exLive}]:[])
    .concat([{id:'merkblatt',title:'Merkblatt',min:4,p:'hm',note:'Als Merkblatt drucken (Menü «Merkblatt drucken») oder abschreiben lassen.',html:()=>d.merk()},
             {id:'check',title:'Abschluss-Check',min:5,p:'',note:'Als Exit-Ticket einzeln lösen lassen. Das Ergebnis zeigt, wo noch Lücken sind.',html:()=>'<p class="lead">'+(d.tryTypes?'Trenne die Satzglieder.':'Tippe jeweils die richtige Antwort.')+'</p>'+[1,2,3,4].map(()=>GT.tryW(tryAll)).join('')}]);
@@ -1144,7 +1239,7 @@ GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
 (function(){
  let depth=0,ign=0,raf=0;
  const isSub=()=>{try{return !!(S.screen!=='start'||document.querySelector('dialog[open]'))}catch(e){return false}};
- const goBack=()=>{try{const dl=document.querySelectorAll('dialog[open]');if(dl.length){dl.forEach(d=>{try{d.close()}catch(e){d.removeAttribute('open')}})}else if(S.screen!=='round'||confirm('Runde wirklich beenden?')){S.screen=BACK[S.screen]||'start';render()}}catch(e){}};
+ const goBack=()=>{try{const dl=document.querySelectorAll('dialog[open]');if(dl.length){dl.forEach(d=>{try{d.close()}catch(e){d.removeAttribute('open')}})}else if(S.screen!=='round'||confirm('Runde wirklich beenden?')){S.screen=backOf();render()}}catch(e){}};
  function sync(){
   raf=0;const want=isSub();
   if(want&&!depth){history.pushState({sub:1},'');depth=1}
