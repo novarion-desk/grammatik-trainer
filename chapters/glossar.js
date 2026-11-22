@@ -190,9 +190,14 @@ function html(id){
     '</div></details></div>';
 }
 (function(){const st=document.createElement('style');st.textContent='.gloss .gl{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.55rem;margin-top:.7rem}.gloss{background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #c7d2fe;border-radius:16px;padding:.9rem 1rem 1rem}.gloss .glr{border:1px solid #c7d2fe;border-left:5px solid #6366f1;border-radius:12px;padding:.55rem .75rem;background:#fff;color:#1e293b;hyphens:none;-webkit-hyphens:none}.gloss .glt{color:#312e81}.gloss h2{margin-top:0}.gloss .glt{font-size:1rem}.gloss .gld{color:var(--muted,#64748b);font-weight:600}.gloss .gle{font-size:.92rem;margin-top:.15rem}';document.head.appendChild(st);})();
+function tab(id){
+  const rows=(G[id]||[]).filter(r=>!r[3]||lvNow()>=r[3]);if(!rows.length)return '';
+  return '<h3 style="margin-top:1rem;break-before:page;page-break-before:always">Glossar</h3><table class="gtab">'+rows.map(r=>'<tr><td><b>'+r[0]+'</b>'+(r[1]?'<br>= '+r[1]:'')+'</td><td>'+r[2]+'</td></tr>').join('')+'</table>';
+}
 Object.keys(G).forEach(id=>{
   const c=GT.chapters[id];if(!c||c.glossar)return;
   c.glossar=true;
+  const m0=c.merk;if(typeof m0==='function')c.merk=()=>m0()+tab(id);
   c.SEC.glossar=()=>'<h2>Glossar</h2>'+html(id);
   const i=c.TOC.findIndex(t=>t[0]==='ziele');
   c.TOC.splice(i<0?0:i+1,0,['glossar','Glossar']);

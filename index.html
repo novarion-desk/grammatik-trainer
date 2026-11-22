@@ -128,6 +128,7 @@ mark.w{background:var(--b);color:inherit;box-shadow:inset 0 -3px 0 var(--c);bord
 .sec h3.pr{font-size:1.1rem;margin:1.2rem 0 .5rem}
 .sent{font-size:1.2rem;margin:.3rem 0 .6rem}
 .sent2{margin-top:.4rem}
+.ho-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.ho-cell{break-inside:avoid;page-break-inside:avoid;border:1px solid #94a3b8;border-radius:6px;min-height:58mm;overflow:hidden;display:flex;flex-direction:column;background:#fff}.ho-t{background:#eef2ff;color:#312e81;font-weight:800;padding:1mm 2.5mm;font-size:9pt}.ho-b{zoom:.42;padding:3mm;overflow:hidden}.ho-b .noprint{display:none}.gtab{width:100%;border-collapse:collapse;font-size:9.5pt}.gtab tr{break-inside:avoid;page-break-inside:avoid}.gtab td{border:1px solid #cbd5e1;padding:1mm 2mm;vertical-align:top}.gtab td:first-child{width:34%;background:#eef2ff;color:#312e81}
 .fbx{margin-top:.45rem;padding-top:.4rem;border-top:1px dashed currentColor;font-size:.95em;opacity:.95}
 .fcard{border:2px solid var(--c);background:var(--b);border-radius:var(--radius);padding:.9rem 1rem}
 .fcard h3{font-size:1rem;color:var(--t)}
@@ -404,7 +405,7 @@ const catTag=k=>'<span class="tag f-'+k+'">'+CN()[k]+'</span>';
 function setCh(t,v){if(t)S.teil=t;if(v&&v!==S.ch){S.ch=v;S.cfg.types=null;S.cfg.cats=null;}}
 const PK='gt-progress';
 function loadP(){try{return JSON.parse(localStorage.getItem(PK))||{};}catch(e){return {};}}
-function saveP(ok){try{const P=loadP(),c=P[S.ch]||{a:0,r:0};c.a++;if(ok)c.r++;P[S.ch]=c;localStorage.setItem(PK,JSON.stringify(P));localStorage.setItem('gt-last',S.ch);}catch(e){}}
+function saveP(ok){try{const P=loadP(),c=P[S.ch]||{a:0,r:0};c.a++;if(ok)c.r++;c.t=Date.now();P[S.ch]=c;localStorage.setItem(PK,JSON.stringify(P));localStorage.setItem('gt-last',S.ch);}catch(e){}}
 const $app=document.getElementById('app'),$head=document.getElementById('head');
 
 const isW=t=>!!(t.input||(t.w&&t.opts&&S.cfg.mode==='write'));
@@ -438,6 +439,15 @@ function renderHead(){
    (S.screen!=='start'?'<button class="btn sm" data-a="back">‹ Zurück</button>':'')+'<div class="crumb">'+crumb()+'</div>'+
    '<span class="lblniv">Niveau</span><div class="seg" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div>'+authBtns();
 }
+function progHTML(P){
+  const ids=Object.keys(P).filter(k=>P[k]&&P[k].a&&GT.chapters[k]);if(!ids.length)return '';
+  const order=[].concat(GT.WORT||[],GT.SATZ||[]).map(c=>c[1]);ids.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  let A=0,R=0;
+  const rows=ids.map(k=>{const q=P[k],pct=Math.round(q.r/q.a*100),col=pct>=80?'var(--ok)':pct>=50?'var(--warn)':'var(--bad)';A+=q.a;R+=q.r;
+    const d=q.t?new Date(q.t).toLocaleDateString('de-CH',{day:'numeric',month:'numeric'}):'';
+    return '<div class="cat"><div class="top"><span>'+GT.chapters[k].title+'</span><span style="color:'+col+'">'+pct+' % · '+q.a+' Aufgaben'+(d?' · zuletzt '+d:'')+'</span></div><div class="b"><i style="width:'+pct+'%;background:'+col+'"></i></div></div>';}).join('');
+  return '<details class="card myprog" style="margin:.8rem 0"><summary style="cursor:pointer;font-weight:800">📊 Mein Fortschritt <span class="muted" style="font-weight:600">· '+A+' Aufgaben, '+Math.round(R/A*100)+' % richtig · nur auf diesem Gerät</span></summary><div class="grid3" style="margin:.7rem 0 .2rem">'+rows+'</div></details>';
+}
 function screenStart(){
   const D={A:'Alles, auch die Erweiterungen',B:'Kern und einige Erweiterungen',C:'Der Kern: Grundlagen und Proben'},P=loadP();
   const EM=GT.EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzglieder:['🏷️','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff'],zgs:['🧵','#4f46e5','#e0e7ff'],nsarten:['🌿','#4f46e5','#e0e7ff'],rede:['💬','#4f46e5','#e0e7ff']};
@@ -457,7 +467,7 @@ function screenStart(){
   const cont=lc?'<div class="cont"><div class="ci">🚀</div><div class="cb"><b>Weiter mit '+lc.title+'</b><div class="pbar big"><i style="width:'+lp+'%;background:var(--primary)"></i></div></div><button class="btn primary" data-a="config" data-t="'+lc.teil+'" data-v="'+last+'">Weiter →</button></div>':'';
   return '<div class="hero2"><div class="hleft"><div class="htitle">'+LOGOSM+'Grammatik Trainer</div><p>Wörter knacken. Sätze bauen. Fehler finden.</p></div>'+
    '<div class="hr"><div class="heroniv"><span class="lblniv">Dein Niveau</span><div class="seg big" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div><span class="nd">'+D[S.niv]+'</span></div><div class="auth">'+authBtns()+'</div></div></div>'+cont+
-   '<div class="cont"><div class="ci">📝</div><div class="cb"><b>Testvorbereitung</b><div class="muted" style="font-size:.9rem">Mehrere Kapitel mischen, Punkte sammeln, Übungsprüfung ausdrucken</div></div><button class="btn primary" data-a="testopen">Starten →</button></div>'+
+   '<div class="cont"><div class="ci">📝</div><div class="cb"><b>Testvorbereitung</b><div class="muted" style="font-size:.9rem">Mehrere Kapitel mischen, Punkte sammeln, Übungsprüfung ausdrucken</div></div><button class="btn primary" data-a="testopen">Starten →</button></div>'+progHTML(P)+
    '<div class="jumpbar" role="navigation" aria-label="Zum Bereich springen"><button class="btn" data-a="jump" data-v="wort">🔤 Wortlehre</button><button class="btn" data-a="jump" data-v="satz">🧩 Satzlehre</button></div>'+
    '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','🔤 Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','🧩 Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
    (Object.keys(P).length?'<div class="resetbar">'+(S.resetAsk?'<span>Wirklich den ganzen Fortschritt auf diesem Gerät löschen?</span> <button class="btn sm" data-a="resetyes" style="border-color:var(--bad);color:var(--bad)">Ja, löschen</button> <button class="btn sm" data-a="resetno">Abbrechen</button>':'<button class="btn sm" data-a="resetask">Fortschritt zurücksetzen</button>')+'</div>':'');
@@ -1142,7 +1152,7 @@ function screenTeach(){
   const bar='<div class="tbar"><div class="seg"><button data-a="tmode" data-v="slides" class="'+(T.mode==='slides'?'on':'')+'">Folien</button><button data-a="tmode" data-v="overview" class="'+(T.mode==='overview'?'on':'')+'">Übersicht</button></div>'+
    (T.mode==='slides'?'<button class="btn sm primary" data-a="tpres" title="Vollbild, wie in PowerPoint (Esc beendet)">▶ Präsentieren</button>':'')+'<button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tnotes">Hinweise: '+(T.notes?'an':'aus')+'</button>'+
    '<span class="tsp"></span><span class="muted tinfo">'+V.length+' Folien · ca. '+tot+' Min.</span>'+
-   '<details class="dd"><summary class="btn sm">Drucken ▾</summary><div class="ddm"><button class="btn sm" data-a="tprint" data-v="h">Übersicht für das Heft</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt</button><button class="btn sm" data-a="tprint" data-v="u">Gemeinsame Übungen</button><hr style="margin:.3rem 0;border:0;border-top:1px solid var(--line)"><button class="btn sm" data-a="tdocx" data-v="h">Übersicht für das Heft (.docx)</button><button class="btn sm" data-a="tdocx" data-v="m">Merkblatt (.docx)</button><button class="btn sm" data-a="tdocx" data-v="u">Gemeinsame Übungen (.docx)</button></div></details>'+
+   '<details class="dd"><summary class="btn sm">Drucken ▾</summary><div class="ddm"><button class="btn sm" data-a="tprint" data-v="h">Übersicht für das Heft</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt</button><button class="btn sm" data-a="tprint" data-v="u">Gemeinsame Übungen</button><button class="btn sm" data-a="tprint" data-v="ho">Handout: Folien (mehrere pro A4)</button><hr style="margin:.3rem 0;border:0;border-top:1px solid var(--line)"><button class="btn sm" data-a="tdocx" data-v="h">Übersicht für das Heft (.docx)</button><button class="btn sm" data-a="tdocx" data-v="m">Merkblatt (.docx)</button><button class="btn sm" data-a="tdocx" data-v="u">Gemeinsame Übungen (.docx)</button></div></details>'+
    '<button class="btn sm primary" data-a="sheet" data-t="'+S.teil+'" data-v="'+S.ch+'">Übungsblatt erstellen</button></div>';
   if(T.pres&&T.mode==='slides'){
     const s=V[T.cur];
@@ -1176,6 +1186,7 @@ function doPrint(html){
 function teachInner(mode){
   const c=C();
   if(mode==='m')return ['Merkblatt',c.merk()];
+  if(mode==='ho')return ['Handout',c.title?'<div class="ho-grid">'+slidesVis().filter(s=>(s.p||'')!=='').map((s,i)=>'<div class="ho-cell"><div class="ho-t">'+(i+1)+' · '+s.title+'</div><div class="ho-b">'+stripH(s.print?s.print():s.html())+'</div></div>').join('')+'</div>':''];
   return [mode==='u'?'Übungsblatt':'Übersicht für das Heft',slidesVis().filter(s=>(s.p||'').includes(mode)).map(s=>'<section class="ps"><h2 style="font-size:1.15rem">'+s.title+'</h2>'+(s.print?s.print():stripH(s.html()))+'</section>').join('')];
 }
 function printTeach(mode){const [name,inner]=teachInner(mode);doPrint(wrapPrint(name,C().title,inner));}
