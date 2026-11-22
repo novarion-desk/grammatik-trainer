@@ -11,6 +11,10 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Glossar** am Anfang jedes Kapitels (Theorie und Folien): Fachbegriff, deutsches Wort, Erklärung. Daten in `chapters/glossar.js`.
+- **Partikel** ausgebaut: Interjektionen (neuer Abschnitt), Konjunktionen nebenordnend/unterordnend mit Verbstellung, Adverbien zuordnen (lokal, temporal, modal, kausal), Wechselpräpositionen (Wo? Wohin?), Kurzformen. Begriffe wie «Verhältniswort» im Text.
+- **Lange Texte**: Wortarten «Langer Text anmalen» (alle fünf Wortarten), in Nomen, Verb, Adjektiv, Pronomen und Partikel je «… im langen Text». Daten in `chapters/langtext.js`.
+- «Probier es aus» kommt in der Theorie nur noch einmal am Schluss: Endet das Kapitel schon mit einer Übungsbox, entfällt der Block «Ausprobieren».
 - Aufgaben zum Selberschreiben (Einsetzen, Umformen, Mehrzahl, Artikel …); Umschalter «Selber schreiben / Auswählen» in der Übungsauswahl.
 - Verb: Einsetzen, Umformen, Zeit wählen, Verben im Text.
 - Alle Wortarten: Aufgabe «… im Text» (Wortarten: alle Wortarten im Text anmalen).

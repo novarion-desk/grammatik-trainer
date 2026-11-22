@@ -57,3 +57,10 @@ Widgets: `GT.tryW(typen, kategorien)` (Probier-es-aus), Trennen und Verschieben 
 - Offen: Adjektiv, Verb, Pronomen, Partikel (Kapitelskripte vorhanden, aber noch nicht an den Unterlagen geprüft).
 - Ideen: Verbenfächer, Aktiv/Passiv, Konjunktiv I/II, Zusammensetzungen.
 - Offene Punkte: Tests auf iPad und Handy, Lehrer-Login prüfen, KI-Übungsblatt testen, kleine Testgruppe, Einstellungen im Konto speichern, Knopf «Aufgabe melden», Verschieben auch im Übungsmodus, alte Inhalte in `komma.js` und im Teil «Wortstellung» von `hs-ns.js` noch ungeprüft.
+
+## Glossar und lange Texte
+
+- `chapters/glossar.js` (nach allen Kapiteln geladen): Glossar pro Kapitel `[Begriff, deutsches Wort, Erklärung, optional Niveau]`. Neues Kapitel = neuen Eintrag in `G` ergänzen. Es erscheint als Abschnitt «Glossar» (TOC) und als zweite Folie.
+- `chapters/langtext.js` (danach geladen): lange Texte für Wortarten (`anmalenlang`) und die Einzelkapitel (`textlang`). Format `Wort|wortart`, Artikel zählen zu Pronomen, Adverbien/Präpositionen/Konjunktionen zu Partikel.
+- Beide Dateien hängen sich nach `GT.register` an (`SEC`, `TOC`, `SLIDES`, `TASKS`, `TYPES`). Ladereihenfolge in `index.html` beachten.
+- Theorie: Am Schluss kein «Ausprobieren», wenn der letzte Abschnitt schon eine Übungsbox hat (`noCheck`).

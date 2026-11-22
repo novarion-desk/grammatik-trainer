@@ -469,7 +469,7 @@ function secTheme(id,i){
   return '--sc:'+p[0]+';--sb:'+p[1]+';--st:'+p[2]+';--se:&quot;'+(SEMO[id]||SEFB[i%SEFB.length])+'&quot;';
 }
 function screenLernen(){
-  const vis=C().TOC.filter(t=>!t[2]||lv()>=t[2]);
+  const vis=C().TOC.filter(t=>(!t[2]||lv()>=t[2])&&!(t[0]==='check'&&C().noCheck&&C().noCheck()));
   const em=(GT.EM&&GT.EM[S.ch])||['📘','#4f46e5','#e0e7ff'];
   const hero='<div class="thero" style="--hc:'+em[1]+';--hb:'+em[2]+'"><div class="hi">'+em[0]+'</div><div><div class="hk">'+(S.teil==='wort'?'Wortlehre':'Satzlehre')+' · Kapitel '+C().nr+'</div><div class="ht">'+C().title+'</div><div class="hd">'+(C().desc||'')+'</div></div></div>';
   return '<div class="toc" id="toc">'+vis.map(t=>'<button data-a="toc" data-v="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'+
@@ -523,7 +523,7 @@ function screenRound(){
   const R=S.R;if(R.test){S.ch=R.tasks[R.i]._ch;if(R.bi!==R.i){R.bi=R.i;R.brush=CK()[0];}}
   const t=R.tasks[R.i],T=TY()[t.typ],total=R.tasks.length;
   let body='';
-  if(t.typ==='anmalen'){
+  if(t.typ==='anmalen'||t.typ==='anmalenlang'){
     body='<div class="instr">'+T.instr+'</div><div class="brush">'+CK().map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+CN()[k]+'</button>').join('')+'</div>'+
      '<div class="flow">'+t.parts.map((p,i)=>p.f?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
   }else if(t.cuts){
@@ -549,7 +549,7 @@ document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closes
 function checkRound(){
   const R=S.R,t=R.tasks[R.i];if(R.answered)return;
   let ok=false,mine='',right='',conf=null;
-  if(t.typ==='anmalen'){
+  if(t.typ==='anmalen'||t.typ==='anmalenlang'){
     const need=t.parts.map((p,i)=>p.f?i:-1).filter(i=>i>=0);
     if(need.some(i=>!R.paint[i])){document.getElementById('fb').innerHTML='<div class="fb err">Male zuerst alle Gruppen an.</div>';return;}
     ok=need.every(i=>R.paint[i]===t.parts[i].f);
@@ -1283,6 +1283,8 @@ GT.chapter=function(d){
   const SEC={ziele:()=>'<div class="card"><h3>Das lernst du hier</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+d.goals.map(g=>'<li>'+g+'</li>').join('')+'</ul></div>'};
   const secs=d.sections.filter(s=>!s.teacherOnly);
   secs.forEach(s=>SEC[s.id]=sec(s));
+  /* «Probier es aus» nur einmal: Endet die Theorie schon mit einer Übungsbox, entfällt der Block «Ausprobieren» am Schluss. */
+  const lastHas=()=>{const ls=secs[secs.length-1];if(!ls)return false;const h=typeof ls.html==='function'?ls.html():ls.html;return String(h).indexOf('data-w="try"')>=0||stBox(ls,String(h))!=='';};
   SEC.check=()=>'<div class="nopill"><h2>Probier es aus</h2><p class="sub" style="margin-top:0">'+(d.tryTypes?'Trenne die Satzglieder. Nach der Überprüfung kannst du die Satzglieder verschieben.':'Gemischte Aufgaben zum Ausprobieren. Nach jeder Antwort siehst du die Lösung.')+'</p>'+GT.tryW(d.tryTypes||Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(','))+'</div>';
   const TOC=[['ziele','Lernziele']].concat(secs.map(s=>[s.id,s.short||s.title,s.lv>1?s.lv:undefined])).concat([['check','Ausprobieren']]);
   const tryAll=d.tryTypes||Object.keys(d.types).filter(k=>TASKS.some(t=>t.typ===k&&t.opts)).join(',');
@@ -1308,7 +1310,7 @@ GT.chapter=function(d){
   if(d.css){const st=document.createElement('style');st.textContent=d.css;document.head.appendChild(st);}
   GT.register({id:d.id,teil:d.teil,nr:d.nr,title:d.title,desc:d.desc,ex:d.ex,cats,catName,catTitle:d.catTitle||'Welche Themen?',catWord:d.catWord||'Thema',
     writeTypes:d.write||[],writeAny:d.writeAny||[],strictTypes:d.strict||[],TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>d.merk(),
-    SLIDES,widgets:d.widgets||{},actions:d.actions||{}});
+    SLIDES,noCheck:lastHas,widgets:d.widgets||{},actions:d.actions||{}});
 };
 GT.start=function(){
   const l=document.getElementById('login');if(l)l.addEventListener('close',()=>{S.loginOpen=false;});
@@ -1357,11 +1359,13 @@ GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
 <script src="chapters/komma.js"></script>
 <script src="chapters/faelle.js"></script>
 <script src="chapters/rede.js"></script>
+<script src="chapters/glossar.js"></script>
+<script src="chapters/langtext.js"></script>
 <script>if('serviceWorker' in navigator&&location.protocol.startsWith('http')&&!/[?&]demo/.test(location.search)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 GT.start();</script>
 <script>
 /* Feedback: öffnet das anonyme Tally-Formular (App, Version und Gerät werden mitgegeben, keine Personendaten) */
-function openAppFeedback(){var q=new URLSearchParams({app:'grammatik-trainer',version:'2026-11-21',geraet:(navigator.userAgent||'').slice(0,120)});window.open('https://tally.so/r/GeR9re?'+q.toString(),'_blank','noopener');}
+function openAppFeedback(){var q=new URLSearchParams({app:'grammatik-trainer',version:'2026-11-22',geraet:(navigator.userAgent||'').slice(0,120)});window.open('https://tally.so/r/GeR9re?'+q.toString(),'_blank','noopener');}
 </script>
 </body>
 </html>
