@@ -181,6 +181,7 @@ const EX=[
 ];
 const merk=()=>T(['Thema','Merksatz'],[['Erkennen','Adjektive beschreiben und lassen sich meist steigern.'],['Steigerung','Positiv: schnell · Komparativ: schneller · Superlativ: am schnellsten'],['Unregelmässig','gut – besser – am besten · viel – mehr – am meisten · gern – lieber – am liebsten'],['Vergleich','grösser als · so gross wie'],['Endungen','Vor dem Nomen braucht das Adjektiv eine Endung; nach «sein» nicht.'],['Nach dem Artikel','-e im Nominativ sowie im Akkusativ weiblich und sächlich, sonst -en (Mehrzahl immer -en).'],['Wortbildung','un-, -lich, -ig, -isch, -bar, -sam, -voll']]);
 const UEM={'merkmale':{types:'erkennen',cats:'sg3'},'steigerung':{types:'komp,stufe',cats:'sg1'},'endungen':{types:'endung',cats:'sg2'},'ohneartikel':{types:'endung',cats:'sg2'},'wortbildung':{types:'wort',cats:'sg4'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,poss:1},opt:{pron:.15,adj:.85,det:{def:.45,indef:.3,poss:.25}},classes:[{gl:'Adjektiv',cats:['sg3'],lv:1}],perClass:34});
 GT.chapter({id:'adjektiv',teil:'wort',nr:5,title:'Adjektiv',big:'Ein kleiner Hund, ein schnelles Auto',desc:'Eigenschaften, Steigerung und Endungen',
  ex:'«Der '+mk('adj','kleine')+' Hund ist '+mk('adj','schneller')+' als die '+mk('adj','alte')+' Katze.»',
  goals:['Ich erkenne Adjektive mit der Steigerungsprobe.','Ich steigere Adjektive (Positiv, Komparativ, Superlativ).','Ich setze die richtige Endung vor dem Nomen.','Ich bilde Gegenteile und Adjektive aus Nomen.'],

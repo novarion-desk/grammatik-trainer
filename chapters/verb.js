@@ -207,6 +207,7 @@ const merk=()=>T(['Zeitform','Beispiel','Bildung'],[['Präsens','er lacht','Stam
  '<h3 style="margin-top:.9rem">Personalformen</h3>'+T(['','Endung','lachen'],[['ich','-e','lache'],['du','-st','lachst'],['er/sie/es','-t','lacht'],['wir','-en','lachen'],['ihr','-t','lacht'],['sie','-en','lachen']])+
  '<ul><li>Grundform (Infinitiv, Rohform): lachen, gehen, sein.</li><li>Hilfsverben: sein, haben, werden.</li><li>Befehlsform: Komm! Lies! Fahr!</li></ul>';
 const UEM={'formen':{types:'person',cats:'sg1'},'zeiten':{types:'zeit,zeitwahl',cats:'sg2'},'bildung':{types:'einsetzen,zeit',cats:'sg2'},'arten':{types:'stamm',cats:'sg3'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,konj:2},opt:{pron:.3,adj:.2,det:{def:.5,indef:.3,poss:.2}},classes:[{gl:'Verb',cats:['sg4'],lv:1}],perClass:34});
 GT.chapter({id:'verb',teil:'wort',nr:4,title:'Verb',big:'Er lacht. Er lachte. Er hat gelacht.',desc:'Formen, Zeitformen und Befehlsform',
  ex:'«Er '+mk('verb','lacht')+'. Er '+mk('verb','lachte')+'. Er '+mk('verb','hat gelacht')+'.»',
  goals:['Ich erkenne Verben mit der Konjugationsprobe.','Ich kenne die Grundform (Rohform) und bilde die Personalformen.','Ich kenne die Zeitformen Präsens, Präteritum, Perfekt, Plusquamperfekt und Futur I und erkenne sie im Satz.','Ich bilde Stammformen und das Partizip II.','Ich bilde die Befehlsform (Imperativ).'],

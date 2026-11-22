@@ -1230,24 +1230,25 @@ GT.chapter=function(d){
   const lvOf=x=>x.lv||1;
   const cats=Object.keys(d.cats);
   const catName=Object.fromEntries(cats.map(k=>[k,d.cats[k]]));
+  if(!d.types.markieren&&d.tasks.some(t=>t.typ==='markieren'))d.types.markieren={icon:'👆',label:'Im Satz antippen',short:'Die Wörter im Satz antippen',instr:'Tippe die Wörter an.',hint:'Lies den ganzen Satz und prüfe jedes Wort.',ref:d.sections[0].id};
   const TY={};Object.keys(d.types).forEach(k=>TY[k]=Object.assign({icon:ICONS[k],ref:d.sections[0].id,hint:d.hint||''},d.types[k]));
   let id=1;const TASKS=d.tasks.map(t=>Object.assign({id:id++,lv:t.lv||(t.stufe===3?2:1),cats:t.cats||[cats[0]]},t));
   const SECX=({
-   wortarten:{nomen:'nomen',verb:'verb',adjektiv:'adj',pronomen:'pron',partikel:'part',proben:'nomen,verb,adj,pron,part'},
-   nomen:{merkmale:'sg3',genus:'sg1',zahl:'sg2',gross:'sg3',arten:'sg4',zusammen:'sg5|kompo',homonyme:'sg5|homonym'},
+   wortarten:{nomen:'nomen||Nomen',verb:'verb||Verb',adjektiv:'adj||Adjektiv',pronomen:'pron||Pronomen',partikel:'part||Partikel',proben:'nomen,verb,adj,pron,part||Nomen;Verb;Adjektiv;Pronomen;Partikel'},
+   nomen:{merkmale:'sg3||Nomen',genus:'sg1||Artikel;Nomen',zahl:'sg2||Nomen',gross:'sg3||Nomen',arten:'sg4||Nomen',zusammen:'sg5|kompo|Nomen',homonyme:'sg5|homonym'},
    faelle:{vier:'|bestimmen,zuordnen,anmalen',tabelle:'|einsetzen,endung',proben:'|frage,ersatz',praep:'|praep',fehler:'|fehler',endung:'|endung'},
-   verb:{merkmale:'sg1',formen:'sg1',zeiten:'sg2',bildung:'sg3',arten:'sg4',modi:'|befehl'},
-   adjektiv:{merkmale:'sg3',steigerung:'sg1',endungen:'sg2',ohneartikel:'sg2',wortbildung:'sg4'},
-   pronomen:{artikel:'sg1',personal:'sg2',possessiv:'sg3',weitere:'sg4',genitiv:'sg3'},
-   partikel:{merkmale:'sg4',praep:'sg1',konj:'sg2',adverb:'sg3',abgrenzung:'|adverbgeg'},
+   verb:{merkmale:'sg1||Verb',formen:'sg1||Verb',zeiten:'sg2||Verb',bildung:'sg3||Verb',arten:'sg4||Verb',modi:'|befehl'},
+   adjektiv:{merkmale:'sg3||Adjektiv',steigerung:'sg1||Adjektiv',endungen:'sg2||Adjektiv',ohneartikel:'sg2||Adjektiv',wortbildung:'sg4||Adjektiv'},
+   pronomen:{merkmale:'|wissen,text|Pronomen',begleiter:'sg1|wissen,zuordnen|Pronomen',artikel:'sg1|artikel,artikelein|Artikel',personal:'sg2|personal,fall,ersetzen,kuerzen,bezug|Personalpronomen',hoeflich:'sg2|hoeflich|Personalpronomen',possessiv:'sg3|possessiv|Possessivpronomen',reflexiv:'sg4|reflexiv,zuordnen|Reflexivpronomen',demonstrativ:'sg5|zuordnen,wissen|Demonstrativpronomen',frage:'sg5|zuordnen,wissen|Fragepronomen',indefinit:'sg5|zuordnen,wissen|Indefinitpronomen',relativ:'sg6|zuordnen,wissen,bezug|Relativpronomen',genitiv:'sg3|possessiv',fachbegriffe:'sg0|begriff,begriffin',vorgehen:'|zuordnen,fall|Pronomen'},
+   partikel:{merkmale:'sg4||Partikel',praep:'sg1||Präposition',konj:'sg2||Konjunktion',adverb:'sg3||Adverb',abgrenzung:'|adverbgeg'},
    'wl-sl':{unterschied:'sg1',satz:'sg3',glieder:'sg2'},
    verschiebe:{probe:'sg2',abtrennen:'sg1'},
-   verbale:{rohform:'sg1',begriffe:'sg5',teile:'sg2',wortkette:'sg4',klammer:'sg3'},
+   verbale:{rohform:'sg1',begriffe:'sg5',teile:'sg2||Verbale Teile',wortkette:'sg4||Verbale Teile',klammer:'sg3||Verbale Teile'},
    satzarten:{arten:'sg1',bau:'sg4',fragment:'sg5',frage:'sg1',umformen:'sg3',hoeflich:'sg3'},
-   feld:{idee:'fm1',klammer:'fm2',vorfeld:'fm3',schritte:'fm1',fragen:'fm3',nachfeld:'fm1'},
-   'hs-ns':{haupt:'sg1',verbindung:'sg2',einleite:'sg3',stellung:'sg4'},
+   feld:{idee:'fm1||Vorfeld;Mittelfeld;Nachfeld',klammer:'fm2||Linke Satzklammer;Rechte Satzklammer',vorfeld:'fm3||Vorfeld',schritte:'fm1||Vorfeld;Mittelfeld',fragen:'fm3||Vorfeld',nachfeld:'fm1||Nachfeld'},
+   'hs-ns':{haupt:'sg1||Hauptsatz;Nebensatz',verbindung:'sg2||Nebensatz',einleite:'sg3||Einleitewort',stellung:'sg4||Nebensatz'},
    zgs:{was:'sg1',erkennen:'sg1',falsch:'sg3'},
-   nsarten:{was:'sg0',konj:'sg1','relativ-neu':'sg3',uneing:'sg2'},
+   nsarten:{was:'sg0||Nebensatz',konj:'sg1||Nebensatz;Einleitewort','relativ-neu':'sg3||Relativsatz',uneing:'sg2'},
    komma:{auf:'sg1','ns-erkl':'sg2','haupt-neben':'sg2','hs-hs':'sg2','relativ-erkl':'sg3',relativ:'sg3',einschub:'sg3',sonst:'sg4',infgruppe:'sg4'}
   })[d.id]||{};
   const stBox=(s,h)=>{
@@ -1255,14 +1256,27 @@ GT.chapter=function(d){
     const u=s.uebung||{},tp=u.tap;
     if(tp){if(!TY.markieren||!TASKS.some(t=>t.typ==='markieren'&&t.gl===tp.own&&t.lv<=lv()))return '';
       return '<div class="card uebox noprint nopill" style="margin-top:1rem"><h3 style="margin-top:0">Probier es aus</h3><div class="uechips"><button class="btn sm on" data-a="uetype" data-t="markieren" data-ans="'+tp.own+'">👆 '+tp.own+' im Satz antippen</button>'+(tp.all.length>1?'<button class="btn sm" data-a="uepaint">🎨 Alle bisherigen anmalen</button>':'')+'</div>'+GT.tryW('markieren','',tp.own)+(tp.all.length>1?'<div class="try sgp" data-w="sgpaint" data-known="'+tp.all.join(',')+'" hidden></div>':'')+'</div>';}
-    let cats=u.cats||'',types=u.types?String(u.types).split(','):null,ans=u.ans||'';
-    const m=SECX[s.id];if(m!==undefined){const a=m.split('|');cats=a[0]||'';types=a[1]?a[1].split(','):null;}
-    if(!cats&&!types&&!s.uebung)return '';
+    let cats=u.cats||'',types=u.types?String(u.types).split(','):null,ans=u.ans||'',tapc=[];
+    const m=SECX[s.id];if(m!==undefined){const a=m.split('|');cats=a[0]||'';types=a[1]?a[1].split(','):null;if(a[2])tapc=a[2].split(';');}
+    if(!cats&&!types&&!s.uebung&&!tapc.length)return '';
     const cf=cats?String(cats).split(','):null,af=ans?ans.split('|'):null;
-    const okT=(types||Object.keys(d.types)).filter(k=>TY[k]&&TASKS.some(t=>t.typ===k&&t.lv<=lv()&&(t.opts||t.cuts||(t.tokens&&t.targets))&&(!cf||t.cats.some(c=>cf.includes(c)))&&(!af||af.includes(String(t.answer))||(t.gl&&af.includes(t.gl)))));
-    if(!okT.length)return '';
-    const chips=okT.length>1?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="'+okT.join(',')+'" data-ans="'+ans+'">Alle Aufgaben</button>'+okT.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'" data-ans="'+ans+'">'+(TY[k].icon||'')+' '+(TY[k].label||k)+'</button>').join('')+'</div>':'';
-    return '<div class="card uebox noprint nopill" style="margin-top:1rem"><h3 style="margin-top:0">Probier es aus</h3>'+chips+GT.tryW(okT.join(','),cats,ans)+'</div>';
+    tapc=tapc.filter(c=>TY.markieren&&TASKS.some(t=>t.typ==='markieren'&&t.gl===c&&t.lv<=lv()));
+    let okT=(types||Object.keys(d.types)).filter(k=>TY[k]&&TASKS.some(t=>t.typ===k&&t.lv<=lv()&&(t.opts||t.cuts||(t.tokens&&t.targets))&&(!cf||t.cats.some(c=>cf.includes(c)))&&(!af||af.includes(String(t.answer))||(t.gl&&af.includes(t.gl)))));
+    if(tapc.length)okT=okT.filter(k=>k!=='markieren');
+    let tapT=null;if(!tapc.length)tapT=okT.find(k=>['markieren','text','ktap','trenn'].includes(k))||null;
+    if(tapT&&tapT==='markieren'&&TASKS.some(t=>t.typ==='markieren'&&t.gl)&&!TASKS.some(t=>t.typ==='markieren'&&!t.gl&&t.lv<=lv()&&(!cf||t.cats.some(c=>cf.includes(c)))))tapT=null;
+    if(!okT.length&&!tapc.length)return '';
+    const rest=tapT?okT.filter(k=>k!==tapT):okT;
+    const btn=(k,on,aa)=>'<button class="btn sm'+(on?' on':'')+'" data-a="uetype" data-t="'+k+'" data-ans="'+aa+'">'+(TY[k].icon||'')+' '+(TY[k].label||k)+'</button>';
+    let bs=[];
+    tapc.forEach((c,i)=>bs.push('<button class="btn sm'+(i===0?' on':'')+'" data-a="uetype" data-t="markieren" data-ans="'+c+'">👆 '+c+' im Satz antippen</button>'));
+    if(tapT)bs.push(btn(tapT,true,ans));
+    const hasTap=bs.length>0;
+    if(rest.length>1)bs.push('<button class="btn sm'+(hasTap?'':' on')+'" data-a="uetype" data-t="'+rest.join(',')+'" data-ans="'+ans+'">Alle Aufgaben</button>');
+    rest.forEach(k=>{if(rest.length>1||hasTap)bs.push(btn(k,false,ans));});
+    const chips=bs.length>1?'<div class="uechips">'+bs.join('')+'</div>':'';
+    const first=tapc.length?GT.tryW('markieren','',tapc[0]):tapT?GT.tryW(tapT,cats,ans):GT.tryW(okT.join(','),cats,ans);
+    return '<div class="card uebox noprint nopill" style="margin-top:1rem"><h3 style="margin-top:0">Probier es aus</h3>'+chips+first+'</div>';
   };
   const sec=s=>()=>{const h=typeof s.html==='function'?s.html():s.html;return '<h2>'+s.title+'</h2>'+h+stBox(s,h);};
   const SEC={ziele:()=>'<div class="card"><h3>Das lernst du hier</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+d.goals.map(g=>'<li>'+g+'</li>').join('')+'</ul></div>'};
@@ -1323,6 +1337,7 @@ GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
 
 </script>
 <script src="docx-export.js"></script>
+<script src="chapters/wortgen.js"></script>
 <script src="chapters/wortarten.js"></script>
 <script src="chapters/nomen.js"></script>
 <script src="chapters/verb.js"></script>
