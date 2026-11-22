@@ -127,6 +127,7 @@ mark.w{background:var(--b);color:inherit;box-shadow:inset 0 -3px 0 var(--c);bord
 .thero .hi{font-size:3rem;line-height:1}.thero .hk{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--hc)}.thero .ht{font-size:1.7rem;font-weight:800;line-height:1.2}.thero .hd{color:var(--muted);margin-top:.15rem}
 .sec h3.pr{font-size:1.1rem;margin:1.2rem 0 .5rem}
 .sent{font-size:1.2rem;margin:.3rem 0 .6rem}
+.sent2{margin-top:.4rem}
 .fcard{border:2px solid var(--c);background:var(--b);border-radius:var(--radius);padding:.9rem 1rem}
 .fcard h3{font-size:1rem;color:var(--t)}
 .fcard .q{font-size:1.35rem;font-weight:800;margin:.25rem 0;color:var(--t)}
@@ -332,7 +333,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 .chip.tok.sel{background:var(--primary-l);border-color:var(--primary);color:#312e81}
 .chip.tok.right{background:var(--ok-l);border-color:var(--ok)}.chip.tok.wrong{background:var(--bad-l);border-color:var(--bad)}.chip.tok.miss{border:2px dashed var(--ok)}
 .chip.tok.right::after{content:' ✓'}.chip.tok.wrong::after{content:' ✗'}
-.f-nomen{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-verb{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adj{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-pron{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-part{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-art{--c:#0891b2;--b:#cffafe;--t:#164e63}
+.f-nomen{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-verb{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adj{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-pron{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-part{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-praep{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-konj{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adv{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-interj{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-art{--c:#0891b2;--b:#cffafe;--t:#164e63}
 .f-sg1{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-sg2{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-sg3{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-sg4{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-sg5{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-sg6{--c:#0891b2;--b:#cffafe;--t:#164e63}.f-sg0{--c:#64748b;--b:#f1f5f9;--t:#334155}
 .f-pn{--c:#0d9488;--b:#ccfbf1;--t:#134e4a}.f-adv{--c:#db2777;--b:#fce7f3;--t:#831843}.f-att{--c:#64748b;--b:#f1f5f9;--t:#334155}
 @media print{.po{display:block!important}.noprint,#merk button,#merk .try{display:none!important}#merk .sol[hidden]{display:block!important}#merk .uw .u{background:var(--b);box-shadow:inset 0 -3px 0 var(--c)}#merk .card{box-shadow:none}}
@@ -524,7 +525,8 @@ function screenRound(){
   const t=R.tasks[R.i],T=TY()[t.typ],total=R.tasks.length;
   let body='';
   if(t.typ==='anmalen'||t.typ==='anmalenlang'){
-    body='<div class="instr">'+T.instr+'</div><div class="brush">'+CK().map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+CN()[k]+'</button>').join('')+'</div>'+
+    const BK=t.brushKeys||CK(),BN=t.brushNames||CN();if(BK.indexOf(R.brush)<0)R.brush=BK[0];
+    body='<div class="instr">'+T.instr+'</div><div class="brush">'+BK.map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+BN[k]+'</button>').join('')+'</div>'+
      '<div class="flow">'+t.parts.map((p,i)=>p.f?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
   }else if(t.cuts){
     body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow cutflow'+(t.typ==='ktap'?' kf':'')+'">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="cut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div>';
@@ -534,7 +536,7 @@ function screenRound(){
     body='<div class="instr">'+(t.sent&&t.prompt?t.prompt:(T.winstr||T.instr))+'</div><div class="sbox">'+(t.sent||t.prompt)+'</div><input class="wfield" id="wfield" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="Deine Antwort" placeholder="Deine Antwort">';
   }else{
     if(!R.order)R.order=shuffle(t.opts);
-    body='<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'<div class="sbox">'+t.sent+'</div>')+
+    body='<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>'+(t.sent&&String(t.prompt).replace(/<[^>]+>/g,'').indexOf(String(t.sent).replace(/<[^>]+>/g,'').slice(0,15))<0?'<div class="sbox sent2">'+t.sent+'</div>':''):'<div class="sbox">'+t.sent+'</div>')+
      '<div class="opts">'+R.order.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="pick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
   }
   return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div>'+(R.test?'<span class="pill gray">'+C().title+'</span> ':'')+'<span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+(R.test?' · '+tPts(t)+' P.':'')+'</span></div>'+
@@ -553,8 +555,8 @@ function checkRound(){
     const need=t.parts.map((p,i)=>p.f?i:-1).filter(i=>i>=0);
     if(need.some(i=>!R.paint[i])){document.getElementById('fb').innerHTML='<div class="fb err">Male zuerst alle Gruppen an.</div>';return;}
     ok=need.every(i=>R.paint[i]===t.parts[i].f);
-    need.forEach(i=>{const b=document.querySelector('.chip[data-i="'+i+'"]');CK().forEach(k=>b.classList.remove('f-'+k,'p-'+k));b.classList.add(R.paint[i]===t.parts[i].f?'right':'wrong');b.classList.add('f-'+t.parts[i].f,'p-'+t.parts[i].f);});
-    mine=need.map(i=>(R.paint[i]?CN()[R.paint[i]]:'–')).join(', ');right=need.map(i=>CN()[t.parts[i].f]).join(', ');
+    need.forEach(i=>{const b=document.querySelector('.chip[data-i="'+i+'"]');(t.brushKeys||CK()).forEach(k=>b.classList.remove('f-'+k,'p-'+k));b.classList.add(R.paint[i]===t.parts[i].f?'right':'wrong');b.classList.add('f-'+t.parts[i].f,'p-'+t.parts[i].f);});
+    const BN2=t.brushNames||CN();mine=need.map(i=>(R.paint[i]?BN2[R.paint[i]]:'–')).join(', ');right=need.map(i=>BN2[t.parts[i].f]).join(', ');
     need.forEach(i=>{if(R.paint[i]!==t.parts[i].f)conf=[t.parts[i].f,R.paint[i]];});
     document.querySelectorAll('.chip,.brush button').forEach(b=>b.disabled=true);
   }else if(t.cuts){
@@ -624,7 +626,7 @@ function renderTry(el){
     el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+(t.instr||TY()[t.typ].instr)+'</div><div class="flow tapflow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="ttok" data-i="'+i+'">'+x+'</button>').join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem;gap:.5rem"><button class="btn primary" data-a="tchk">Überprüfen</button><button class="btn" data-a="tnext">🔄 Neuer Satz</button></div>';
     return;}
   el._o=shuffle(t.opts);
-  el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div><div class="opts">'+
+  el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div>'+(t.prompt&&t.sent&&String(t.prompt).replace(/<[^>]+>/g,'').indexOf(String(t.sent).replace(/<[^>]+>/g,'').slice(0,15))<0?'<div class="sbox sent2">'+t.sent+'</div>':'')+'<div class="opts">'+
    el._o.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="tpick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div>';
 }
 function tryPick(b){
@@ -706,7 +708,7 @@ function sheetItem(t){
   const T=TY()[t.typ]||{};let q,a,opts=null,instr=T.instr||'',kind='line';
   if(t.parts){
     q=t.parts.map(p=>p.f?'<u>'+esc(p.t)+'</u>':esc(p.t)).join(' ');
-    a=t.parts.filter(p=>p.f).map(p=>esc(p.t.replace(/[.,]$/,''))+' → '+esc(CN()[p.f])).join('; ');
+    a=t.parts.filter(p=>p.f).map(p=>esc(p.t.replace(/[.,]$/,''))+' → '+esc((t.brushNames||CN())[p.f])).join('; ');
     instr='Bestimme die unterstrichenen Wörter und schreibe die Bezeichnung darüber.';kind='para';
   }else if(t.cuts){
     q=esc(t.tokens.join(' '));a=esc(t.tokens.map((x,i)=>x+(t.cuts.includes(i)?(t.typ==='ktap'?',':' |'):'')).join(' '));instr=t.typ==='ktap'?'Setze die fehlenden Kommas. Unterstreiche das Signalwort.':(t.instr||instr);kind='para';
@@ -1026,7 +1028,7 @@ document.addEventListener('click',e=>{
    case 'start':{const pool=poolFor(S.cfg);if(!pool.length)return;startRound(shuffle(balance(pool).slice(0,wanted(S.cfg))),'Runde');break;}
    case 'pick':{const R=S.R;if(R.answered)return;R.choice=Number(b.dataset.i);document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');document.getElementById('checkBtn').disabled=false;break;}
    case 'brush':{S.R.brush=b.dataset.k;document.querySelectorAll('.brush button').forEach(x=>x.classList.toggle('on',x===b));break;}
-   case 'paint':{const R=S.R;if(R.answered)return;const i=b.dataset.i;CK().forEach(k=>b.classList.remove('f-'+k,'p-'+k));
+   case 'paint':{const R=S.R;if(R.answered)return;const i=b.dataset.i;(R.tasks[R.i].brushKeys||CK()).forEach(k=>b.classList.remove('f-'+k,'p-'+k));
      if(R.paint[i]===R.brush){delete R.paint[i];}else{R.paint[i]=R.brush;b.classList.add('f-'+R.brush,'p-'+R.brush);}
      const need=R.tasks[R.i].parts.filter(p=>p.f).length;document.getElementById('checkBtn').disabled=Object.keys(R.paint).length<need;break;}
    case 'cut':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=false;break;}

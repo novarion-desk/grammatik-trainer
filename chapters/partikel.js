@@ -67,7 +67,7 @@ const KJ=[
 ['Sie lernt, <b>nachdem</b> sie gegessen hat.',1,3,'«nachdem» leitet einen Nebensatz ein. Das Verb «hat» steht am Ende.'],
 ['Entweder bleibst du hier, <b>oder</b> du kommst mit.',0,3,'«oder» verbindet zwei Hauptsätze.']
 ];
-KJ.forEach(k=>task.push({typ:'konjart',stufe:k[2],lv:k[2]===3?2:1,cats:['sg2'],prompt:'Ist die Konjunktion nebenordnend oder unterordnend?',sent:k[0],opts:KA,answer:KA[k[1]],why:'<b>'+KA[k[1]]+'.</b> '+k[3]}));
+KJ.forEach(k=>task.push({typ:'konjart',stufe:k[2],lv:k[2]===3?2:1,cats:['sg2'],sent:k[0],opts:KA,answer:KA[k[1]],why:'<b>'+KA[k[1]]+'.</b> '+k[3]}));
 /* Verbstellung nach der Konjunktion */
 const KS=[
 ['Ich bleibe zu Hause, weil ich krank bin.','Ich bleibe zu Hause, weil ich bin krank.',1,'Nach «weil» steht das Verb am Ende des Nebensatzes.'],
@@ -112,7 +112,7 @@ const ADZ=[
 ['Sie kommt <b>oft</b> zu spät.',1,2,'«oft» antwortet auf «Wie oft?» oder «Wann?»: Temporaladverb.'],
 ['Sie geht die Treppe <b>hinauf</b>.',0,3,'«hinauf» gibt die Richtung an (Wohin?): Lokaladverb.']
 ];
-ADZ.forEach(a=>task.push({typ:'adverbzu',stufe:a[2],lv:a[2]===3?2:1,cats:['sg3'],prompt:'Welche Art von Adverb ist das markierte Wort?',sent:a[0],opts:AD,answer:AD[a[1]],why:'<b>'+AD[a[1]]+'.</b> '+a[3]}));
+ADZ.forEach(a=>task.push({typ:'adverbzu',stufe:a[2],lv:a[2]===3?2:1,cats:['sg3'],sent:a[0],opts:AD,answer:AD[a[1]],why:'<b>'+AD[a[1]]+'.</b> '+a[3]}));
 
 /* Interjektionen */
 const IJ=[
@@ -159,7 +159,7 @@ const WFQ=[
 ['Er läuft <b>über die Strasse</b>.',0,2,'Wohin? Akkusativ.'],
 ['Das Flugzeug fliegt <b>über der Stadt</b>.',1,3,'Wo? Dativ.']
 ];
-WFQ.forEach(w=>task.push({typ:'wechselfall',stufe:w[2],lv:w[2]===3?2:1,cats:['sg1'],prompt:'Welcher Fall steht nach der Wechselpräposition?',sent:w[0],opts:WF,answer:WF[w[1]],why:'<b>'+WF[w[1]]+'.</b> '+w[3]}));
+WFQ.forEach(w=>task.push({typ:'wechselfall',stufe:w[2],lv:w[2]===3?2:1,cats:['sg1'],sent:w[0],opts:WF,answer:WF[w[1]],why:'<b>'+WF[w[1]]+'.</b> '+w[3]}));
 
 /* Partikelart bestimmen */
 const Z=['Adverb','Präposition','Konjunktion','Interjektion'];

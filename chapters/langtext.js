@@ -36,4 +36,19 @@ Object.keys(SINGLE).forEach(id=>{
     c.TASKS.push({id:nextId(c),typ:'textlang',stufe:a[0],lv:a[0]===3?2:1,cats:[S.cat],tokens,targets,instr:S.instr,lang:true,why:targets.map(i=>tokens[i].replace(/[.,]$/,'')).join(', ')});
   });
 });
+/* Partikel: langer Text, jede Partikelart hat eine eigene Farbe (Präposition, Konjunktion, Adverb, Interjektion) */
+(function(){
+  const c=GT.chapters.partikel;if(!c)return;
+  const BK=['praep','konj','adv','interj'],BN={praep:'Präposition',konj:'Konjunktion',adv:'Adverb',interj:'Interjektion'};
+  c.TYPES.anmalenlang={icon:'🎨',label:'Partikel im langen Text anmalen',short:'Präpositionen, Konjunktionen, Adverbien und Interjektionen farbig markieren',instr:'Wähle eine Farbe und tippe die passenden Wörter im Text an. Jede Partikelart hat ihre eigene Farbe.',hint:'Präposition: steht vor einem Nomen (mit der Klasse). Konjunktion: verbindet Sätze (und, weil). Adverb: Wo? Wann? Wie? Warum? Interjektion: Ausruf (ach, aua).',ref:'merkmale'};
+  const T=[
+   [1,"Hurra|interj, heute|adv gehen wir mit|praep der Klasse in|praep den Zoo. Dort|adv sehen wir Affen und|konj Elefanten. Ach|interj, der Löwe schläft noch|adv! Nach|praep dem Essen fahren wir zurück|adv zum|praep Bahnhof."],
+   [2,"Igitt|interj, es regnet schon|adv wieder|adv! Weil|konj wir keinen Schirm haben, warten wir unter|praep dem Dach. Mia ist müde, denn|konj sie hat gestern|adv lange|adv gespielt. Aua|interj, ich bin gegen|praep die Wand gelaufen! Danach|adv gehen wir nach|praep Hause."],
+   [3,"Juhu|interj, endlich|adv sind Ferien! Obwohl|konj es draussen|adv kalt ist, laufen wir ohne|praep Jacke durch|praep den Wald. Plötzlich|adv ruft Tim leise|adv: Pst|interj, hört ihr das? Wir bleiben stehen, weil|konj er sofort|adv gespannt|adv lauscht. Hinter|praep den Bäumen sehen wir ein Reh, aber|konj es rennt davon|adv."]
+  ];
+  T.forEach(a=>{
+    const parts=a[1].split(' ').map(w=>{const i=w.indexOf('|');if(i<0)return{t:w,f:null};const m=w.slice(i+1).match(/^([a-z]+)(.*)$/);return{t:w.slice(0,i)+m[2],f:m[1]};});
+    c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0]===3?2:1,cats:['sg4'],parts,sent:'',lang:true,brushKeys:BK,brushNames:BN,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,:!?]$/,'')+' → '+BN[p.f]).join(' · ')});
+  });
+})();
 })();
