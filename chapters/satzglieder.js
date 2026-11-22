@@ -306,41 +306,49 @@ const SL=(k,emo,name,frage,lead,steps,head,rows,callouts)=>
 const MKS=(k,t)=>mk(k,t);
 
 /* ===== Satzgenerator für «Satzglied antippen» (Folien und Schüler): unbegrenzt viele Sätze aus Bausteinen ===== */
-const GL_INSTR={'Subjekt':'Tippe alle Wörter des Subjekts an (Wer oder was?).','Prädikat':'Tippe alle Wörter des Prädikats an (alle Teile des Verbs).','Akkusativobjekt':'Tippe alle Wörter des Akkusativobjekts an (Wen oder was?).','Dativobjekt':'Tippe alle Wörter des Dativobjekts an (Wem?).','Präpositionalgefüge':'Tippe alle Wörter des Präpositionalgefüges an.','Adverbiale':'Tippe das Adverbiale an (Wörter ohne Präposition: Wann? Wo?).'};
-const GL_Q={'Subjekt':'Frage: Wer oder was …?','Prädikat':'Das Prädikat besteht aus allen Verbteilen.','Akkusativobjekt':'Frage: Wen oder was …?','Dativobjekt':'Frage: Wem …?','Präpositionalgefüge':'Es beginnt mit einer Präposition.','Adverbiale':'Es hat keine Präposition und sagt wann, wo oder wie.'};
-const GL_CAT={'Subjekt':'sg2','Prädikat':'sg2','Akkusativobjekt':'sg3','Dativobjekt':'sg3','Präpositionalgefüge':'sg4','Adverbiale':'sg4'};
+const GL_INSTR={'Subjekt':'Tippe alle Wörter des Subjekts an (Wer oder was?).','Prädikat':'Tippe alle Wörter des Prädikats an (alle Teile des Verbs).','Akkusativobjekt':'Tippe alle Wörter des Akkusativobjekts an (Wen oder was?).','Dativobjekt':'Tippe alle Wörter des Dativobjekts an (Wem?).','Präpositionalgefüge':'Tippe alle Wörter des Präpositionalgefüges an.','Adverbiale':'Tippe das Adverbiale an (Wörter ohne Präposition: Wann? Wo?).','Genitivobjekt':'Tippe alle Wörter des Genitivobjekts an (Wessen?).','Gleichsetzungsnominativ':'Tippe alle Wörter des Gleichsetzungsnominativs an (zweiter Nominativ nach sein, werden, bleiben).','Attribut':'Tippe alle Attribute an (Was für ein …?). Auch der Artikel zählt dazu.'};
+const GL_Q={'Subjekt':'Frage: Wer oder was …?','Prädikat':'Das Prädikat besteht aus allen Verbteilen.','Akkusativobjekt':'Frage: Wen oder was …?','Dativobjekt':'Frage: Wem …?','Präpositionalgefüge':'Es beginnt mit einer Präposition.','Adverbiale':'Es hat keine Präposition und sagt wann, wo oder wie.','Genitivobjekt':'Frage: Wessen …? Es hängt am Verb.','Gleichsetzungsnominativ':'Nominativ nach sein, werden, bleiben. Es setzt das Subjekt gleich.','Attribut':'Frage: Was für ein …? Alle Wörter ausser dem Kern (Nomen) sind Attribute, auch der Artikel.'};
+const GL_CAT={'Subjekt':'sg2','Prädikat':'sg2','Akkusativobjekt':'sg3','Dativobjekt':'sg3','Präpositionalgefüge':'sg4','Adverbiale':'sg4','Genitivobjekt':'sg3','Gleichsetzungsnominativ':'sg2','Attribut':'sg5'};
 /* Alte Aufgaben «markieren»: Satzglied aus der Anweisung ableiten */
 task.filter(t=>t.typ==='markieren'&&!t.gl).forEach(t=>{const i=t.instr||'';t.gl=/Subjekts/.test(i)?'Subjekt':/Prädikats/.test(i)?'Prädikat':/Akkusativobjekts/.test(i)?'Akkusativobjekt':/Dativobjekts/.test(i)?'Dativobjekt':/Präpositionalgefüges/.test(i)?'Präpositionalgefüge':/Adverbiale/.test(i)?'Adverbiale':/Attribut/.test(i)?'Attribut':'';});
 const GP=(sg,pl)=>({sg:sg,pl:pl});
-const SUBP=[['Der Lehrer',0],['Meine Schwester',0],['Die Kinder',1],['Anna',0,1],['Mein Bruder',0],['Die Schülerin',0],['Der Nachbar',0],['Die Frau',0],['Unsere Eltern',1],['Die Mädchen',1],['Tim',0,1],['Die Schüler',1],['Der kleine Junge',0],['Die Trainerin',0]];
-const SUBA=[['Der Hund',0],['Die Katze',0],['Die Hunde',1],['Das Pferd',0],['Die Vögel',1]];
-const SUBD=[['Der Hund',0],['Die Hunde',1]];
-const SUBT=[['Das Fahrrad',0],['Das Buch',0],['Die Jacke',0],['Der Ball',0],['Die Tasche',0]];
-/* Verben: [3.Sg, 3.Pl, Partizip, Hilfsverb(0=hat,1=ist), Subjektgruppe, AO-Liste, DO-Liste] */
+const LVG={'Genitivobjekt':2,'Gleichsetzungsnominativ':3};
+/* Nominalgruppen: «^» trennt Kern und nachgestelltes Attribut: «das Haus ^des Nachbarn». Kern = letztes Wort vor «^». */
+const npParse=s=>{const a=s.split(' ^'),pre=a[0].split(' '),post=a[1]?a[1].split(' '):[];const w=pre.concat(post),k=pre.length-1;return{w:w,at:w.map((_,i)=>i).filter(i=>i!==k)};};
+const SUBP=[['Der Lehrer',0],['Meine Schwester',0],['Die Kinder',1],['Anna',0,1],['Mein Bruder',0],['Die Schülerin',0],['Der Nachbar',0],['Die Frau',0],['Unsere Eltern',1],['Die Mädchen',1],['Tim',0,1],['Die Schüler',1],['Der kleine Junge',0],['Die Trainerin',0],['Der freundliche Nachbar',0],['Die neue Lehrerin',0],['Die lauten Kinder',1],['Der Bruder ^der Lehrerin',0],['Die Freundin ^meines Bruders',0],['Die Eltern ^des Jungen',1],['Die Schwester ^des Nachbarn',0]];
+const SUBA=[['Der Hund',0],['Die Katze',0],['Die Hunde',1],['Das Pferd',0],['Die Vögel',1],['Der kleine Hund',0],['Die freche Katze',0],['Das schwarze Pferd',0]];
+const SUBD=[['Der Hund',0],['Die Hunde',1],['Der grosse Hund',0]];
+const SUBT=[['Das Fahrrad',0],['Das Buch',0],['Die Jacke',0],['Der Ball',0],['Die Tasche',0],['Das alte Fahrrad',0],['Die rote Jacke',0],['Das Fahrrad ^des Nachbarn',0],['Das Buch ^der Lehrerin',0]];
+/* Verben: [3.Sg, 3.Pl, Partizip, Hilfsverb(0=hat,1=ist), Subjektgruppe, AO-Liste, DO-Liste, nur Präsens, GO-Liste] */
 const VB=[
 ['schläft','schlafen','geschlafen',0,'pa',null,null],['lacht','lachen','gelacht',0,'p',null,null],['arbeitet','arbeiten','gearbeitet',0,'p',null,null],
 ['singt','singen','gesungen',0,'p',null,null],['spielt','spielen','gespielt',0,'pa',null,null],['wartet','warten','gewartet',0,'p',null,null],
 ['bellt','bellen','gebellt',0,'d',null,null],['läuft','laufen','gelaufen',1,'pa',null,null],['kommt','kommen','gekommen',1,'p',null,null],
-['liest','lesen','gelesen',0,'p',['ein Buch','die Zeitung','eine Geschichte','einen Brief'],null],
-['isst','essen','gegessen',0,'p',['einen Apfel','eine Pizza','ein Brot','einen Kuchen'],null],
-['kauft','kaufen','gekauft',0,'p',['ein Fahrrad','einen Ball','ein Heft','eine Jacke'],null],
-['backt','backen','gebacken',0,'p',['einen Kuchen','ein Brot','einen Apfelkuchen'],null],
-['malt','malen','gemalt',0,'p',['ein Bild','einen Baum','ein Haus'],null],
-['sucht','suchen','gesucht',0,'p',['den Schlüssel','ein Buch','die Brille'],null],
-['trägt','tragen','getragen',0,'p',['eine Tasche','einen Rucksack','die Kiste'],null],
-['schreibt','schreiben','geschrieben',0,'p',['einen Brief','eine Geschichte','einen Text'],null],
-['hört','hören','gehört',0,'p',['ein Lied','die Musik','das Radio'],null],
-['lobt','loben','gelobt',0,'p',['den Schüler','die Klasse','den Hund'],null],
-['besucht','besuchen','besucht',0,'p',['die Oma','den Onkel','die Freundin'],null],
-['hilft','helfen','geholfen',0,'p',null,['dem Kind','der Lehrerin','meinem Freund','der Nachbarin','den Kindern']],
-['dankt','danken','gedankt',0,'p',null,['der Lehrerin','dem Trainer','meiner Oma','den Eltern']],
-['antwortet','antworten','geantwortet',0,'p',null,['dem Lehrer','der Frau','den Schülern','meinem Bruder']],
-['gehört','gehören','gehört',0,'t',null,['dem Kind','meiner Schwester','dem Nachbarn','den Eltern']],
+['liest','lesen','gelesen',0,'p',['ein Buch','die Zeitung','eine Geschichte','einen Brief','ein spannendes Buch','das Buch ^der Lehrerin'],null],
+['isst','essen','gegessen',0,'p',['einen Apfel','eine Pizza','ein Brot','einen Kuchen','einen roten Apfel'],null],
+['kauft','kaufen','gekauft',0,'p',['ein Fahrrad','einen Ball','ein Heft','eine Jacke','ein neues Fahrrad'],null],
+['backt','backen','gebacken',0,'p',['einen Kuchen','ein Brot','einen Apfelkuchen','einen leckeren Kuchen'],null],
+['malt','malen','gemalt',0,'p',['ein Bild','einen Baum','ein Haus','ein buntes Bild'],null],
+['sucht','suchen','gesucht',0,'p',['den Schlüssel','ein Buch','die Brille','den alten Schlüssel','das Fahrrad ^des Nachbarn'],null],
+['trägt','tragen','getragen',0,'p',['eine Tasche','einen Rucksack','die Kiste','eine schwere Tasche'],null],
+['schreibt','schreiben','geschrieben',0,'p',['einen Brief','eine Geschichte','einen Text','einen langen Brief'],null],
+['hört','hören','gehört',0,'p',['ein Lied','die Musik','das Radio','ein neues Lied'],null],
+['lobt','loben','gelobt',0,'p',['den Schüler','die Klasse','den Hund','den fleissigen Schüler','den Hund ^des Nachbarn'],null],
+['besucht','besuchen','besucht',0,'p',['die Oma','den Onkel','die Freundin','die alte Freundin','die Eltern ^der Freundin'],null],
+['hilft','helfen','geholfen',0,'p',null,['dem Kind','der Lehrerin','meinem Freund','der Nachbarin','den Kindern','dem kleinen Kind','dem Bruder ^der Lehrerin']],
+['dankt','danken','gedankt',0,'p',null,['der Lehrerin','dem Trainer','meiner Oma','den Eltern','der netten Lehrerin']],
+['antwortet','antworten','geantwortet',0,'p',null,['dem Lehrer','der Frau','den Schülern','meinem Bruder','meinem besten Freund']],
+['gehört','gehören','gehört',0,'t',null,['dem Kind','meiner Schwester','dem Nachbarn','den Eltern','dem kleinen Kind']],
 ['schenkt','schenken','geschenkt',0,'p',['ein Buch','einen Ball','eine Blume'],['dem Kind','der Oma','meinem Freund','den Eltern']],
 ['zeigt','zeigen','gezeigt',0,'p',['das Foto','den Weg','ein Bild'],['dem Kind','der Klasse','meinem Freund','den Gästen']],
 ['gibt','geben','gegeben',0,'p',['ein Heft','einen Stift','den Ball'],['dem Kind','der Schülerin','meinem Bruder','den Schülern']],
-['bringt','bringen','gebracht',0,'p',['einen Tee','die Tasche','den Brief'],['der Oma','dem Lehrer','meiner Mutter','den Gästen']]
+['bringt','bringen','gebracht',0,'p',['einen Tee','die Tasche','den Brief'],['der Oma','dem Lehrer','meiner Mutter','den Gästen']],
+['gedenkt','gedenken','gedacht',0,'p',null,null,1,['der Opfer','der Toten','der Verstorbenen']],
+['bedarf','bedürfen','bedurft',0,'p',null,null,1,['der Hilfe','der Ruhe','der Unterstützung']],
+['beschuldigt','beschuldigen','beschuldigt',0,'p',['den Mann','die Frau','den Nachbarn'],null,0,['des Diebstahls','der Lüge']]
 ];
+const SUBC=[['Anna','f',1],['Tim','m',1],['Mein Bruder','m'],['Meine Schwester','f'],['Der Nachbar','m'],['Die Nachbarin','f'],['Der Lehrer','m'],['Die Trainerin','f'],['Die Kinder','p'],['Unsere Eltern','p']];
+const PNB={m:['Lehrer','Pilot','Arzt','Koch','Trainer','mein bester Freund','ein guter Schüler','ein netter Nachbar'],f:['Lehrerin','Pilotin','Ärztin','Köchin','Trainerin','meine beste Freundin','eine gute Schülerin','eine nette Nachbarin'],p:['Schüler','Freunde','gute Freunde','nette Nachbarn','Lehrer']};
 const ADVP=['heute','oft','manchmal','leider','dort','hier','jeden Tag','immer','meistens'];
 const ADVPAST=['gestern','gestern Abend','letzte Woche','vorhin'];
 const ADVFUT=['bald','morgen','nächste Woche','später'];
@@ -349,48 +357,77 @@ const PGM=['im Garten','im Park','vor dem Haus','auf der Wiese'].concat(PGT);
 const PGP=['in der Schule','in der Küche','auf dem Sportplatz'];
 const rn=a=>a[Math.floor(Math.random()*a.length)];
 const lowF=t=>/^(Der|Die|Das|Mein|Meine|Unsere|Unser)\b/.test(t)?t.charAt(0).toLowerCase()+t.slice(1):t;
+const txt0=x=>Array.isArray(x)?x[0]:x;
+/* Eintrag wählen; mit Attribut-Pinsel bevorzugt Nominalgruppen mit Beifügungen */
+const pickNP=(list,attrOk)=>{const l=list.filter(x=>attrOk||txt0(x).indexOf(' ^')<0);if(attrOk&&Math.random()<.55){const r=l.filter(x=>txt0(x).replace(' ^',' ').split(' ').length>=3);if(r.length)return rn(r);}return rn(l);};
+const NP=(r,s)=>{const n=npParse(s);return{r:r,w:n.w,at:n.at};};
+const finish=(parts,proper,subj)=>{
+  const toks=[],roles=[],attr=[];
+  parts.forEach((p,pi)=>p.w.forEach((w,wi)=>{let x=w;if(p===subj&&!proper&&pi>0&&wi===0)x=lowF(x);toks.push(x);roles.push(p.r);attr.push(!!(p.at&&p.at.indexOf(wi)>=0));}));
+  toks[0]=toks[0].charAt(0).toUpperCase()+toks[0].slice(1);
+  toks[toks.length-1]+='.';
+  return{toks:toks,roles:roles,attr:attr,present:[...new Set(roles)]};
+};
+function genCop(ok){
+  const s=rn(SUBC),k=s[1],pl=k==='p',c=Math.floor(Math.random()*3);
+  const sg=['ist','wird','bleibt'],pg=['sind','werden','bleiben'];
+  const perfekt=c>0&&Math.random()<.3;
+  const subj={r:'Subjekt',w:[s[0]],at:[]};
+  const fin=perfekt?(pl?'sind':'ist'):(pl?pg[c]:sg[c]);
+  const fv={r:'Prädikat',w:[fin]},pt=perfekt?{r:'Prädikat',w:[c===1?'geworden':'geblieben']}:null;
+  let pn=rn(PNB[k].filter(x=>ok('Attribut')||x.split(' ').length===1||Math.random()<.2));
+  const pnp=NP('Gleichsetzungsnominativ',pn);
+  let adv=null;
+  if(!perfekt&&ok('Adverbiale')&&Math.random()<.4)adv={r:'Adverbiale',w:[rn([['jetzt'],['bald','später'],['immer','weiterhin']][c])]};
+  const front=adv&&Math.random()<.5;
+  const parts=front?[adv,fv,subj,pnp]:adv?[subj,fv,adv,pnp]:[subj,fv,pnp];
+  if(pt)parts.push(pt);
+  const g=finish(parts,!!s[2],subj);
+  g.stufe=(adv||perfekt)?2:1;g.perfekt=perfekt;return g;
+}
 function genSatz(allowed){
   const ok=r=>!allowed||allowed.has(r);
-  const cand=VB.filter(v=>(!v[5]||ok('Akkusativobjekt'))&&(!v[6]||ok('Dativobjekt')));
+  if(ok('Gleichsetzungsnominativ')&&Math.random()<(allowed?.3:.1))return genCop(ok);
+  const attrOk=ok('Attribut');
+  const cand=VB.filter(v=>(!v[5]||ok('Akkusativobjekt'))&&(!v[6]||ok('Dativobjekt'))&&(!v[8]||ok('Genitivobjekt')));
   const v=rn(cand),grp=v[4];
-  const sp=rn(grp==='p'?SUBP:grp==='a'?SUBA:grp==='d'?SUBD:grp==='t'?SUBT:SUBP.concat(SUBA));
+  const sp=pickNP(grp==='p'?SUBP:grp==='a'?SUBA:grp==='d'?SUBD:grp==='t'?SUBT:SUBP.concat(SUBA),attrOk);
   const pl=!!sp[1],proper=!!sp[2];
   const advOk=ok('Adverbiale'),pgOk=ok('Präpositionalgefüge');
-  const pastAdv=advOk&&Math.random()<.25,futAdv=advOk&&!pastAdv&&Math.random()<.12;
-  const perfekt=pastAdv||(!futAdv&&Math.random()<.35);
+  const pastAdv=!v[7]&&advOk&&Math.random()<.25,futAdv=advOk&&!pastAdv&&Math.random()<.12;
+  const perfekt=!v[7]&&(pastAdv||(!futAdv&&Math.random()<.35));
   const nAdv=advOk&&Math.random()<.55?1:0,nPg=pgOk&&Math.random()<.5?1:0;
-  const subj={r:'Subjekt',w:sp[0].split(' ')};
+  const subj=NP('Subjekt',sp[0]);
   const fin=perfekt?(v[3]?(pl?'sind':'ist'):(pl?'haben':'hat')):(pl?v[1]:v[0]);
   const fv={r:'Prädikat',w:[fin]},pt=perfekt?{r:'Prädikat',w:[v[2]]}:null;
-  let adv=null,pg=null,ao=null,dob=null;
+  let adv=null,pg=null,ao=null,dob=null,gob=null;
   if(nAdv)adv={r:'Adverbiale',w:rn(pastAdv?ADVPAST:futAdv?ADVFUT:ADVP).split(' ')};
-  if(nPg)pg={r:'Präpositionalgefüge',w:rn(v[3]?PGT:(grp==='p'||grp==='pa')?PGM.concat(PGP):PGM).split(' ')};
-  if(v[6])dob={r:'Dativobjekt',w:rn(v[6]).split(' ')};
-  if(v[5])ao={r:'Akkusativobjekt',w:rn(v[5]).split(' ')};
-  if(!adv&&!pg&&!ao&&!dob&&advOk){adv={r:'Adverbiale',w:rn(ADVP).split(' ')};}
-  const opts=[subj,subj,subj];if(adv)opts.push(adv);if(pg)opts.push(pg);if(ao&&Math.random()<.3)opts.push(ao);if(dob&&Math.random()<.2)opts.push(dob);
+  if(nPg){const s=rn(v[3]?PGT:(grp==='p'||grp==='pa')?PGM.concat(PGP):PGM).split(' ');pg={r:'Präpositionalgefüge',w:s,at:attrOk?s.map((_,i)=>i).filter(i=>i>0&&i<s.length-1):[]};}
+  if(v[6])dob=NP('Dativobjekt',pickNP(v[6],attrOk));
+  if(v[5])ao=NP('Akkusativobjekt',pickNP(v[5],attrOk));
+  if(v[8])gob=NP('Genitivobjekt',rn(v[8]));
+  if(!attrOk){[subj,dob,ao,gob].forEach(p=>{if(p)p.at=[];});}
+  if(!adv&&!pg&&!ao&&!dob&&!gob&&advOk){adv={r:'Adverbiale',w:rn(ADVP).split(' ')};}
+  const opts=[subj,subj,subj];if(adv)opts.push(adv);if(pg)opts.push(pg);if(ao&&Math.random()<.3)opts.push(ao);if(dob&&Math.random()<.2)opts.push(dob);if(gob&&Math.random()<.25)opts.push(gob);
   const vf=rn(opts);
-  const rest=[adv,dob,ao,pg].filter(x=>x&&x!==vf);
+  const rest=[adv,dob,ao,gob,pg].filter(x=>x&&x!==vf);
   const parts=[];
   if(vf===subj){parts.push(subj,fv);rest.forEach(x=>parts.push(x));}
   else{parts.push(vf,fv,subj);rest.forEach(x=>parts.push(x));}
   if(pt)parts.push(pt);
-  const toks=[],roles=[];
-  parts.forEach((p,pi)=>p.w.forEach((w,wi)=>{let x=w;if(p===subj&&!proper&&pi>0&&wi===0)x=lowF(x);toks.push(x);roles.push(p.r);}));
-  toks[0]=toks[0].charAt(0).toUpperCase()+toks[0].slice(1);
-  toks[toks.length-1]+='.';
-  const present=[...new Set(roles)];
-  const stufe=(present.length>=5||(perfekt&&vf!==subj&&present.length>=4))?3:(present.length>=4||vf!==subj||perfekt)?2:1;
-  return{toks,roles,present,stufe,perfekt};
+  const g=finish(parts,proper,subj),present=g.present;
+  g.stufe=(present.length>=5||(perfekt&&vf!==subj&&present.length>=4))?3:(present.length>=4||vf!==subj||perfekt)?2:1;
+  g.perfekt=perfekt;return g;
 }
-const SGKEY={'Prädikat':'verb','Subjekt':'nom','Akkusativobjekt':'akk','Dativobjekt':'dat','Präpositionalgefüge':'art','Adverbiale':'adv'};
+const SGKEY={'Prädikat':'verb','Subjekt':'nom','Akkusativobjekt':'akk','Dativobjekt':'dat','Präpositionalgefüge':'art','Adverbiale':'adv','Genitivobjekt':'gen','Gleichsetzungsnominativ':'pn','Attribut':'att'};
 /* Widget: mehrere Satzglieder im selben Satz anmalen (Pinsel oben, Wort antippen) */
 const sgpaint=el=>{
-  const known=(el.dataset.known||'').split(',').filter(Boolean),allowed=new Set(known);
+  const known=(el.dataset.known||'').split(',').filter(Boolean).filter(k=>(LVG[k]||1)<=GT.lv()),allowed=new Set(known);
+  const truth=i=>(allowed.has('Attribut')&&g.attr[i])?'Attribut':g.roles[i];
   let g,paint,brush,done;
   const esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
   function draw(){
-    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">Wähle oben ein Satzglied und tippe dann im Satz die Wörter an, die dazu gehören. Jedes Wort bekommt eine Farbe.</div>'+
+    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">Wähle oben ein Satzglied und tippe dann im Satz die Wörter an, die dazu gehören. Jedes Wort bekommt eine Farbe.'+(allowed.has('Attribut')?' Der Kern (das Nomen) bekommt die Farbe des Satzglieds, Artikel und Beifügungen sind Attribute.':'')+'</div>'+
      '<div class="brush">'+known.map(k=>'<button class="f-'+SGKEY[k]+(brush===k?' on':'')+'" data-k="'+k+'">'+k+'</button>').join('')+'</div>'+
      '<div class="flow">'+g.toks.map((x,i)=>{const pk=paint[i],cl=pk?' f-'+SGKEY[pk]+' p-'+SGKEY[pk]:'';return '<button class="chip tok'+cl+'" data-i="'+i+'"'+(pk?' style="background:var(--b);border-color:var(--c);color:var(--t)"':'')+'>'+esc(x)+'</button>';}).join('')+'</div>'+
      '<div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem;gap:.5rem"><button class="btn primary" data-x="chk">Überprüfen</button><button class="btn" data-x="new">🔄 Neuer Satz</button></div>';
@@ -404,10 +441,10 @@ const sgpaint=el=>{
     if(b.dataset.x==='chk'){
       if(!Object.keys(paint).length)return;
       done=true;let right=0;const ac=el.querySelector('.actions');if(ac)ac.remove();
-      el.querySelectorAll('.flow .tok').forEach(x=>{const i=Number(x.dataset.i),tr=g.roles[i],ok=paint[i]===tr;if(ok)right++;
+      el.querySelectorAll('.flow .tok').forEach(x=>{const i=Number(x.dataset.i),tr=truth(i),ok=paint[i]===tr;if(ok)right++;
         x.disabled=true;x.className='chip tok f-'+SGKEY[tr]+' p-'+SGKEY[tr]+(ok?' right':' wrong');x.setAttribute('style','background:var(--b);border-color:var(--c);color:var(--t)'+(ok?'':';outline:3px solid var(--bad);outline-offset:1px'));});
       const n=g.toks.length,all=right===n;
-      const list=known.filter(k=>g.roles.includes(k)).map(k=>'<b>'+k+':</b> «'+g.toks.filter((_,i)=>g.roles[i]===k).map(x=>x.replace(/\.$/,'')).join(' … ')+'»').join('<br>');
+      const list=known.filter(k=>g.toks.some((_,i)=>truth(i)===k)).map(k=>'<b>'+k+':</b> «'+g.toks.filter((_,i)=>truth(i)===k).map(x=>x.replace(/\.$/,'')).join(' … ')+'»').join('<br>');
       el.querySelector('.tfb').innerHTML='<div class="fb '+(all?'ok':'err')+'"><b>'+(all?'✓ Alles richtig!':'✗ '+right+' von '+n+' Wörtern richtig. Rot umrandet = falsch gemalt.')+'</b><div style="margin-top:.4rem">'+list+'</div></div><div style="margin-top:.7rem"><button class="btn primary" data-x="new">Nächster Satz →</button></div>';
       return;
     }
@@ -417,16 +454,20 @@ const sgpaint=el=>{
   fresh();
 };
 const SATZSEEN=new Set();
-for(let i=0;i<260;i++){
+for(let i=0;i<420;i++){
   const g=genSatz(),key=g.toks.join(' ');if(SATZSEEN.has(key))continue;SATZSEEN.add(key);
+  const lvS=Math.max(g.stufe===3?2:1,...g.present.map(r=>LVG[r]||1));
   g.present.forEach(r=>{
     const targets=[];g.roles.forEach((x,k)=>{if(x===r)targets.push(k);});
     let txt='';targets.forEach((k,j)=>{txt+=(j===0?'':(k===targets[j-1]+1?' ':' … '))+g.toks[k].replace(/\.$/,'');});
-    task.push({typ:'markieren',stufe:g.stufe,lv:g.stufe===3?2:1,cats:[GL_CAT[r]],gl:r,tokens:g.toks.slice(),targets,instr:GL_INSTR[r],why:'<b>'+r+':</b> «'+txt+'». '+GL_Q[r]});
+    task.push({typ:'markieren',stufe:g.stufe,lv:lvS,cats:[GL_CAT[r]],gl:r,tokens:g.toks.slice(),targets,instr:GL_INSTR[r],why:'<b>'+r+':</b> «'+txt+'». '+GL_Q[r]});
   });
+  const at=[];g.attr.forEach((a,k)=>{if(a)at.push(k);});
+  if(at.length&&Math.random()<.6){let txt='';at.forEach((k,j)=>{txt+=(j===0?'':(k===at[j-1]+1?' ':' … '))+g.toks[k].replace(/\.$/,'');});
+    task.push({typ:'markieren',stufe:g.stufe,lv:lvS,cats:['sg5'],gl:'Attribut',tokens:g.toks.slice(),targets:at,instr:GL_INSTR['Attribut'],why:'<b>Attribut:</b> «'+txt+'». '+GL_Q['Attribut']});}
 }
-const TAPORD=['praedikat','subjekt','ao','do','pg','adverbiale'];
-const TAPGL={praedikat:'Prädikat',subjekt:'Subjekt',ao:'Akkusativobjekt','do':'Dativobjekt',pg:'Präpositionalgefüge',adverbiale:'Adverbiale'};
+const TAPORD=['praedikat','subjekt','ao','do','go','pg','adverbiale','attribut','pradikativ'];
+const TAPGL={praedikat:'Prädikat',subjekt:'Subjekt',ao:'Akkusativobjekt','do':'Dativobjekt',pg:'Präpositionalgefüge',adverbiale:'Adverbiale',go:'Genitivobjekt',attribut:'Attribut',pradikativ:'Gleichsetzungsnominativ'};
 
 const SECS=[
 {id:'farben',title:'Die Satzglieder und ihre Farben',short:'Farben',min:6,note:'Überblick mit Farbcode. Diese Farben verwenden wir auf allen Folien und im Merkblatt. Jedes Satzglied wird danach auf einer eigenen Folie genau erklärt. Das Attribut ist kein eigenes Satzglied, es gehört zu einem Nomen.',
