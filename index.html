@@ -608,7 +608,7 @@ function renderTry(el){
     el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+(t.typ==='ktap'?'Tippe zwischen zwei Wörter, wo ein Komma stehen muss. Nenne dann das Signalwort und die Regel.':'Tippe zwischen zwei Wörter, wo ein Satzglied endet.')+'</div><div class="flow cutflow'+(t.typ==='ktap'?' kf':'')+'">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="tcut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem"><button class="btn primary" data-a="tchk">Überprüfen</button></div>';
     return;}
   if(!t.opts&&t.tokens&&t.targets){el._sel=new Set();delete el.dataset.done;
-    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+(t.instr||TY()[t.typ].instr)+'</div><div class="flow tapflow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="ttok" data-i="'+i+'">'+x+'</button>').join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem"><button class="btn primary" data-a="tchk">Überprüfen</button></div>';
+    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+(t.instr||TY()[t.typ].instr)+'</div><div class="flow tapflow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="ttok" data-i="'+i+'">'+x+'</button>').join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem;gap:.5rem"><button class="btn primary" data-a="tchk">Überprüfen</button><button class="btn" data-a="tnext">🔄 Neuer Satz</button></div>';
     return;}
   el._o=shuffle(t.opts);
   el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div><div class="opts">'+
@@ -997,7 +997,8 @@ document.addEventListener('click',e=>{
    case 'tchk':tryCheck(b);break;
    case 'tmv':tryMove(b,false);break;
    case 'tmvreset':tryMove(b,true);break;
-   case 'uetype':{const box=b.closest('.uebox'),el=box.querySelector('[data-w="try"]');el.dataset.types=b.dataset.t;if(b.dataset.ans!==undefined){if(b.dataset.ans)el.dataset.ans=b.dataset.ans;else delete el.dataset.ans;}if(b.dataset.t==='markieren')delete el.dataset.cats;box.querySelectorAll('[data-a="uetype"]').forEach(x=>x.classList.toggle('on',x===b));delete el.dataset.done;renderTry(el);break;}
+   case 'uepaint':{const box=b.closest('.uebox');box.querySelector('[data-w="try"]').hidden=true;box.querySelector('.sgp').hidden=false;box.querySelectorAll('[data-a="uetype"],[data-a="uepaint"]').forEach(x=>x.classList.toggle('on',x===b));break;}
+   case 'uetype':{const box=b.closest('.uebox'),el=box.querySelector('[data-w="try"]');el.hidden=false;const sg=box.querySelector('.sgp');if(sg)sg.hidden=true;el.dataset.types=b.dataset.t;if(b.dataset.ans!==undefined){if(b.dataset.ans)el.dataset.ans=b.dataset.ans;else delete el.dataset.ans;}if(b.dataset.t==='markieren')delete el.dataset.cats;box.querySelectorAll('[data-a="uetype"]').forEach(x=>x.classList.toggle('on',x===b));delete el.dataset.done;renderTry(el);break;}
    case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
    case 'resetask':S.resetAsk=true;render();break;
    case 'resetno':S.resetAsk=false;render();break;
@@ -1218,7 +1219,9 @@ GT.chapter=function(d){
   const catName=Object.fromEntries(cats.map(k=>[k,d.cats[k]]));
   const TY={};Object.keys(d.types).forEach(k=>TY[k]=Object.assign({icon:ICONS[k],ref:d.sections[0].id,hint:d.hint||''},d.types[k]));
   let id=1;const TASKS=d.tasks.map(t=>Object.assign({id:id++,lv:t.lv||(t.stufe===3?2:1),cats:t.cats||[cats[0]]},t));
-  const sec=s=>()=>'<h2>'+s.title+'</h2>'+(typeof s.html==='function'?s.html():s.html);
+  const stBox=s=>{const tp=s.uebung&&s.uebung.tap;if(!tp||!TY.markieren||!TASKS.some(t=>t.typ==='markieren'&&t.gl===tp.own))return '';
+    return '<div class="card uebox noprint" style="margin-top:1rem"><h3 style="margin-top:0">Probier es aus</h3><div class="uechips"><button class="btn sm on" data-a="uetype" data-t="markieren" data-ans="'+tp.own+'">👆 '+tp.own+' im Satz antippen</button>'+(tp.all.length>1?'<button class="btn sm" data-a="uepaint">🎨 Alle bisherigen anmalen</button>':'')+'</div>'+GT.tryW('markieren','',tp.own)+(tp.all.length>1?'<div class="try sgp" data-w="sgpaint" data-known="'+tp.all.join(',')+'" hidden></div>':'')+'</div>';};
+  const sec=s=>()=>'<h2>'+s.title+'</h2>'+(typeof s.html==='function'?s.html():s.html)+stBox(s);
   const SEC={ziele:()=>'<div class="card"><h3>Das lernst du hier</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+d.goals.map(g=>'<li>'+g+'</li>').join('')+'</ul></div>'};
   const secs=d.sections.filter(s=>!s.teacherOnly);
   secs.forEach(s=>SEC[s.id]=sec(s));
@@ -1235,10 +1238,10 @@ GT.chapter=function(d){
      if(!s.uebung)return [base];
      const u=s.uebung,tys=String(u.types).split(',').filter(k=>TY[k]);
      const tp=u.tap&&TY.markieren&&TASKS.some(t=>t.typ==='markieren'&&t.gl===u.tap.own)?u.tap:null,A0=u.ans||'';
-     const chips=(tp?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="markieren" data-ans="'+tp.own+'">👆 '+tp.own+' im Satz antippen</button>'+(tp.all.length>1?'<button class="btn sm" data-a="uetype" data-t="markieren" data-ans="'+tp.all.join('|')+'">👆 Alle bisherigen antippen</button>':'')+(tys.length>1?'<button class="btn sm" data-a="uetype" data-t="'+tys.join(',')+'" data-ans="'+A0+'">Alle Aufgaben</button>':'')+tys.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'" data-ans="'+A0+'">'+(TY[k].icon||'')+' '+TY[k].label+'</button>').join('')+'</div>':
+     const chips=(tp?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="markieren" data-ans="'+tp.own+'">👆 '+tp.own+' im Satz antippen</button>'+(tp.all.length>1?'<button class="btn sm" data-a="uepaint">🎨 Alle bisherigen anmalen</button>':'')+(tys.length>1?'<button class="btn sm" data-a="uetype" data-t="'+tys.join(',')+'" data-ans="'+A0+'">Alle Aufgaben</button>':'')+tys.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'" data-ans="'+A0+'">'+(TY[k].icon||'')+' '+TY[k].label+'</button>').join('')+'</div>':
        (tys.length>1?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="'+tys.join(',')+'" data-ans="'+A0+'">Alle Aufgaben</button>'+tys.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'" data-ans="'+A0+'">'+(TY[k].icon||'')+' '+TY[k].label+'</button>').join('')+'</div>':''));
      return [base,{id:s.id+'-ue',title:'Übung: '+(u.title||s.short||s.title),min:u.min||5,lv:u.lv||s.lv,p:'',note:u.note||'Gemeinsam vorne lösen: Klasse antworten lassen, Antwort begründen, dann «Nächste Aufgabe». Oben kann man den Aufgabentyp wählen.',
-       html:()=>'<div class="noprint uebox"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam üben:</b> Eine Aufgabe nach der anderen. Antwort begründen lassen, dann «Nächste Aufgabe».</div>'+chips+(tp?GT.tryW('markieren','',tp.own):GT.tryW(tys.join(','),u.cats,u.ans))+'</div>'}];})))
+       html:()=>'<div class="noprint uebox"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam üben:</b> Eine Aufgabe nach der anderen. Antwort begründen lassen, dann «Nächste Aufgabe».</div>'+chips+(tp?GT.tryW('markieren','',tp.own)+(tp.all.length>1?'<div class="try sgp" data-w="sgpaint" data-known="'+tp.all.join(',')+'" hidden></div>':''):GT.tryW(tys.join(','),u.cats,u.ans))+'</div>'}];})))
    .concat(ex.length?[{id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:exLive}]:[])
    .concat([{id:'merkblatt',title:'Merkblatt',min:4,p:'hm',note:'Als Merkblatt drucken (Menü «Merkblatt drucken») oder abschreiben lassen.',html:()=>d.merk()},
             {id:'check',title:'Abschluss-Check',min:5,p:'',note:'Als Exit-Ticket einzeln lösen lassen. Das Ergebnis zeigt, wo noch Lücken sind.',html:()=>'<p class="lead">'+(d.tryTypes?'Trenne die Satzglieder.':'Tippe jeweils die richtige Antwort.')+'</p>'+[1,2,3,4].map(()=>GT.tryW(tryAll)).join('')}]);

@@ -349,26 +349,27 @@ const PGM=['im Garten','im Park','vor dem Haus','auf der Wiese'].concat(PGT);
 const PGP=['in der Schule','in der Küche','auf dem Sportplatz'];
 const rn=a=>a[Math.floor(Math.random()*a.length)];
 const lowF=t=>/^(Der|Die|Das|Mein|Meine|Unsere|Unser)\b/.test(t)?t.charAt(0).toLowerCase()+t.slice(1):t;
-function genSatz(){
-  const v=rn(VB),grp=v[4];
+function genSatz(allowed){
+  const ok=r=>!allowed||allowed.has(r);
+  const cand=VB.filter(v=>(!v[5]||ok('Akkusativobjekt'))&&(!v[6]||ok('Dativobjekt')));
+  const v=rn(cand),grp=v[4];
   const sp=rn(grp==='p'?SUBP:grp==='a'?SUBA:grp==='d'?SUBD:grp==='t'?SUBT:SUBP.concat(SUBA));
   const pl=!!sp[1],proper=!!sp[2];
-  const pastAdv=Math.random()<.25,futAdv=!pastAdv&&Math.random()<.12;
+  const advOk=ok('Adverbiale'),pgOk=ok('Präpositionalgefüge');
+  const pastAdv=advOk&&Math.random()<.25,futAdv=advOk&&!pastAdv&&Math.random()<.12;
   const perfekt=pastAdv||(!futAdv&&Math.random()<.35);
-  const nAdv=Math.random()<.55?1:0,nPg=Math.random()<.5?1:0;
-  const R=[];/* Rollen in Reihenfolge der Bausteine */
+  const nAdv=advOk&&Math.random()<.55?1:0,nPg=pgOk&&Math.random()<.5?1:0;
   const subj={r:'Subjekt',w:sp[0].split(' ')};
   const fin=perfekt?(v[3]?(pl?'sind':'ist'):(pl?'haben':'hat')):(pl?v[1]:v[0]);
   const fv={r:'Prädikat',w:[fin]},pt=perfekt?{r:'Prädikat',w:[v[2]]}:null;
-  const mid=[];
   let adv=null,pg=null,ao=null,dob=null;
   if(nAdv)adv={r:'Adverbiale',w:rn(pastAdv?ADVPAST:futAdv?ADVFUT:ADVP).split(' ')};
   if(nPg)pg={r:'Präpositionalgefüge',w:rn(v[3]?PGT:(grp==='p'||grp==='pa')?PGM.concat(PGP):PGM).split(' ')};
   if(v[6])dob={r:'Dativobjekt',w:rn(v[6]).split(' ')};
   if(v[5])ao={r:'Akkusativobjekt',w:rn(v[5]).split(' ')};
-  if(!adv&&!pg&&!ao&&!dob){adv={r:'Adverbiale',w:rn(ADVP).split(' ')};}
-  const opts=[subj];if(adv)opts.push(adv);if(pg)opts.push(pg);
-  const vf=rn(opts.concat([subj,subj]));/* Vorfeld */
+  if(!adv&&!pg&&!ao&&!dob&&advOk){adv={r:'Adverbiale',w:rn(ADVP).split(' ')};}
+  const opts=[subj,subj,subj];if(adv)opts.push(adv);if(pg)opts.push(pg);if(ao&&Math.random()<.3)opts.push(ao);if(dob&&Math.random()<.2)opts.push(dob);
+  const vf=rn(opts);
   const rest=[adv,dob,ao,pg].filter(x=>x&&x!==vf);
   const parts=[];
   if(vf===subj){parts.push(subj,fv);rest.forEach(x=>parts.push(x));}
@@ -382,6 +383,39 @@ function genSatz(){
   const stufe=(present.length>=5||(perfekt&&vf!==subj&&present.length>=4))?3:(present.length>=4||vf!==subj||perfekt)?2:1;
   return{toks,roles,present,stufe,perfekt};
 }
+const SGKEY={'Prädikat':'verb','Subjekt':'nom','Akkusativobjekt':'akk','Dativobjekt':'dat','Präpositionalgefüge':'art','Adverbiale':'adv'};
+/* Widget: mehrere Satzglieder im selben Satz anmalen (Pinsel oben, Wort antippen) */
+const sgpaint=el=>{
+  const known=(el.dataset.known||'').split(',').filter(Boolean),allowed=new Set(known);
+  let g,paint,brush,done;
+  const esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  function draw(){
+    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">Wähle oben ein Satzglied und tippe dann im Satz die Wörter an, die dazu gehören. Jedes Wort bekommt eine Farbe.</div>'+
+     '<div class="brush">'+known.map(k=>'<button class="f-'+SGKEY[k]+(brush===k?' on':'')+'" data-k="'+k+'">'+k+'</button>').join('')+'</div>'+
+     '<div class="flow">'+g.toks.map((x,i)=>{const pk=paint[i],cl=pk?' f-'+SGKEY[pk]+' p-'+SGKEY[pk]:'';return '<button class="chip tok'+cl+'" data-i="'+i+'"'+(pk?' style="background:var(--b);border-color:var(--c);color:var(--t)"':'')+'>'+esc(x)+'</button>';}).join('')+'</div>'+
+     '<div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem;gap:.5rem"><button class="btn primary" data-x="chk">Überprüfen</button><button class="btn" data-x="new">🔄 Neuer Satz</button></div>';
+  }
+  function fresh(){g=genSatz(allowed);el._g=g;paint={};brush=brush&&known.includes(brush)?brush:known[0];done=false;draw();}
+  el.onclick=e=>{
+    const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.x==='new'){fresh();return;}
+    if(done)return;
+    if(b.dataset.k){brush=b.dataset.k;el.querySelectorAll('.brush button').forEach(x=>x.classList.toggle('on',x===b));return;}
+    if(b.dataset.x==='chk'){
+      if(!Object.keys(paint).length)return;
+      done=true;let right=0;const ac=el.querySelector('.actions');if(ac)ac.remove();
+      el.querySelectorAll('.flow .tok').forEach(x=>{const i=Number(x.dataset.i),tr=g.roles[i],ok=paint[i]===tr;if(ok)right++;
+        x.disabled=true;x.className='chip tok f-'+SGKEY[tr]+' p-'+SGKEY[tr]+(ok?' right':' wrong');x.setAttribute('style','background:var(--b);border-color:var(--c);color:var(--t)'+(ok?'':';outline:3px solid var(--bad);outline-offset:1px'));});
+      const n=g.toks.length,all=right===n;
+      const list=known.filter(k=>g.roles.includes(k)).map(k=>'<b>'+k+':</b> «'+g.toks.filter((_,i)=>g.roles[i]===k).map(x=>x.replace(/\.$/,'')).join(' … ')+'»').join('<br>');
+      el.querySelector('.tfb').innerHTML='<div class="fb '+(all?'ok':'err')+'"><b>'+(all?'✓ Alles richtig!':'✗ '+right+' von '+n+' Wörtern richtig. Rot umrandet = falsch gemalt.')+'</b><div style="margin-top:.4rem">'+list+'</div></div><div style="margin-top:.7rem"><button class="btn primary" data-x="new">Nächster Satz →</button></div>';
+      return;
+    }
+    const t=b.closest('.tok');if(t){const i=Number(t.dataset.i);if(paint[i]===brush)delete paint[i];else paint[i]=brush;
+      const pk=paint[i];t.className='chip tok'+(pk?' f-'+SGKEY[pk]+' p-'+SGKEY[pk]:'');if(pk)t.setAttribute('style','background:var(--b);border-color:var(--c);color:var(--t)');else t.removeAttribute('style');}
+  };
+  fresh();
+};
 const SATZSEEN=new Set();
 for(let i=0;i<260;i++){
   const g=genSatz(),key=g.toks.join(' ');if(SATZSEEN.has(key))continue;SATZSEEN.add(key);
@@ -514,5 +548,5 @@ GT.chapter({id:'satzglieder',teil:'satz',nr:3,title:'Die Satzglieder benennen',b
   glied:{label:'Satzglied bestimmen',short:'Subjekt, Prädikat, Objekte, Präpositionalgefüge, Adverbiale',instr:'Welches Satzglied ist markiert?',hint:'Stelle die passende Frage: Wer? Was tut? Wen? Wem? Wo? Wann?',ref:'subjekt'},
   frage:{label:'Fragen zu den Satzgliedern',short:'Welche Frage passt?',instr:'Wähle die richtige Frage.',hint:'Schau in der Theorie nach.',ref:'ao'},
   markieren:{icon:'👆',label:'Satzglied antippen',short:'Wörter im Satz antippen',instr:'Tippe die gesuchten Wörter an.',hint:'Stelle die passende Frage: Wer? Was geschieht? Wen? Wem? Wann? Was für ein …? Beginnt es mit einer Präposition?',ref:'subjekt'}},
- sections:SECS,tasks:task,exercises:EX,merk});
+ sections:SECS,tasks:task,exercises:EX,merk,widgets:{sgpaint:sgpaint}});
 })();
