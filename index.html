@@ -406,6 +406,8 @@ function poolFor(cfg){
   const types=cfg.types||new Set(typesAvailable());
   return visibleTasks().filter(t=>types.has(t.typ)&&t.cats.every(f=>cfg.cats.has(f))&&stufeOk(t,cfg.stufe));
 }
+/* Aufgabentypen gleichmässig mischen (damit ein Typ mit vielen Aufgaben nicht alles dominiert) */
+function balance(arr){const g={};arr.forEach(t=>{(g[t.typ]=g[t.typ]||[]).push(t);});const L=shuffle(Object.keys(g)).map(k=>shuffle(g[k]));const out=[];let more=true;while(more){more=false;L.forEach(l=>{if(l.length){out.push(l.shift());more=true;}});}return out;}
 function stufeOk(t,s){return s==='mix'?true:t.stufe===Number(s);}
 function wanted(cfg){return cfg.count==='custom'?Math.max(1,Math.min(100,parseInt(cfg.custom,10)||10)):parseInt(cfg.count,10);}
 
@@ -599,11 +601,14 @@ function render(){
 }
 function renderTry(el){
   const types=el.dataset.types.split(',');
-  const cf=el.dataset.cats?el.dataset.cats.split(','):null;const af=el.dataset.ans?el.dataset.ans.split('|'):null;const pool=visibleTasks().filter(t=>types.includes(t.typ)&&(t.opts||t.cuts)&&(!cf||t.cats.some(c=>cf.includes(c)))&&(!af||af.includes(String(t.answer))));if(!pool.length){el.hidden=true;return;}
+  const cf=el.dataset.cats?el.dataset.cats.split(','):null;const af=el.dataset.ans?el.dataset.ans.split('|'):null;const pool=visibleTasks().filter(t=>types.includes(t.typ)&&(t.opts||t.cuts||(t.tokens&&t.targets))&&(!cf||t.cats.some(c=>cf.includes(c)))&&(!af||af.includes(String(t.answer))||(t.gl&&af.includes(t.gl))));if(!pool.length){el.hidden=true;return;}
   let t,n=0;do{t=pool[Math.floor(Math.random()*pool.length)];n++;}while(String(t.id)===el.dataset.tid&&pool.length>1&&n<20);
   el.dataset.tid=t.id;el._t=t;
   if(t.cuts){el._sel=new Set();delete el.dataset.done;
     el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+(t.typ==='ktap'?'Tippe zwischen zwei Wörter, wo ein Komma stehen muss. Nenne dann das Signalwort und die Regel.':'Tippe zwischen zwei Wörter, wo ein Satzglied endet.')+'</div><div class="flow cutflow'+(t.typ==='ktap'?' kf':'')+'">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="tcut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem"><button class="btn primary" data-a="tchk">Überprüfen</button></div>';
+    return;}
+  if(!t.opts&&t.tokens&&t.targets){el._sel=new Set();delete el.dataset.done;
+    el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+(t.instr||TY()[t.typ].instr)+'</div><div class="flow tapflow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="ttok" data-i="'+i+'">'+x+'</button>').join('')+'</div><div class="tfb" role="status" aria-live="polite"></div><div class="actions" style="justify-content:flex-start;margin-top:.6rem"><button class="btn primary" data-a="tchk">Überprüfen</button></div>';
     return;}
   el._o=shuffle(t.opts);
   el.innerHTML='<span class="pill">Probier es aus</span><div class="instr" style="margin-top:.5rem">'+TY()[t.typ].instr+'</div><div class="sbox">'+(t.prompt||t.sent)+'</div><div class="opts">'+
@@ -625,8 +630,17 @@ function tMoveHTML(el){
   return '<div class="mvbox"><div class="instr" style="margin-top:.8rem">Jetzt verschieben: Tippe ein Satzglied an. Es springt an den Anfang. Das Verb bleibt an zweiter Stelle.</div><div class="flow mvflow">'+ord.map((ci,p)=>'<button class="mvb'+(fx.has(ci)?' fixed':'')+'" data-a="tmv" data-i="'+ci+'">'+words[p]+'</button>').join('')+'</div><div class="mvsent">'+words.join(' ')+'.</div><div style="margin-top:.5rem"><button class="btn sm" data-a="tmvreset">↺ Ursprünglicher Satz</button></div></div>';
 }
 function tryCut(b){const el=b.closest('[data-w="try"]');if(el.dataset.done)return;const i=Number(b.dataset.i);if(el._sel.has(i))el._sel.delete(i);else el._sel.add(i);b.classList.toggle('sel',el._sel.has(i));}
+function tryTok(b){const el=b.closest('[data-w="try"]');if(el.dataset.done)return;const i=Number(b.dataset.i);if(el._sel.has(i))el._sel.delete(i);else el._sel.add(i);b.classList.toggle('sel',el._sel.has(i));}
 function tryCheck(b){
-  const el=b.closest('[data-w="try"]');if(el.dataset.done)return;el.dataset.done='1';const t=el._t,tg=new Set(t.cuts);
+  const el=b.closest('[data-w="try"]');if(el.dataset.done)return;
+  if(el._t&&el._t.tokens&&!el._t.cuts&&!el._t.opts){
+    if(!el._sel.size)return;el.dataset.done='1';const t=el._t,tg=new Set(t.targets);
+    const ok=t.tokens.every((_,i)=>el._sel.has(i)===tg.has(i));
+    el.querySelectorAll('.tok').forEach(x=>{const i=Number(x.dataset.i);x.disabled=true;if(el._sel.has(i)&&tg.has(i))x.classList.add('right');else if(el._sel.has(i))x.classList.add('wrong');else if(tg.has(i))x.classList.add('miss');});
+    el.querySelector('.actions').remove();
+    el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig markiert!':'✗ Nicht ganz richtig.')+'</b> '+(t.why||'')+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
+    return;}
+  el.dataset.done='1';const t=el._t,tg=new Set(t.cuts);
   const ok=[...tg].every(i=>el._sel.has(i))&&[...el._sel].every(i=>tg.has(i));
   el.querySelectorAll('.gap').forEach(g=>{const i=Number(g.dataset.i);g.disabled=true;if(el._sel.has(i)&&tg.has(i))g.classList.add('right');else if(el._sel.has(i))g.classList.add('wrong');else if(tg.has(i))g.classList.add('miss');});
   el.querySelector('.actions').remove();el._ord=null;
@@ -834,7 +848,7 @@ function testInit(){if(!S.test)S.test={chs:new Set(),count:'20',custom:20,timer:
 function testWanted(){const T=S.test;return T.count==='custom'?Math.max(1,Math.min(60,parseInt(T.custom,10)||20)):parseInt(T.count,10);}
 function testAvail(){let n=0;S.test.chs.forEach(id=>{if(GT.chapters[id])n+=withCh(id,()=>visibleTasks().length);});return n;}
 function testBuild(){
-  testInit();const pools=[...S.test.chs].filter(id=>GT.chapters[id]).map(id=>withCh(id,()=>shuffle(visibleTasks().map(t=>Object.assign({},t,{_ch:id})))));
+  testInit();const pools=[...S.test.chs].filter(id=>GT.chapters[id]).map(id=>withCh(id,()=>balance(visibleTasks().map(t=>Object.assign({},t,{_ch:id})))));
   const want=testWanted(),pick=[];let i=0;
   while(pick.length<want&&pools.some(p=>p.length)){const p=pools[i++%pools.length];if(p.length)pick.push(p.shift());}
   return shuffle(pick);
@@ -979,10 +993,11 @@ document.addEventListener('click',e=>{
    case 'tpick':tryPick(b);break;
    case 'tall':{b.closest('.noprint').querySelectorAll('[data-w="try"]').forEach(e=>{delete e.dataset.done;renderTry(e);});break;}
    case 'tcut':tryCut(b);break;
+   case 'ttok':tryTok(b);break;
    case 'tchk':tryCheck(b);break;
    case 'tmv':tryMove(b,false);break;
    case 'tmvreset':tryMove(b,true);break;
-   case 'uetype':{const box=b.closest('.uebox'),el=box.querySelector('[data-w="try"]');el.dataset.types=b.dataset.t;box.querySelectorAll('[data-a="uetype"]').forEach(x=>x.classList.toggle('on',x===b));delete el.dataset.done;renderTry(el);break;}
+   case 'uetype':{const box=b.closest('.uebox'),el=box.querySelector('[data-w="try"]');el.dataset.types=b.dataset.t;if(b.dataset.ans!==undefined){if(b.dataset.ans)el.dataset.ans=b.dataset.ans;else delete el.dataset.ans;}if(b.dataset.t==='markieren')delete el.dataset.cats;box.querySelectorAll('[data-a="uetype"]').forEach(x=>x.classList.toggle('on',x===b));delete el.dataset.done;renderTry(el);break;}
    case 'tnext':{const el=b.closest('[data-w="try"]');delete el.dataset.done;renderTry(el);break;}
    case 'resetask':S.resetAsk=true;render();break;
    case 'resetno':S.resetAsk=false;render();break;
@@ -994,7 +1009,7 @@ document.addEventListener('click',e=>{
    case 'toc':{const el=document.getElementById('s-'+v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});break;}
    case 'rev':{const s=b.nextElementSibling;s.hidden=!s.hidden;b.textContent=s.hidden?b.dataset.l:'Verbergen';break;}
    case 'all':case 'none':{const g=b.dataset.g,on=a==='all';if(g==='types')S.cfg.types=on?new Set(typesAvailable()):new Set();else S.cfg.cats=on?new Set(CK()):new Set();render();break;}
-   case 'start':{const pool=poolFor(S.cfg);if(!pool.length)return;startRound(shuffle(pool).slice(0,wanted(S.cfg)),'Runde');break;}
+   case 'start':{const pool=poolFor(S.cfg);if(!pool.length)return;startRound(shuffle(balance(pool).slice(0,wanted(S.cfg))),'Runde');break;}
    case 'pick':{const R=S.R;if(R.answered)return;R.choice=Number(b.dataset.i);document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');document.getElementById('checkBtn').disabled=false;break;}
    case 'brush':{S.R.brush=b.dataset.k;document.querySelectorAll('.brush button').forEach(x=>x.classList.toggle('on',x===b));break;}
    case 'paint':{const R=S.R;if(R.answered)return;const i=b.dataset.i;CK().forEach(k=>b.classList.remove('f-'+k,'p-'+k));
@@ -1219,9 +1234,11 @@ GT.chapter=function(d){
    .concat([].concat(...d.sections.map(s=>{const base={id:s.id,title:s.title,min:s.min||5,lv:s.lv,p:s.p===undefined?'h':s.p,note:s.note,html:typeof s.html==='function'?s.html:()=>s.html,print:s.print};
      if(!s.uebung)return [base];
      const u=s.uebung,tys=String(u.types).split(',').filter(k=>TY[k]);
-     const chips=tys.length>1?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="'+tys.join(',')+'">Alle Aufgaben</button>'+tys.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'">'+(TY[k].icon||'')+' '+TY[k].label+'</button>').join('')+'</div>':'';
+     const tp=u.tap&&TY.markieren&&TASKS.some(t=>t.typ==='markieren'&&t.gl===u.tap.own)?u.tap:null,A0=u.ans||'';
+     const chips=(tp?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="markieren" data-ans="'+tp.own+'">👆 '+tp.own+' im Satz antippen</button>'+(tp.all.length>1?'<button class="btn sm" data-a="uetype" data-t="markieren" data-ans="'+tp.all.join('|')+'">👆 Alle bisherigen antippen</button>':'')+(tys.length>1?'<button class="btn sm" data-a="uetype" data-t="'+tys.join(',')+'" data-ans="'+A0+'">Alle Aufgaben</button>':'')+tys.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'" data-ans="'+A0+'">'+(TY[k].icon||'')+' '+TY[k].label+'</button>').join('')+'</div>':
+       (tys.length>1?'<div class="uechips"><button class="btn sm on" data-a="uetype" data-t="'+tys.join(',')+'" data-ans="'+A0+'">Alle Aufgaben</button>'+tys.map(k=>'<button class="btn sm" data-a="uetype" data-t="'+k+'" data-ans="'+A0+'">'+(TY[k].icon||'')+' '+TY[k].label+'</button>').join('')+'</div>':''));
      return [base,{id:s.id+'-ue',title:'Übung: '+(u.title||s.short||s.title),min:u.min||5,lv:u.lv||s.lv,p:'',note:u.note||'Gemeinsam vorne lösen: Klasse antworten lassen, Antwort begründen, dann «Nächste Aufgabe». Oben kann man den Aufgabentyp wählen.',
-       html:()=>'<div class="noprint uebox"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam üben:</b> Eine Aufgabe nach der anderen. Antwort begründen lassen, dann «Nächste Aufgabe».</div>'+chips+GT.tryW(tys.join(','),u.cats,u.ans)+'</div>'}];})))
+       html:()=>'<div class="noprint uebox"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam üben:</b> Eine Aufgabe nach der anderen. Antwort begründen lassen, dann «Nächste Aufgabe».</div>'+chips+(tp?GT.tryW('markieren','',tp.own):GT.tryW(tys.join(','),u.cats,u.ans))+'</div>'}];})))
    .concat(ex.length?[{id:'uebungen',title:'Gemeinsame Übungen',min:12,p:'u',note:'Einzel- oder Partnerarbeit, danach Lösung einblenden. Jede Antwort begründen lassen. Dieselbe Folie gibt es als Übungsblatt zum Drucken.',html:exLive}]:[])
    .concat([{id:'merkblatt',title:'Merkblatt',min:4,p:'hm',note:'Als Merkblatt drucken (Menü «Merkblatt drucken») oder abschreiben lassen.',html:()=>d.merk()},
             {id:'check',title:'Abschluss-Check',min:5,p:'',note:'Als Exit-Ticket einzeln lösen lassen. Das Ergebnis zeigt, wo noch Lücken sind.',html:()=>'<p class="lead">'+(d.tryTypes?'Trenne die Satzglieder.':'Tippe jeweils die richtige Antwort.')+'</p>'+[1,2,3,4].map(()=>GT.tryW(tryAll)).join('')}]);

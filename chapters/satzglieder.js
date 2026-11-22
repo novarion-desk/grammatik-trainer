@@ -305,6 +305,95 @@ const SL=(k,emo,name,frage,lead,steps,head,rows,callouts)=>
  callouts.map(c=>'<div class="callout" style="margin-top:.7rem;background:var(--b);border-color:var(--c);color:var(--t)">'+c+'</div>').join('')+'</div>';
 const MKS=(k,t)=>mk(k,t);
 
+/* ===== Satzgenerator für «Satzglied antippen» (Folien und Schüler): unbegrenzt viele Sätze aus Bausteinen ===== */
+const GL_INSTR={'Subjekt':'Tippe alle Wörter des Subjekts an (Wer oder was?).','Prädikat':'Tippe alle Wörter des Prädikats an (alle Teile des Verbs).','Akkusativobjekt':'Tippe alle Wörter des Akkusativobjekts an (Wen oder was?).','Dativobjekt':'Tippe alle Wörter des Dativobjekts an (Wem?).','Präpositionalgefüge':'Tippe alle Wörter des Präpositionalgefüges an.','Adverbiale':'Tippe das Adverbiale an (Wörter ohne Präposition: Wann? Wo?).'};
+const GL_Q={'Subjekt':'Frage: Wer oder was …?','Prädikat':'Das Prädikat besteht aus allen Verbteilen.','Akkusativobjekt':'Frage: Wen oder was …?','Dativobjekt':'Frage: Wem …?','Präpositionalgefüge':'Es beginnt mit einer Präposition.','Adverbiale':'Es hat keine Präposition und sagt wann, wo oder wie.'};
+const GL_CAT={'Subjekt':'sg2','Prädikat':'sg2','Akkusativobjekt':'sg3','Dativobjekt':'sg3','Präpositionalgefüge':'sg4','Adverbiale':'sg4'};
+/* Alte Aufgaben «markieren»: Satzglied aus der Anweisung ableiten */
+task.filter(t=>t.typ==='markieren'&&!t.gl).forEach(t=>{const i=t.instr||'';t.gl=/Subjekts/.test(i)?'Subjekt':/Prädikats/.test(i)?'Prädikat':/Akkusativobjekts/.test(i)?'Akkusativobjekt':/Dativobjekts/.test(i)?'Dativobjekt':/Präpositionalgefüges/.test(i)?'Präpositionalgefüge':/Adverbiale/.test(i)?'Adverbiale':/Attribut/.test(i)?'Attribut':'';});
+const GP=(sg,pl)=>({sg:sg,pl:pl});
+const SUBP=[['Der Lehrer',0],['Meine Schwester',0],['Die Kinder',1],['Anna',0,1],['Mein Bruder',0],['Die Schülerin',0],['Der Nachbar',0],['Die Frau',0],['Unsere Eltern',1],['Die Mädchen',1],['Tim',0,1],['Die Schüler',1],['Der kleine Junge',0],['Die Trainerin',0]];
+const SUBA=[['Der Hund',0],['Die Katze',0],['Die Hunde',1],['Das Pferd',0],['Die Vögel',1]];
+const SUBD=[['Der Hund',0],['Die Hunde',1]];
+const SUBT=[['Das Fahrrad',0],['Das Buch',0],['Die Jacke',0],['Der Ball',0],['Die Tasche',0]];
+/* Verben: [3.Sg, 3.Pl, Partizip, Hilfsverb(0=hat,1=ist), Subjektgruppe, AO-Liste, DO-Liste] */
+const VB=[
+['schläft','schlafen','geschlafen',0,'pa',null,null],['lacht','lachen','gelacht',0,'p',null,null],['arbeitet','arbeiten','gearbeitet',0,'p',null,null],
+['singt','singen','gesungen',0,'p',null,null],['spielt','spielen','gespielt',0,'pa',null,null],['wartet','warten','gewartet',0,'p',null,null],
+['bellt','bellen','gebellt',0,'d',null,null],['läuft','laufen','gelaufen',1,'pa',null,null],['kommt','kommen','gekommen',1,'p',null,null],
+['liest','lesen','gelesen',0,'p',['ein Buch','die Zeitung','eine Geschichte','einen Brief'],null],
+['isst','essen','gegessen',0,'p',['einen Apfel','eine Pizza','ein Brot','einen Kuchen'],null],
+['kauft','kaufen','gekauft',0,'p',['ein Fahrrad','einen Ball','ein Heft','eine Jacke'],null],
+['backt','backen','gebacken',0,'p',['einen Kuchen','ein Brot','einen Apfelkuchen'],null],
+['malt','malen','gemalt',0,'p',['ein Bild','einen Baum','ein Haus'],null],
+['sucht','suchen','gesucht',0,'p',['den Schlüssel','ein Buch','die Brille'],null],
+['trägt','tragen','getragen',0,'p',['eine Tasche','einen Rucksack','die Kiste'],null],
+['schreibt','schreiben','geschrieben',0,'p',['einen Brief','eine Geschichte','einen Text'],null],
+['hört','hören','gehört',0,'p',['ein Lied','die Musik','das Radio'],null],
+['lobt','loben','gelobt',0,'p',['den Schüler','die Klasse','den Hund'],null],
+['besucht','besuchen','besucht',0,'p',['die Oma','den Onkel','die Freundin'],null],
+['hilft','helfen','geholfen',0,'p',null,['dem Kind','der Lehrerin','meinem Freund','der Nachbarin','den Kindern']],
+['dankt','danken','gedankt',0,'p',null,['der Lehrerin','dem Trainer','meiner Oma','den Eltern']],
+['antwortet','antworten','geantwortet',0,'p',null,['dem Lehrer','der Frau','den Schülern','meinem Bruder']],
+['gehört','gehören','gehört',0,'t',null,['dem Kind','meiner Schwester','dem Nachbarn','den Eltern']],
+['schenkt','schenken','geschenkt',0,'p',['ein Buch','einen Ball','eine Blume'],['dem Kind','der Oma','meinem Freund','den Eltern']],
+['zeigt','zeigen','gezeigt',0,'p',['das Foto','den Weg','ein Bild'],['dem Kind','der Klasse','meinem Freund','den Gästen']],
+['gibt','geben','gegeben',0,'p',['ein Heft','einen Stift','den Ball'],['dem Kind','der Schülerin','meinem Bruder','den Schülern']],
+['bringt','bringen','gebracht',0,'p',['einen Tee','die Tasche','den Brief'],['der Oma','dem Lehrer','meiner Mutter','den Gästen']]
+];
+const ADVP=['heute','oft','manchmal','leider','dort','hier','jeden Tag','immer','meistens'];
+const ADVPAST=['gestern','gestern Abend','letzte Woche','vorhin'];
+const ADVFUT=['bald','morgen','nächste Woche','später'];
+const PGT=['nach dem Essen','am Abend','am Wochenende','im Sommer','in der Pause'];
+const PGM=['im Garten','im Park','vor dem Haus','auf der Wiese'].concat(PGT);
+const PGP=['in der Schule','in der Küche','auf dem Sportplatz'];
+const rn=a=>a[Math.floor(Math.random()*a.length)];
+const lowF=t=>/^(Der|Die|Das|Mein|Meine|Unsere|Unser)\b/.test(t)?t.charAt(0).toLowerCase()+t.slice(1):t;
+function genSatz(){
+  const v=rn(VB),grp=v[4];
+  const sp=rn(grp==='p'?SUBP:grp==='a'?SUBA:grp==='d'?SUBD:grp==='t'?SUBT:SUBP.concat(SUBA));
+  const pl=!!sp[1],proper=!!sp[2];
+  const pastAdv=Math.random()<.25,futAdv=!pastAdv&&Math.random()<.12;
+  const perfekt=pastAdv||(!futAdv&&Math.random()<.35);
+  const nAdv=Math.random()<.55?1:0,nPg=Math.random()<.5?1:0;
+  const R=[];/* Rollen in Reihenfolge der Bausteine */
+  const subj={r:'Subjekt',w:sp[0].split(' ')};
+  const fin=perfekt?(v[3]?(pl?'sind':'ist'):(pl?'haben':'hat')):(pl?v[1]:v[0]);
+  const fv={r:'Prädikat',w:[fin]},pt=perfekt?{r:'Prädikat',w:[v[2]]}:null;
+  const mid=[];
+  let adv=null,pg=null,ao=null,dob=null;
+  if(nAdv)adv={r:'Adverbiale',w:rn(pastAdv?ADVPAST:futAdv?ADVFUT:ADVP).split(' ')};
+  if(nPg)pg={r:'Präpositionalgefüge',w:rn(v[3]?PGT:(grp==='p'||grp==='pa')?PGM.concat(PGP):PGM).split(' ')};
+  if(v[6])dob={r:'Dativobjekt',w:rn(v[6]).split(' ')};
+  if(v[5])ao={r:'Akkusativobjekt',w:rn(v[5]).split(' ')};
+  if(!adv&&!pg&&!ao&&!dob){adv={r:'Adverbiale',w:rn(ADVP).split(' ')};}
+  const opts=[subj];if(adv)opts.push(adv);if(pg)opts.push(pg);
+  const vf=rn(opts.concat([subj,subj]));/* Vorfeld */
+  const rest=[adv,dob,ao,pg].filter(x=>x&&x!==vf);
+  const parts=[];
+  if(vf===subj){parts.push(subj,fv);rest.forEach(x=>parts.push(x));}
+  else{parts.push(vf,fv,subj);rest.forEach(x=>parts.push(x));}
+  if(pt)parts.push(pt);
+  const toks=[],roles=[];
+  parts.forEach((p,pi)=>p.w.forEach((w,wi)=>{let x=w;if(p===subj&&!proper&&pi>0&&wi===0)x=lowF(x);toks.push(x);roles.push(p.r);}));
+  toks[0]=toks[0].charAt(0).toUpperCase()+toks[0].slice(1);
+  toks[toks.length-1]+='.';
+  const present=[...new Set(roles)];
+  const stufe=(present.length>=5||(perfekt&&vf!==subj&&present.length>=4))?3:(present.length>=4||vf!==subj||perfekt)?2:1;
+  return{toks,roles,present,stufe,perfekt};
+}
+const SATZSEEN=new Set();
+for(let i=0;i<260;i++){
+  const g=genSatz(),key=g.toks.join(' ');if(SATZSEEN.has(key))continue;SATZSEEN.add(key);
+  g.present.forEach(r=>{
+    const targets=[];g.roles.forEach((x,k)=>{if(x===r)targets.push(k);});
+    let txt='';targets.forEach((k,j)=>{txt+=(j===0?'':(k===targets[j-1]+1?' ':' … '))+g.toks[k].replace(/\.$/,'');});
+    task.push({typ:'markieren',stufe:g.stufe,lv:g.stufe===3?2:1,cats:[GL_CAT[r]],gl:r,tokens:g.toks.slice(),targets,instr:GL_INSTR[r],why:'<b>'+r+':</b> «'+txt+'». '+GL_Q[r]});
+  });
+}
+const TAPORD=['praedikat','subjekt','ao','do','pg','adverbiale'];
+const TAPGL={praedikat:'Prädikat',subjekt:'Subjekt',ao:'Akkusativobjekt','do':'Dativobjekt',pg:'Präpositionalgefüge',adverbiale:'Adverbiale'};
+
 const SECS=[
 {id:'farben',title:'Die Satzglieder und ihre Farben',short:'Farben',min:6,note:'Überblick mit Farbcode. Diese Farben verwenden wir auf allen Folien und im Merkblatt. Jedes Satzglied wird danach auf einer eigenen Folie genau erklärt. Das Attribut ist kein eigenes Satzglied, es gehört zu einem Nomen.',
  html:()=>'<p class="lead">Jedes Satzglied hat eine eigene <b>Farbe</b>, eine eigene <b>Frage</b> und ein eigenes Zeichen.</p>'+
@@ -390,6 +479,7 @@ const SECS=[
   ['8 · Prädikat mit zwei Teilen','«Wir <b>haben</b> gestern <b>gelacht</b>.»','Beide verbalen Teile gehören zum Prädikat.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('glied,frage,probe')}
 ];
+SECS.forEach(sc=>{const k=TAPORD.indexOf(sc.id);if(k>=0&&sc.uebung){sc.uebung.tap={own:TAPGL[sc.id],all:TAPORD.slice(0,k+1).map(x=>TAPGL[x])};}});
 const EX=[
  ['Finde das Prädikat: «Anna hat gestern im Garten gelacht.»','hat … gelacht',1],
  ['Finde das Subjekt: «Gestern spielte der kleine Junge Fussball.»','der kleine Junge (Wer spielte?)',1],
@@ -423,6 +513,6 @@ GT.chapter({id:'satzglieder',teil:'satz',nr:3,title:'Die Satzglieder benennen',b
  types:{fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'},
   glied:{label:'Satzglied bestimmen',short:'Subjekt, Prädikat, Objekte, Präpositionalgefüge, Adverbiale',instr:'Welches Satzglied ist markiert?',hint:'Stelle die passende Frage: Wer? Was tut? Wen? Wem? Wo? Wann?',ref:'subjekt'},
   frage:{label:'Fragen zu den Satzgliedern',short:'Welche Frage passt?',instr:'Wähle die richtige Frage.',hint:'Schau in der Theorie nach.',ref:'ao'},
-  markieren:{label:'Satzglied markieren',short:'Prädikat, Objekte, Adverbiale, Attribut',instr:'Tippe die gesuchten Wörter an.',hint:'Stelle die passende Frage: Wer? Was geschieht? Wen? Wem? Wann? Was für ein …? Beginnt es mit einer Präposition?',ref:'subjekt'}},
+  markieren:{icon:'👆',label:'Satzglied antippen',short:'Wörter im Satz antippen',instr:'Tippe die gesuchten Wörter an.',hint:'Stelle die passende Frage: Wer? Was geschieht? Wen? Wem? Wann? Was für ein …? Beginnt es mit einer Präposition?',ref:'subjekt'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();
