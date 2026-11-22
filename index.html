@@ -106,7 +106,7 @@ mark.w{background:var(--b);color:inherit;box-shadow:inset 0 -3px 0 var(--c);bord
 .chrow.off{opacity:.55;cursor:default}
 
 /* Lernen */
-.toc{position:sticky;top:61px;z-index:20;background:rgba(248,250,252,.95);backdrop-filter:blur(6px);padding:.5rem 0;margin:0 0 .8rem;display:flex;gap:.4rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.jumpbar{position:sticky;top:0;z-index:20;display:flex;gap:.5rem;padding:.5rem 0;margin:0 0 .6rem;background:rgba(248,250,252,.95);backdrop-filter:blur(6px)}.jumpbar .btn{flex:1;min-height:46px;font-weight:700}section[id^=sec-]{scroll-margin-top:4.5rem}.toc{position:sticky;top:61px;z-index:20;background:rgba(248,250,252,.95);backdrop-filter:blur(6px);padding:.5rem 0;margin:0 0 .8rem;display:flex;gap:.4rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .toc button{flex:0 0 auto;min-height:44px;border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:.3rem .9rem;font-weight:600;font-size:.85rem;color:var(--muted)}
 .toc button:hover{border-color:var(--primary);color:var(--primary)}
 .sec{scroll-margin-top:120px;margin-bottom:1.6rem}
@@ -436,12 +436,12 @@ function screenStart(){
      (p&&p.a?'<div class="pbar" title="Auf diesem Gerät gespeichert"><i style="width:'+pct+'%;background:'+em[1]+'"></i></div>':'')+'</div>'+
      '<div class="tbtn">'+(teacherAccess()?'<button class="btn t2" data-a="teach" data-t="'+key+'" data-v="'+c[1]+'">Folien</button><button class="btn t2" data-a="sheet" data-t="'+key+'" data-v="'+c[1]+'">Übungsblatt</button>':'')+'<button class="btn" data-a="theorie" data-t="'+key+'" data-v="'+c[1]+'">Theorie</button><button class="btn primary" data-a="config" data-t="'+key+'" data-v="'+c[1]+'">Üben →</button></div></div>';
   };
-  const col=(key,title,sub,L)=>'<section><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>c[0]==='#'?'<h3 class="teilh">'+c[1]+'</h3>':tile(key,c,i)).join('')+'</div></section>';
+  const col=(key,title,sub,L)=>'<section id="sec-'+key+'"><div class="colh"><h2>'+title+'</h2><span>'+sub+'</span></div><div class="tiles">'+L.map((c,i)=>c[0]==='#'?'<h3 class="teilh">'+c[1]+'</h3>':tile(key,c,i)).join('')+'</div></section>';
   let last=null;try{last=localStorage.getItem('gt-last');}catch(e){}
   const lc=last&&GT.chapters[last]&&P[last]&&P[last].a?GT.chapters[last]:null;
   const lp=lc?Math.round(P[last].r/P[last].a*100):0;
   const cont=lc?'<div class="cont"><div class="ci">🚀</div><div class="cb"><b>Weiter mit '+lc.title+'</b><div class="pbar big"><i style="width:'+lp+'%;background:var(--primary)"></i></div></div><button class="btn primary" data-a="config" data-t="'+lc.teil+'" data-v="'+last+'">Weiter →</button></div>':'';
-  return '<div class="hero2"><div class="hleft"><div class="htitle">'+LOGOSM+'Grammatik Trainer</div><p>Wörter knacken. Sätze bauen. Fehler finden.</p></div>'+
+  return '<div class="jumpbar" role="navigation" aria-label="Zum Bereich springen"><button class="btn" data-a="jump" data-v="wort">🔤 Wortlehre</button><button class="btn" data-a="jump" data-v="satz">🧩 Satzlehre</button></div><div class="hero2"><div class="hleft"><div class="htitle">'+LOGOSM+'Grammatik Trainer</div><p>Wörter knacken. Sätze bauen. Fehler finden.</p></div>'+
    '<div class="hr"><div class="heroniv"><span class="lblniv">Dein Niveau</span><div class="seg big" role="group" aria-label="Niveau">'+['A','B','C'].map(n=>'<button data-a="niv" data-v="'+n+'" class="'+(S.niv===n?'on':'')+'">'+n+'</button>').join('')+'</div><span class="nd">'+D[S.niv]+'</span></div><div class="auth">'+authBtns()+'</div></div></div>'+cont+
    '<div class="cont"><div class="ci">📝</div><div class="cb"><b>Testvorbereitung</b><div class="muted" style="font-size:.9rem">Mehrere Kapitel mischen, Punkte sammeln, Übungsprüfung ausdrucken</div></div><button class="btn primary" data-a="testopen">Starten →</button></div>'+
    '<div class="grid2" style="align-items:start;gap:1.4rem">'+col('wort','🔤 Wortlehre','Wörter und ihre Formen',GT.WORT)+col('satz','🧩 Satzlehre','Sätze und ihre Teile',GT.SATZ)+'</div>'+
@@ -961,6 +961,7 @@ document.addEventListener('click',e=>{
    case 'teach':if(!teacherAccess())break;setCh(b.dataset.t,v);S.screen='teach';S.t.cur=0;render();break;
    case 'config':setCh(b.dataset.t,v);S.sheet=false;S.screen='config';render();break;
    case 'sheet':if(!teacherAccess())break;S.sheetFrom='';setCh(b.dataset.t,v);S.sheet=true;S.sheetOut=null;S.sheetErr='';S.screen='config';render();break;
+   case 'jump':{const el=document.getElementById('sec-'+v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});break;}
    case 'testopen':testInit();S.screen='test';S.sheetFrom='';render();break;
    case 'tch':{testInit();const k=b.dataset.v;if(S.test.chs.has(k))S.test.chs.delete(k);else S.test.chs.add(k);b.classList.toggle('on',S.test.chs.has(k));b.setAttribute('aria-pressed',S.test.chs.has(k));testInfo();break;}
    case 'tgrp':{testInit();const ids=v.split(',');const all=ids.every(k=>S.test.chs.has(k));ids.forEach(k=>all?S.test.chs.delete(k):S.test.chs.add(k));document.querySelectorAll('.tchips [data-a="tch"]').forEach(x=>{const on=S.test.chs.has(x.dataset.v);x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);});testInfo();break;}
