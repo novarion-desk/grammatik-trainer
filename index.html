@@ -487,8 +487,8 @@ function screenConfig(){
    '<h3>Fragen pro Runde</h3><div class="chk">'+[['5','5'],['10','10'],['15','15'],['20','20'],['custom','Eigene Anzahl']].map(o=>'<label class="'+(c.count===o[0]?'sel':'')+'"><input type="radio" name="count" data-cfg="count" value="'+o[0]+'" '+(c.count===o[0]?'checked':'')+'> '+o[1]+'</label>').join('')+
    (c.count==='custom'?'<input type="number" inputmode="numeric" min="1" max="100" data-cfg="custom" value="'+c.custom+'" aria-label="Eigene Anzahl" style="width:90px;min-height:46px;border:1.5px solid var(--line2);border-radius:.75rem;padding:.3rem .6rem;text-align:center">':'')+'</div></div>';
   if(S.sheet)return sheetConfig(pre,sum,det,info,pool);
-  return '<h2 class="page">'+C().title+': Üben</h2><p class="sub">Was möchtest du üben? Niveau '+S.niv+' ist eingestellt.</p><div class="presets">'+pre+'</div>'+
-   '<div class="card"><div class="sumline"><span>'+sum+'</span><button class="btn sm" data-a="moreopt">'+(S.cfgOpen?'Einstellungen schliessen':'Einstellungen anpassen')+'</button></div>'+(S.cfgOpen?det:'')+
+  return '<h2 class="page">'+C().title+': Üben</h2><p class="sub">Was möchtest du üben? Niveau '+S.niv+' ist eingestellt.</p>'+
+   '<div class="card"><div class="sumline"><span>'+sum+'</span></div>'+det+
    '<div id="avail">'+info+'</div>'+
    '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Erst Theorie lesen</button><button class="btn primary" id="startBtn" data-a="start" '+(pool.length===0?'disabled':'')+'>Übung starten →</button></div></div>';
 }
