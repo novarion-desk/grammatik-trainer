@@ -168,9 +168,6 @@ const W=[
 W.forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
 
 
-/* INPUT-AUFGABEN (selber schreiben) */
-const INP=[["setzen", 2, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Ich hoffe dass es morgen schönes Wetter gibt.", "Ich hoffe, dass es morgen schönes Wetter gibt.", [], false, "Richtig gesetzt: «Ich hoffe, dass es morgen schönes Wetter gibt.»"], ["setzen", 1, "sg1", "Schreibe den Satz mit den richtigen Kommas ab.", "Tim kauft Äpfel Birnen und Bananen.", "Tim kauft Äpfel, Birnen und Bananen.", [], false, "Richtig gesetzt: «Tim kauft Äpfel, Birnen und Bananen.»"], ["setzen", 1, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Wir bleiben zu Hause weil es regnet.", "Wir bleiben zu Hause, weil es regnet.", [], false, "Richtig gesetzt: «Wir bleiben zu Hause, weil es regnet.»"], ["setzen", 2, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Sie ist müde aber sie spielt weiter.", "Sie ist müde, aber sie spielt weiter.", [], false, "Richtig gesetzt: «Sie ist müde, aber sie spielt weiter.»"], ["setzen", 3, "sg3", "Schreibe den Satz mit den richtigen Kommas ab.", "Der Hund der im Garten spielt gehört mir.", "Der Hund, der im Garten spielt, gehört mir.", [], false, "Richtig gesetzt: «Der Hund, der im Garten spielt, gehört mir.»"], ["setzen", 2, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Wenn die Sonne scheint gehen wir schwimmen.", "Wenn die Sonne scheint, gehen wir schwimmen.", [], false, "Richtig gesetzt: «Wenn die Sonne scheint, gehen wir schwimmen.»"], ["setzen", 1, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Lena sagt dass sie krank ist.", "Lena sagt, dass sie krank ist.", [], false, "Richtig gesetzt: «Lena sagt, dass sie krank ist.»"], ["setzen", 1, "sg1", "Schreibe den Satz mit den richtigen Kommas ab.", "Ich mag Pizza Pasta und Salat.", "Ich mag Pizza, Pasta und Salat.", [], false, "Richtig gesetzt: «Ich mag Pizza, Pasta und Salat.»"]];
-INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
 
 const SECS0=[
 {id:'auf',title:'Aufzählung',short:'Aufzählung',min:6,note:'Einfachste Regel zuerst: Aufzählung. «und» und «oder» ersetzen das Komma.',
@@ -238,7 +235,6 @@ GT.chapter({id:'komma',teil:'satz',nr:10,title:'Kommasetzung',big:'Ich weiss, da
  types:{ktap:{icon:'👆',label:'Kommas antippen',short:'Wo steht ein Komma?',instr:'Tippe zwischen zwei Wörter, wo ein Komma stehen muss.',hint:'Suche das Einleitewort (weil, dass, der …) oder die Aufzählung. Davor oder danach steht das Komma.',ref:'haupt-neben'},
   komma:{label:'Richtigen Satz wählen',short:'Welcher Satz ist richtig?',instr:'Welcher Satz ist richtig geschrieben?',hint:'Suche den Nebensatz, die Aufzählung oder den Einschub.',ref:'haupt-neben'},
   ja:{label:'Komma oder nicht',short:'Komma setzen?',instr:'Muss ein Komma stehen?',hint:'Beginnt ein Nebensatz? Ist es eine Aufzählung?',ref:'haupt-neben'},
-  setzen:{icon:'✂️',label:'Kommas setzen',short:'Den Satz richtig abschreiben',instr:'Schreibe den Satz mit Kommas.',hint:'Suche Aufzählungen, Nebensätze und Einschübe.',ref:'haupt-neben'},
   wissen:{label:'Wissen',short:'Kommaregeln',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'auf'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();
