@@ -344,7 +344,7 @@ const CLS={
  'Dativ':{test:t=>t.c==='Dat'&&!t.merged,q:'Dativ: Wem?'},
  'Akkusativ':{test:t=>t.c==='Akk',q:'Akkusativ: Wen oder was?'},
  'Vorfeld':{test:t=>t.f==='Vorfeld',q:'Das Vorfeld steht vor dem Verb. Dort steht genau ein Satzglied.'},
- 'Linke Satzklammer':{test:t=>t.f==='Linke Satzklammer',q:'Die linke Satzklammer ist das gebeugte Verb an zweiter Stelle.'},
+ 'Linke Satzklammer':{test:t=>t.f==='Linke Satzklammer',q:'Die linke Satzklammer ist das konjugierte Verb (Personalform) an zweiter Stelle.'},
  'Mittelfeld':{test:t=>t.f==='Mittelfeld',q:'Das Mittelfeld liegt zwischen den beiden Klammern.'},
  'Rechte Satzklammer':{test:t=>t.f==='Rechte Satzklammer',q:'Die rechte Satzklammer enthält die übrigen Verbteile (Partizip, Infinitiv, Verbzusatz).'},
  'Nachfeld':{test:t=>t.f==='Nachfeld',q:'Das Nachfeld steht nach der rechten Klammer, zum Beispiel ein Nebensatz.'}

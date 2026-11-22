@@ -44,7 +44,7 @@ const K=[
 ['___ ich gegessen hatte, ging ich spazieren.','Nachdem',['Damit','Dass','Ob'],2,'«nachdem» beschreibt, was vorher geschah.'],
 ['Ich lerne, ___ ich bessere Noten möchte.','weil',['obwohl','aber','oder'],1,'«weil» gibt den Grund an.'],
 ['Ich komme, ___ du mich einlädst.','wenn',['dass','obwohl','damit'],2,'«wenn» nennt eine Bedingung.'],
-['Er ist müde, ___ er hat wenig geschlafen.','denn',['weil','dass','obwohl'],3,'«denn» verbindet zwei Hauptsätze (Verb bleibt an zweiter Stelle).'],
+['Er ist müde, ___ er hat wenig geschlafen.','denn',['weil','dass','obwohl'],3,'«denn» verbindet zwei Hauptsätze (das konjugierte Verb bleibt an zweiter Stelle).'],
 ['Entweder bleibst du hier, ___ du kommst mit.','oder',['und','aber','weil'],2,'«entweder … oder».'],
 ['Sowohl Anna ___ Tim kommen mit.','als auch',['oder auch','und auch','aber auch'],3,'«sowohl … als auch».']
 ];
@@ -54,28 +54,28 @@ K.forEach(k=>task.push({typ:'konj',stufe:k[3],lv:k[3]===3?2:1,cats:['sg2'],sent:
 const KA=['nebenordnend','unterordnend'];
 const KJ=[
 ['Anna lacht, <b>und</b> Tim winkt.',0,1,'«und» verbindet zwei Hauptsätze. Die Verben bleiben an zweiter Stelle.'],
-['Ich bleibe zu Hause, <b>weil</b> ich krank bin.',1,1,'«weil» leitet einen Nebensatz ein. Das Verb steht am Ende.'],
+['Ich bleibe zu Hause, <b>weil</b> ich krank bin.',1,1,'«weil» leitet einen Nebensatz ein. Das konjugierte Verb steht am Ende.'],
 ['Willst du Tee <b>oder</b> Kaffee?',0,1,'«oder» verbindet gleichwertige Teile.'],
-['Ich weiss, <b>dass</b> du müde bist.',1,1,'«dass» leitet einen Nebensatz ein. Das Verb steht am Ende.'],
+['Ich weiss, <b>dass</b> du müde bist.',1,1,'«dass» leitet einen Nebensatz ein. Das konjugierte Verb steht am Ende.'],
 ['Er ist krank, <b>aber</b> er kommt zur Schule.',0,1,'«aber» verbindet zwei Hauptsätze.'],
 ['<b>Obwohl</b> es regnet, gehen wir hinaus.',1,2,'«obwohl» leitet einen Nebensatz ein. Das Verb «regnet» steht am Ende.'],
-['Ich gehe früh ins Bett, <b>denn</b> ich bin müde.',0,2,'«denn» verbindet zwei Hauptsätze. Das Verb bleibt an zweiter Stelle.'],
-['Wir üben, <b>damit</b> wir die Prüfung bestehen.',1,2,'«damit» leitet einen Nebensatz ein. Das Verb steht am Ende.'],
+['Ich gehe früh ins Bett, <b>denn</b> ich bin müde.',0,2,'«denn» verbindet zwei Hauptsätze. Das konjugierte Verb bleibt an zweiter Stelle.'],
+['Wir üben, <b>damit</b> wir die Prüfung bestehen.',1,2,'«damit» leitet einen Nebensatz ein. Das konjugierte Verb steht am Ende.'],
 ['Er geht nicht ins Kino, <b>sondern</b> er bleibt zu Hause.',0,2,'«sondern» verbindet zwei Hauptsätze.'],
-['Ich rufe dich an, <b>wenn</b> ich zu Hause bin.',1,2,'«wenn» leitet einen Nebensatz ein. Das Verb steht am Ende.'],
-['Ich weiss nicht, <b>ob</b> er kommt.',1,2,'«ob» leitet einen Nebensatz ein. Das Verb steht am Ende.'],
+['Ich rufe dich an, <b>wenn</b> ich zu Hause bin.',1,2,'«wenn» leitet einen Nebensatz ein. Das konjugierte Verb steht am Ende.'],
+['Ich weiss nicht, <b>ob</b> er kommt.',1,2,'«ob» leitet einen Nebensatz ein. Das konjugierte Verb steht am Ende.'],
 ['Sie lernt, <b>nachdem</b> sie gegessen hat.',1,3,'«nachdem» leitet einen Nebensatz ein. Das Verb «hat» steht am Ende.'],
 ['Entweder bleibst du hier, <b>oder</b> du kommst mit.',0,3,'«oder» verbindet zwei Hauptsätze.']
 ];
 KJ.forEach(k=>task.push({typ:'konjart',stufe:k[2],lv:k[2]===3?2:1,cats:['sg2'],sent:k[0],opts:KA,answer:KA[k[1]],why:'<b>'+KA[k[1]]+'.</b> '+k[3]}));
 /* Verbstellung nach der Konjunktion */
 const KS=[
-['Ich bleibe zu Hause, weil ich krank bin.','Ich bleibe zu Hause, weil ich bin krank.',1,'Nach «weil» steht das Verb am Ende des Nebensatzes.'],
-['Er sagt, dass er müde ist.','Er sagt, dass er ist müde.',1,'Nach «dass» steht das Verb am Ende.'],
+['Ich bleibe zu Hause, weil ich krank bin.','Ich bleibe zu Hause, weil ich bin krank.',1,'Nach «weil» steht das konjugierte Verb am Ende des Nebensatzes.'],
+['Er sagt, dass er müde ist.','Er sagt, dass er ist müde.',1,'Nach «dass» steht das konjugierte Verb am Ende.'],
 ['Obwohl es regnet, gehen wir hinaus.','Obwohl es regnet, wir gehen hinaus.',2,'Nach dem Nebensatz kommt im Hauptsatz zuerst das Verb: «gehen wir».'],
-['Ich gehe heim, denn ich bin müde.','Ich gehe heim, denn ich müde bin.',2,'Nach «denn» bleibt das Verb an zweiter Stelle.'],
-['Wir üben, damit wir besser werden.','Wir üben, damit wir werden besser.',2,'Nach «damit» steht das Verb am Ende.'],
-['Ich rufe dich an, wenn ich zu Hause bin.','Ich rufe dich an, wenn ich bin zu Hause.',2,'Nach «wenn» steht das Verb am Ende.']
+['Ich gehe heim, denn ich bin müde.','Ich gehe heim, denn ich müde bin.',2,'Nach «denn» bleibt das konjugierte Verb an zweiter Stelle.'],
+['Wir üben, damit wir besser werden.','Wir üben, damit wir werden besser.',2,'Nach «damit» steht das konjugierte Verb am Ende.'],
+['Ich rufe dich an, wenn ich zu Hause bin.','Ich rufe dich an, wenn ich bin zu Hause.',2,'Nach «wenn» steht das konjugierte Verb am Ende.']
 ];
 KS.forEach(k=>task.push({typ:'konjstellung',stufe:k[2],lv:1,cats:['sg2'],prompt:'Welcher Satz ist richtig?',opts:[k[0],k[1]],answer:k[0],why:'<b>'+k[0]+'</b> '+k[3]}));
 
@@ -216,31 +216,46 @@ TX.forEach(m=>{
 const INP=[["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "oben ↔ ___", "unten", [], false, "Gegenteil des Adverbs «oben»: «unten»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "drinnen ↔ ___", "draussen", [], false, "Gegenteil des Adverbs «drinnen»: «draussen»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "vorne ↔ ___", "hinten", [], false, "Gegenteil des Adverbs «vorne»: «hinten»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "links ↔ ___", "rechts", [], false, "Gegenteil des Adverbs «links»: «rechts»."], ["adverbgeg", 1, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "hier ↔ ___", "dort", ["da"], false, "Gegenteil des Adverbs «hier»: «dort»."], ["adverbgeg", 2, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "immer ↔ ___", "nie", ["niemals"], false, "Gegenteil des Adverbs «immer»: «nie»."], ["adverbgeg", 2, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "gestern ↔ ___", "morgen", [], false, "Gegenteil des Adverbs «gestern»: «morgen»."], ["adverbgeg", 2, "sg3", "Schreibe das Adverb mit dem gegenteiligen Sinn.", "vorher ↔ ___", "nachher", ["danach"], false, "Gegenteil des Adverbs «vorher»: «nachher»."]];
 INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
 
+
+/* Grafiken für Theorie und Folien (gleiche Farben wie beim Anmalen: Präposition blau, Konjunktion pink, Adverb grün, Interjektion orange) */
+const PVCSS='.pvg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.7rem 0}.pvk{border:2px solid var(--c);background:var(--b);color:var(--t);border-radius:14px;padding:.6rem .7rem;text-align:center}.pvk .ic{font-size:1.9rem;line-height:1.2}.pvk b.n{display:block;font-size:1.05rem}.pvk small{display:block;opacity:.9;margin-top:.15rem}.pvroot{width:fit-content;margin:.4rem auto 0;background:#7c3aed;color:#fff;border-radius:999px;padding:.45rem 1.2rem;font-weight:800;text-align:center}.pvroot small{display:block;font-weight:600;opacity:.9}.pvarrow{text-align:center;font-size:1.5rem;line-height:1;color:#7c3aed}.pvs{display:flex;flex-wrap:wrap;gap:.3rem;align-items:flex-end;margin:1rem 0 .5rem}.pvw{border:2px solid #cbd5e1;border-radius:8px;padding:.2rem .55rem;background:#fff;color:#0f172a;position:relative}.pvw.v{border-color:#dc2626;background:#fee2e2;color:#7f1d1d;font-weight:800}.pvw.k{border-color:#db2777;background:#fce7f3;color:#831843;font-weight:800}.pvw i{position:absolute;top:-1rem;left:50%;transform:translateX(-50%);font-size:.7rem;font-style:normal;font-weight:800;color:#64748b;white-space:nowrap}.pvcomma{align-self:flex-end;font-weight:800}.pvb{display:inline-block;border:2px solid #d97706;background:#fef3c7;color:#78350f;border-radius:20px 20px 20px 4px;padding:.35rem .8rem;font-weight:800;margin:.2rem .3rem .2rem 0}.pvb span{margin-right:.3rem}.pvsvg{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.6rem;margin:.7rem 0}.pvsvg>div{border:1px solid #e2e8f0;border-radius:14px;background:#fff;padding:.4rem;text-align:center}.pvsvg svg{width:100%;height:auto;max-height:190px}.pvsvg b{display:block;margin-top:.1rem}';
+const pvk=(c,ic,n,sm)=>'<div class="pvk f-'+c+'"><div class="ic">'+ic+'</div><b class="n">'+n+'</b><small>'+sm+'</small></div>';
+const PV={
+ tree:()=>'<div class="pvroot">Partikel<small>Teilchen · verändern sich nie</small></div><div class="pvarrow">↓</div><div class="pvg">'+pvk('praep','📍','Präposition','Verhältniswort<br>in, auf, mit, für')+pvk('konj','🔗','Konjunktion','Bindewort<br>und, aber, weil')+pvk('adv','🧭','Adverb','Umstandswort<br>heute, hier, gern')+pvk('interj','💬','Interjektion','Ausrufewort<br>ach, aua, hurra')+'</div>',
+ praep:()=>'<div class="pvg">'+pvk('praep','📍','Ort','in, auf, unter, neben, bei')+pvk('praep','⏰','Zeit','nach, vor, seit, während')+pvk('praep','🛤️','Weg','durch, über, um, gegen')+pvk('praep','❓','Grund','wegen, trotz, für')+'</div>',
+ wo:()=>'<div class="pvsvg"><div><svg viewBox="0 0 220 150" role="img" aria-label="Das Buch liegt auf dem Tisch"><rect x="30" y="86" width="160" height="10" rx="3" fill="#b45309"/><rect x="44" y="96" width="10" height="26" fill="#92400e"/><rect x="166" y="96" width="10" height="26" fill="#92400e"/><rect x="85" y="64" width="50" height="22" rx="3" fill="#2563eb"/><rect x="85" y="64" width="6" height="22" fill="#1e3a8a"/><text x="110" y="146" text-anchor="middle" font-size="22" font-weight="800" fill="#1e3a8a">Wo?</text><text x="110" y="40" text-anchor="middle" font-size="13" fill="#334155">Ruhe, kein Ziel</text></svg><b style="color:#1e3a8a">Dativ: auf <u>dem</u> Tisch</b></div>'+
+  '<div><svg viewBox="0 0 220 150" role="img" aria-label="Ich lege das Buch auf den Tisch"><rect x="30" y="86" width="160" height="10" rx="3" fill="#b45309"/><rect x="44" y="96" width="10" height="26" fill="#92400e"/><rect x="166" y="96" width="10" height="26" fill="#92400e"/><rect x="20" y="40" width="50" height="22" rx="3" fill="#2563eb" opacity=".45"/><rect x="125" y="64" width="50" height="22" rx="3" fill="#2563eb"/><rect x="125" y="64" width="6" height="22" fill="#1e3a8a"/><path d="M72 46 Q110 10 140 58" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 4"/><path d="M140 58 l-9 -3 m9 3 l1 -10" stroke="#dc2626" stroke-width="3" fill="none"/><text x="110" y="146" text-anchor="middle" font-size="22" font-weight="800" fill="#991b1b">Wohin?</text></svg><b style="color:#991b1b">Akkusativ: auf <u>den</u> Tisch</b></div></div>',
+ konj:()=>'<div class="pvs"><span class="pvw">Ich<i>1</i></span><span class="pvw v">gehe<i>2</i></span><span class="pvw">heim</span><span class="pvcomma">,</span><span class="pvw k">denn</span><span class="pvw">ich</span><span class="pvw v">bin<i>2</i></span><span class="pvw">müde.</span></div><p class="muted" style="margin:0 0 .6rem"><b>nebenordnend:</b> Nach «denn» bleibt das konjugierte Verb an zweiter Stelle.</p>'+
+  '<div class="pvs"><span class="pvw">Ich</span><span class="pvw v">gehe</span><span class="pvw">heim</span><span class="pvcomma">,</span><span class="pvw k">weil</span><span class="pvw">ich</span><span class="pvw">müde</span><span class="pvw v">bin<i>Ende</i></span><span class="pvw">.</span></div><p class="muted" style="margin:0 0 .6rem"><b>unterordnend:</b> Nach «weil» rutscht das konjugierte Verb ans Ende.</p>',
+ adv:()=>'<div class="pvg">'+pvk('adv','⏰','Temporal','Wann? Wie oft?<br>gestern, oft')+pvk('adv','📍','Lokal','Wo? Wohin?<br>hier, oben')+pvk('adv','🎯','Modal','Wie?<br>gern, leider')+pvk('adv','❓','Kausal','Warum?<br>deshalb, darum')+'</div>',
+ interj:()=>'<div><span class="pvb"><span>🎉</span>Hurra!</span><span class="pvb"><span>😢</span>Ach!</span><span class="pvb"><span>🤕</span>Aua!</span><span class="pvb"><span>🤫</span>Pst!</span><span class="pvb"><span>🤢</span>Igitt!</span><span class="pvb"><span>👋</span>Hey!</span></div>'
+};
+
 const SECS=[
 {id:'merkmale',title:'Was sind Partikel?',short:'Merkmale',min:6,note:'Partikel = unveränderliche Wörter. Veränderungsprobe: Kann man das Wort konjugieren oder deklinieren? Wenn nein: Partikel.',
- html:()=>'<div class="grid2"><div class="card"><h3>Partikel verändern sich nicht</h3><p>Sie haben keine Endungen und keine Zeitformen: <b>und, in, heute, aber, dort</b>.</p></div>'+
+ html:()=>PV.tree()+'<div class="grid2"><div class="card"><h3>Partikel verändern sich nicht</h3><p>Sie haben keine Endungen und keine Zeitformen: <b>und, in, heute, aber, dort</b>.</p></div>'+
  '<div class="card"><h3>Vier Arten</h3><p><b>Präpositionen</b> (Verhältniswörter): in, auf, mit, für</p><p><b>Konjunktionen</b> (Bindewörter): und, aber, weil, dass</p><p><b>Adverbien</b> (Umstandswörter): heute, hier, dort, gern</p><p><b>Interjektionen</b> (Ausrufewörter): ach, aua, hurra, hey</p></div></div>'+
- '<div class="callout"><b>Probe:</b> Kann man das Wort beugen (Endungen) oder mit einem Artikel verbinden? Wenn nicht, ist es ein Partikel. Wenige Adverbien lassen sich steigern (gern – lieber, oft – öfter). Sie bekommen dabei aber keine Endungen und bleiben Partikel.</div>'},
+ '<div class="callout"><b>Probe:</b> Kann man das Wort beugen (= die Form verändern, z. B. mit Endungen) oder mit einem Artikel verbinden? Wenn nicht, ist es ein Partikel. Wenige Adverbien lassen sich steigern (gern – lieber, oft – öfter). Sie bekommen dabei aber keine Endungen und bleiben Partikel.</div>'},
 {id:'praep',title:'Präpositionen (Verhältniswörter)',short:'Präpositionen',min:12,note:'Präpositionen verlangen einen Fall. Wechselpräpositionen (an, auf, in, über, unter, vor, hinter, neben, zwischen): Wo? → Dativ. Wohin? → Akkusativ.',
- html:()=>'<p class="lead">Präpositionen stehen vor einem Nomen und zeigen Ort, Zeit, Weg oder Grund.</p>'+
+ html:()=>'<p class="lead">Präpositionen stehen vor einem Nomen und zeigen Ort, Zeit, Weg oder Grund.</p>'+PV.praep()+
  T(['Fall','Beispiele','Merkhilfe'],[['Akkusativ','durch, für, gegen, ohne, um','«durch den Park»'],['Dativ','aus, bei, mit, nach, seit, von, zu','«mit dem Bus»'],['Genitiv (nur Niveau A)','wegen, während, trotz','«wegen des Regens»'],['Wechsel: Wo? Dativ · Wohin? Akkusativ','an, auf, in, über, unter, vor, hinter, neben, zwischen','«im Haus» / «ins Haus»']])+
  '<div class="callout">Kurzformen: im = in dem, zum = zu dem, vom = von dem, beim = bei dem, ins = in das. Im Alltag nimmt man meist die Kurzform. Die lange Form betont das Wort: «im Haus» (normal), «in dem Haus» (dieses bestimmte Haus).</div>'},
 {id:'wechsel',title:'Wechselpräpositionen: Wo? oder Wohin?',short:'Wechselpräpositionen',min:8,note:'Neun Präpositionen verlangen je nach Frage Dativ oder Akkusativ. Wo? = Dativ (Ruhe). Wohin? = Akkusativ (Bewegung zu einem Ziel).',
- html:()=>'<p class="lead">Neun Präpositionen sind «Wechsler»: an, auf, hinter, in, neben, über, unter, vor, zwischen.</p>'+
+ html:()=>'<p class="lead">Neun Präpositionen sind «Wechsler»: an, auf, hinter, in, neben, über, unter, vor, zwischen.</p>'+PV.wo()+
  T(['Frage','Fall','Beispiel','Merkhilfe'],[['Wo?','Dativ','Das Buch liegt <b>auf dem</b> Tisch.','Ruhe, kein Ziel'],['Wohin?','Akkusativ','Ich lege das Buch <b>auf den</b> Tisch.','Bewegung zu einem Ziel']])+
  '<div class="callout info">Kurzformen: <b>im Garten</b> (Wo?) / <b>in den Garten</b> oder <b>ins</b> Haus (Wohin?). Frage zuerst: Wo oder Wohin? Dann setzt du den Fall ein.</div>',
  uebung:{types:'wechsel,wechselfall',cats:'sg1'}},
-{id:'konj',title:'Konjunktionen (Bindewörter)',short:'Konjunktionen',min:10,note:'Konjunktionen verbinden Wörter und Sätze. Nebenordnend (und, oder, aber, denn, sondern): verbindet gleichwertige Teile, das Verb bleibt an seiner Stelle. Unterordnend (weil, dass, obwohl, damit, wenn, ob, nachdem): leitet einen Nebensatz ein, das Verb steht am Ende. Das Kapitel Haupt- und Nebensatz kommt später und vertieft das.',
- html:()=>'<div class="grid2"><div class="card"><h3>Nebenordnend: gleichwertig verbinden</h3><p><b>und</b> (Aufzählung) · <b>oder</b> (Wahl) · <b>aber</b> (Gegensatz) · <b>denn</b> (Grund) · <b>sondern</b> (Ersatz)</p><p>Das Verb bleibt an <b>zweiter Stelle</b>: «Ich gehe heim, denn ich <b>bin</b> müde.»</p></div>'+
- '<div class="card"><h3>Unterordnend: Nebensatz einleiten</h3><p><b>weil</b> (Grund) · <b>obwohl</b> (Gegensatz) · <b>damit</b> (Zweck) · <b>dass</b> (Inhalt) · <b>wenn</b> (Bedingung) · <b>ob</b> (Frage) · <b>nachdem</b> (Zeit)</p><p>Das Verb steht am <b>Ende</b>: «Ich gehe heim, weil ich müde <b>bin</b>.»</p></div></div>'+
- '<div class="callout">Merkhilfe: Nach <b>und, oder, aber, denn, sondern</b> bleibt die Wortstellung gleich. Nach <b>weil, dass, obwohl …</b> rutscht das Verb ans Satzende.</div>',
+{id:'konj',title:'Konjunktionen (Bindewörter)',short:'Konjunktionen',min:10,note:'Konjunktionen verbinden Wörter und Sätze. Nebenordnend (und, oder, aber, denn, sondern): verbindet gleichwertige Teile, das konjugierte Verb (Personalform) bleibt an zweiter Stelle. Unterordnend (weil, dass, obwohl, damit, wenn, ob, nachdem): leitet einen Nebensatz ein, das konjugierte Verb (Personalform) steht am Ende. Das Kapitel Haupt- und Nebensatz kommt später und vertieft das.',
+ html:()=>PV.konj()+'<div class="grid2"><div class="card"><h3>Nebenordnend: gleichwertig verbinden</h3><p><b>und</b> (Aufzählung) · <b>oder</b> (Wahl) · <b>aber</b> (Gegensatz) · <b>denn</b> (Grund) · <b>sondern</b> (Ersatz)</p><p>Das konjugierte Verb (Personalform) bleibt an <b>zweiter Stelle</b>: «Ich gehe heim, denn ich <b>bin</b> müde.»</p></div>'+
+ '<div class="card"><h3>Unterordnend: Nebensatz einleiten</h3><p><b>weil</b> (Grund) · <b>obwohl</b> (Gegensatz) · <b>damit</b> (Zweck) · <b>dass</b> (Inhalt) · <b>wenn</b> (Bedingung) · <b>ob</b> (Frage) · <b>nachdem</b> (Zeit)</p><p>Das konjugierte Verb (Personalform) steht am <b>Ende</b>: «Ich gehe heim, weil ich müde <b>bin</b>.»</p></div></div>'+
+ '<div class="callout">Merkhilfe: Nach <b>und, oder, aber, denn, sondern</b> bleibt die Wortstellung gleich. Nach <b>weil, dass, obwohl …</b> rutscht das konjugierte Verb ans Satzende.</div>',
  uebung:{types:'konjart,konjstellung,konj',cats:'sg2'}},
 {id:'adverb',title:'Adverbien (Umstandswörter)',short:'Adverbien',min:10,note:'Adverbien beantworten Fragen: Wann? Wo? Wie? Warum? Wohin? Sie bekommen keine Endungen.',
- html:()=>T(['Art','Frage','Beispiele'],[['Temporal','Wann? Wie oft?','gestern, heute, bald, oft, nie, immer'],['Lokal','Wo? Wohin? Woher?','hier, dort, oben, draussen, links'],['Modal','Wie?','gern, leider, vielleicht, so, sehr'],['Kausal','Warum?','deshalb, darum, deswegen, trotzdem']])+
+ html:()=>PV.adv()+T(['Art','Frage','Beispiele'],[['Temporal','Wann? Wie oft?','gestern, heute, bald, oft, nie, immer'],['Lokal','Wo? Wohin? Woher?','hier, dort, oben, draussen, links'],['Modal','Wie?','gern, leider, vielleicht, so, sehr'],['Kausal','Warum?','deshalb, darum, deswegen, trotzdem']])+
  '<div class="callout">Adverbien bekommen keine Endungen. Sie bestimmen das Verb, ein Adjektiv oder den ganzen Satz näher.</div>',
  uebung:{types:'adverbzu,adverb',cats:'sg3'}},
 {id:'interj',title:'Interjektionen (Ausrufewörter)',short:'Interjektionen',min:6,note:'Interjektionen drücken ein Gefühl aus oder rufen jemanden an. Sie verändern sich nicht und gehören zu keinem Satzglied. Nach ihnen steht ein Komma oder ein Ausrufezeichen.',
- html:()=>'<p class="lead">Interjektionen sind kurze Ausrufe. Sie stehen oft am Satzanfang.</p>'+
+ html:()=>'<p class="lead">Interjektionen sind kurze Ausrufe. Sie stehen oft am Satzanfang.</p>'+PV.interj()+
  T(['Was sie ausdrücken','Beispiele'],[['Gefühle','ach, oh, hurra, igitt, juhu'],['Schmerz','aua, autsch'],['Aufforderung oder Anruf','pst, hey, he']])+
  '<div class="grid2"><div class="card"><h3>Satzzeichen</h3><p>«<b>Hurra</b>, wir haben gewonnen!»</p><p>«<b>Hurra</b>! Wir haben gewonnen.»</p><p>Nach einer Interjektion steht ein Komma oder ein Ausrufezeichen.</p></div>'+
  '<div class="card"><h3>Probe</h3><p>Interjektionen verändern sich nie und passen in keinen Satzbau. Du kannst sie weglassen, der Satz bleibt vollständig.</p></div></div>',
@@ -272,7 +287,7 @@ const merk=()=>T(['Art','Beispiele','Merksatz'],[['Partikel','und, in, heute, ab
  T(['Fall','Präpositionen'],[['Akkusativ','durch, für, gegen, ohne, um'],['Dativ','aus, bei, mit, nach, seit, von, zu'],['Genitiv','wegen, während, trotz'],['Wechsel (Wo? Dat. · Wohin? Akk.)','an, auf, in, über, unter, vor, hinter, neben, zwischen']]);
 const UEM={'praep':{types:'praep',cats:'sg1'},'konj':{types:'konj',cats:'sg2'},'adverb':{types:'adverb',cats:'sg3'},'abgrenzung':{types:'art',cats:'sg4'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,konj:3},opt:{pron:.3,adj:.2,det:{def:.5,indef:.3,poss:.2}},classes:[{gl:'Präposition',cats:['sg1'],lv:1},{gl:'Konjunktion',cats:['sg2'],lv:1},{gl:'Adverb',cats:['sg3'],lv:1},{gl:'Partikel',cats:['sg4'],lv:1}],perClass:30});
-GT.chapter({id:'partikel',teil:'wort',nr:7,title:'Partikel',big:'Und, in, heute, aber',desc:'Präpositionen, Konjunktionen, Adverbien und Interjektionen',
+GT.chapter({id:'partikel',teil:'wort',nr:7,css:PVCSS,title:'Partikel',big:'Und, in, heute, aber',desc:'Präpositionen, Konjunktionen, Adverbien und Interjektionen',
  ex:'«'+mk('part','Heute')+' gehe ich '+mk('part','mit')+' dir ins Kino, '+mk('part','denn')+' ich habe Zeit.»',
  goals:['Ich erkenne unveränderliche Wörter (Partikel).','Ich wähle die richtige Präposition und den richtigen Fall (auch Wo? oder Wohin?).','Ich unterscheide nebenordnende und unterordnende Konjunktionen.','Ich erkenne Adverbien und bestimme sie mit Fragen.','Ich erkenne Interjektionen und setze die Satzzeichen.'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
@@ -282,8 +297,8 @@ GT.chapter({id:'partikel',teil:'wort',nr:7,title:'Partikel',big:'Und, in, heute,
   art:{label:'Partikelart bestimmen',short:'Adverb, Präposition, Konjunktion oder Interjektion',instr:'Welche Partikelart ist das markierte Wort?',hint:'Vor einem Nomen: Präposition. Verbindet Sätze: Konjunktion. Beantwortet Wann/Wo/Wie: Adverb. Drückt ein Gefühl aus: Interjektion.',ref:'merkmale'},
   text:{icon:'🔍',label:'Partikel im Text',short:'Alle Partikel in einem Text finden',instr:'Tippe alle Partikel im Text an.',hint:'Partikel verändern sich nicht.',ref:'merkmale'},
   adverbgeg:{icon:'↔️',label:'Adverbien: Gegenteile',short:'Adverbien mit gegenteiliger Bedeutung',instr:'Schreibe das Gegenteil.',hint:'Adverbien nennen Ort, Zeit oder Art. Welches Wort passt als Gegensatz?',ref:'adverb'},
-  konjart:{label:'Konjunktionen: neben- oder unterordnend',short:'Nebenordnend oder unterordnend',instr:'Ist die Konjunktion nebenordnend oder unterordnend?',hint:'Bleibt das Verb an zweiter Stelle, ist sie nebenordnend. Steht das Verb am Ende, ist sie unterordnend.',ref:'konj'},
-  konjstellung:{icon:'🔗',label:'Verbstellung nach Konjunktionen',short:'Welcher Satz ist richtig?',instr:'Welcher Satz ist richtig?',hint:'Nach weil, dass, obwohl … steht das Verb am Ende. Nach und, aber, denn, oder bleibt es an zweiter Stelle.',ref:'konj'},
+  konjart:{label:'Konjunktionen: neben- oder unterordnend',short:'Nebenordnend oder unterordnend',instr:'Ist die Konjunktion nebenordnend oder unterordnend?',hint:'Bleibt das konjugierte Verb (Personalform) an zweiter Stelle, ist sie nebenordnend. Steht es am Ende, ist sie unterordnend.',ref:'konj'},
+  konjstellung:{icon:'🔗',label:'Verbstellung nach Konjunktionen',short:'Welcher Satz ist richtig?',instr:'Welcher Satz ist richtig?',hint:'Nach weil, dass, obwohl … steht das konjugierte Verb am Ende. Nach und, aber, denn, oder bleibt es an zweiter Stelle.',ref:'konj'},
   adverbzu:{icon:'🧭',label:'Adverbien zuordnen',short:'Lokal, temporal, modal oder kausal',instr:'Welche Art von Adverb ist das markierte Wort?',hint:'Stelle die Frage: Wo? (lokal), Wann? (temporal), Wie? (modal), Warum? (kausal).',ref:'adverb'},
   interj:{icon:'💥',label:'Interjektionen erkennen',short:'Ausrufewörter finden und zuordnen',instr:'Wähle die richtige Antwort.',hint:'Interjektionen drücken ein Gefühl aus oder rufen jemanden an.',ref:'interj'},
   interjein:{icon:'⌨️',label:'Interjektionen schreiben',short:'Eine passende Interjektion selber schreiben',instr:'Schreibe eine passende Interjektion.',hint:'Welches Gefühl hat die Person? Schmerz, Freude, Ekel?',ref:'interj'},

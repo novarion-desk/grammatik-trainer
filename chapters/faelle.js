@@ -307,7 +307,7 @@ const SEC={
   '<tr><td class="rh f-gen">Genitiv (2. Fall)</td><td>lat. casus genitivus = Wesfall</td><td><b>Wessen?</b></td></tr>'+
   '<tr><td class="rh f-dat">Dativ (3. Fall)</td><td>lat. casus dativus = Wemfall</td><td><b>Wem?</b></td></tr>'+
   '<tr><td class="rh f-akk">Akkusativ (4. Fall)</td><td>lat. casus accusativus = Wenfall</td><td><b>Wen oder was?</b></td></tr>'+
-  '<tr><td><b>deklinieren</b></td><td>lat. declinare = abwandeln, beugen</td><td>Nomen und Begleiter nach Fall und Zahl verändern.</td></tr>'+
+  '<tr><td><b>deklinieren</b></td><td>lat. declinare = abwandeln, beugen (= die Form verändern)</td><td>Nomen und Begleiter nach Fall und Zahl verändern.</td></tr>'+
   '<tr><td><b>Präposition</b></td><td>lat. praepositio = Voranstellung</td><td>Verhältniswort (mit, für, wegen). Sie verlangt einen Fall.</td></tr>'+
   '<tr><td><b>Wechselpräposition</b></td><td></td><td>Verlangt Dativ (Wo?) oder Akkusativ (Wohin?): in, auf, an, unter …</td></tr>'+
   '<tr><td><b>Ersatzprobe</b> (Maskulinprobe)</td><td>lat. masculinum = männlich</td><td>Das Nomen durch «der Mann» ersetzen, damit man den Fall sieht.</td></tr></table></div>',

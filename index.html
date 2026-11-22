@@ -333,7 +333,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 .chip.tok.sel{background:var(--primary-l);border-color:var(--primary);color:#312e81}
 .chip.tok.right{background:var(--ok-l);border-color:var(--ok)}.chip.tok.wrong{background:var(--bad-l);border-color:var(--bad)}.chip.tok.miss{border:2px dashed var(--ok)}
 .chip.tok.right::after{content:' ✓'}.chip.tok.wrong::after{content:' ✗'}
-.f-nomen{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-verb{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adj{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-pron{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-part{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-praep{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-konj{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adv{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-interj{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-art{--c:#0891b2;--b:#cffafe;--t:#164e63}
+.f-nomen{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-verb{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-adj{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-pron{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-part{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-praep{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-kein{--c:#94a3b8;--b:#f1f5f9;--t:#475569}.f-konj{--c:#db2777;--b:#fce7f3;--t:#831843}.f-adv{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-interj{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-art{--c:#0891b2;--b:#cffafe;--t:#164e63}
 .f-sg1{--c:#2563eb;--b:#dbeafe;--t:#1e3a8a}.f-sg2{--c:#dc2626;--b:#fee2e2;--t:#7f1d1d}.f-sg3{--c:#16a34a;--b:#dcfce7;--t:#14532d}.f-sg4{--c:#d97706;--b:#fef3c7;--t:#78350f}.f-sg5{--c:#7c3aed;--b:#ede9fe;--t:#4c1d95}.f-sg6{--c:#0891b2;--b:#cffafe;--t:#164e63}.f-sg0{--c:#64748b;--b:#f1f5f9;--t:#334155}
 .f-pn{--c:#0d9488;--b:#ccfbf1;--t:#134e4a}.f-adv{--c:#db2777;--b:#fce7f3;--t:#831843}.f-att{--c:#64748b;--b:#f1f5f9;--t:#334155}
 @media print{.po{display:block!important}.noprint,#merk button,#merk .try{display:none!important}#merk .sol[hidden]{display:block!important}#merk .uw .u{background:var(--b);box-shadow:inset 0 -3px 0 var(--c)}#merk .card{box-shadow:none}}
@@ -527,7 +527,7 @@ function screenRound(){
   if(t.typ==='anmalen'||t.typ==='anmalenlang'){
     const BK=t.brushKeys||CK(),BN=t.brushNames||CN();if(BK.indexOf(R.brush)<0)R.brush=BK[0];
     body='<div class="instr">'+T.instr+'</div><div class="brush">'+BK.map(k=>'<button class="f-'+k+' '+(R.brush===k?'on':'')+'" data-a="brush" data-k="'+k+'">'+BN[k]+'</button>').join('')+'</div>'+
-     '<div class="flow">'+t.parts.map((p,i)=>p.f?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
+     '<div class="flow">'+t.parts.map((p,i)=>p.f||t.allChips?'<button class="chip" data-a="paint" data-i="'+i+'">'+p.t+'</button>':'<span class="plain">'+p.t+'</span>').join('')+'</div>';
   }else if(t.cuts){
     body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow cutflow'+(t.typ==='ktap'?' kf':'')+'">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="cut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div>';
   }else if(t.tokens){
@@ -554,8 +554,12 @@ function checkRound(){
   if(t.typ==='anmalen'||t.typ==='anmalenlang'){
     const need=t.parts.map((p,i)=>p.f?i:-1).filter(i=>i>=0);
     if(need.some(i=>!R.paint[i])){document.getElementById('fb').innerHTML='<div class="fb err">Male zuerst alle Gruppen an.</div>';return;}
-    ok=need.every(i=>R.paint[i]===t.parts[i].f);
-    need.forEach(i=>{const b=document.querySelector('.chip[data-i="'+i+'"]');(t.brushKeys||CK()).forEach(k=>b.classList.remove('f-'+k,'p-'+k));b.classList.add(R.paint[i]===t.parts[i].f?'right':'wrong');b.classList.add('f-'+t.parts[i].f,'p-'+t.parts[i].f);});
+    const okI=i=>{const f=t.parts[i].f;return f?R.paint[i]===f:(!R.paint[i]||R.paint[i]==='kein');};
+    const idx=t.allChips?t.parts.map((_,i)=>i):need;ok=idx.every(okI);
+    idx.forEach(i=>{const b=document.querySelector('.chip[data-i="'+i+'"]'),f=t.parts[i].f;(t.brushKeys||CK()).forEach(k=>b.classList.remove('f-'+k,'p-'+k));
+      if(f){b.classList.add(okI(i)?'right':'wrong');b.classList.add('f-'+f,'p-'+f);}
+      else if(R.paint[i]&&R.paint[i]!=='kein'){b.classList.add('wrong');b.classList.add('f-'+R.paint[i],'p-'+R.paint[i]);}
+      else if(R.paint[i]==='kein'){b.classList.add('f-kein','p-kein');}});
     const BN2=t.brushNames||CN();mine=need.map(i=>(R.paint[i]?BN2[R.paint[i]]:'–')).join(', ');right=need.map(i=>BN2[t.parts[i].f]).join(', ');
     need.forEach(i=>{if(R.paint[i]!==t.parts[i].f)conf=[t.parts[i].f,R.paint[i]];});
     document.querySelectorAll('.chip,.brush button').forEach(b=>b.disabled=true);
@@ -608,10 +612,13 @@ function screenSummary(){
    '<button class="btn" data-a="again">Neue Runde</button><button class="btn" data-a="ref" data-v="'+worst+'">Zur passenden Theorie</button><button class="btn" data-a="home">Zur Übersicht</button></div>'+
    '<h3>Alle Fragen</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+TY()[h.t.typ].label+'</b> '+(h.ok?'· richtig':'· falsch')+'<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
 }
+let _rk='',_ry=0;
 function render(){
+  const keepKey=S.screen+'|'+S.ch+'|'+(S.screen==='round'&&S.R?S.R.i+':'+(S.R.tasks||[]).length:'');
+  const keep=(S.screen!=='teach')&&keepKey===_rk;_ry=window.scrollY||0;_rk=keepKey;
   renderHead();
   $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary,sheet:screenSheet,test:screenTest})[S.screen]();
-  initTry(document);mountWidgets(document);window.scrollTo(0,0);renderLogin();
+  initTry(document);mountWidgets(document);window.scrollTo(0,keep?_ry:0);renderLogin();
   const pr=!!(S.screen==='teach'&&S.t.pres&&S.t.mode==='slides');document.body.classList.toggle('presing',pr);if(pr){fitPres();presWake();}else if(S.t.pres&&S.screen!=='teach'){S.t.pres=false;}
 }
 function renderTry(el){

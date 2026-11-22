@@ -36,19 +36,41 @@ Object.keys(SINGLE).forEach(id=>{
     c.TASKS.push({id:nextId(c),typ:'textlang',stufe:a[0],lv:a[0]===3?2:1,cats:[S.cat],tokens,targets,instr:S.instr,lang:true,why:targets.map(i=>tokens[i].replace(/[.,]$/,'')).join(', ')});
   });
 });
-/* Partikel: langer Text, jede Partikelart hat eine eigene Farbe (Präposition, Konjunktion, Adverb, Interjektion) */
+/* Partikel: langer Text, jede Partikelart hat eine eigene Farbe (Präposition, Konjunktion, Adverb, Interjektion).
+   Alle Wörter lassen sich antippen (auch «Kein Partikel»). Die Texte sind unmarkiert gespeichert und werden mit einer Wortliste automatisch bestimmt.
+   Beim Schreiben neuer Texte mehrdeutige Wörter meiden: auf/an/ab/um als Verbzusatz, «zu» vor Verben oder Adjektiven, da, so, wie, bis, während. */
 (function(){
   const c=GT.chapters.partikel;if(!c)return;
-  const BK=['praep','konj','adv','interj'],BN={praep:'Präposition',konj:'Konjunktion',adv:'Adverb',interj:'Interjektion'};
-  c.TYPES.anmalenlang={icon:'🎨',label:'Partikel im langen Text anmalen',short:'Präpositionen, Konjunktionen, Adverbien und Interjektionen farbig markieren',instr:'Wähle eine Farbe und tippe die passenden Wörter im Text an. Jede Partikelart hat ihre eigene Farbe.',hint:'Präposition: steht vor einem Nomen (mit der Klasse). Konjunktion: verbindet Sätze (und, weil). Adverb: Wo? Wann? Wie? Warum? Interjektion: Ausruf (ach, aua).',ref:'merkmale'};
+  const BK=['praep','konj','adv','interj','kein'],BN={praep:'Präposition',konj:'Konjunktion',adv:'Adverb',interj:'Interjektion',kein:'Kein Partikel'};
+  c.TYPES.anmalenlang={icon:'🎨',label:'Partikel im langen Text anmalen',short:'Alle Wörter einer Partikelart zuordnen (mit Farben)',instr:'Wähle eine Farbe und tippe die Wörter im Text an. Jede Partikelart hat ihre eigene Farbe. Alle anderen Wörter lässt du weiss oder malst sie grau («Kein Partikel»).',hint:'Präposition: steht vor einem Nomen (mit der Klasse). Konjunktion: verbindet Sätze (und, weil). Adverb: Wo? Wann? Wie? Warum? Interjektion: Ausruf (ach, aua).',ref:'merkmale'};
+  const L={praep:'mit in nach von aus bei zu zum zur im am vom beim ins ans aufs auf an über unter vor hinter neben zwischen für gegen ohne durch um wegen trotz seit statt',
+    konj:'und oder aber denn sondern weil dass obwohl damit wenn ob als nachdem bevor sobald falls',
+    adv:'nicht heute gestern jetzt bald oft manchmal immer nie dort hier draussen drinnen oben unten links rechts dann danach davor später früher schon noch wieder gern leider vielleicht sehr plötzlich sofort endlich zuerst zuletzt darum deshalb deswegen trotzdem zurück hinauf hinunter hinaus herein überall nirgends kaum fast nur auch bestimmt wirklich dabei dafür dazu davon abends morgens mittags nachts eigentlich bereits ständig unbedingt ausserdem dennoch jedoch vorne hinten',
+    interj:'ach oh hurra igitt juhu aua autsch pst psst hey hallo ups uff na wow puh pfui'};
+  const MAP={};Object.keys(L).forEach(k=>L[k].split(' ').forEach(w=>{MAP[w]=k;}));
   const T=[
-   [1,"Hurra|interj, heute|adv gehen wir mit|praep der Klasse in|praep den Zoo. Dort|adv sehen wir Affen und|konj Elefanten. Ach|interj, der Löwe schläft noch|adv! Nach|praep dem Essen fahren wir zurück|adv zum|praep Bahnhof."],
-   [2,"Igitt|interj, es regnet schon|adv wieder|adv! Weil|konj wir keinen Schirm haben, warten wir unter|praep dem Dach. Mia ist müde, denn|konj sie hat gestern|adv lange|adv gespielt. Aua|interj, ich bin gegen|praep die Wand gelaufen! Danach|adv gehen wir nach|praep Hause."],
-   [3,"Juhu|interj, endlich|adv sind Ferien! Obwohl|konj es draussen|adv kalt ist, laufen wir ohne|praep Jacke durch|praep den Wald. Plötzlich|adv ruft Tim leise|adv: Pst|interj, hört ihr das? Wir bleiben stehen, weil|konj er sofort|adv gespannt|adv lauscht. Hinter|praep den Bäumen sehen wir ein Reh, aber|konj es rennt davon|adv."]
+   [1,"Heute gehen wir mit der Klasse in den Zoo. Dort sehen wir Affen und Elefanten. Ach, der Löwe schläft noch! Nach dem Essen fahren wir zurück zum Bahnhof."],
+   [1,"Hurra, es ist Samstag! Mia spielt draussen mit ihrem Hund. Sie läuft oft durch den Park und trifft dort ihre Freunde. Danach essen alle Eis."],
+   [1,"Oh, es regnet schon wieder! Wir bleiben drinnen und spielen ein Spiel. Tim holt Karten aus dem Schrank. Später kochen wir Tee."],
+   [1,"Hallo, ich bin Noah. Ich wohne in einem kleinen Dorf neben dem Wald. Jeden Tag fahre ich mit dem Bus zur Schule. Manchmal gehe ich auch zu Fuss."],
+   [1,"Wir machen einen Ausflug. Zuerst fahren wir mit dem Zug nach Luzern. Dort laufen wir am See und essen ein Brötchen. Am Abend sind alle müde."],
+   [1,"Aua, mein Knie tut weh! Ich bin vor der Tür gestolpert. Mama legt ein Pflaster auf die Wunde und gibt mir einen Apfel. Jetzt geht es mir besser."],
+   [2,"Igitt, die Suppe ist kalt! Weil niemand sie gewärmt hat, schmeckt sie schlecht. Jetzt essen wir Brot und Käse, denn wir haben grossen Hunger."],
+   [2,"Lena freut sich, weil bald Ferien sind. Sie packt schon den Koffer und denkt an das Meer. Ihr Bruder hofft, dass die Sonne jeden Tag scheint."],
+   [2,"Gestern war ich mit meiner Familie draussen, aber es war kalt. Wir sind trotzdem weitergegangen, denn die Aussicht war schön. Abends tranken wir heissen Tee."],
+   [2,"Wenn es schneit, gehen wir auf den Hügel. Dort fahren wir mit dem Schlitten hinunter und lachen. Danach wärmen wir uns in der Hütte."],
+   [2,"Ach, ich habe meinen Schlüssel vergessen! Ich weiss nicht, ob jemand zu Hause ist. Vielleicht klingle ich bei der Nachbarin, denn sie ist oft in ihrer Wohnung."],
+   [2,"Der Zug hat Verspätung, deshalb warten wir am Bahnhof. Hier ist es kalt, aber im Café gibt es Kakao. Pst, ich höre die Durchsage!"],
+   [3,"Juhu, endlich sind Ferien! Obwohl es draussen kalt ist, laufen wir ohne Jacke durch den Wald. Plötzlich ruft Tim: Pst, hört ihr das? Wir bleiben stehen, weil er sofort etwas gehört hat. Hinter den Bäumen sehen wir ein Reh, aber es rennt davon."],
+   [3,"Nachdem wir gegessen hatten, spülten alle das Geschirr. Danach spielten wir bei Kerzenlicht Karten, obwohl wir eigentlich müde waren. Oh, schon Mitternacht!"],
+   [3,"Meine Schwester lernt nicht für die Prüfung, sondern sie schaut ständig auf ihr Handy. Trotzdem hofft sie, dass sie eine gute Note bekommt. Ich finde, dass das kaum klappt."],
+   [3,"In der Pause diskutierten wir über das Spiel. Hey, wer hat gestern gewonnen? Wegen des Regens wurde das Training abgesagt, trotzdem kamen fast alle."],
+   [3,"Uff, das war anstrengend! Wir haben den ganzen Tag gearbeitet, denn der Garten musste fertig werden. Sobald es dunkel wurde, gingen alle nach Hause. Dort wartete bereits die Suppe."],
+   [3,"Wow, die Aussicht ist wirklich toll! Vor uns liegt der See, hinter uns erheben sich die Berge. Wenn das Wetter hält, bleiben wir noch einen Tag hier, denn wir möchten unbedingt auf den Gipfel steigen."]
   ];
   T.forEach(a=>{
-    const parts=a[1].split(' ').map(w=>{const i=w.indexOf('|');if(i<0)return{t:w,f:null};const m=w.slice(i+1).match(/^([a-z]+)(.*)$/);return{t:w.slice(0,i)+m[2],f:m[1]};});
-    c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0]===3?2:1,cats:['sg4'],parts,sent:'',lang:true,brushKeys:BK,brushNames:BN,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,:!?]$/,'')+' → '+BN[p.f]).join(' · ')});
+    const parts=a[1].split(' ').map(w=>({t:w,f:MAP[w.replace(/^[«"„]+|[.,!?;:»"“]+$/g,'').toLowerCase()]||null}));
+    c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0]===3?2:1,cats:['sg4'],parts,sent:'',lang:true,allChips:true,brushKeys:BK,brushNames:BN,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,:!?]$/,'')+' → '+BN[p.f]).join(' · ')});
   });
 })();
 })();

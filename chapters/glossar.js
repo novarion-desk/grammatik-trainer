@@ -11,7 +11,7 @@ wortarten:[
 ['Adjektiv','Wiewort','Sagt, wie etwas ist oder aussieht.'],
 ['Pronomen','Fürwort','Steht für ein Nomen oder begleitet es: er, mein, dieser.'],
 ['Partikel','unveränderliches Wort','Ein Wort, das nie seine Form ändert: und, in, heute.'],
-['flektieren','beugen','Ein Wort ändert seine Form. Beim Verb heisst das konjugieren, bei Nomen, Artikel, Adjektiv und Pronomen deklinieren.'],
+['flektieren','beugen (= die Form verändern)','Ein Wort ändert seine Form. Beim Verb heisst das konjugieren, bei Nomen, Artikel, Adjektiv und Pronomen deklinieren.'],
 ['flektierbar','veränderlich','Das Wort kann seine Form ändern (Nomen, Verb, Adjektiv, Pronomen).'],
 ['nicht flektierbar','unveränderlich','Das Wort bleibt immer gleich. Das gilt für alle Partikel.']],
 nomen:[
@@ -28,7 +28,9 @@ nomen:[
 verb:[
 ['Verb','Tunwort','Sagt, was jemand tut oder was geschieht.'],
 ['Infinitiv','Grundform','Die Form im Wörterbuch: laufen, sagen.'],
-['konjugieren','beugen','Das Verb ändert sich nach Person und Zeit: ich laufe, du läufst.'],
+['konjugieren','beugen (= die Form verändern)','Das Verb ändert sich nach Person, Zeit und Modus: ich laufe, du läufst.'],
+['Personalform','konjugierte Form','Das Verb, angepasst an Person, Zeit und Modus: ich laufe, du liefst. Andere Namen: konjugierte Form, finites Verb.'],
+['Modus','Aussageweise','Indikativ (Wirklichkeit), Konjunktiv (Möglichkeit, Wunsch), Imperativ (Befehl).',2],
 ['Person','','1. Person (ich, wir), 2. Person (du, ihr), 3. Person (er, sie, es, sie).'],
 ['Zeitform','Tempus','Sagt, wann etwas geschieht: Gegenwart, Vergangenheit, Zukunft.'],
 ['Hilfsverb','','sein, haben, werden: Sie helfen, andere Zeitformen zu bilden.'],
@@ -60,12 +62,12 @@ pronomen:[
 ['Relativpronomen','bezügliches Fürwort','Leitet einen Relativsatz ein: der Mann, der dort steht.',2],
 ['Bezugswort','','Das Wort, auf das sich ein Pronomen bezieht.']],
 partikel:[
-['Partikel','Teilchen','Wörter, die ihre Form nie ändern. Sie lassen sich nicht beugen. Dazu gehören Präpositionen, Konjunktionen, Adverbien und Interjektionen.'],
+['Partikel','Teilchen','Wörter, die ihre Form nie ändern. Sie lassen sich nicht beugen (= die Form verändern, zum Beispiel mit Endungen). Dazu gehören Präpositionen, Konjunktionen, Adverbien und Interjektionen.'],
 ['nicht flektierbar','unveränderlich','Das Wort bekommt keine Endung und hat keine Zeitform.'],
 ['Präposition','Verhältniswort','Steht vor einem Nomen und verlangt einen Fall: in, auf, mit, für.'],
 ['Konjunktion','Bindewort','Verbindet Wörter oder Sätze. Es gibt zwei Arten: nebenordnende und unterordnende Konjunktionen.'],
-['nebenordnende Konjunktion','nebenordnendes Bindewort','Eine Art der Konjunktion. Verbindet gleichwertige Teile, das Verb bleibt an seiner Stelle: und, oder, aber, denn, sondern.'],
-['unterordnende Konjunktion','unterordnendes Bindewort','Eine Art der Konjunktion. Leitet einen Nebensatz ein, das Verb steht am Ende: weil, dass, obwohl, wenn, damit.'],
+['nebenordnende Konjunktion','nebenordnendes Bindewort','Eine Art der Konjunktion. Verbindet gleichwertige Teile, das konjugierte Verb (Personalform) bleibt an zweiter Stelle: und, oder, aber, denn, sondern.'],
+['unterordnende Konjunktion','unterordnendes Bindewort','Eine Art der Konjunktion. Leitet einen Nebensatz ein, das konjugierte Verb (Personalform) steht am Ende: weil, dass, obwohl, wenn, damit.'],
 ['Adverb','Umstandswort','Nennt Ort, Zeit, Art oder Grund: hier, heute, gern, deshalb.'],
 ['Lokaladverb','Ortsadverb','Antwortet auf Wo? oder Wohin?: hier, dort, oben, hinauf.'],
 ['Temporaladverb','Zeitadverb','Antwortet auf Wann? oder Wie oft?: heute, bald, oft.'],
@@ -85,7 +87,7 @@ partikel:[
 verbale:[
 ['Verbale Teile','','Alle Teile des Prädikats: Personalform, Infinitiv, Partizip, Verbzusatz.'],
 ['Rohform','','Der Satz mit allen verbalen Teilen, ohne die anderen Wörter.'],
-['Personalform','','Das Verb mit Person und Zeit: ich lese, wir lasen.'],
+['Personalform','konjugierte Form','Das Verb, angepasst an Person, Zeit und Modus: ich lese, wir lasen.'],
 ['Infinitiv','Grundform','lesen, laufen.'],
 ['Partizip','Mittelwort','gelesen, gelaufen (Partizip II) oder lesend (Partizip I).'],
 ['Verbzusatz','','Der abgetrennte Teil des Verbs: Ich rufe dich <b>an</b>.'],
@@ -120,7 +122,7 @@ feld:[
 ['Vorfeld','','Alles vor der linken Satzklammer. Im Aussagesatz steht dort genau ein Satzglied.'],
 ['Mittelfeld','','Alles zwischen den beiden Satzklammern.'],
 ['Nachfeld','','Alles nach der rechten Satzklammer.'],
-['linke Satzklammer','','Die Personalform des Verbs.'],
+['linke Satzklammer','','Die Personalform (konjugierte Form) des Verbs.'],
 ['rechte Satzklammer','','Die restlichen verbalen Teile.'],
 ['Satzglied','','Wörter, die beim Verschieben zusammenbleiben.']],
 'hs-ns':[
@@ -130,7 +132,7 @@ feld:[
 ['Satzgefüge','','Ein Hauptsatz mit mindestens einem Nebensatz.'],
 ['Einleitewort','','Das Wort am Anfang des Nebensatzes: weil, dass, der.'],
 ['Konjunktion','Bindewort','Verbindet Sätze: weil, dass, obwohl.'],
-['Personalform','','Das Verb mit Person und Zeit.'],
+['Personalform','konjugierte Form','Das Verb, angepasst an Person, Zeit und Modus.'],
 ['Wortstellung','','Die Reihenfolge der Wörter im Satz.']],
 zgs:[
 ['zusammengezogener Satz','','Zwei Sätze, bei denen ein gemeinsames Satzglied nur einmal steht.'],
@@ -165,7 +167,7 @@ faelle:[
 ['Genitiv','Wes-Fall','Wessen?'],
 ['Dativ','Wem-Fall','Wem?'],
 ['Akkusativ','Wen-Fall','Wen oder was?'],
-['deklinieren','beugen','Nomen, Artikel, Adjektive und Pronomen ändern ihre Form nach dem Fall.'],
+['deklinieren','beugen (= die Form verändern)','Nomen, Artikel, Adjektive und Pronomen ändern ihre Form nach dem Fall.'],
 ['Präposition','Verhältniswort','Verlangt einen bestimmten Fall: mit dem Bus (Dativ).'],
 ['Endung','','Der Teil am Wortende, der den Fall zeigt.']],
 rede:[
@@ -187,7 +189,7 @@ function html(id){
     rows.map(r=>'<div class="glr"><div class="glt"><b>'+r[0]+'</b>'+(r[1]?' <span class="gld">= '+r[1]+'</span>':'')+'</div><div class="gle">'+r[2]+'</div></div>').join('')+
     '</div></details></div>';
 }
-(function(){const st=document.createElement('style');st.textContent='.gloss .gl{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.55rem;margin-top:.7rem}.gloss .glr{border:1px solid var(--line,#e2e8f0);border-radius:12px;padding:.55rem .75rem;background:var(--surface,#fff);hyphens:none;-webkit-hyphens:none}.gloss .glt{font-size:1rem}.gloss .gld{color:var(--muted,#64748b);font-weight:600}.gloss .gle{font-size:.92rem;margin-top:.15rem}';document.head.appendChild(st);})();
+(function(){const st=document.createElement('style');st.textContent='.gloss .gl{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.55rem;margin-top:.7rem}.gloss{background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #c7d2fe;border-radius:16px;padding:.9rem 1rem 1rem}.gloss .glr{border:1px solid #c7d2fe;border-left:5px solid #6366f1;border-radius:12px;padding:.55rem .75rem;background:#fff;color:#1e293b;hyphens:none;-webkit-hyphens:none}.gloss .glt{color:#312e81}.gloss h2{margin-top:0}.gloss .glt{font-size:1rem}.gloss .gld{color:var(--muted,#64748b);font-weight:600}.gloss .gle{font-size:.92rem;margin-top:.15rem}';document.head.appendChild(st);})();
 Object.keys(G).forEach(id=>{
   const c=GT.chapters[id];if(!c||c.glossar)return;
   c.glossar=true;
