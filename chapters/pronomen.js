@@ -143,6 +143,7 @@ const EX=[
 ];
 const merk=()=>T(['Thema','Merksatz'],[['Pronomen','Sie ersetzen ein Nomen oder begleiten es.'],['Artikel','bestimmt: der, die, das · unbestimmt: ein, eine'],['Personalpronomen','ich, du, er, sie, es, wir, ihr, sie – ändern sich nach Fall: er – ihn – ihm'],['Possessiv','mein, dein, sein, ihr, unser, euer – Endungen wie bei «ein»'],['Weitere','Reflexiv: sich · Demonstrativ: dieser · Frage: wer · Indefinit: man · Relativ: der']])+
  T(['Person','Nom.','Akk.','Dat.'],[['ich','ich','mich','mir'],['du','du','dich','dir'],['er','er','ihn','ihm'],['sie','sie','sie','ihr'],['es','es','es','ihm'],['wir','wir','uns','uns'],['ihr','ihr','euch','euch'],['sie (Mz.)','sie','sie','ihnen']]);
+const UEM={'artikel':{types:'artikel',cats:'sg1'},'personal':{types:'personal',cats:'sg2'},'possessiv':{types:'possessiv',cats:'sg3'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 GT.chapter({id:'pronomen',teil:'wort',nr:6,title:'Pronomen',big:'Er gibt ihr sein Buch',desc:'Artikel und Pronomen: ersetzen und begleiten',
  ex:'«'+mk('pron','Er')+' gibt '+mk('pron','ihr')+' '+mk('pron','sein')+' Buch.»',
  goals:['Ich erkenne bestimmte und unbestimmte Artikel.','Ich ersetze Nomen durch Personalpronomen in der richtigen Form.','Ich wähle das richtige Possessivpronomen.','Ich kenne weitere Pronomen (reflexiv, demonstrativ, Frage, unbestimmt).'],

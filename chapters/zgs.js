@@ -74,6 +74,7 @@ const EX=[
  ['Berichtige: «Er hilft und unterstützt seinen Freund.»','Er hilft seinem Freund und unterstützt ihn.',3]
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['ZGS','Ein gemeinsames Satzglied wird nur einmal genannt.'],['Gemeinsam','Subjekt, Objekt, Prädikat oder Hilfsverb.'],['Achtung','Verschiedene Fälle oder Hilfsverben: nicht zusammenziehen.']]);
+const UEM={'erkennen':{types:'erkenne',cats:'sg1'},'falsch':{types:'falsch',cats:'sg3'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 GT.chapter({id:'zgs',teil:'satz',nr:8,title:'Zusammengezogener Satz',big:'Anna kocht und deckt den Tisch',desc:'Gemeinsames Satzglied erkennen und Sätze zusammenziehen',
  ex:'«Anna kocht und deckt den Tisch.»',
  goals:['Ich erkenne den zusammengezogenen Satz.','Ich nenne das gemeinsame Satzglied.','Ich ziehe Sätze zusammen.','Ich berichtige falsche Zusammenziehungen (ab B).'],

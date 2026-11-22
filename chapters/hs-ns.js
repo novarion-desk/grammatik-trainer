@@ -25,7 +25,7 @@ const Q=[
 ['Ich gehe schlafen, <b>nachdem ich gegessen habe</b>.',1,2,'Nebensatz mit «nachdem».'],
 ['<b>Weil er müde war</b>, ging er früh ins Bett.',1,2,'Nebensatz mit «weil».'],
 ['Weil er müde war, <b>ging er früh ins Bett</b>.',0,2,'Hauptsatz: Verb steht an zweiter Stelle.'],
-['Er sagt, <b>er habe keine Zeit</b>.',1,3,'Indirekte Rede ohne «dass»: Nebensatz.'],
+['Er sagt, <b>er habe keine Zeit</b>.',1,3,'Indirekte Rede ohne «dass»: Nebensatz. Hier steht das Verb ausnahmsweise nicht am Ende.'],
 ['Ich bleibe hier, <b>bis du kommst</b>.',1,2,'Nebensatz mit «bis».'],
 ['<b>Ich bleibe hier</b>, bis du kommst.',0,2,'Hauptsatz.']
 ];
@@ -164,7 +164,7 @@ const SECS=[
  html:()=>T(['Satz','Aufbau','Beispiel'],[['Einfacher Satz','ein Hauptsatz (H)','Anna lacht.'],['Satzverbindung (SV)','H + H (+ H …)','Der Hund bellt, <b>und</b> die Katze schläft.'],['Satzgefüge (SG)','H + N (+ N …)','Ich bleibe zu Hause, <b>weil</b> ich krank bin.']])+
  '<div class="callout">Satzverbindung und Satzgefüge heissen zusammen <b>zusammengesetzter Satz</b>. Hauptsätze verbindet man mit <b>und, aber, oder, denn</b>. Nebensätze leitet man mit <b>weil, dass, obwohl, wenn, damit …</b> ein.</div>'},
 {id:'einleite',title:'Einleitewörter des Nebensatzes',short:'Einleitewörter',min:10,note:'Drei Gruppen: unterordnende Konjunktionen, Relativpronomen/Relativadverbien, Fragewörter. Wichtig: denn, aber, und, oder leiten Hauptsätze ein.',
- html:()=>T(['Einleitewort','Beispiele','Satz'],[['unterordnende Konjunktion','weil, dass, obwohl, wenn, als, ob, damit, bevor','Ich weiss, <b>dass</b> du recht hast.'],['Relativpronomen','der, die, das, welcher','Das ist der Lehrer, <b>der</b> Mathe unterrichtet.'],['Relativadverb','wo, woher, womit, wofür','Der Ort, <b>wo</b> wir uns treffen, ist neu.'],['Fragewort','wer, was, wann, warum, wie','Sag mir, <b>wann</b> du kommst.']])+
+ html:()=>T(['Einleitewort','Beispiele','Satz'],[['unterordnende Konjunktion','weil, dass, obwohl, wenn, als, ob, damit, bevor','Ich weiss, <b>dass</b> du recht hast.'],['Relativpronomen','der, die, das, welcher','Das ist der Lehrer, <b>der</b> Mathe unterrichtet.'],['Relativadverb','wo, woher, wohin','Der Ort, <b>wo</b> wir uns treffen, ist neu.'],['Fragewort','wer, was, wann, warum, wie','Sag mir, <b>wann</b> du kommst.']])+
  '<div class="callout"><b>Achtung:</b> «denn» und «aber» leiten <b>Hauptsätze</b> ein. Danach steht das Verb an zweiter Stelle: «Wir bleiben, <b>denn</b> es regnet.»</div>'},
 {id:'stellung',title:'Wortstellung',short:'Wortstellung',min:8,note:'Wichtigste Fehlerquelle: Verb im Nebensatz. Vorangestellter Nebensatz zählt als erstes Satzglied: Danach folgt das Verb des Hauptsatzes.',
  html:()=>'<div class="grid2"><div class="card"><h3>Nebensatz nachgestellt</h3><p>Ich bleibe zu Hause, weil ich krank <b>bin</b>.</p></div>'+
@@ -189,7 +189,8 @@ const EX=[
  ['Bilde einen Satz mit «damit».','Beispiel: Ich lerne, damit ich die Prüfung bestehe.',2],
  ['Satzverbindung oder Satzgefüge? «Der Hund bellt, und die Katze schläft.»','Satzverbindung',2]
 ];
-const merk=()=>T(['Begriff','Merksatz'],[['Hauptsatz','Kann allein stehen. Verb an zweiter Stelle.'],['Nebensatz','Beginnt mit einer Konjunktion. Verb am Ende. Kommt nicht allein vor.'],['Satzverbindung','Hauptsatz + Hauptsatz (und, aber, oder, denn).'],['Satzgefüge','Hauptsatz + Nebensatz (weil, dass, obwohl, wenn, damit …).'],['Komma','Zwischen Haupt- und Nebensatz steht immer ein Komma.'],['Teilsatz','Jeder Teil eines zusammengesetzten Satzes.'],['Einleitewort','Relativpronomen (der, die, das), Fragewort (wer, wann, warum) oder unterordnende Konjunktion (weil, dass, obwohl, wenn).']]);
+const merk=()=>T(['Begriff','Merksatz'],[['Hauptsatz','Kann allein stehen. Verb an zweiter Stelle.'],['Nebensatz','Beginnt meist mit einem Einleitewort. Verb am Ende. Kommt nicht allein vor.'],['Satzverbindung','Hauptsatz + Hauptsatz (und, aber, oder, denn).'],['Satzgefüge','Hauptsatz + Nebensatz (weil, dass, obwohl, wenn, damit …).'],['Komma','Zwischen Haupt- und Nebensatz steht immer ein Komma.'],['Teilsatz','Jeder Teil eines zusammengesetzten Satzes.'],['Einleitewort','Relativpronomen (der, die, das), Fragewort (wer, wann, warum) oder unterordnende Konjunktion (weil, dass, obwohl, wenn).']]);
+const UEM={'haupt':{types:'teilsatz,hatns',cats:'sg1'},'verbindung':{types:'gefuege',cats:'sg2'},'einleite':{types:'einleit',cats:'sg3'},'stellung':{types:'konj',cats:'sg4'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 GT.chapter({id:'hs-ns',teil:'satz',nr:7,title:'Hauptsatz, Nebensatz und Satzgefüge',big:'Ich bleibe, weil ich müde bin',desc:'Satzverbindung, Satzgefüge, Einleitewörter und Verbstellung',
  ex:'«Ich bleibe zu Hause, weil ich krank bin.»',
  goals:['Ich unterscheide Hauptsatz und Nebensatz.','Ich erkenne Satzverbindung und Satzgefüge.','Ich erkenne Einleitewörter von Nebensätzen.','Ich bilde Satzverbindungen und Satzgefüge aus zwei einfachen Sätzen.','Ich stelle das Verb im Nebensatz richtig.'],

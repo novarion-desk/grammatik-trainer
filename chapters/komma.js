@@ -44,10 +44,33 @@ const J=[
 ];
 J.forEach(j=>task.push({typ:'ja',stufe:j[2],lv:j[2]===3?2:1,cats:[j[3]],sent:j[0].replace(/___ ?/g,'<span class="gap">_</span> ').replace(/ ___ /g,' <span class="gap">_</span> '),opts:['Komma setzen','Kein Komma'],answer:j[1]?'Komma setzen':'Kein Komma',why:'<b>'+(j[1]?'Komma setzen.':'Kein Komma.')+'</b> '+j[4]}));
 
+/* Zusatzaufgaben: Relativsatz, Einschub, Infinitivgruppe */
+const R2=[
+['Die Frau, die dort wartet, ist meine Lehrerin.',['Die Frau die dort wartet ist meine Lehrerin.','Die Frau, die dort wartet ist meine Lehrerin.','Die Frau die dort wartet, ist meine Lehrerin.'],2,'sg3','Relativsatz in der Mitte: Komma davor und danach.'],
+['Das Fahrrad, das ich geschenkt bekam, ist rot.',['Das Fahrrad das ich geschenkt bekam ist rot.','Das Fahrrad, das ich geschenkt bekam ist rot.','Das Fahrrad das ich geschenkt bekam, ist rot.'],2,'sg3','Relativsatz in der Mitte: zwei Kommas.'],
+['Ich kenne den Jungen, der neben mir sitzt.',['Ich kenne den Jungen der neben mir sitzt.','Ich kenne, den Jungen der neben mir sitzt.','Ich kenne den Jungen, der, neben mir sitzt.'],2,'sg3','Relativsatz am Satzende: nur ein Komma davor.'],
+['Mein Onkel, ein Pilot, wohnt in Zürich.',['Mein Onkel ein Pilot wohnt in Zürich.','Mein Onkel, ein Pilot wohnt in Zürich.','Mein Onkel ein Pilot, wohnt in Zürich.'],3,'sg3','Eingeschobene Erklärung: Komma davor und danach.'],
+['Herr Meier, unser Nachbar, hat ein neues Auto.',['Herr Meier unser Nachbar hat ein neues Auto.','Herr Meier, unser Nachbar hat ein neues Auto.','Herr Meier unser Nachbar, hat ein neues Auto.'],3,'sg3','Eingeschobene Erklärung (Apposition): zwei Kommas.'],
+['Zürich, die grösste Stadt der Schweiz, liegt am See.',['Zürich die grösste Stadt der Schweiz liegt am See.','Zürich, die grösste Stadt der Schweiz liegt am See.','Zürich die grösste Stadt der Schweiz, liegt am See.'],3,'sg3','Der Einschub erklärt «Zürich» und steht zwischen zwei Kommas.'],
+['Wir gingen früh, um den Bus zu erreichen.',['Wir gingen früh um den Bus zu erreichen.','Wir gingen, früh um den Bus zu erreichen.','Wir gingen früh um, den Bus zu erreichen.'],2,'sg4','Vor «um … zu» steht immer ein Komma.'],
+['Er ging weg, ohne ein Wort zu sagen.',['Er ging weg ohne ein Wort zu sagen.','Er ging weg ohne, ein Wort zu sagen.','Er ging, weg ohne ein Wort zu sagen.'],3,'sg4','Bei «ohne … zu» steht das Komma immer.'],
+['Statt zu lernen, schaute sie fern.',['Statt zu lernen schaute sie fern.','Statt, zu lernen schaute sie fern.','Statt zu lernen schaute, sie fern.'],3,'sg4','Bei «statt … zu» steht das Komma immer, auch wenn die Gruppe vorne steht.']
+];
+R2.forEach(r=>task.push({typ:'komma',stufe:r[2],lv:r[2]===3?2:1,cats:[r[3]],prompt:'Welcher Satz ist richtig geschrieben?',opts:[r[0]].concat(r[1]),answer:r[0],why:'<b>'+r[0]+'</b> '+r[4]}));
+const J2=[
+['Der Lehrer___ der gerade kommt___ ist neu.',true,2,'sg3','Relativsatz in der Mitte: Komma davor und danach.'],
+['Anna___ meine Freundin___ wohnt in Bern.',true,3,'sg3','Eingeschobene Erklärung: Komma davor und danach.'],
+['Ich sehe den Mann___ der dort steht.',true,2,'sg3','Vor dem Relativsatz steht ein Komma.'],
+['Das Mädchen___ das singt___ heisst Lena.',true,2,'sg3','Relativsatz in der Mitte: zwei Kommas.'],
+['Sie ging___ ohne zu grüssen.',true,3,'sg4','Vor «ohne … zu» steht das Komma immer.'],
+['Statt zu lernen___ spielte er.',true,3,'sg4','Nach «statt … zu» am Satzanfang steht das Komma.']
+];
+J2.forEach(j=>task.push({typ:'ja',stufe:j[2],lv:j[2]===3?2:1,cats:[j[3]],sent:j[0].replace(/___ ?/g,'<span class="gap">_</span> '),opts:['Komma setzen','Kein Komma'],answer:j[1]?'Komma setzen':'Kein Komma',why:'<b>'+(j[1]?'Komma setzen.':'Kein Komma.')+'</b> '+j[4]}));
+
 /* Wissen */
 const W=[
 ['Wann steht in einer Aufzählung <b>kein</b> Komma?',['vor «und» und «oder»','zwischen den Gliedern','nach dem ersten Wort','nie'],'vor «und» und «oder»','«Äpfel, Birnen und Bananen.»','sg1',1],
-['Vor welchen Wörtern steht <b>immer</b> ein Komma?',['dass, weil, obwohl, damit','und, oder','der, die, das','ich, du, er'],'dass, weil, obwohl, damit','Nebensätze trennt man mit Komma.','sg2',1],
+['Welche Wörter leiten einen Nebensatz ein, der mit Komma abgetrennt wird?',['dass, weil, obwohl, damit','und, oder','der, die, das','ich, du, er'],'dass, weil, obwohl, damit','Nebensätze trennt man mit Komma.','sg2',1],
 ['Welche Konjunktion verlangt <b>kein</b> Komma zwischen zwei Hauptsätzen?',['und','aber','denn','sondern'],'und','Vor «und» und «oder» ist das Komma nicht Pflicht.','sg2',2],
 ['Wo stehen die Kommas im Relativsatz mitten im Satz?',['davor und danach','nur davor','nur danach','nirgends'],'davor und danach','«Der Mann, der dort steht, ist mein Onkel.»','sg3',2],
 ['Warum setzt man ein Komma vor «dass»?',['weil ein Nebensatz beginnt','weil «dass» ein Nomen ist','weil «dass» ein Verb ist','es gibt keinen Grund'],'weil ein Nebensatz beginnt','Haupt- und Nebensatz werden durch Komma getrennt.','sg2',1],
@@ -62,7 +85,7 @@ W.forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:1,cats:[w[4]],prompt:w[0],opt
 const INP=[["setzen", 2, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Ich hoffe dass es morgen schönes Wetter gibt.", "Ich hoffe, dass es morgen schönes Wetter gibt.", [], false, "Richtig gesetzt: «Ich hoffe, dass es morgen schönes Wetter gibt.»"], ["setzen", 1, "sg1", "Schreibe den Satz mit den richtigen Kommas ab.", "Tim kauft Äpfel Birnen und Bananen.", "Tim kauft Äpfel, Birnen und Bananen.", [], false, "Richtig gesetzt: «Tim kauft Äpfel, Birnen und Bananen.»"], ["setzen", 1, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Wir bleiben zu Hause weil es regnet.", "Wir bleiben zu Hause, weil es regnet.", [], false, "Richtig gesetzt: «Wir bleiben zu Hause, weil es regnet.»"], ["setzen", 2, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Sie ist müde aber sie spielt weiter.", "Sie ist müde, aber sie spielt weiter.", [], false, "Richtig gesetzt: «Sie ist müde, aber sie spielt weiter.»"], ["setzen", 3, "sg3", "Schreibe den Satz mit den richtigen Kommas ab.", "Der Hund der im Garten spielt gehört mir.", "Der Hund, der im Garten spielt, gehört mir.", [], false, "Richtig gesetzt: «Der Hund, der im Garten spielt, gehört mir.»"], ["setzen", 2, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Wenn die Sonne scheint gehen wir schwimmen.", "Wenn die Sonne scheint, gehen wir schwimmen.", [], false, "Richtig gesetzt: «Wenn die Sonne scheint, gehen wir schwimmen.»"], ["setzen", 1, "sg2", "Schreibe den Satz mit den richtigen Kommas ab.", "Lena sagt dass sie krank ist.", "Lena sagt, dass sie krank ist.", [], false, "Richtig gesetzt: «Lena sagt, dass sie krank ist.»"], ["setzen", 1, "sg1", "Schreibe den Satz mit den richtigen Kommas ab.", "Ich mag Pizza Pasta und Salat.", "Ich mag Pizza, Pasta und Salat.", [], false, "Richtig gesetzt: «Ich mag Pizza, Pasta und Salat.»"]];
 INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6]||[],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
 
-const SECS=[
+const SECS0=[
 {id:'auf',title:'Aufzählung',short:'Aufzählung',min:6,note:'Einfachste Regel zuerst: Aufzählung. «und» und «oder» ersetzen das Komma.',
  html:()=>'<div class="card"><p>Ich kaufe Äpfel<b>,</b> Birnen <b>und</b> Bananen.</p><p>Er ist gross<b>,</b> stark <b>und</b> freundlich.</p></div>'+
  '<div class="callout"><b>Merke:</b> Zwischen den Gliedern einer Aufzählung steht ein Komma. Vor <b>und</b> und <b>oder</b> steht <b>kein</b> Komma.</div>'},
@@ -87,6 +110,30 @@ const SECS=[
   ['6 · Komma im falschen Satz','«Ich gehe, nach Hause.»','Kein Komma ohne Grund.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('komma,ja')}
 ];
+const ART=o=>'<div class="grid2"><div class="card"><h3>Was ist das?</h3><p>'+o.was+'</p></div><div class="card"><h3>So erkennst du es</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+o.erk.map(x=>'<li>'+x+'</li>').join('')+'</ul></div></div>'+T(['Beispiel','Komma'],o.bsp)+'<div class="callout">⚠️ <b>Stolperstein:</b> '+o.stolper+'</div>';
+const SECS_N=[
+{id:'was-komma',title:'Wozu braucht man Kommas?',short:'Wozu Kommas?',min:8,note:'Einstieg: Das Komma gliedert den Satz und kann die Bedeutung verändern. Die Schüler lesen die Paare laut und erklären den Unterschied.',
+ html:()=>'<div class="grid2"><div class="card"><h3>Was ist ein Komma?</h3><p>Das Komma ist ein <b>Satzzeichen</b>. Es steht <b>innerhalb</b> eines Satzes.</p></div>'+
+ '<div class="card"><h3>Wozu ist es da?</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem"><li>Es <b>gliedert</b> den Satz in Teile.</li><li>Es zeigt, was <b>zusammengehört</b> und was nicht.</li><li>Es hilft dem Leser, den Satz <b>richtig zu verstehen</b>.</li></ul></div></div>'+
+ '<h3 style="margin:1rem 0 .4rem">Ein Komma kann den Sinn ändern</h3>'+
+ T(['Anderes Komma','Mit Komma'],[
+ ['Komm, wir essen Opa!<br><small>Opa wird gegessen.</small>','Komm, wir essen<b>,</b> Opa!<br><small>Opa wird angesprochen.</small>'],
+ ['Der Lehrer sagt<b>,</b> der Schüler sei faul.<br><small>Der Lehrer urteilt über den Schüler.</small>','Der Lehrer<b>,</b> sagt der Schüler<b>,</b> sei faul.<br><small>Der Schüler urteilt über den Lehrer.</small>'],
+ ['Ich komme nicht<b>,</b> weil du es willst.<br><small>Ich komme nicht. Der Grund: Du willst es.</small>','Ich komme<b>,</b> nicht weil du es willst.<br><small>Ich komme. Aber nicht deinetwegen.</small>']])+
+ '<div class="callout"><b>Merke:</b> Ein Komma ist keine Atempause. Es folgt festen Regeln. Die lernst du auf den nächsten Folien.</div>'},
+{id:'ns-erkl',title:'Was ist ein Nebensatz? Wann steht ein Komma?',short:'Nebensatz erkennen',min:8,note:'Kurze Wiederholung: Ein Nebensatz kann nicht allein stehen, beginnt meist mit einem Einleitewort (weil, dass, wenn, der …) und hat das Verb am Schluss. Zwischen Haupt- und Nebensatz steht immer ein Komma.',
+ html:()=>ART({was:'Ein <b>Nebensatz</b> kann nicht allein stehen. Er hängt an einem <b>Hauptsatz</b>. Zwischen den beiden Sätzen steht ein <b>Komma</b>.',erk:['Er beginnt mit einem <b>Einleitewort</b>: weil, dass, wenn, obwohl, damit, als, der, die, das …','Die <b>Personalform</b> steht am <b>Schluss</b>.','Probe: Allein ergibt er keinen vollständigen Satz («…, weil ich müde bin»).'],bsp:[['Ich bleibe zu Hause<b>,</b> weil ich krank bin.','Nebensatz hinten: Komma davor'],['Weil ich krank bin<b>,</b> bleibe ich zu Hause.','Nebensatz vorne: Komma danach'],['Ich weiss<b>,</b> dass du recht hast.','Komma vor «dass»']],stolper:'Das Komma gehört zwischen die Sätze, nicht ins Innere des Nebensatzes. Nicht: «Ich bleibe, zu Hause weil ich krank bin.»'})},
+{id:'relativ-erkl',lv:2,title:'Was ist ein Relativsatz?',short:'Was ist ein Relativsatz?',min:8,note:'Ab Niveau B. Relativsatz = Nebensatz, der ein Nomen im Hauptsatz genauer beschreibt (Bezugswort). Beginnt mit der, die, das, welcher, wo. Immer mit Komma abgetrennt: am Ende ein Komma, in der Mitte zwei.',
+ html:()=>ART({was:'Ein <b>Relativsatz</b> ist ein Nebensatz, der ein <b>Nomen</b> genauer beschreibt. Er beginnt mit <b>der, die, das</b> (oder welcher, wo).',erk:['Er hängt an einem <b>Bezugswort</b> (einem Nomen) im Hauptsatz.','Das Relativpronomen lässt sich oft durch <b>«welcher, welche, welches»</b> ersetzen.','Die Personalform steht am <b>Schluss</b>.'],bsp:[['Ich kenne den Jungen<b>,</b> der neben mir sitzt.','am Ende: ein Komma davor'],['Die Frau<b>,</b> die dort wartet<b>,</b> ist meine Lehrerin.','in der Mitte: zwei Kommas'],['Das Fahrrad<b>,</b> das ich bekam<b>,</b> ist rot.','in der Mitte: zwei Kommas']],stolper:'In der Mitte brauchst du <b>zwei</b> Kommas. Wer einmal anfängt, muss auch schliessen.'})},
+{id:'einschub',lv:2,title:'Was ist ein Einschub?',short:'Einschub (Apposition)',min:6,note:'Ab Niveau B. Ein Einschub (Apposition) erklärt ein Nomen genauer und steht zwischen zwei Kommas. Probe: Ohne den Einschub bleibt der Satz vollständig. Nicht mit Aufzählung verwechseln.',
+ html:()=>ART({was:'Ein <b>Einschub</b> (Apposition) erklärt ein Nomen genauer. Er wird in den Satz <b>eingeschoben</b>.',erk:['Er sagt noch einmal dasselbe mit anderen Worten: «Anna, <b>meine Schwester</b>».','Probe: Lässt man ihn weg, ist der Satz noch <b>vollständig</b>.','Er steht zwischen <b>zwei Kommas</b>.'],bsp:[['Anna<b>,</b> meine Schwester<b>,</b> wohnt in Bern.','Einschub: meine Schwester'],['Mein Onkel<b>,</b> ein Pilot<b>,</b> wohnt in Zürich.','Einschub: ein Pilot'],['Zürich<b>,</b> die grösste Stadt der Schweiz<b>,</b> liegt am See.','Einschub: die grösste Stadt …']],stolper:'Eine <b>Aufzählung</b> sieht ähnlich aus: «Anna, Tim und Mia». Beim Einschub bezeichnen beide Teile <b>dieselbe</b> Person oder Sache.'})},
+{id:'infgruppe',title:'Was ist eine Infinitivgruppe?',short:'Infinitivgruppe',min:8,note:'Infinitivgruppe = Infinitiv mit «zu» plus die Wörter, die dazugehören (um den Bus zu erreichen). Komma ist Pflicht bei um, ohne, statt, anstatt, ausser, als. Sonst ist es oft freiwillig. Pflicht ist es auch, wenn die Gruppe von einem Nomen oder Hinweiswort abhängt.',
+ html:()=>ART({was:'Eine <b>Infinitivgruppe</b> besteht aus einem <b>Infinitiv mit «zu»</b> und den Wörtern, die dazugehören.',erk:['Es steht «<b>zu</b>» + Infinitiv: <b>zu erreichen, zu sagen, zu lernen</b>.','Es gibt keine Personalform und kein eigenes Subjekt.','Bei <b>um … zu, ohne … zu, statt … zu</b> steht das Komma <b>immer</b>.'],bsp:[['Wir gingen früh<b>,</b> um den Bus zu erreichen.','um … zu: Komma Pflicht'],['Er ging weg<b>,</b> ohne ein Wort zu sagen.','ohne … zu: Komma Pflicht'],['Statt zu lernen<b>,</b> schaute sie fern.','statt … zu: Komma Pflicht']],stolper:'Bei anderen Infinitivgruppen (zum Beispiel «Er hofft zu gewinnen») ist das Komma oft <b>freiwillig</b>. Pflicht ist es auch, wenn die Gruppe zu einem Nomen oder Hinweiswort gehört: «Ich habe den Plan<b>,</b> auszuwandern.»'})}
+];
+const ORD=['was-komma','auf','ns-erkl','haupt-neben','hs-hs','relativ-erkl','relativ','einschub','sonst','infgruppe','stolper'];
+const UE={auf:{types:'komma,ja',cats:'sg1'},'ns-erkl':{types:'komma,ja',cats:'sg2'},'haupt-neben':{types:'komma,ja',cats:'sg2'},'hs-hs':{types:'komma,ja',cats:'sg2'},'relativ-erkl':{types:'komma,ja',cats:'sg3'},relativ:{types:'komma,ja',cats:'sg3'},einschub:{types:'komma,ja',cats:'sg3'},sonst:{types:'komma,ja',cats:'sg4',title:'Anrede, Ausruf, Infinitivgruppe'},infgruppe:{types:'komma,ja',cats:'sg4'}};
+const ALL=SECS0.concat(SECS_N);
+const SECS=ORD.map(id=>{const x=ALL.find(y=>y.id===id);if(!x)throw new Error('Abschnitt fehlt: '+id);if(UE[id])x.uebung=Object.assign({},UE[id]);return x;});
 const EX=[
  ['Setze die Kommas: «Ich kaufe Brot Milch Käse und Butter.»','Ich kaufe Brot, Milch, Käse und Butter.',1],
  ['Setze das Komma: «Ich weiss dass er kommt.»','Ich weiss, dass er kommt.',1],

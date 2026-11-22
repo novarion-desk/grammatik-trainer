@@ -30,9 +30,10 @@ const S=[
 ['gehen','ging','gegangen',['gehte','gangte','ginget'],['gegeht','gegangt','gegehen'],1],['singen','sang','gesungen',['singte','sung','sangte'],['gesingt','gesang','gesangen'],1],['kommen','kam','gekommen',['kommte','kamte','kamm'],['gekommt','gekam','gekamt'],1],['essen','ass','gegessen',['esste','asste','ase'],['gegesst','gegass','geessen'],2],['schreiben','schrieb','geschrieben',['schreibte','schriebte','schribe'],['geschreibt','geschrieb','geschriebt'],2],['lesen','las','gelesen',['leste','laste','lasste'],['gelest','gelas','geliesen'],2],['fahren','fuhr','gefahren',['fahrte','fahr','fuhrte'],['gefahrt','gefuhr','gefahrte'],2],['nehmen','nahm','genommen',['nehmte','nam','nahmte'],['genehmt','genahm','genommt'],2],['sehen','sah','gesehen',['sehte','siehte','sahte'],['gesehnt','gesah','gesieht'],2],['trinken','trank','getrunken',['trinkte','trunk','trankte'],['getrinkt','getrank','getrinken'],2],['laufen','lief','gelaufen',['laufte','lauf','liefte'],['gelauft','gelief','geloffen'],2],['schwimmen','schwamm','geschwommen',['schwimmte','schwomm','schwammte'],['geschwimmt','geschwamm','geschwammen'],2],['geben','gab','gegeben',['gebte','gabte','gib'],['gegebt','gegab','gegaben'],2],['helfen','half','geholfen',['helfte','halfte','hilfte'],['gehelft','gehalf','gehilft'],2],
 ['besuchen','besuchte','besucht',['besuchet','gebesuchte','besuchete'],['gebesucht','gebesuchen','besuchen'],3],['aufstehen','stand auf','aufgestanden',['aufstand','stehte auf','aufstehte'],['aufgestehen','gestandenauf','aufgestandt'],3],['anrufen','rief an','angerufen',['anrief','rufte an','anrufte'],['geanrufen','angerufte','angerufet'],3]
 ];
+const SEIN={gehen:1,kommen:1,fahren:1,laufen:1,schwimmen:1,aufstehen:1};
 S.forEach(s=>{
   task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Präteritum</b> von «'+s[0]+'»? (er/sie/es …)',opts:[s[1]].concat(s[3]),answer:s[1],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Präteritum: «er '+s[1]+'».'});
-  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Partizip II</b> von «'+s[0]+'»?',opts:[s[2]].concat(s[4]),answer:s[2],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Perfekt: «er hat/ist '+s[2]+'».'});
+  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Partizip II</b> von «'+s[0]+'»?',opts:[s[2]].concat(s[4]),answer:s[2],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Perfekt: «er '+(SEIN[s[0]]?'ist ':'hat ')+s[2]+'».'});
 });
 
 /* Verbteile markieren */
@@ -51,15 +52,15 @@ const E=[
 ['Gestern ___ wir im Garten. (spielen)','Präteritum','spielten',1,'Stamm spiel- + -ten.'],
 ['Er ___ gern Fussball. (spielen)','Präsens','spielt',1,'er spielt.'],
 ['Sie ___ gestern einen Kuchen. (backen)','Präteritum','backte',1,'backen – backte (auch: buk).',['buk']],
-['Wir ___ morgen nach Bern. (fahren)','Futur I','werden fahren',1,'werden + Infinitiv.'],
+['Wir ___ morgen nach Bern ___. (fahren)','Futur I','werden fahren',1,'werden + Infinitiv.'],
 ['Ich ___ gestern lange ___. (schlafen)','Perfekt','habe geschlafen',1,'haben + Partizip II.'],
-['Du ___ heute sehr früh. (aufstehen)','Präsens','stehst auf',2,'Trennbares Verb: du stehst … auf.'],
+['Du ___ heute sehr früh ___. (aufstehen)','Präsens','stehst auf',2,'Trennbares Verb: du stehst … auf.'],
 ['Sie ___ schon nach Hause ___. (gehen)','Perfekt','ist gegangen',2,'gehen bildet das Perfekt mit sein.'],
 ['Er ___ das Buch schon ___, bevor der Film begann. (lesen)','Plusquamperfekt','hatte gelesen',2,'hatte + Partizip II.'],
 ['Gestern ___ es den ganzen Tag. (regnen)','Präteritum','regnete',1,'Stamm regn- + -ete.'],
 ['Wir ___ Pizza. (essen)','Präteritum','assen',2,'essen – ass – gegessen.'],
-['Nächstes Jahr ___ ich in die Lehre. (gehen)','Futur I','werde gehen',2,'werden + Infinitiv.'],
-['Sie ___ ein Lied. (singen)','Perfekt','hat gesungen',2,'singen – sang – gesungen.'],
+['Nächstes Jahr ___ ich in die Lehre ___. (gehen)','Futur I','werde gehen',2,'werden + Infinitiv.'],
+['Sie ___ ein Lied ___. (singen)','Perfekt','hat gesungen',2,'singen – sang – gesungen.'],
 ['Als ich ankam, ___ der Zug schon ___. (abfahren)','Plusquamperfekt','war abgefahren',3,'war + Partizip II: Der Zug fuhr früher ab.'],
 ['Nachdem sie gegessen ___, gingen sie hinaus. (haben)','Plusquamperfekt','hatten',3,'Nachdem sie gegessen hatten …: Plusquamperfekt von essen.'],
 ['Er ___ mir gestern den Weg. (zeigen)','Präteritum','zeigte',1,'Stamm zeig- + -te.'],
@@ -78,7 +79,7 @@ E.forEach(e=>{
 /* Umformen: ganzen Satz in andere Zeit schreiben. [Satz, Zielzeit, Lösung, Stufe, Hinweis, accept[]] */
 const U=[
 ['Ich spiele Fussball.','Präteritum','Ich spielte Fussball.',1,'spielen: Stamm + -te.'],
-['Sie lacht laut.','Perfekt','Sie hat laut gelacht.',1,'haben + Partizip II.',['Sie hat gelacht laut.']],
+['Sie lacht laut.','Perfekt','Sie hat laut gelacht.',1,'haben + Partizip II.'],
 ['Wir gehen nach Hause.','Präteritum','Wir gingen nach Hause.',1,'gehen – ging.'],
 ['Er kocht Suppe.','Perfekt','Er hat Suppe gekocht.',1,'haben + gekocht.'],
 ['Der Hund bellt.','Futur I','Der Hund wird bellen.',1,'werden + Infinitiv.'],
@@ -133,7 +134,7 @@ const W=[
 ['Welche Zeitform braucht man oft beim mündlichen Erzählen von Vergangenem?',['Perfekt','Futur I','Plusquamperfekt','Imperativ'],'Perfekt','Mündlich sagen wir meist «ich habe gelacht», schriftlich eher «ich lachte».','sg2',1],
 ['Welche Zeitform verwendet man oft beim <b>schriftlichen Erzählen</b> in der Vergangenheit?',['Präteritum','Futur I','Perfekt','Präsens'],'Präteritum','In Geschichten schreiben wir meist im Präteritum: «Sie ging nach Hause.»','sg2',2],
 ['Wie lautet die <b>Befehlsform</b> (Imperativ) von «lesen» für «du»?',['Lies!','Lese!','Liest!','Lesen!'],'Lies!','Der Imperativ von «lesen» hat -ie-: Lies!','sg4',2],
-['Wie lautet die Befehlsform von «fahren» für «du»?',['Fahr!','Fähr!','Fährst!','Fahre!'],'Fahr!','Der Imperativ hat keinen Umlaut: Fahr!','sg4',2],
+['Wie lautet die Befehlsform von «fahren» für «du»?',['Fahr!','Fähr!','Fährst!','Fährt!'],'Fahr!','Der Imperativ hat keinen Umlaut: Fahr!','sg4',2],
 ['Wie lautet die Befehlsform von «geben» für «du»?',['Gib!','Gebe!','Gibst!','Geb!'],'Gib!','Wie bei «lesen» wechselt das e zu i: Gib!','sg4',2],
 ['Wie lautet die Befehlsform von «kommen» für «ihr»?',['Kommt!','Kommen!','Komm!','Kommst!'],'Kommt!','Der Imperativ Mehrzahl endet auf -t: Kommt!','sg4',1],
 ['Welcher Satz ist eine <b>Aufforderung</b> (Imperativ)?',['Komm bitte her!','Er kommt.','Sie kam gestern.','Wir werden kommen.'],'Komm bitte her!','Der Imperativ verlangt etwas: Komm! Geh! Lies!','sg4',1],
@@ -205,6 +206,7 @@ const EX=[
 const merk=()=>T(['Zeitform','Beispiel','Bildung'],[['Präsens','er lacht','Stamm + Endung'],['Präteritum','er lachte','Stamm + -te oder Ablaut'],['Perfekt','er hat gelacht','haben/sein + Partizip II'],['Plusquamperfekt','er hatte gelacht','hatte/war + Partizip II'],['Futur I','er wird lachen','werden + Infinitiv']])+
  '<h3 style="margin-top:.9rem">Personalformen</h3>'+T(['','Endung','lachen'],[['ich','-e','lache'],['du','-st','lachst'],['er/sie/es','-t','lacht'],['wir','-en','lachen'],['ihr','-t','lacht'],['sie','-en','lachen']])+
  '<ul><li>Grundform (Infinitiv, Rohform): lachen, gehen, sein.</li><li>Hilfsverben: sein, haben, werden.</li><li>Befehlsform: Komm! Lies! Fahr!</li></ul>';
+const UEM={'formen':{types:'person',cats:'sg1'},'zeiten':{types:'zeit,zeitwahl',cats:'sg2'},'bildung':{types:'einsetzen,zeit',cats:'sg2'},'arten':{types:'stamm',cats:'sg3'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 GT.chapter({id:'verb',teil:'wort',nr:4,title:'Verb',big:'Er lacht. Er lachte. Er hat gelacht.',desc:'Formen, Zeitformen und Befehlsform',
  ex:'«Er '+mk('verb','lacht')+'. Er '+mk('verb','lachte')+'. Er '+mk('verb','hat gelacht')+'.»',
  goals:['Ich erkenne Verben mit der Konjugationsprobe.','Ich kenne die Grundform (Rohform) und bilde die Personalformen.','Ich kenne die Zeitformen Präsens, Präteritum, Perfekt, Plusquamperfekt und Futur I und erkenne sie im Satz.','Ich bilde Stammformen und das Partizip II.','Ich bilde die Befehlsform (Imperativ).'],

@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const GT=window.GT,T=GT.table;
-const C={sg1:'Formale Arten',sg2:'Umformen',sg3:'Relativsatz',sg4:'Infinitivsatz',sg5:'Bedeutung (Zeit, Grund …)',sg6:'Sätze umwandeln',sg7:'Fachbegriffe'};
+const C={sg0:'Was ist ein Nebensatz?',sg1:'Formale Arten',sg2:'Umformen',sg3:'Relativsatz',sg4:'Infinitivsatz',sg5:'Bedeutung (Zeit, Grund …)',sg6:'Sätze umwandeln',sg7:'Fachbegriffe'};
 const task=[];
 const FO=['Konjunktionalsatz','Relativsatz','Indirekter Fragesatz','Uneingeleiteter Nebensatz','Infinitivsatz','Partizipialsatz'];
 const FO5=FO.slice(0,5);
@@ -33,6 +33,58 @@ const W=[
 ['Wann steht bei einer Infinitivgruppe immer ein Komma?',['bei «um … zu», «ohne … zu» und «statt … zu»','bei jedem Infinitiv mit «zu»','nie','nur nach dem Verb «hoffen»'],'bei «um … zu», «ohne … zu» und «statt … zu»','Mit «um, ohne, statt, anstatt, ausser, als» steht das Komma immer. Sonst ist es bei Infinitivgruppen meist freiwillig.','sg1',3]
 ];
 W.forEach(w=>task.push({typ:'form',stufe:w[5],lv:/Partizipialsatz/.test(w[2]+w[1].join())?3:(w[5]===3?2:1),cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+
+/* 0 Was ist ein Nebensatz? */
+const HN0=['Hauptsatz','Nebensatz'];
+const N0=[
+['Ich bleibe zu Hause, <b>weil ich krank bin</b>.',1,1,'Das Verb «bin» steht am Schluss: Nebensatz.'],
+['<b>Ich bleibe zu Hause</b>, weil ich krank bin.',0,1,'Die Personalform «bleibe» steht an zweiter Stelle, der Satz kann allein stehen: Hauptsatz.'],
+['<b>Wenn die Sonne scheint</b>, gehen wir schwimmen.',1,1,'Eingeleitet mit «wenn», Verb am Schluss: Nebensatz.'],
+['Wenn die Sonne scheint, <b>gehen wir schwimmen</b>.',0,1,'Nach dem Nebensatz folgt sofort die Personalform: Hauptsatz.'],
+['Ich weiss, <b>dass du recht hast</b>.',1,1,'«dass» leitet einen Nebensatz ein, das Verb steht am Schluss.'],
+['<b>Ich weiss</b>, dass du recht hast.',0,1,'Hauptsatz, kann allein stehen.'],
+['Der Hund, <b>der dort bellt</b>, gehört mir.',1,2,'Relativsatz mit «der» und Verb am Schluss: Nebensatz.'],
+['Sie fragt, <b>ob der Bus schon gefahren ist</b>.',1,2,'«ob» leitet einen Nebensatz ein: Verb am Schluss.']
+];
+N0.forEach(n=>task.push({typ:'ns0',stufe:n[2],lv:1,cats:['sg0'],sent:n[0],opts:HN0,answer:HN0[n[1]],why:'<b>'+HN0[n[1]]+'.</b> '+n[3]}));
+[
+['Wo steht die Personalform in einem eingeleiteten Nebensatz?',['am Schluss','an zweiter Stelle','an erster Stelle','vor dem Einleitewort'],'am Schluss','Nach dem Einleitewort folgt das Verb ganz am Schluss.',1],
+['Kann ein Nebensatz allein stehen?',['Nein, er braucht einen Hauptsatz.','Ja, immer.','Ja, wenn er ein Komma hat.','Nur am Satzanfang.'],'Nein, er braucht einen Hauptsatz.','Ein Nebensatz ist unselbständig. Er hängt an einem Hauptsatz.',1],
+['Was steht zwischen Haupt- und Nebensatz?',['ein Komma','ein Punkt','ein Doppelpunkt','nichts'],'ein Komma','Haupt- und Nebensatz werden mit einem Komma getrennt.',1]
+].forEach(w=>task.push({typ:'ns0',stufe:w[4],lv:1,cats:['sg0'],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+
+/* Zusätzliche Aufgaben pro Nebensatzart (für die Übungsfolien): [Satz, Art, Stufe, Hinweis] */
+const FN=[
+['Wir gehen schwimmen, wenn die Sonne scheint.',0,1,'«wenn» ist eine unterordnende Konjunktion, das Verb steht am Schluss.'],
+['Obwohl er müde war, kam er mit.',0,1,'«obwohl» leitet einen Konjunktionalsatz ein.'],
+['Ich bleibe zu Hause, weil ich krank bin.',0,1,'«weil» ist eine unterordnende Konjunktion.'],
+['Sie lernt, damit sie die Prüfung besteht.',0,1,'«damit» leitet einen Konjunktionalsatz ein.'],
+['Als wir ankamen, war das Essen fertig.',0,1,'«als» ist eine unterordnende Konjunktion.'],
+['Er sagt, dass er keine Zeit hat.',0,1,'«dass» leitet einen Konjunktionalsatz ein.'],
+['Das ist der Lehrer, der Mathe unterrichtet.',1,1,'«der» bezieht sich auf «Lehrer»: Relativpronomen.'],
+['Die Aufgabe, die wir gestern lösten, war schwierig.',1,1,'«die» bezieht sich auf «Aufgabe»: Relativsatz.'],
+['Das Handy, das ich gekauft habe, ist neu.',1,1,'«das» bezieht sich auf «Handy» und lässt sich durch «welches» ersetzen: Relativsatz.'],
+['Der Ort, wo wir uns treffen, ist neu.',1,2,'«wo» bezieht sich auf «Ort»: Relativadverb.'],
+['Die Schüler, die zu spät kamen, mussten warten.',1,2,'«die» bezieht sich auf «Schüler»: Relativsatz.'],
+['Ich kenne den Jungen, dem du das Buch gegeben hast.',1,2,'«dem» bezieht sich auf «Jungen»: Relativpronomen im Dativ.'],
+['Ich frage mich, warum er fehlt.',2,1,'«warum» ist ein Fragewort: indirekter Fragesatz.'],
+['Weisst du, ob der Bus kommt?',2,1,'«ob» leitet einen indirekten Fragesatz ein.'],
+['Erkläre mir, wie das funktioniert.',2,1,'«wie» ist hier ein Fragewort.'],
+['Er fragt, wer das Fenster geöffnet hat.',2,1,'«wer» ist ein Fragewort: indirekter Fragesatz.'],
+['Ich weiss nicht, was du meinst.',2,2,'«was» ist hier ein Fragewort («Was meinst du?»).'],
+['Hättest du Zeit, könnten wir ins Kino gehen.',3,2,'Kein Einleitewort, die Personalform steht an erster Stelle: uneingeleiteter Nebensatz.'],
+['Ich denke, es regnet bald.',3,2,'Kein Einleitewort, Verb an zweiter Stelle. Mit «dass» umformbar: Ich denke, dass es bald regnet.'],
+['Wäre das Wetter besser, gingen wir wandern.',3,2,'Kein Einleitewort, die Personalform steht vorne. Mit «wenn» umformbar.'],
+['Er glaubt, sie kommt morgen.',3,2,'Mit «dass» umformbar: Er glaubt, dass sie morgen kommt.'],
+['Ich hoffe, du hast Zeit.',3,2,'Kein Einleitewort. Mit «dass» umformbar: Ich hoffe, dass du Zeit hast.'],
+['Wir freuen uns, dich zu sehen.',4,1,'Infinitiv mit «zu» und ohne eigenes Subjekt: Infinitivsatz.'],
+['Sie ging, ohne sich zu verabschieden.',4,2,'«ohne … zu» + Infinitiv: Infinitivsatz.'],
+['Es macht Spass, Fussball zu spielen.',4,1,'Infinitiv mit «zu» ohne eigenes Subjekt: Infinitivsatz.'],
+['Er versprach, pünktlich zu kommen.',4,1,'Infinitiv mit «zu»: Infinitivsatz.'],
+['Vom Lärm geweckt, stand sie auf.',5,3,'Das Partizip «geweckt» steht ohne Personalform und ohne Subjekt: Partizipialsatz.'],
+['Von allen Seiten bedrängt, gab er auf.',5,3,'Das Partizip «bedrängt» steht ohne Personalform und ohne eigenes Subjekt: Partizipialsatz.']
+];
+FN.forEach(f=>task.push({typ:'form',stufe:f[2],lv:f[1]===5?3:(f[2]===3?2:1),cats:['sg1'],prompt:'Welche Art Nebensatz liegt vor?<br>«'+f[0]+'»',opts:f[1]===5?FO:FO5,answer:FO[f[1]],why:'<b>'+FO[f[1]]+'.</b> '+f[3]}));
 
 /* 2 Umformen */
 const U=[
@@ -117,7 +169,21 @@ const H=[
 ];
 H.forEach(h=>task.push({typ:'fach',stufe:h[5],lv:/Partizipialsatz|Finalsatz|Subjunktion/.test(h[2])?3:1,cats:['sg7'],input:true,prompt:h[0],sent:h[1],answer:h[2],accept:h[3],strict:true,why:'<b>'+h[2]+'.</b> '+h[4]}));
 
-const SECS=[
+const ART=o=>'<div class="grid2"><div class="card"><h3>Was ist das?</h3><p>'+o.was+'</p></div><div class="card"><h3>So erkennst du ihn</h3><ul style="margin:.2rem 0 0;padding-left:1.2rem">'+o.erk.map(x=>'<li>'+x+'</li>').join('')+'</ul></div></div>'+T(['Beispiel','Merkmal'],o.bsp)+'<div class="callout">⚠️ <b>Stolperstein:</b> '+o.stolper+'</div>'+(o.extra||'');
+const SECS0=[
+{id:'was',uebung:{types:'ns0',cats:'sg0'},title:'Was ist ein Nebensatz?',short:'Was ist ein Nebensatz?',min:10,note:'Zuerst klären, was ein Nebensatz überhaupt ist: Er ist ein Teilsatz, der nicht allein stehen kann und an einem Hauptsatz hängt. Er ersetzt oft ein Satzglied. Ein Beispiel mit Satzglied und Nebensatz nebeneinander zeigen.',
+ html:()=>'<div class="grid2"><div class="card"><h3>Hauptsatz</h3><p>Er kann <b>allein</b> stehen. Die Personalform steht an <b>zweiter Stelle</b>.</p><p>Ich <b>bleibe</b> zu Hause.</p></div><div class="card"><h3>Nebensatz</h3><p>Er kann <b>nicht allein</b> stehen. Er hängt an einem Hauptsatz. Meist beginnt er mit einem <b>Einleitewort</b>, das Verb steht am <b>Schluss</b>.</p><p>…, weil ich krank <b>bin</b>.</p></div></div>'+
+ T(['Mit Satzglied','Als Nebensatz'],[['Ich bleibe <b>wegen meiner Krankheit</b> zu Hause.','Ich bleibe zu Hause, <b>weil ich krank bin</b>.'],['Wir gehen <b>bei Sonnenschein</b> schwimmen.','Wir gehen schwimmen, <b>wenn die Sonne scheint</b>.']])+
+ '<div class="callout">Ein Nebensatz tritt oft an die Stelle eines <b>Satzglieds</b> (Grund, Zeit, Bedingung …). Haupt- und Nebensatz trennt man mit einem <b>Komma</b>.</div>'+
+ '<div class="callout">Es gibt <b>sechs</b> Arten: Konjunktionalsatz, Relativsatz, indirekter Fragesatz, uneingeleiteter Nebensatz, Infinitivsatz und (ab Niveau A) Partizipialsatz. Auf den nächsten Folien kommt jede einzeln mit einer Übung.</div>'},
+{id:'konj',uebung:{types:'form',cats:'sg1',ans:'Konjunktionalsatz|Relativsatz|Indirekter Fragesatz'},title:'Der Konjunktionalsatz',short:'Konjunktionalsatz',min:8,note:'Konjunktionalsatz = Nebensatz mit unterordnender Konjunktion (Subjunktion). Verb am Schluss. Hier nur die Form erkennen. Die Bedeutung (Zeit, Grund …) kommt später.',
+ html:()=>ART({was:'Ein <b>Konjunktionalsatz</b> ist ein Nebensatz, der mit einer <b>unterordnenden Konjunktion</b> beginnt.',erk:['Er beginnt mit <b>weil, dass, wenn, obwohl, damit, als, bevor, nachdem</b> …','Die Personalform steht am <b>Schluss</b>.','Er wird mit einem <b>Komma</b> abgetrennt.'],bsp:[['Ich weiss, <b>dass</b> er kommt.','Konjunktion «dass»'],['<b>Weil</b> es regnet, bleiben wir drinnen.','Konjunktion «weil»'],['Wir gehen schwimmen, <b>wenn</b> die Sonne scheint.','Konjunktion «wenn»']],stolper:'«dass» mit Doppel-s ist eine Konjunktion. «das» ist Artikel oder Pronomen. Probe: Lässt sich «dieses» oder «welches» einsetzen, schreibt man «das».'})},
+{id:'relativ-neu',uebung:{types:'form',cats:'sg1',ans:'Relativsatz|Konjunktionalsatz|Indirekter Fragesatz'},title:'Der Relativsatz im Überblick',short:'Relativsatz (Merkmale)',min:6,note:'Kurzer Überblick über die formale Art. Der Relativsatz selbst wird danach noch genauer behandelt (Bezugswort, Komma).',
+ html:()=>ART({was:'Ein <b>Relativsatz</b> beschreibt ein Nomen genauer. Er beginnt mit einem <b>Relativpronomen</b> (der, die, das, welcher) oder einem <b>Relativadverb</b> (wo).',erk:['Er hängt an einem <b>Bezugswort</b> im Hauptsatz.','Das Relativpronomen lässt sich oft durch <b>«welcher, welche, welches»</b> ersetzen.','Die Personalform steht am <b>Schluss</b>.'],bsp:[['Das ist der <b>Lehrer</b>, <b>der</b> Mathe unterrichtet.','Bezugswort «Lehrer»'],['Die <b>Aufgabe</b>, <b>die</b> wir lösten, war schwierig.','Bezugswort «Aufgabe»'],['Der <b>Ort</b>, <b>wo</b> wir uns treffen, ist neu.','Relativadverb «wo»']],stolper:'«das» kann Relativpronomen sein (Das Buch, <b>das</b> ich lese …) oder Artikel. «dass» ist nie ein Relativpronomen.'})},
+{id:'frage',uebung:{types:'form',cats:'sg1',ans:'Indirekter Fragesatz|Konjunktionalsatz|Relativsatz'},title:'Der indirekte Fragesatz',short:'Indirekter Fragesatz',min:8,note:'Indirekter Fragesatz = eine Frage, die als Nebensatz wiedergegeben wird. Einleitung mit Fragewort oder «ob». Verb am Schluss. Das Fragezeichen steht nur, wenn der ganze Satz eine Frage ist.',
+ html:()=>ART({was:'Ein <b>indirekter Fragesatz</b> gibt eine Frage wieder. Er hängt an einem Hauptsatz wie «Sag mir», «Ich frage mich», «Weisst du».',erk:['Er beginnt mit einem <b>Fragewort</b> (wer, was, wann, warum, wie, wo) oder mit <b>«ob»</b>.','Die Personalform steht am <b>Schluss</b>.','Es steht ein <b>Komma</b> davor.'],bsp:[['Sag mir, <b>wann</b> du kommst.','Fragewort «wann»'],['Ich frage mich, <b>warum</b> er fehlt.','Fragewort «warum»'],['Weisst du, <b>ob</b> der Bus kommt?','«ob» für Ja/Nein-Fragen']],stolper:'Direkte Frage: «Wann kommst du?» (Verb an zweiter Stelle, Fragezeichen). Indirekt: «Sag mir, wann du kommst.» (Verb am Schluss, hier ein Punkt).'})},
+{id:'uneing',uebung:{types:'form',cats:'sg1',ans:'Uneingeleiteter Nebensatz|Konjunktionalsatz|Infinitivsatz'},title:'Der uneingeleitete Nebensatz',short:'Uneingeleiteter Nebensatz',min:8,note:'Uneingeleiteter Nebensatz = kein Einleitewort, Verb vorne (1. oder 2. Stelle). Man erkennt ihn, weil sich «dass» oder «wenn» einfügen lässt. Zwei Hauptsätze mit Komma sind dagegen eine Satzverbindung.',
+ html:()=>ART({was:'Ein <b>uneingeleiteter Nebensatz</b> hat <b>kein Einleitewort</b>. Die Personalform steht an <b>erster oder zweiter Stelle</b>.',erk:['Es fehlt ein Einleitewort wie «dass» oder «wenn».','Probe: Mit <b>«dass»</b> oder <b>«wenn»</b> lässt er sich einleiten.','Er steht oft nach Verben wie <b>glauben, denken, hoffen, sagen</b>, oder als Bedingung mit Verb vorne.'],bsp:[['<b>Wäre</b> ich reich, würde ich reisen.','= Wenn ich reich wäre, …'],['Ich glaube, <b>er hat</b> recht.','= Ich glaube, dass er recht hat.'],['<b>Hättest</b> du Zeit, könnten wir ins Kino gehen.','= Wenn du Zeit hättest, …']],stolper:'«Es regnet, wir bleiben hier.» sind zwei Hauptsätze (Satzverbindung). Hier lässt sich «dass» nicht einfügen. Bei «Ich glaube, er hat recht.» geht es.'})},
 {id:'formen',title:'Die sechs Arten der Nebensätze',short:'Formale Arten',min:15,note:'Formal unterscheidet man sechs Nebensatzarten. Entscheidend sind Einleitewort, Verbstellung und Komma. Infinitiv- und Partizipialsätze haben keine Personalform. Bei Infinitivgruppen mit um, ohne, statt, anstatt, ausser, als steht das Komma immer, sonst ist es meist freiwillig.',
  html:()=>T(['Art','Merkmal','Verb','Beispiel'],[['Konjunktionalsatz','unterordnende Konjunktion','am Schluss','Ich weiss, <b>dass</b> er kommt.'],['Relativsatz','Relativpronomen / -adverb','am Schluss','Die Frau, <b>die</b> ich traf, …'],['Indirekter Fragesatz','Fragewort oder «ob»','am Schluss','Sag mir, <b>wann</b> du kommst.'],['Uneingeleiteter Nebensatz','kein Einleitewort','1. oder 2. Stelle','<b>Wäre</b> ich reich, würde ich reisen.'],['Infinitivsatz','«zu» + Infinitiv, kein Subjekt','keine Personalform','Sie hofft, die Prüfung <b>zu bestehen</b>.'],].concat(HI()?[['Partizipialsatz','Partizip, kein Subjekt','keine Personalform','Von der Sonne <b>geblendet</b>, blieb er stehen.']]:[]))},
 {id:'umformen',title:'Uneingeleitet und eingeleitet umformen',short:'Umformen',min:8,note:'Ein uneingeleiteter Nebensatz lässt sich mit Konjunktion umformen (und umgekehrt): Wäre ich reich = Wenn ich reich wäre. Ich glaube, er kommt = Ich glaube, dass er kommt.',
@@ -133,6 +199,12 @@ const SECS=[
 {id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
  html:()=>T(['Begriff','Bedeutung'],[['Konjunktionalsatz','Nebensatz mit unterordnender Konjunktion'+(HI()?' (Subjunktion)':'')],['Relativsatz','Nebensatz mit Relativpronomen'],['Indirekter Fragesatz','Nebensatz mit Fragewort oder «ob»'],['Uneingeleiteter Nebensatz','Nebensatz ohne Einleitewort'],['Infinitivsatz','Nebensatz mit «zu» + Infinitiv'],['Partizipialsatz','Nebensatz mit Partizip']].filter(x=>HI()||x[0]!=='Partizipialsatz'))}
 ];
+const SECS_P=[{id:'partizip',lv:3,title:'Der Partizipialsatz',short:'Partizipialsatz',min:8,note:'Nur Niveau A. Partizipialsatz = Nebensatz mit Partizip, ohne Personalform und ohne eigenes Subjekt. Lässt sich in einen Konjunktionalsatz umformen. Das Komma ist bei Partizipialgruppen meist freiwillig, hier steht es zur Verdeutlichung.',
+ html:()=>ART({was:'Ein <b>Partizipialsatz</b> ist ein Nebensatz mit einem <b>Partizip</b>. Er hat <b>keine Personalform</b> und <b>kein eigenes Subjekt</b>.',erk:['Es steht ein <b>Partizip</b> (geblendet, durchnässt, geweckt).','Es fehlt die Personalform. Das Subjekt ist das des Hauptsatzes.','Probe: Er lässt sich mit <b>«weil»</b> oder <b>«als»</b> als Konjunktionalsatz schreiben.'],bsp:[['Von der Sonne <b>geblendet</b>, blieb er stehen.','= Weil ihn die Sonne blendete, …'],['Vom Regen <b>durchnässt</b>, kamen wir an.','= Als wir vom Regen durchnässt waren, …'],['Vom Lärm <b>geweckt</b>, stand sie auf.','= Weil sie vom Lärm geweckt wurde, …']],stolper:'Ohne Partizip ist es kein Partizipialsatz. «Er blieb stehen.» ist ein Hauptsatz. Das Partizip muss einen Satzteil mit Bezug zum Subjekt einleiten.'})}];
+const ORD=['was','formen','konj','relativ-neu','relativ','frage','uneing','umformen','infinitiv','partizip','bedeutung','umwandeln','fachbegriffe'];
+const ALL=SECS0.concat(SECS_P);
+const UE={formen:{types:'form',cats:'sg1'},umformen:{types:'umform',cats:'sg2'},relativ:{types:'relativ',cats:'sg3',title:'Relativsatz: Bezugswort und Komma'},infinitiv:{types:'form,inf',cats:'sg1,sg4',ans:'Infinitivsatz|Uneingeleiteter Nebensatz|Ja|Nein',title:'Infinitivsatz'},partizip:{types:'form',cats:'sg1',ans:'Partizipialsatz|Infinitivsatz|Uneingeleiteter Nebensatz'},bedeutung:{types:'bedeut',cats:'sg5',title:'Bedeutung der Nebensätze'},umwandeln:{types:'umwand',cats:'sg6',title:'Sätze umwandeln'}};
+const SECS=ORD.map(id=>{const x=ALL.find(y=>y.id===id);if(!x)throw new Error('Abschnitt fehlt: '+id);if(UE[id])x.uebung=Object.assign({},UE[id]);return x;});
 const EX=[
  ['Welche Art Nebensatz? «Sie hofft, die Prüfung zu bestehen.»','Infinitivsatz',1],
  ['Forme um: «Wäre ich reich, würde ich reisen.»','Wenn ich reich wäre, würde ich reisen.',2],
@@ -143,7 +215,8 @@ GT.chapter({id:'nsarten',teil:'satz',nr:9,title:'Arten der Nebensätze',big:'Ich
  ex:'«Sie hofft, die Prüfung zu bestehen.»',
  goals:['Ich unterscheide die sechs formalen Nebensatzarten.','Ich forme uneingeleitete und eingeleitete Nebensätze um.','Ich erkenne Relativsätze und Infinitivsätze.','Ich bestimme die Bedeutung von Nebensätzen (Zeit, Grund, Bedingung …).','Ich wandle überladene Sätze um (ab B).'],
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
- types:{form:{icon:'🧩',label:'Nebensatzart bestimmen',short:'Formale Art und Verbstellung',instr:'Wähle die richtige Antwort.',hint:'Einleitewort? Wo steht das Verb?',ref:'formen'},
+ types:{ns0:{icon:'🧱',label:'Haupt- oder Nebensatz',short:'Was ist ein Nebensatz?',instr:'Wähle die richtige Antwort.',hint:'Wo steht das Verb? Kann der Satz allein stehen?',ref:'was'},
+  form:{icon:'🧩',label:'Nebensatzart bestimmen',short:'Formale Art und Verbstellung',instr:'Wähle die richtige Antwort.',hint:'Einleitewort? Wo steht das Verb?',ref:'formen'},
   umform:{icon:'🔁',label:'Nebensatz umformen',short:'Uneingeleitet ⇄ eingeleitet',instr:'Welcher Satz sagt dasselbe?',hint:'Mit «wenn» oder «dass» einleiten, Verb ans Ende.',ref:'umformen'},
   relativ:{icon:'🔗',label:'Relativsatz',short:'Bezugswort und Komma',instr:'Wähle die richtige Antwort.',hint:'Das Relativpronomen verweist auf ein Wort davor.',ref:'relativ'},
   inf:{icon:'➡️',label:'Infinitivsatz erkennen',short:'«zu» + Infinitiv oder Modalverb?',instr:'Enthält der Satz einen Infinitivsatz?',hint:'Modalverb + Infinitiv ist das Prädikat.',ref:'infinitiv'},
