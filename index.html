@@ -517,7 +517,7 @@ function updateAvail(){
 /* ---- Runde ---- */
 function startRound(tasks,title){
   const isT=tasks.some(t=>t._ch);if(isT)S.ch=tasks[0]._ch;
-  S.R={tasks,i:0,hist:[],title:title||'Runde',answered:false,choice:null,paint:{},sel:new Set(),brush:CK()[0],hint:false,order:null,test:isT,t0:Date.now(),timer:!!(isT&&S.test&&S.test.timer)};
+  S.R={tasks,i:0,hist:[],title:title||'Runde',answered:false,choice:null,paint:{},sel:new Set(),brush:CK()[0],hint:false,order:null,test:isT,exam:!!(isT&&title==='Test'&&S.test&&S.test.exam),t0:Date.now(),timer:!!(isT&&S.test&&S.test.timer)};
   clearInterval(window._tclk);if(S.R.timer)window._tclk=setInterval(()=>{const e=document.getElementById('clk');if(!e||!S.R){clearInterval(window._tclk);return;}const sec=Math.floor((Date.now()-S.R.t0)/1000);e.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');},500);
   S.screen='round';render();
 }
@@ -540,11 +540,11 @@ function screenRound(){
     body='<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>'+(t.sent&&String(t.prompt).replace(/<[^>]+>/g,'').indexOf(String(t.sent).replace(/<[^>]+>/g,'').slice(0,15))<0?'<div class="sbox sent2">'+t.sent+'</div>':''):'<div class="sbox">'+t.sent+'</div>')+
      '<div class="opts">'+R.order.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="pick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
   }
-  return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div>'+(R.test?'<span class="pill gray">'+C().title+'</span> ':'')+'<span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+(R.test?' · '+tPts(t)+' P.':'')+'</span></div>'+
-   '<div class="prog"><span>'+(R.i+1)+' / '+total+' · '+(R.test?R.hist.reduce((a,h)=>a+(h.ok?tPts(h.t):0),0)+' Punkte':R.hist.filter(h=>h.ok).length+' ✓')+(R.timer?' · <b id="clk">0:00</b>':'')+'</span><div class="bar"><i style="width:'+((R.i+1)/total*100)+'%"></i></div></div></div>'+
+  return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div>'+(R.test?'<span class="pill gray">'+C().title+'</span> ':'')+'<span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+(R.test?' · '+fmtP(tPts(t))+' P.':'')+'</span></div>'+
+   '<div class="prog"><span>'+(R.i+1)+' / '+total+' · '+(R.exam?'Prüfung':R.test?fmtP(R.hist.reduce((a,h)=>a+(h.ok?tPts(h.t):0),0))+' Punkte':R.hist.filter(h=>h.ok).length+' ✓')+(R.timer?' · <b id="clk">0:00</b>':'')+'</span><div class="bar"><i style="width:'+((R.i+1)/total*100)+'%"></i></div></div></div>'+
    body+'<div class="hint" id="hintBox" hidden>'+T.hint+'</div><div id="fb" role="status" aria-live="polite"></div>'+
-   '<div class="actions"><div><button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button></div>'+
-   '<div><button class="btn primary" id="checkBtn" data-a="check" disabled>Überprüfen</button><button class="btn ok" id="nextBtn" data-a="next" hidden>'+(R.i+1<total?'Nächste Aufgabe →':'Auswertung anzeigen')+'</button></div></div></div>';
+   '<div class="actions"><div>'+(R.exam?'':'<button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button>')+'</div>'+
+   '<div><button class="btn primary" id="checkBtn" data-a="check" disabled>'+(R.exam?(R.i+1<total?'Weiter →':'Abgeben und auswerten'):'Überprüfen')+'</button><button class="btn ok" id="nextBtn" data-a="next" hidden>'+(R.i+1<total?'Nächste Aufgabe →':'Auswertung anzeigen')+'</button></div></div></div>';
 }
 /* Nach dem Antworten: Tastatur schliessen und den «Nächste»-Knopf sichtbar machen (wichtig auf dem Handy) */
 function revealNext(n){try{const a=document.activeElement;if(a&&a.blur&&/INPUT|TEXTAREA/.test(a.tagName))a.blur();setTimeout(()=>{if(!n||!n.isConnected||n.hidden)return;const r=n.getBoundingClientRect(),h=window.innerHeight||document.documentElement.clientHeight;if(r.bottom>h-8||r.top<0)n.scrollIntoView({block:'center',behavior:'smooth'});},120);}catch(e){}}
@@ -873,9 +873,10 @@ function printSheet(w){
 
 /* ================= Testvorbereitung (Schüler: Kapitel mischen, Punkte, Übungsprüfung) ================= */
 function withCh(id,fn){const o=S.ch;S.ch=id;try{return fn();}finally{S.ch=o;}}
-const tPts=t=>Math.max(1,Math.min(3,Number(t.stufe)||1));
-function testInit(){if(!S.test)S.test={chs:new Set(),count:'20',custom:20,timer:false};}
-function testWanted(){const T=S.test;return T.count==='custom'?Math.max(1,Math.min(60,parseInt(T.custom,10)||20)):parseInt(T.count,10);}
+const tPts=t=>(t.opts&&!isW(t)&&!t.lang)?0.5:((t.lang||(Number(t.stufe)||1)>=2)?2:1);
+const fmtP=n=>String(Math.round(n*2)/2).replace('.',',');
+function testInit(){if(!S.test)S.test={chs:new Set(),count:'20',custom:20,timer:false,exam:true};}
+function testWanted(){const T=S.test;return T.count==='custom'?Math.max(1,Math.min(80,parseInt(T.custom,10)||20)):parseInt(T.count,10);}
 function testAvail(){let n=0;S.test.chs.forEach(id=>{if(GT.chapters[id])n+=withCh(id,()=>visibleTasks().length);});return n;}
 function testBuild(){
   testInit();const pools=[...S.test.chs].filter(id=>GT.chapters[id]).map(id=>withCh(id,()=>balance(visibleTasks().map(t=>Object.assign({},t,{_ch:id})))));
@@ -893,32 +894,38 @@ function screenTest(){
   testInit();const T=S.test;
   const chips=arr=>arr.filter(c=>c[0]!=='#'&&GT.chapters[c[1]]).map(c=>'<button type="button" data-a="tch" data-v="'+c[1]+'" class="'+(T.chs.has(c[1])?'on':'')+'" aria-pressed="'+T.chs.has(c[1])+'">'+c[0]+'</button>').join('');
   const ids=arr=>arr.filter(c=>c[0]!=='#'&&GT.chapters[c[1]]).map(c=>c[1]).join(',');
-  const cnt=['10','20','30','custom'].map(v=>'<button type="button" data-a="tcount" data-v="'+v+'" class="'+(T.count===v?'on':'')+'">'+(v==='custom'?'Eigene Anzahl':v)+'</button>').join('');
+  const cnt=['10','20','30','40','custom'].map(v=>'<button type="button" data-a="tcount" data-v="'+v+'" class="'+(T.count===v?'on':'')+'">'+(v==='custom'?'Eigene Anzahl':v)+'</button>').join('');
   const mode='<button type="button" data-a="tmode2" data-v="write" class="'+(S.cfg.mode==='write'?'on':'')+'">Selber schreiben</button><button type="button" data-a="tmode2" data-v="choose" class="'+(S.cfg.mode==='choose'?'on':'')+'">Auswählen</button>';
   setTimeout(testInfo,0);
-  return '<h2 class="page">Testvorbereitung</h2><p class="sub">Wähle die Kapitel, die in deinem Test vorkommen. Die Aufgaben werden gemischt. Niveau '+S.niv+' ist eingestellt. Jede Aufgabe gibt Punkte: einfach 1, mittel 2, schwierig 3.</p>'+
+  return '<h2 class="page">Testvorbereitung</h2><p class="sub">Wähle die Kapitel, die in deinem Test vorkommen. Die Aufgaben werden gemischt. Niveau '+S.niv+' ist eingestellt. Punkte: Auswahlaufgabe 0,5 · selber schreiben, anmalen oder markieren 1 (schwieriger 2) · lange Texte 2.</p>'+
    '<div class="card"><h3>Kapitel <span><button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.WORT)+'">Wortlehre alle/keine</button> <button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.SATZ)+'">Satzlehre alle/keine</button></span></h3>'+
    '<div class="tlab">🔤 Wortlehre</div><div class="tchips">'+chips(GT.WORT)+'</div><div class="tlab">🧩 Satzlehre</div><div class="tchips">'+chips(GT.SATZ)+'</div>'+
-   '<h3>Anzahl Aufgaben</h3><div class="tchips">'+cnt+'<input id="tcustom" type="number" inputmode="numeric" min="1" max="60" value="'+T.custom+'" aria-label="Eigene Anzahl" '+(T.count==='custom'?'':'hidden')+' style="width:90px;min-height:46px;border:1.5px solid var(--line2);border-radius:.75rem;padding:.3rem .6rem;text-align:center"></div>'+
+   '<h3>Anzahl Aufgaben</h3><div class="tchips">'+cnt+'<input id="tcustom" type="number" inputmode="numeric" min="1" max="80" value="'+T.custom+'" aria-label="Eigene Anzahl" '+(T.count==='custom'?'':'hidden')+' style="width:90px;min-height:46px;border:1.5px solid var(--line2);border-radius:.75rem;padding:.3rem .6rem;text-align:center"></div>'+
    '<h3>Antwort</h3><div class="tchips">'+mode+'</div>'+
-   '<h3>Weitere Einstellung</h3><div class="tchips"><button type="button" data-a="ttimer" class="'+(T.timer?'on':'')+'" aria-pressed="'+T.timer+'">⏱ Stoppuhr anzeigen</button></div>'+
+   '<h3>Weitere Einstellungen</h3><div class="tchips"><button type="button" data-a="texam" class="'+(T.exam?'on':'')+'" aria-pressed="'+T.exam+'">📋 Prüfungsmodus: Resultate erst am Schluss</button><button type="button" data-a="ttimer" class="'+(T.timer?'on':'')+'" aria-pressed="'+T.timer+'">⏱ Stoppuhr anzeigen</button></div>'+
    '<div id="tinfo" style="margin-top:.8rem"></div>'+
    '<div class="actions"><button type="button" class="btn" id="tSheetBtn" data-a="tsheet">🖨 Übungsprüfung als Blatt (mit Lösungen)</button><button type="button" class="btn primary" id="tStartBtn" data-a="tstart">Test starten →</button></div></div>';
 }
 document.addEventListener('input',e=>{if(e.target.id==='tcustom'){testInit();S.test.custom=e.target.value;testInfo();}});
+function tipsHTML(H){
+  const m={};H.filter(h=>!h.ok).forEach(h=>{const c=h.t._ch,r=withCh(c,()=>(TY()[h.t.typ]||{}).ref);if(!r)return;const k=c+'|'+r,x=m[k]=m[k]||{c,r,n:0};x.n++;});
+  const L=Object.values(m).sort((a,b)=>b.n-a.n).slice(0,6);
+  if(!L.length)return '<div class="callout" style="margin:.8rem 0">🎉 Alles richtig. Es gibt nichts Besonderes zu wiederholen.</div>';
+  return '<h3>💡 Das solltest du anschauen</h3><p class="muted" style="margin:.2rem 0 .5rem">Hier hattest du Fehler. Tippe auf einen Abschnitt, dann siehst du die Theorie dazu.</p><div class="btnrow" style="margin:0 0 1.2rem">'+L.map(x=>{const R0=GT.chapters[x.c].REF.find(y=>y[0]===x.r);return '<button class="btn" data-a="tref" data-c="'+x.c+'" data-v="'+x.r+'">'+esc(GT.chapters[x.c].title)+' › '+esc(R0?R0[1]:x.r)+' ('+x.n+' Fehler)</button>';}).join('')+'</div>';
+}
 function screenTestSummary(){
   const R=S.R,H=R.hist;if(!R.t1)R.t1=Date.now();
   let got=0,max=0;const per={};
   H.forEach(h=>{const p=tPts(h.t),k=h.t._ch;max+=p;if(h.ok)got+=p;const q=per[k]=per[k]||{g:0,m:0,n:0,r:0,k};q.m+=p;q.n++;if(h.ok){q.g+=p;q.r++;}});
   const pct=max?Math.round(got/max*100):0,secs=Math.round((R.t1-R.t0)/1000);
   const rows=Object.values(per).sort((a,b)=>a.g/a.m-b.g/b.m);
-  const bars=rows.map(x=>{const q=Math.round(x.g/x.m*100),col=q>=80?'var(--ok)':q>=50?'var(--warn)':'var(--bad)';return '<div class="cat"><div class="top"><span>'+GT.chapters[x.k].title+'</span><span style="color:'+col+'">'+x.g+' von '+x.m+' Punkten</span></div><div class="b"><i style="width:'+q+'%;background:'+col+'"></i></div></div>';}).join('');
+  const bars=rows.map(x=>{const q=Math.round(x.g/x.m*100),col=q>=80?'var(--ok)':q>=50?'var(--warn)':'var(--bad)';return '<div class="cat"><div class="top"><span>'+GT.chapters[x.k].title+'</span><span style="color:'+col+'">'+fmtP(x.g)+' von '+fmtP(x.m)+' Punkten</span></div><div class="b"><i style="width:'+q+'%;background:'+col+'"></i></div></div>';}).join('');
   const wrong=H.filter(h=>!h.ok),weak=rows.find(x=>x.g<x.m);
-  return '<div class="card"><div class="sumhead"><div class="muted" style="font-weight:700">Auswertung Testvorbereitung</div><div class="score">'+got+' von '+max+' Punkten</div><div class="muted">'+(pct>=80?'Sehr gut, du bist sicher.':pct>=50?'Gut, einige Stellen noch üben.':'Hier lohnt sich noch etwas Übung.')+(R.timer?' · Zeit: '+Math.floor(secs/60)+' min '+secs%60+' s':'')+'</div></div>'+
-   '<h3>Nach Kapitel (schwächstes zuerst)</h3><div class="grid3" style="margin:.5rem 0 1.2rem">'+bars+'</div>'+
+  return '<div class="card"><div class="sumhead"><div class="muted" style="font-weight:700">Auswertung Testvorbereitung</div><div class="score">'+fmtP(got)+' von '+fmtP(max)+' Punkten</div><div class="muted">'+(pct>=80?'Sehr gut, du bist sicher.':pct>=50?'Gut, einige Stellen noch üben.':'Hier lohnt sich noch etwas Übung.')+(R.timer?' · Zeit: '+Math.floor(secs/60)+' min '+secs%60+' s':'')+'</div></div>'+
+   tipsHTML(H)+'<h3>Nach Kapitel (schwächstes zuerst)</h3><div class="grid3" style="margin:.5rem 0 1.2rem">'+bars+'</div>'+
    '<div class="actions" style="justify-content:flex-start;margin:1.2rem 0">'+(wrong.length?'<button class="btn primary" data-a="retry">Fehler gezielt wiederholen ('+wrong.length+')</button>':'')+
    '<button class="btn" data-a="again">Neuer Test</button>'+(weak?'<button class="btn" data-a="theorie" data-t="'+GT.chapters[weak.k].teil+'" data-v="'+weak.k+'">Theorie: '+GT.chapters[weak.k].title+'</button>':'')+'<button class="btn" data-a="home">Zur Übersicht</button></div>'+
-   '<h3>Alle Aufgaben</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+GT.chapters[h.t._ch].title+' · '+withCh(h.t._ch,()=>TY()[h.t.typ].label)+'</b> '+(h.ok?'· richtig':'· falsch')+' · '+(h.ok?tPts(h.t):0)+' von '+tPts(h.t)+' P.<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
+   '<h3>Alle Aufgaben</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+GT.chapters[h.t._ch].title+' · '+withCh(h.t._ch,()=>TY()[h.t.typ].label)+'</b> '+(h.ok?'· richtig':'· falsch')+' · '+fmtP(h.ok?tPts(h.t):0)+' von '+fmtP(tPts(h.t))+' P.<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'<div class="muted" style="margin-top:.25rem">'+h.t.why+'</div></div>').join('')+'</div>';
 }
 function testSheetHTML(tasks){
   let n=0,ws='',so='',tot=0;
@@ -929,12 +936,12 @@ function testSheetHTML(tasks){
     const groups=[];g.list.forEach(t=>{const it=sheetItem(t);it.p=tPts(t);let x=groups.find(y=>y.typ===it.typ);if(!x)groups.push(x={typ:it.typ,instr:it.instr,list:[]});x.list.push(it);});
     groups.forEach(x=>{
       ws+='<p class="wi"><b>'+esc((TY()[x.typ]||{label:x.typ}).label)+':</b> '+x.instr+'</p><ol start="'+(n+1)+'">';so+='<ol class="sol" start="'+(n+1)+'">';
-      x.list.forEach(it=>{tot+=it.p;ws+='<li><span class="pt">'+it.p+' P.</span>'+it.q+(it.opts?'<div class="wo">'+it.opts.map(o=>'<span>'+esc(o)+'</span>').join('')+'</div>':'<div class="wl"></div>')+'</li>';so+='<li><b>'+it.a+'</b> <span class="pt">'+it.p+' P.</span></li>';n++;});
+      x.list.forEach(it=>{tot+=it.p;ws+='<li><span class="pt">'+fmtP(it.p)+' P.</span>'+it.q+(it.opts?'<div class="wo">'+it.opts.map(o=>'<span>'+esc(o)+'</span>').join('')+'</div>':'<div class="wl"></div>')+'</li>';so+='<li><b>'+it.a+'</b> <span class="pt">'+fmtP(it.p)+' P.</span></li>';n++;});
       ws+='</ol>';so+='</ol>';
     });
   }));
-  const head='<div class="nm"><span>Name:</span><span>Klasse:</span><span>Datum:</span></div><p class="tot"><b>Total: '+tot+' Punkte</b> · erreicht: ______ von '+tot+'</p>';
-  return{ws:'<div class="wsh">'+head+ws+'</div>',sol:'<div class="wsh"><p class="wi">Lösungen und Punkte (Total: '+tot+' Punkte)</p>'+so+'</div>',n,tot};
+  const head='<div class="nm"><span>Name:</span><span>Klasse:</span><span>Datum:</span></div><p class="tot"><b>Total: '+fmtP(tot)+' Punkte</b> · erreicht: ______ von '+fmtP(tot)+' · Note: ______</p>';
+  return{ws:'<div class="wsh">'+head+ws+'</div>',sol:'<div class="wsh"><p class="wi">Lösungen und Punkte (Total: '+fmtP(tot)+' Punkte)</p>'+so+'</div>',n,tot};
 }
 function makeTestSheet(){
   testInit();const tk=testBuild();if(!tk.length)return;
@@ -1012,6 +1019,7 @@ document.addEventListener('click',e=>{
    case 'tgrp':{testInit();const ids=v.split(',');const all=ids.every(k=>S.test.chs.has(k));ids.forEach(k=>all?S.test.chs.delete(k):S.test.chs.add(k));document.querySelectorAll('.tchips [data-a="tch"]').forEach(x=>{const on=S.test.chs.has(x.dataset.v);x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);});testInfo();break;}
    case 'tcount':{testInit();S.test.count=v;document.querySelectorAll('[data-a="tcount"]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));const ci=document.getElementById('tcustom');if(ci)ci.hidden=v!=='custom';testInfo();break;}
    case 'tmode2':{S.cfg.mode=v;document.querySelectorAll('[data-a="tmode2"]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));break;}
+   case 'texam':{testInit();S.test.exam=!S.test.exam;b.classList.toggle('on',S.test.exam);b.setAttribute('aria-pressed',S.test.exam);break;}
    case 'ttimer':{testInit();S.test.timer=!S.test.timer;b.classList.toggle('on',S.test.timer);b.setAttribute('aria-pressed',S.test.timer);break;}
    case 'tstart':{const tk=testBuild();if(!tk.length)return;startRound(tk,'Test');break;}
    case 'tsheet':{makeTestSheet();break;}
@@ -1049,10 +1057,11 @@ document.addEventListener('click',e=>{
    case 'cut':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=false;break;}
    case 'tok':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=!R.sel.size;break;}
    case 'hint':{const h=document.getElementById('hintBox');h.hidden=!h.hidden;break;}
-   case 'check':checkRound();break;
+   case 'check':checkRound();if(S.R&&S.R.exam&&S.R.answered)nextRound();break;
    case 'next':nextRound();break;
    case 'stop':clearInterval(window._tclk);S.screen=(S.R&&S.R.test)?'test':'config';render();break;
    case 'ref':openRef(v);break;
+   case 'tref':S.ch=b.dataset.c;openRef(v);break;
    case 'refsec':openRef(v);break;
    case 'closeRef':document.getElementById('ref').close();break;
    case 'retry':{const w=S.R.hist.filter(h=>!h.ok).map(h=>h.t);startRound(shuffle(w),'Wiederholung');break;}

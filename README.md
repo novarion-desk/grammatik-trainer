@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Testvorbereitung als Prüfung:** Kapitel mischen (bis 80 Aufgaben), Prüfungsmodus (Resultate erst am Schluss, ohne Tipps), Auswertung mit «Das solltest du anschauen» (Links zur Theorie) und Lösungen mit Begründung. Punkte: Auswahl 0,5, sonst 1 (schwieriger 2), lange Texte 2. Prüfung auch als Blatt (Druck/Word) mit Lösungsblatt, Total und Note.
 - **Glossar** am Anfang jedes Kapitels (Theorie und Folien): Fachbegriff, deutsches Wort, Erklärung. Daten in `chapters/glossar.js`.
 - **Partikel** ausgebaut: Interjektionen (neuer Abschnitt), Konjunktionen nebenordnend/unterordnend mit Verbstellung, Adverbien zuordnen (lokal, temporal, modal, kausal), Wechselpräpositionen (Wo? Wohin?), Kurzformen. Begriffe wie «Verhältniswort» im Text.
 - **Lange Texte**: Wortarten «Langer Text anmalen» (alle fünf Wortarten), in Nomen, Verb, Adjektiv, Pronomen und Partikel je «… im langen Text». Daten in `chapters/langtext.js`.
