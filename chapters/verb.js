@@ -189,7 +189,10 @@ const SECS=[
   ['3 · Perfekt mit sein','«Ich <b>bin</b> gelaufen.»','Bei Bewegung und Zustandsänderung: sein + Partizip II.'],
   ['4 · Präsens für die Zukunft','«Morgen <b>fahre</b> ich nach Bern.»','Das Präsens kann Zukünftiges ausdrücken, wenn eine Zeitangabe da ist.'],
   ['5 · Unregelmässige Personalformen','«du <b>liest</b>, er <b>fährt</b>»','Der Stamm ändert sich. Das erkennt man nur beim Konjugieren.'],
-  ['6 · «würde» ist kein Präsens','«Ich <b>würde</b> kommen.»','Das ist der Konjunktiv. Der kommt in einem späteren Thema.']
+  ['6 · «würde» ist kein Präsens','«Ich <b>würde</b> kommen.»','Das ist der Konjunktiv. Der kommt in einem späteren Thema.'],
+  ['7 · Partizip II richtig bilden','«aufstehen → <b>auf</b>ge<b>standen</b>» / «verlieren → <b>ver</b>loren» / «besuchen → besucht» / «bringen → gebracht»','Bei trennbaren Verben steht «ge» in der Mitte. Bei Vorsilben wie ver-, be-, er-, ent-, zer- gibt es kein «ge». Unregelmässige Verben ändern den Stamm (nicht «gebringt»).'],,
+  ['8 · Perfekt mit «sein» (Schweizer Standardsprache)','«Ich <b>bin</b> gesessen.» / «Er <b>ist</b> gestanden.» / «Sie <b>ist</b> gelegen.»','In der Schweiz sind diese Formen mit «sein» richtig. In Deutschland sagt man oft «habe gesessen». Beides ist in Ordnung, nicht anstreichen.'],,
+  ['9 · Nicht «tun» + Verb','Nicht: «Ich tue lesen.» Sondern: «Ich lese.»','Die Umschreibung mit «tun» gehört zur Mundart. In der Schriftsprache braucht man die normale Personalform.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('zeit,person,stamm')}
 ];
 const EX=[
@@ -201,7 +204,10 @@ const EX=[
  ['Gib die Stammformen an: gehen, essen, sehen.','gehen – ging – gegangen · essen – ass – gegessen · sehen – sah – gesehen',1],
  ['Unterstreiche alle Teile des Verbs: «Sie hat gestern früh aufstehen müssen.»','hat · aufstehen · müssen (drei Teile)',2],
  ['Bilde die Befehlsform für «du»: lesen, fahren, geben.','Lies! · Fahr! · Gib!',2],
- ['Schreibe im Plusquamperfekt: «Er isst. Dann geht er.» («Nachdem …»)','Nachdem er gegessen hatte, ging er.',2]
+ ['Schreibe im Plusquamperfekt: «Er isst. Dann geht er.» («Nachdem …»)','Nachdem er gegessen hatte, ging er.',2],
+ ['Bilde das Partizip II: aufstehen, verlieren, besuchen, bringen.','aufgestanden · verloren · besucht · gebracht',2],
+ ['Schreibe im Perfekt: «Sie räumt das Zimmer auf.»','Sie hat das Zimmer aufgeräumt.',2],
+ ['Korrigiere: «Ich tue lesen.»','Ich lese.',2]
 ];
 const merk=()=>T(['Zeitform','Beispiel','Bildung'],[['Präsens','er lacht','Stamm + Endung'],['Präteritum','er lachte','Stamm + -te oder Ablaut'],['Perfekt','er hat gelacht','haben/sein + Partizip II'],['Plusquamperfekt','er hatte gelacht','hatte/war + Partizip II'],['Futur I','er wird lachen','werden + Infinitiv']])+
  '<h3 style="margin-top:.9rem">Personalformen</h3>'+T(['','Endung','lachen'],[['ich','-e','lache'],['du','-st','lachst'],['er/sie/es','-t','lacht'],['wir','-en','lachen'],['ihr','-t','lacht'],['sie','-en','lachen']])+

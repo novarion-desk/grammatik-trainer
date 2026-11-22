@@ -270,7 +270,10 @@ const SECS=[
   ['3 · seit oder seid?','«<b>Seit</b> gestern regnet es.» / «Ihr <b>seid</b> müde.»','seit = Präposition, seid = Verb (sein).'],
   ['4 · Verb am Ende','«Ich gehe, weil ich müde <b>bin</b>.»','Nach weil, obwohl, dass … steht das Verb am Ende.'],
   ['5 · Fall nach der Präposition','«mit <b>dem</b> Bus», «für <b>den</b> Bus»','Dativ nach mit, Akkusativ nach für.'],
-  ['6 · Kurzformen','«im, zum, vom, beim»','im = in dem, zum = zu dem. Die Kurzform ist alltäglich, die lange Form betont das Wort.']
+  ['6 · Kurzformen','«im, zum, vom, beim»','im = in dem, zum = zu dem. Die Kurzform ist alltäglich, die lange Form betont das Wort.'],
+  ['7 · als, wenn oder wann?','«<b>Als</b> ich klein war, wohnten wir in Bern.» (einmalig) / «Jedes Mal, <b>wenn</b> es regnet, nehme ich den Schirm.» (wiederholt) / «<b>Wann</b> kommst du?» (Frage)','als = einmal in der Vergangenheit. wenn = immer wieder oder in der Zukunft. wann = Frage nach der Zeit.'],,
+  ['8 · deshalb oder weil?','«Ich bin krank, <b>deshalb</b> bleibe ich zu Hause.» / «Ich bleibe zu Hause, <b>weil</b> ich krank <b>bin</b>.»','Nach «deshalb, darum, trotzdem» (Adverbien) steht das Verb an zweiter Stelle. Nach «weil, obwohl» (Konjunktionen) steht es am Ende.'],,
+  ['9 · Mundart-Fallen','Nicht: «wegen dem Regen», «dem Vater sein Auto». Sondern: «wegen des Regens», «das Auto des Vaters» (oder «vom Vater»).','In der Schriftsprache steht nach «wegen» der Genitiv. Der Dativ ist umgangssprachlich. «dem Vater sein Auto» schreibt man nicht.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0;font-size:.9rem">'+x[2]+'</p></div>').join('')+'</div>'+tryW('praep,konj,art')}
 ];
 const EX=[
@@ -281,7 +284,14 @@ const EX=[
  ['Unterstreiche alle Partikel: «Heute gehe ich mit dir ins Kino, denn ich habe Zeit.»','Heute · mit · ins · denn',1],
  ['Ordne zu: oft, in, aber, hier, für.','Adverb: oft, hier · Präposition: in, für · Konjunktion: aber',2],
  ['Wie lauten die Kurzformen? in dem, zu dem, von dem, bei dem','im · zum · vom · beim',2],
- ['Schreibe einen Satz mit «wegen» (Genitiv).','Wegen des Regens bleiben wir hier.',2]
+ ['Schreibe einen Satz mit «wegen» (Genitiv).','Wegen des Regens bleiben wir hier.',2],
+ ['Setze ein: ___ ich klein war, wohnten wir in Bern. (einmalig)','Als',1],
+ ['Setze ein: Jedes Mal, ___ es regnet, nehme ich den Schirm.','wenn',1],
+ ['Setze ein: Ich weiss nicht, ___ der Bus kommt.','wann',1],
+ ['Verbinde mit «deshalb»: Ich bin müde. Ich gehe schlafen.','Ich bin müde, deshalb gehe ich schlafen.',2],
+ ['Verbinde mit «weil»: Ich bin müde. Ich gehe schlafen.','Ich gehe schlafen, weil ich müde bin.',2],
+ ['Korrigiere: «Wegen dem Regen bleiben wir hier.»','Wegen des Regens bleiben wir hier.',2],
+ ['Korrigiere: «Das ist dem Vater sein Auto.»','Das ist das Auto des Vaters. (oder: das Auto vom Vater)',2]
 ];
 const merk=()=>T(['Art','Beispiele','Merksatz'],[['Partikel','und, in, heute, aber','Sie verändern sich nicht.'],['Präposition','in, auf, mit, für, wegen','Steht vor einem Nomen und verlangt einen Fall.'],['Konjunktion','und, aber, weil, dass, obwohl','Verbindet Wörter und Sätze. Nebenordnend (und, oder, aber, denn, sondern): Verb bleibt. Unterordnend (weil, dass, obwohl): Verb am Ende.'],['Adverb','heute, hier, gern, deshalb','Beantwortet Wann? Wo? Wie? Warum?'],['Interjektion','ach, aua, hurra, hey','Drückt ein Gefühl aus oder ruft jemanden an. Danach steht ein Komma oder Ausrufezeichen.']])+
  T(['Fall','Präpositionen'],[['Akkusativ','durch, für, gegen, ohne, um'],['Dativ','aus, bei, mit, nach, seit, von, zu'],['Genitiv','wegen, während, trotz'],['Wechsel (Wo? Dat. · Wohin? Akk.)','an, auf, in, über, unter, vor, hinter, neben, zwischen']]);
