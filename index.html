@@ -128,6 +128,7 @@ mark.w{background:var(--b);color:inherit;box-shadow:inset 0 -3px 0 var(--c);bord
 .sec h3.pr{font-size:1.1rem;margin:1.2rem 0 .5rem}
 .sent{font-size:1.2rem;margin:.3rem 0 .6rem}
 .sent2{margin-top:.4rem}
+.fbx{margin-top:.45rem;padding-top:.4rem;border-top:1px dashed currentColor;font-size:.95em;opacity:.95}
 .fcard{border:2px solid var(--c);background:var(--b);border-radius:var(--radius);padding:.9rem 1rem}
 .fcard h3{font-size:1rem;color:var(--t)}
 .fcard .q{font-size:1.35rem;font-weight:800;margin:.25rem 0;color:var(--t)}
@@ -585,7 +586,7 @@ function checkRound(){
     document.querySelectorAll('.sbox .hl').forEach(h=>{if(t.cats.length===1)h.classList.add('f-'+t.cats[0]);});
   }
   R.answered=true;R.hist.push({t,ok,mine,right,conf});saveP(ok);
-  document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+'</div>';
+  document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+fbX(t,ok,mine,right)+'</div>';
   document.getElementById('checkBtn').hidden=true;document.getElementById('nextBtn').hidden=false;revealNext(document.getElementById('nextBtn'));
 }
 function nextRound(){
@@ -613,6 +614,13 @@ function screenSummary(){
    '<h3>Alle Fragen</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+TY()[h.t.typ].label+'</b> '+(h.ok?'· richtig':'· falsch')+'<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
 }
 let _rk='',_ry=0;
+function fbX(t,ok,mine,right){
+  const strip=v=>String(v==null?'':v).replace(/<[^>]+>/g,'').trim();
+  const T=(C()&&C().TYPES&&C().TYPES[t.typ])||{},h=t.hint||T.hint;let o='';
+  if(!ok&&mine!==undefined&&strip(mine)&&strip(right)&&strip(mine)!==strip(right))o+='Du hast «'+strip(mine)+'» gewählt, richtig ist «'+strip(right)+'».';
+  if(h)o+=(o?'<br>':'')+'💡 <b>Merke:</b> '+h;
+  return o?'<div class="fbx">'+o+'</div>':'';
+}
 function render(){
   const keepKey=S.screen+'|'+S.ch+'|'+(S.screen==='round'&&S.R?S.R.i+':'+(S.R.tasks||[]).length:'');
   const keep=(S.screen!=='teach')&&keepKey===_rk;_ry=window.scrollY||0;_rk=keepKey;
@@ -640,7 +648,7 @@ function tryPick(b){
   const el=b.closest('[data-w="try"]');if(el.dataset.done)return;el.dataset.done='1';
   const t=el._t,i=Number(b.dataset.i),ok=el._o[i]===t.answer;
   el.querySelectorAll('.opt').forEach((x,j)=>{x.disabled=true;if(el._o[j]===t.answer)x.classList.add('right');else if(j===i)x.classList.add('wrong');});
-  el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
+  el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+fbX(t,ok,el._o[i],t.answer)+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
 }
 const LOWW=new Set(['der','die','das','den','dem','des','ein','eine','einen','einem','mein','meine','meinen','meinem','unser','unsere','wir','ich','du','er','sie','es','ihr','nach','am','im','mit','in','auf','gestern','heute','morgen','leider','dann','jetzt']);
 const VERBPART=new Set(['verloren','ab','gewonnen','geschaut','ein','gelacht','gespielt']);
@@ -660,7 +668,7 @@ function tryCheck(b){
     const ok=t.tokens.every((_,i)=>el._sel.has(i)===tg.has(i));
     el.querySelectorAll('.tok').forEach(x=>{const i=Number(x.dataset.i);x.disabled=true;if(el._sel.has(i)&&tg.has(i))x.classList.add('right');else if(el._sel.has(i))x.classList.add('wrong');else if(tg.has(i))x.classList.add('miss');});
     el.querySelector('.actions').remove();
-    el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig markiert!':'✗ Nicht ganz richtig.')+'</b> '+(t.why||'')+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
+    el.querySelector('.tfb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig markiert!':'✗ Nicht ganz richtig.')+'</b> '+(t.why||'')+fbX(t,ok)+'</div><div style="margin-top:.7rem"><button class="btn primary" data-a="tnext">Nächste Aufgabe →</button></div>';
     return;}
   el.dataset.done='1';const t=el._t,tg=new Set(t.cuts);
   const ok=[...tg].every(i=>el._sel.has(i))&&[...el._sel].every(i=>tg.has(i));
