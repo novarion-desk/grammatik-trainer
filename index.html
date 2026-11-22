@@ -386,7 +386,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 'use strict';
 const GT=window.GT={chapters:{},
  WORT:[['Wortarten','wortarten','Nomen, Verb, Adjektiv, Pronomen und Partikel erkennen'],['Nomen','nomen','Wörter für Lebewesen, Dinge und Gedanken'],['Die 4 Fälle','faelle','Nominativ, Genitiv, Dativ und Akkusativ bestimmen'],['Verb','verb','Formen, Zeitformen und Modi'],['Adjektiv','adjektiv','Eigenschaften beschreiben und steigern'],['Pronomen','pronomen','Stellvertreter und Begleiter, auch Artikel'],['Partikel','partikel','Adverb, Konjunktion und Präposition']],
- SATZ:[['#','Teil 1 · Satzglieder und Satzarten'],['Wortlehre und Satzlehre','wl-sl','Wörter und Sätze untersuchen'],['Die Verschiebeprobe','verschiebe','Satzglieder finden und abtrennen'],['Die Satzglieder benennen','satzglieder','Prädikat, Subjekt, Objekte, Adverbiale, Attribut'],['Verbale Teile und Rohform des Satzes','verbale','Verbale Teile, Rohform, verbale Wortkette'],['Satzarten und Satzbau','satzarten','Satzarten, einfacher und zusammengesetzter Satz'],['Das Feldermodell und die Satzklammer','feld','Vorfeld, Satzklammer, Mittelfeld, Nachfeld'],['#','Teil 2 · Zusammengesetzte Sätze'],['Hauptsatz, Nebensatz und Satzgefüge','hs-ns','Satzverbindung, Satzgefüge, Einleitewörter'],['Zusammengezogener Satz','zgs','Gemeinsames Satzglied nur einmal nennen'],['#','Teil 3 · Nebensätze und Komma'],['Arten der Nebensätze','nsarten','Formale Arten, Relativsatz, Bedeutung'],['Kommasetzung','komma','Kommaregeln anwenden']],
+ SATZ:[['#','Teil 1 · Satzglieder und Satzarten'],['Wortlehre und Satzlehre','wl-sl','Wörter und Sätze untersuchen'],['Die Verschiebeprobe','verschiebe','Satzglieder finden und abtrennen'],['Die Satzglieder benennen','satzglieder','Prädikat, Subjekt, Objekte, Adverbiale, Attribut'],['Verbale Teile und Rohform des Satzes','verbale','Verbale Teile, Rohform, verbale Wortkette'],['Satzarten und Satzbau','satzarten','Satzarten, einfacher und zusammengesetzter Satz'],['Das Feldermodell und die Satzklammer','feld','Vorfeld, Satzklammer, Mittelfeld, Nachfeld'],['#','Teil 2 · Zusammengesetzte Sätze'],['Hauptsatz, Nebensatz und Satzgefüge','hs-ns','Satzverbindung, Satzgefüge, Einleitewörter'],['Zusammengezogener Satz','zgs','Gemeinsames Satzglied nur einmal nennen'],['#','Teil 3 · Nebensätze und Komma'],['Arten der Nebensätze','nsarten','Formale Arten, Relativsatz, Bedeutung'],['Kommasetzung','komma','Kommaregeln anwenden'],['#','Teil 4 · Rede wiedergeben'],['Direkte und indirekte Rede','rede','Zeichensetzung, Konjunktiv I, Umformen']],
  register(c){c.catWord=c.catWord||'Fall';this.chapters[c.id]=c;if(c.TYPES)Object.keys(c.TYPES).forEach(k=>{if(!c.TYPES[k].icon&&ICONS[k])c.TYPES[k].icon=ICONS[k];});if(GT.autoW)GT.autoW(c);},
  mk:(k,t)=>'<mark class="w f-'+k+'">'+t+'</mark>',
  cap:s=>s.charAt(0).toUpperCase()+s.slice(1),
@@ -438,7 +438,7 @@ function renderHead(){
 }
 function screenStart(){
   const D={A:'Alles, auch die Erweiterungen',B:'Kern und einige Erweiterungen',C:'Der Kern: Grundlagen und Proben'},P=loadP();
-  const EM=GT.EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzglieder:['🏷️','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff'],zgs:['🧵','#4f46e5','#e0e7ff'],nsarten:['🌿','#4f46e5','#e0e7ff']};
+  const EM=GT.EM={wortarten:['🏷️','#475569','#e2e8f0'],nomen:['🏠','#2563eb','#dbeafe'],faelle:['🎯','#0d9488','#ccfbf1'],verb:['🏃','#dc2626','#fee2e2'],adjektiv:['🎨','#16a34a','#dcfce7'],pronomen:['👤','#d97706','#fef3c7'],partikel:['🔗','#7c3aed','#ede9fe'],'wl-sl':['🔎','#4f46e5','#e0e7ff'],verbale:['🔧','#4f46e5','#e0e7ff'],verschiebe:['🔀','#4f46e5','#e0e7ff'],satzglieder:['🏷️','#4f46e5','#e0e7ff'],satzarten:['💬','#4f46e5','#e0e7ff'],'hs-ns':['🪢','#4f46e5','#e0e7ff'],komma:['✂️','#4f46e5','#e0e7ff'],zgs:['🧵','#4f46e5','#e0e7ff'],nsarten:['🌿','#4f46e5','#e0e7ff'],rede:['💬','#4f46e5','#e0e7ff']};
   const tile=(key,c,i)=>{
     const ch=GT.chapters[c[1]],em=EM[c[1]]||['📘','#4f46e5','#e0e7ff'];
     const ico='<div class="ti" style="background:'+em[2]+'">'+em[0]+'</div>';
@@ -1248,6 +1248,7 @@ GT.chapter=function(d){
    feld:{idee:'fm1||Vorfeld;Mittelfeld;Nachfeld',klammer:'fm2||Linke Satzklammer;Rechte Satzklammer',vorfeld:'fm3||Vorfeld',schritte:'fm1||Vorfeld;Mittelfeld',fragen:'fm3||Vorfeld',nachfeld:'fm1||Nachfeld'},
    'hs-ns':{haupt:'sg1||Hauptsatz;Nebensatz',verbindung:'sg2||Nebensatz',einleite:'sg3||Einleitewort',stellung:'sg4||Nebensatz'},
    zgs:{was:'sg1',erkennen:'sg1',falsch:'sg3'},
+   rede:{was:'sg2||Redebegleitsatz;Wörtliche Rede',zeichen:'sg1||Redebegleitsatz;Wörtliche Rede',indirekt:'sg4',konj:'sg3',ersatz:'sg3'},
    nsarten:{was:'sg0||Nebensatz',konj:'sg1||Nebensatz;Einleitewort','relativ-neu':'sg3||Relativsatz',uneing:'sg2'},
    komma:{auf:'sg1','ns-erkl':'sg2','haupt-neben':'sg2','hs-hs':'sg2','relativ-erkl':'sg3',relativ:'sg3',einschub:'sg3',sonst:'sg4',infgruppe:'sg4'}
   })[d.id]||{};
@@ -1355,6 +1356,7 @@ GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
 <script src="chapters/nsarten.js"></script>
 <script src="chapters/komma.js"></script>
 <script src="chapters/faelle.js"></script>
+<script src="chapters/rede.js"></script>
 <script>if('serviceWorker' in navigator&&location.protocol.startsWith('http')&&!/[?&]demo/.test(location.search)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 GT.start();</script>
 <script>
