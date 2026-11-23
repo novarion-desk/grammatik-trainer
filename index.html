@@ -515,13 +515,14 @@ function screenConfig(){
   return '<h2 class="page">'+C().title+': Üben</h2><p class="sub">Was möchtest du üben? Niveau '+S.niv+' ist eingestellt.</p>'+
    '<div class="card"><div class="sumline"><span>'+sum+'</span></div>'+det+
    '<div id="avail">'+info+'</div>'+
-   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Erst Theorie lesen</button><button class="btn primary" id="startBtn" data-a="start" '+(pool.length===0?'disabled':'')+'>Übung starten →</button></div></div>';
+   '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Erst Theorie lesen</button><button class="btn primary" id="startBtn" data-a="start" '+(pool.length===0?'disabled':'')+'>Übung starten →</button><button class="btn sbtn" data-a="ssheet" data-v="print" title="Aufgaben als Blatt drucken oder als PDF speichern, Lösungen am Schluss" '+(pool.length===0?'disabled':'')+'>🖨️ Drucken / PDF</button><button class="btn sbtn" data-a="ssheet" data-v="docx" title="Aufgaben als Word-Datei, Lösungen am Schluss" '+(pool.length===0?'disabled':'')+'>📝 Word</button></div></div>';
 }
 function updateAvail(){
   const c=S.cfg,pool=poolFor(c),want=wanted(c),el=document.getElementById('avail'),b=document.getElementById('startBtn');if(!el)return;
   el.innerHTML=pool.length===0?'<div class="avail none">Mit dieser Auswahl gibt es keine Aufgaben. Wähle mehr Themen, Aufgabentypen oder eine andere Stufe.</div>':
    pool.length<want?'<div class="avail warn">Es gibt nur '+pool.length+' passende Aufgaben. Die Runde hat deshalb '+pool.length+' statt '+want+' Fragen.</div>':'<div class="avail">'+pool.length+' passende Aufgaben verfügbar. Die Runde hat '+want+' Fragen.</div>';
   if(b)b.disabled=pool.length===0;
+  document.querySelectorAll('.sbtn').forEach(x=>x.disabled=pool.length===0);
 }
 
 /* ---- Runde ---- */
@@ -728,6 +729,15 @@ function sheetConfig(pre,sum,det,info,pool){
    '<div class="card">'+src+'<div class="sumline" style="margin-top:.8rem"><span>'+sum+'</span><button class="btn sm" data-a="moreopt">'+(S.cfgOpen?'Einstellungen schliessen':'Einstellungen anpassen')+'</button></div>'+(S.cfgOpen?det:'')+
    '<div id="avail">'+(ai?'<div class="avail">Die KI erstellt neue Aufgaben zu deiner Auswahl.</div>':info)+'</div>'+err+
    '<div class="actions"><button class="btn" data-a="theorie" data-t="'+S.teil+'" data-v="'+S.ch+'">Theorie ansehen</button><button class="btn" id="pvBtn" data-a="mksheet" data-v="preview" '+((!ai&&pool.length===0)||S.busy?'disabled':'')+'>👁️ Vorschau</button><button class="btn primary" id="mkBtn" data-a="mksheet" data-v="print" '+((!ai&&pool.length===0)||S.busy?'disabled':'')+'>'+(S.busy?'Wird erstellt …':'Übungsblatt erstellen →')+'</button></div></div>';
+}
+/* Übungsblatt für Schüler: Aufgaben aus der aktuellen Auswahl, Lösungen am Schluss (Druck/PDF oder Word) */
+function studentSheet(kind){
+  const items=buildPoolSheet();if(!items.length)return;
+  S.sheetFrom='';S.src='pool';
+  const o=Object.assign(sheetHTML(items),{src:'pool',title:C().title});
+  o.sol=o.sol.replace('Lösungen für die Lehrperson','Lösungen');
+  S.sheetOut=o;
+  if(kind==='docx')docxSheet('both');else printSheet('both');
 }
 function sheetItem(t){
   const T=TY()[t.typ]||{};let q,a,opts=null,instr=T.instr||'',kind='line';
@@ -1058,6 +1068,7 @@ document.addEventListener('click',e=>{
    case 'toc':{const el=document.getElementById('s-'+v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});break;}
    case 'rev':{const s=b.nextElementSibling;s.hidden=!s.hidden;b.textContent=s.hidden?b.dataset.l:'Verbergen';break;}
    case 'all':case 'none':{const g=b.dataset.g,on=a==='all';if(g==='types')S.cfg.types=on?new Set(typesAvailable()):new Set();else S.cfg.cats=on?new Set(CK()):new Set();render();break;}
+   case 'ssheet':studentSheet(v);break;
    case 'start':{const pool=poolFor(S.cfg);if(!pool.length)return;startRound(shuffle(balance(pool).slice(0,wanted(S.cfg))),'Runde');break;}
    case 'pick':{const R=S.R;if(R.answered)return;R.choice=Number(b.dataset.i);document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');document.getElementById('checkBtn').disabled=false;break;}
    case 'brush':{S.R.brush=b.dataset.k;document.querySelectorAll('.brush button').forEach(x=>x.classList.toggle('on',x===b));break;}

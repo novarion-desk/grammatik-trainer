@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Übungsblatt für Schüler (23.11.):** Im Üben-Menü neben «Übung starten» gibt es «🖨️ Drucken / PDF» und «📝 Word». Das Blatt entsteht aus der gewählten Auswahl (Themen, Typen, Stufe, Anzahl). Die Lösungen stehen am Schluss.
 - **Mehr Aufgaben (23.11.):** rund 325 neue Aufgaben in 14 Kapiteln, vor allem dort, wo es wenige gab (Zusammengezogener Satz, Wortlehre/Satzlehre, Verschiebeprobe, Satzarten, Rede, Verbale Teile, Komma, Hauptsatz/Nebensatz, Adjektiv). Mehr Stufe 2 und 3. Pronomen, Satzglieder, Fälle und Feld unverändert.
 - **Merkblatt** enthält jetzt das Glossar (eigene Seite). **Handout:** Folien verkleinert, mehrere pro A4 (Lehrer: Drucken ▾ › Handout). **Mein Fortschritt** auf der Startseite: pro Kapitel Trefferquote, Anzahl Aufgaben, zuletzt geübt (nur auf diesem Gerät).
 - **Testvorbereitung als Prüfung:** Kapitel mischen (bis 80 Aufgaben), Prüfungsmodus (Resultate erst am Schluss, ohne Tipps), Auswertung mit «Das solltest du anschauen» (Links zur Theorie) und Lösungen mit Begründung. Punkte: Auswahl 0,5, sonst 1 (schwieriger 2), lange Texte 2. Prüfung auch als Blatt (Druck/Word) mit Lösungsblatt, Total und Note.
