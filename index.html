@@ -639,6 +639,7 @@ function render(){
   $app.innerHTML=({start:screenStart,teach:screenTeach,lernen:screenLernen,config:screenConfig,round:screenRound,summary:screenSummary,sheet:screenSheet,test:screenTest})[S.screen]();
   initTry(document);mountWidgets(document);window.scrollTo(0,keep?_ry:0);renderLogin();
   const pr=!!(S.screen==='teach'&&S.t.pres&&S.t.mode==='slides');document.body.classList.toggle('presing',pr);if(pr){fitPres();presWake();}else if(S.t.pres&&S.screen!=='teach'){S.t.pres=false;}
+  saveView();
 }
 function renderTry(el){
   const types=el.dataset.types.split(',');
@@ -1361,27 +1362,38 @@ GT.chapter=function(d){
     writeTypes:d.write||[],writeAny:d.writeAny||[],strictTypes:d.strict||[],TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>d.merk(),
     SLIDES,noCheck:lastHas,widgets:d.widgets||{},actions:d.actions||{}});
 };
-/* ---- Nach einem Update dort weitermachen, wo man war (nur nach Klick auf «Jetzt laden») ---- */
+/* ---- Ansicht merken: Neuladen (Wischen nach unten) und Update bringen einen an dieselbe Stelle zurück ---- */
 window.__updateBusy=()=>(S.screen==='round'&&S.R&&S.R.test)?'Ein Test läuft. Lade erst nach dem Test neu.':'';
-window.__updateSave=function(){try{
-  const o={ts:Date.now(),niv:S.niv,teil:S.teil,ch:S.ch,screen:S.screen,cfg:S.cfg};
-  if(S.screen==='round'&&S.R&&!S.R.test){const R=S.R;Object.assign(o,{title:R.title,i:R.i,answered:R.answered,tasks:R.tasks,hist:R.hist.map(h=>({t:R.tasks.indexOf(h.t),ok:h.ok,mine:h.mine,right:h.right,conf:h.conf})),el:Date.now()-R.t0});}
-  localStorage.setItem('gt-resume',JSON.stringify(o));
-}catch(e){}};
-function resumeAfterUpdate(){try{
-  const raw=localStorage.getItem('gt-resume');if(!raw)return;localStorage.removeItem('gt-resume');
-  const o=JSON.parse(raw);if(!o||Date.now()-o.ts>5*60*1000||!GT.chapters[o.ch])return;
-  S.niv=o.niv||S.niv;S.teil=o.teil||S.teil;S.ch=o.ch;if(o.cfg)S.cfg=Object.assign(S.cfg,o.cfg);
+function viewSnap(){
+  const c=S.cfg,o={ts:Date.now(),niv:S.niv,teil:S.teil,ch:S.ch,ref:S.ref,screen:S.screen,
+    cfg:Object.assign({},c,{types:c.types?[...c.types]:null,cats:c.cats?[...c.cats]:null})};
+  if(S.screen==='round'&&S.R&&!S.R.test){const R=S.R;Object.assign(o,{title:R.title,i:R.i,tasks:R.tasks,hist:R.hist.map(h=>({t:R.tasks.indexOf(h.t),ok:h.ok,mine:h.mine,right:h.right,conf:h.conf})),el:Date.now()-R.t0});}
+  return JSON.stringify(o);
+}
+function saveView(){try{if(!S.demo)sessionStorage.setItem('gt-view',viewSnap());}catch(e){}}
+window.__updateSave=function(){try{localStorage.setItem('gt-resume',viewSnap());}catch(e){}};
+function resumeView(){try{
+  let raw=null,fresh=false;
+  const lr=localStorage.getItem('gt-resume');
+  if(lr){localStorage.removeItem('gt-resume');raw=lr;fresh=true;}
+  else{
+    const nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};
+    if(nav.type==='reload')raw=sessionStorage.getItem('gt-view');
+  }
+  if(!raw)return;
+  const o=JSON.parse(raw);if(!o||!GT.chapters[o.ch])return;
+  if(fresh&&Date.now()-o.ts>5*60*1000)return;
+  S.niv=o.niv||S.niv;S.teil=o.teil||S.teil;S.ch=o.ch;if(o.ref)S.ref=o.ref;
+  if(o.cfg)Object.assign(S.cfg,o.cfg,{types:o.cfg.types?new Set(o.cfg.types):null,cats:o.cfg.cats?new Set(o.cfg.cats):null});
   if(o.screen==='round'&&o.tasks&&o.tasks.length){
-    const tasks=o.tasks;let i=o.i;
+    const tasks=o.tasks,i=o.i;
     const hist=(o.hist||[]).filter(h=>h.t>=0&&tasks[h.t]).map(h=>({t:tasks[h.t],ok:h.ok,mine:h.mine,right:h.right,conf:h.conf}));
-    if(o.answered)i++;
     if(i>=tasks.length||!tasks.every(t=>t&&t.typ&&C().TYPES[t.typ])){S.screen='config';return;}
     startRound(tasks,o.title);S.R.i=i;S.R.hist=hist;S.R.t0=Date.now()-(o.el||0);
-  }else if(o.screen==='config'||o.screen==='lernen'){S.screen=o.screen;}
+  }else if(o.screen==='config'||o.screen==='lernen'||o.screen==='sheet'){S.screen=o.screen==='sheet'?'config':o.screen;}
 }catch(e){}}
 GT.start=function(){
-  resumeAfterUpdate();
+  resumeView();
   const l=document.getElementById('login');if(l)l.addEventListener('close',()=>{S.loginOpen=false;});
   initAuth();render();
 };
