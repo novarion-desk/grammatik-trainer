@@ -1360,7 +1360,27 @@ GT.chapter=function(d){
     writeTypes:d.write||[],writeAny:d.writeAny||[],strictTypes:d.strict||[],TYPES:TY,TASKS,SEC,TOC,PRESETS,REF:secs.filter((x,i)=>i<2||Object.values(TY).some(t=>t.ref===x.id)).map(s=>[s.id,s.short||s.title]),merk:()=>d.merk(),
     SLIDES,noCheck:lastHas,widgets:d.widgets||{},actions:d.actions||{}});
 };
+/* ---- Nach einem Update dort weitermachen, wo man war (nur nach Klick auf «Jetzt laden») ---- */
+window.__updateBusy=()=>(S.screen==='round'&&S.R&&S.R.test)?'Ein Test läuft. Lade erst nach dem Test neu.':'';
+window.__updateSave=function(){try{
+  const o={ts:Date.now(),niv:S.niv,teil:S.teil,ch:S.ch,screen:S.screen,cfg:S.cfg};
+  if(S.screen==='round'&&S.R&&!S.R.test){const R=S.R;Object.assign(o,{title:R.title,i:R.i,answered:R.answered,tasks:R.tasks,hist:R.hist.map(h=>({t:R.tasks.indexOf(h.t),ok:h.ok,mine:h.mine,right:h.right,conf:h.conf})),el:Date.now()-R.t0});}
+  localStorage.setItem('gt-resume',JSON.stringify(o));
+}catch(e){}};
+function resumeAfterUpdate(){try{
+  const raw=localStorage.getItem('gt-resume');if(!raw)return;localStorage.removeItem('gt-resume');
+  const o=JSON.parse(raw);if(!o||Date.now()-o.ts>5*60*1000||!GT.chapters[o.ch])return;
+  S.niv=o.niv||S.niv;S.teil=o.teil||S.teil;S.ch=o.ch;if(o.cfg)S.cfg=Object.assign(S.cfg,o.cfg);
+  if(o.screen==='round'&&o.tasks&&o.tasks.length){
+    const tasks=o.tasks;let i=o.i;
+    const hist=(o.hist||[]).filter(h=>h.t>=0&&tasks[h.t]).map(h=>({t:tasks[h.t],ok:h.ok,mine:h.mine,right:h.right,conf:h.conf}));
+    if(o.answered)i++;
+    if(i>=tasks.length||!tasks.every(t=>t&&t.typ&&C().TYPES[t.typ])){S.screen='config';return;}
+    startRound(tasks,o.title);S.R.i=i;S.R.hist=hist;S.R.t0=Date.now()-(o.el||0);
+  }else if(o.screen==='config'||o.screen==='lernen'){S.screen=o.screen;}
+}catch(e){}}
 GT.start=function(){
+  resumeAfterUpdate();
   const l=document.getElementById('login');if(l)l.addEventListener('close',()=>{S.loginOpen=false;});
   initAuth();render();
 };
@@ -1414,6 +1434,59 @@ GT.start();</script>
 <script>
 /* Feedback: öffnet das anonyme Tally-Formular (App, Version und Gerät werden mitgegeben, keine Personendaten) */
 function openAppFeedback(){var q=new URLSearchParams({app:'grammatik-trainer',version:'2026-11-22',geraet:(navigator.userAgent||'').slice(0,120)});window.open('https://tally.so/r/GeR9re?'+q.toString(),'_blank','noopener');}
+</script>
+<script id="update-notice">
+/* Update-Hinweis: meldet unten eine Leiste, sobald die Seite auf dem Server neuer ist. Lädt nie von selbst neu. */
+(function(){
+  try{
+    if(typeof fetch!=='function'||!/^https?:$/.test(location.protocol)||/[?&]demo\b/.test(location.search)||/\/versions\//.test(location.pathname)||window.EMBED_TOPIC||window.self!==window.top)return;
+    var base=location.pathname.replace(/[^\/]*$/,'');
+    var urls=[location.pathname,base+'sw.js'];
+    [].slice.call(document.scripts).forEach(function(s){
+      if(!s.src)return;var u=new URL(s.src,location.href);
+      if(u.origin===location.origin&&!/\/vendor\//.test(u.pathname)&&urls.indexOf(u.pathname)<0)urls.push(u.pathname);
+    });
+    function sig(){
+      return Promise.all(urls.map(function(u){
+        return fetch(u,{method:'HEAD',cache:'no-store'}).then(function(r){return r.ok?(r.headers.get('etag')||r.headers.get('last-modified')||''):'';});
+      })).then(function(a){return a.join('|');}).catch(function(){return null;});
+    }
+    var baseSig=null,shown=false,snooze=0;
+    function bar(){
+      if(shown)return;shown=true;
+      var b=document.createElement('div');b.setAttribute('role','status');
+      b.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483000;max-width:min(94vw,520px);background:#1e293b;color:#fff;border-radius:14px;padding:.7rem .9rem;box-shadow:0 8px 28px rgba(0,0,0,.35);font:600 15px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center;justify-content:center';
+      var t=document.createElement('span');t.textContent='Neue Version verfügbar.';
+      var go=document.createElement('button'),later=document.createElement('button'),busy=document.createElement('div');
+      var st='border:0;border-radius:10px;padding:.5rem .9rem;font:700 15px system-ui,sans-serif;cursor:pointer;min-height:40px;';
+      go.textContent='Jetzt laden';go.style.cssText=st+'background:#38bdf8;color:#0f172a';
+      later.textContent='Später';later.style.cssText=st+'background:transparent;color:#cbd5e1';
+      busy.style.cssText='flex-basis:100%;font:500 13px system-ui,sans-serif;color:#fde68a;text-align:center';
+      try{var m=window.__updateBusy&&window.__updateBusy();if(m)busy.textContent=m;}catch(e){}
+      go.onclick=function(){
+        go.disabled=true;go.textContent='Lädt …';
+        try{window.__updateSave&&window.__updateSave();}catch(e){}
+        var done=false,reload=function(){if(done)return;done=true;location.reload();};
+        setTimeout(reload,4000);
+        Promise.all(urls.map(function(u){return fetch(u,{cache:'reload'}).catch(function(){});})).then(reload,reload);
+      };
+      later.onclick=function(){b.remove();shown=false;snooze=Date.now()+30*60*1000;};
+      b.appendChild(t);b.appendChild(go);b.appendChild(later);b.appendChild(busy);document.body.appendChild(b);
+    }
+    function check(){
+      if(shown||Date.now()<snooze)return;
+      sig().then(function(s){
+        if(!s||!/[^|]/.test(s))return;
+        if(baseSig===null){baseSig=s;return;}
+        if(s!==baseSig)bar();
+      });
+    }
+    window.addEventListener('load',function(){setTimeout(check,1500);});
+    setInterval(check,5*60*1000);
+    document.addEventListener('visibilitychange',function(){if(!document.hidden)check();});
+    window.addEventListener('online',check);
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
