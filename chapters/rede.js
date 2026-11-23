@@ -104,6 +104,51 @@ const FB=[
 ];
 FB.forEach(f=>add({typ:'fach',stufe:2,lv:1,cats:['sg5'],input:true,prompt:'Schreibe den Fachbegriff.',sent:f[0].replace('___',GAP),answer:f[1],accept:f[2],strict:true,why:'<b>'+f[1]+'.</b> '+f[3]}));
 
+/* ---- Erweiterung 2 (23.11.2026, Ausbau Fachbegriffe, Zeichensetzung und Umformen) ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Mama ruft: «Das Essen ist fertig!»','direkte Rede','Anführungszeichen und Doppelpunkt: direkte Rede.',1],
+['Mama ruft, das Essen sei fertig.','indirekte Rede','Konjunktiv I «sei», keine Anführungszeichen: indirekte Rede.',1],
+['«Ich habe keine Lust», sagt Ben.','direkte Rede','Die Anführungszeichen zeigen die wörtliche Rede.',1],
+['Ben sagt, er habe keine Lust.','indirekte Rede','Konjunktiv I «habe», keine Anführungszeichen: indirekte Rede.',1],
+['Der Pilot meldet, der Flug dauere zwei Stunden.','indirekte Rede','Konjunktiv I «dauere», keine Anführungszeichen: indirekte Rede.',2],
+['Lisa fragt, ob Tim heute Zeit habe.','indirekte Rede','Eingeleitet mit «ob», Konjunktiv I «habe».',2]
+].forEach(e=>add({typ:'erkenne',stufe:e[3],lv:e[3]===2?2:1,cats:['sg2'],prompt:'Ist das <b>direkte</b> oder <b>indirekte</b> Rede?',sent:e[0],opts:['direkte Rede','indirekte Rede'],answer:e[1],why:'<b>'+e[1]+'.</b> '+e[2]}));
+[
+[['Nina sagte: «Ich bin müde.»','Nina sagte «Ich bin müde».','Nina sagte, «Ich bin müde.»'],'Redebegleitsatz vorn: Doppelpunkt. Der Schlusspunkt steht in den Anführungszeichen.',1],
+[['«Hast du Zeit?», fragte Ben.','«Hast du Zeit?» fragte Ben.','«Hast du Zeit»?, fragte Ben.'],'Nach dem Fragezeichen steht trotzdem ein Komma. Der Begleitsatz beginnt klein.',1],
+[['Der Trainer rief: «Schneller laufen!»','Der Trainer rief «Schneller laufen»!','Der Trainer rief, «Schneller laufen!»'],'Das Ausrufezeichen gehört zur wörtlichen Rede und steht in den Anführungszeichen.',1],
+[['«Ich komme später», sagte Lena, «weil ich noch lernen muss.»','«Ich komme später,» sagte Lena «weil ich noch lernen muss.»','«Ich komme später», sagte Lena, «Weil ich noch lernen muss.»'],'Redebegleitsatz in der Mitte: Komma davor und danach, die Fortsetzung beginnt klein.',2]
+].forEach(z=>add({typ:'zeichen',stufe:z[2],lv:1,cats:['sg1'],prompt:'Welcher Satz ist richtig geschrieben?',opts:z[0],answer:z[0][0],why:'<b>'+z[0][0]+'</b> '+z[1]}));
+[
+['Lisa sagt: «Ich habe meine Hausaufgaben gemacht.»','Lisa sagt, sie habe ihre Hausaufgaben gemacht.',['Lisa sagt, sie hat ihre Hausaufgaben gemacht.','Lisa sagt, ich habe meine Hausaufgaben gemacht.','Lisa sagt, sie habe ihre Hausaufgaben machen.'],'«ich» wird zu «sie», «meine» zu «ihre». «habe … gemacht» ist der Konjunktiv I der Vergangenheit.',3],
+['Paul sagt: «Ich fahre morgen nach Bern.»','Paul sagt, er fahre morgen nach Bern.',['Paul sagt, er fährt morgen nach Bern.','Paul sagt, ich fahre morgen nach Bern.','Paul sagt, er fuhr morgen nach Bern.'],'«ich» wird zu «er», «fahre» ist schon Konjunktiv I.',2],
+['Mia sagt: «Ich kann gut schwimmen.»','Mia sagt, sie könne gut schwimmen.',['Mia sagt, sie kann gut schwimmen.','Mia sagt, ich könne gut schwimmen.','Mia sagt, sie konnte gut schwimmen.'],'«ich» wird zu «sie», «kann» wird zu «könne».',2],
+['Die Kinder sagen: «Wir haben Hunger.»','Die Kinder sagen, sie hätten Hunger.',['Die Kinder sagen, sie haben Hunger.','Die Kinder sagen, wir hätten Hunger.','Die Kinder sagen, sie habe Hunger.'],'«wir» wird zu «sie». Der Konjunktiv I «haben» wäre gleich wie der Indikativ, darum nimmt man den Konjunktiv II «hätten».',3],
+['Lea sagt: «Das Wetter war schlecht.»','Lea sagt, das Wetter sei schlecht gewesen.',['Lea sagt, das Wetter war schlecht.','Lea sagt, das Wetter ist schlecht gewesen.','Lea sagt, das Wetter wäre schlecht gewesen.'],'Vergangenheit: «sei … gewesen» (Konjunktiv I von «sein» und Partizip).',3],
+['Noah fragt Mia: «Wo wohnst du?»','Noah fragt Mia, wo sie wohne.',['Noah fragt Mia, wo sie wohnt.','Noah fragt Mia, wo du wohnst.','Noah fragt Mia, ob sie wohne.'],'Das Fragewort «wo» bleibt, «du» wird zu «sie», «wohnst» zu «wohne».',3],
+['Der Arzt sagt zu Tim: «Du musst mehr trinken.»','Der Arzt sagt zu Tim, er müsse mehr trinken.',['Der Arzt sagt zu Tim, er muss mehr trinken.','Der Arzt sagt zu Tim, du müsstest mehr trinken.','Der Arzt sagt zu Tim, er musste mehr trinken.'],'«du» wird zu «er», «musst» wird zu «müsse».',2]
+].forEach(u=>add({typ:'umform',stufe:u[4],lv:u[4]===2?2:3,cats:['sg4'],prompt:'Wie lautet die <b>indirekte Rede</b>?',sent:u[0],opts:[u[1]].concat(u[2]),answer:u[1],why:'<b>'+u[1]+'</b> '+u[3]}));
+[
+['Wie lautet die Konjunktiv-I-Form von «er kommt»?',['er komme','er käme','er kommt','er kam'],'er komme','Konjunktiv I: Stamm und «-e»: «komme».','sg3',1],
+['Warum sagt man «Die Kinder sagen, sie hätten Hunger» und nicht «sie haben Hunger»?',['«haben» im Konjunktiv I lautet gleich wie der Indikativ.','«hätten» ist die Höflichkeitsform.','Die Rede steht in der Vergangenheit.','«haben» ist kein Hilfsverb.'],'«haben» im Konjunktiv I lautet gleich wie der Indikativ.','Wenn man den Konjunktiv I nicht vom Indikativ unterscheiden kann, nimmt man den Konjunktiv II als Ersatzform.','sg3',3],
+['Was passiert beim Umformen in die indirekte Rede meist mit den Personalpronomen?',['Sie richten sich nach der Person, über die man spricht: «ich» wird zu «er» oder «sie».','Sie fallen weg.','Sie werden immer zu «man».','Sie bleiben immer gleich.'],'Sie richten sich nach der Person, über die man spricht: «ich» wird zu «er» oder «sie».','Beispiel: «Ich komme.» wird zu «Er sagt, er komme.»','sg4',2],
+['Welches Wort kann eine indirekte Aussage einleiten?',['dass','ob','wer','wo'],'dass','Beispiel: Er sagt, dass er komme. «dass» kann auch wegfallen: Er sagt, er komme.','sg4',2]
+].forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+'.</b> '+w[3]}));
+[
+['In der direkten Rede steht das Gesagte in ___.','Anführungszeichen',['anführungszeichen'],'Die wörtliche Rede steht in Anführungszeichen.',1],
+['Wenn der Konjunktiv I wie der Indikativ lautet, braucht man eine ___.','Ersatzform',['ersatzform'],'Ersatzform: Konjunktiv II oder «würde» und Infinitiv.',2],
+['Das Zeichen vor der wörtlichen Rede, wenn der Redebegleitsatz vorangeht, heisst ___.','Doppelpunkt',['doppelpunkt'],'Beispiel: Er sagte: «Ich komme.»',1],
+['Die Frage «Kommst du?» heisst in der indirekten Rede ___ Frage.','indirekte',['indirekte'],'Beispiel: Sie fragt, ob er komme.',2],
+['Die Aussage «Ich komme.» ohne Anführungszeichen wiederzugeben, nennt man ___ Rede.','indirekte',['indirekte'],'Indirekte Rede: Er sagt, er komme.',1],
+['Das Gesagte, das in Anführungszeichen steht, heisst auch ___ Rede.','wörtliche',['wörtliche','woertliche'],'Wörtliche Rede = direkte Rede.',1],
+['Die Möglichkeitsform, die man für die indirekte Rede braucht, heisst Konjunktiv ___.','I',['I','1','eins'],'Konjunktiv I.',2]
+].forEach(f=>add({typ:'fach',stufe:f[4],lv:1,cats:['sg5'],input:true,prompt:'Schreibe den Fachbegriff.',sent:f[0].replace('___',GAP),answer:f[1],accept:f[2],strict:true,why:'<b>'+f[1]+'.</b> '+f[3]}));
+task.push=_p0;
+})();
+
 /* ---------- Antippen: Redebegleitsatz und wörtliche Rede ---------- */
 const TP=[
 ['Er sagte:','«Ich komme morgen.»','BR'],['Anna fragte:','«Kommst du mit?»','BR'],['Der Lehrer rief:','«Ruhe bitte!»','BR'],['Mia erzählte:','«Ich war gestern im Kino.»','BR'],

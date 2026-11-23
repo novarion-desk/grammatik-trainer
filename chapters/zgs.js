@@ -136,6 +136,66 @@ H2.forEach(h=>task.push({typ:'fach',stufe:h[5],lv:1,cats:['sg4'],input:true,prom
 task.push=_p0;
 })();
 
+/* ---- Erweiterung 2 (23.11.2026, Ausbau dünner Themen und Stufe 3) ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+const E3=[
+['Jonas spielt Fussball und trainiert dreimal pro Woche.',0,1,'«Jonas» ist das gemeinsame Subjekt.'],
+['Die Katze schläft und träumt.',0,1,'«Die Katze» ist das gemeinsame Subjekt.'],
+['Sara packt ihre Tasche und geht zur Schule.',0,1,'«Sara» ist das gemeinsame Subjekt.'],
+['Ben trinkt Tee und Lisa Kaffee.',2,2,'Das Prädikat «trinkt» steht nur einmal: Lisa [trinkt] Kaffee.'],
+['Paul liest einen Krimi und Nina einen Roman.',2,2,'Das Prädikat «liest» steht nur einmal.'],
+['Tom wäscht das Auto und Eva das Velo.',2,2,'Das Prädikat «wäscht» steht nur einmal.'],
+['Der Lehrer korrigiert die Tests und die Lehrerin die Aufsätze.',2,2,'Das Prädikat «korrigiert» steht nur einmal.'],
+['Lena liest und Tim schreibt einen Brief.',1,2,'«einen Brief» ist das gemeinsame Objekt beider Teile.'],
+['Mia backt und Noah verziert den Kuchen.',1,2,'«den Kuchen» ist das gemeinsame Objekt beider Teile.'],
+['Max hat gelacht und Lea gewunken.',3,3,'Das Hilfsverb «hat» steht nur einmal: …und Lea [hat] gewunken.'],
+['Der Zug ist angekommen und der Bus abgefahren.',3,3,'Das Hilfsverb «ist» steht nur einmal: …und der Bus [ist] abgefahren.'],
+['Sie haben gespielt und wir gesungen.',3,3,'Das Hilfsverb «haben» steht nur einmal: …und wir [haben] gesungen.']
+];
+E3.forEach(e=>task.push({typ:'erkenne',stufe:e[2],lv:e[2]===3?2:1,cats:['sg1'],prompt:'Welches Satzglied wird nur einmal genannt?<br>«'+e[0]+'»',opts:SG,answer:SG[e[1]],why:'<b>'+SG[e[1]]+'.</b> '+e[3]}));
+const W3=[
+['Welcher Satz ist ein zusammengezogener Satz?',['Sara schreibt und zeichnet.','Sara schreibt, und Tim zeichnet.','Sara schreibt, weil sie Zeit hat.','Schreibt Sara?'],'Sara schreibt und zeichnet.','Das Subjekt «Sara» steht nur einmal und gehört zu beiden Prädikaten.','sg1',1],
+['Welcher Satz ist <b>kein</b> zusammengezogener Satz?',['Ben kocht, und Eva deckt den Tisch.','Ben kocht und deckt den Tisch.','Ben isst Reis und Eva Fisch.','Ben steht auf und kocht Tee.'],'Ben kocht, und Eva deckt den Tisch.','Jeder Teil hat ein eigenes Subjekt und ein eigenes Prädikat. Es wird nichts zusammengezogen.','sg1',2],
+['Wie oft steht das Subjekt in «Nina packt ein und geht los.»?',['einmal','zweimal','dreimal','gar nicht'],'einmal','«Nina» steht nur einmal und gilt für «packt … ein» und «geht … los».','sg1',2],
+['Muss in «Tim isst und trinkt.» vor «und» ein Komma stehen?',['Nein, «und» verbindet zwei Prädikate und keine ganzen Sätze.','Ja, vor «und» steht immer ein Komma.','Ja, weil zwei Verben im Satz stehen.','Nur wenn der Satz lang ist.'],'Nein, «und» verbindet zwei Prädikate und keine ganzen Sätze.','Im zusammengezogenen Satz steht vor «und» kein Komma, weil keine zwei vollständigen Sätze verbunden werden.','sg1',2],
+['Welcher Satz hat ein gemeinsames Objekt?',['Mia backt und Noah verziert den Kuchen.','Mia backt den Kuchen, und Noah geht heim.','Mia backt den Kuchen. Noah isst ihn.','Mia backt, weil Noah Hunger hat.'],'Mia backt und Noah verziert den Kuchen.','«den Kuchen» gehört zu «backt» und zu «verziert» und steht nur einmal.','sg1',3],
+['Wie wird «Lea spielt Geige. Lea singt dazu.» richtig zusammengezogen?',['Lea spielt Geige und singt dazu.','Lea spielt Geige und Lea singt dazu.','Lea spielt und singt Geige dazu.','Lea spielt Geige, singt Lea dazu.'],'Lea spielt Geige und singt dazu.','Das Subjekt «Lea» steht nur einmal. Beide Prädikate folgen auf «Lea».','sg2',1],
+['Was bleibt in «Ben trinkt Tee und Lisa Kaffee.» im zweiten Teil weg?',['das Prädikat «trinkt»','das Subjekt «Lisa»','das Objekt «Kaffee»','das Wort «und»'],'das Prädikat «trinkt»','«trinkt» steht nur im ersten Teil und gilt auch für den zweiten.','sg2',2]
+];
+W3.forEach(w=>task.push({typ:'erkenne',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+const Z3=[
+['Sara packt die Tasche. Sara geht zur Schule.','Sara packt die Tasche und geht zur Schule.',[],1,'Das Subjekt «Sara» steht nur einmal.'],
+['Die Katze schläft. Die Katze träumt.','Die Katze schläft und träumt.',[],1,'Das Subjekt «Die Katze» steht nur einmal.'],
+['Jonas spielt Fussball. Jonas trainiert dreimal pro Woche.','Jonas spielt Fussball und trainiert dreimal pro Woche.',[],1,'Das Subjekt «Jonas» steht nur einmal.'],
+['Mein Bruder isst Reis. Meine Schwester isst Fisch.','Mein Bruder isst Reis und meine Schwester Fisch.',['Mein Bruder isst Reis, meine Schwester Fisch.','Mein Bruder isst Reis, und meine Schwester Fisch.'],2,'Das Prädikat «isst» steht nur einmal.'],
+['Ben trinkt Tee. Lisa trinkt Kaffee.','Ben trinkt Tee und Lisa Kaffee.',['Ben trinkt Tee, Lisa Kaffee.','Ben trinkt Tee, und Lisa Kaffee.'],2,'Das Prädikat «trinkt» steht nur einmal.'],
+['Tom wäscht das Auto. Eva wäscht das Velo.','Tom wäscht das Auto und Eva das Velo.',['Tom wäscht das Auto, Eva das Velo.','Tom wäscht das Auto, und Eva das Velo.'],2,'Das Prädikat «wäscht» steht nur einmal.'],
+['Wir haben gelacht. Wir haben gespielt.','Wir haben gelacht und gespielt.',[],2,'Subjekt und Hilfsverb «haben» stehen nur einmal.'],
+['Der Zug ist angekommen. Der Bus ist abgefahren.','Der Zug ist angekommen und der Bus abgefahren.',['Der Zug ist angekommen, der Bus abgefahren.','Der Zug ist angekommen, und der Bus abgefahren.'],3,'Das Hilfsverb «ist» steht nur einmal.'],
+['Mia hat den Kuchen gebacken. Mia hat den Kuchen verziert.','Mia hat den Kuchen gebacken und verziert.',[],3,'Subjekt, Hilfsverb und Objekt stehen nur einmal.'],
+['Lea ist aufgestanden. Lea hat geduscht.','Lea ist aufgestanden und hat geduscht.',[],3,'Das Subjekt «Lea» steht nur einmal. Die Hilfsverben sind verschieden («ist» und «hat»), darum werden beide genannt.']
+];
+Z3.forEach(z=>task.push({typ:'zieh',stufe:z[3],lv:1,cats:['sg2'],input:true,prompt:'Ziehe die beiden Sätze zu einem Satz zusammen.',sent:z[0],answer:z[1],accept:z[2],why:'<b>'+z[1]+'</b> '+z[4]}));
+const F3=[
+['Welcher Satz ist richtig?',['Sie hilft ihrem Bruder und tröstet ihn.','Sie hilft und tröstet ihrem Bruder.','Sie hilft und tröstet ihren Bruder.','Sie hilft ihren Bruder und tröstet ihm.'],'Sie hilft ihrem Bruder und tröstet ihn.','«helfen» verlangt den Dativ, «trösten» den Akkusativ. Ein gemeinsames Objekt passt nicht zu beiden.'],
+['Welcher Satz ist richtig?',['Er trifft seine Freundin und gratuliert ihr.','Er trifft und gratuliert seine Freundin.','Er trifft und gratuliert seiner Freundin.','Er trifft seiner Freundin und gratuliert sie.'],'Er trifft seine Freundin und gratuliert ihr.','«treffen» verlangt den Akkusativ, «gratulieren» den Dativ.'],
+['Welcher Satz ist richtig?',['Sie ist gerannt und hat gelacht.','Sie ist gerannt und gelacht.','Sie hat gerannt und gelacht.','Sie ist gerannt und lachen.'],'Sie ist gerannt und hat gelacht.','«rennen» bildet das Perfekt mit «ist», «lachen» mit «hat». Die Hilfsverben sind verschieden, darum muss man beide nennen.'],
+['Welcher Satz ist richtig?',['Das Kind ist gefallen und hat geweint.','Das Kind ist gefallen und geweint.','Das Kind hat gefallen und geweint.','Das Kind ist gefallen und weint hat.'],'Das Kind ist gefallen und hat geweint.','«fallen» bildet das Perfekt mit «ist», «weinen» mit «hat».'],
+['Welcher Satz ist falsch zusammengezogen?',['Wir loben und danken unserer Lehrerin.','Wir danken und helfen unserer Lehrerin.','Wir loben und tadeln unsere Lehrerin.','Wir besuchen und fragen unsere Lehrerin.'],'Wir loben und danken unserer Lehrerin.','«loben» verlangt den Akkusativ, «danken» den Dativ. Das Objekt kann nicht gemeinsam stehen. Bei den anderen Sätzen haben beide Verben den gleichen Fall.']
+];
+F3.forEach(f=>task.push({typ:'falsch',stufe:3,lv:2,cats:['sg3'],prompt:f[0],opts:f[1],answer:f[2],why:f[3]}));
+const H3=[
+['Sara schreibt und zeichnet. Was haben beide Teile gemeinsam?','Das gemeinsame Satzglied ist das …','Subjekt',['Das Subjekt'],'«Sara» ist das gemeinsame Subjekt.',1],
+['Ben isst Reis und Eva Fisch. Welches Satzglied wird im zweiten Teil weggelassen?','Das weggelassene Satzglied ist das …','Prädikat',['Das Prädikat'],'«isst» steht nur einmal.',2],
+['Ben kocht, und Eva deckt den Tisch. Wie heisst diese Verbindung zweier vollständiger Hauptsätze?','Das ist eine …','Satzverbindung',['eine Satzverbindung','Eine Satzverbindung'],'Satzverbindung: zwei vollständige Hauptsätze, nichts wird zusammengezogen.',2],
+['Max hat gelacht und Lea gewunken. Welches Wort steht nur einmal?','Es steht nur das …','Hilfsverb',['Das Hilfsverb'],'«hat» ist ein Hilfsverb und gehört zu beiden Teilen.',3]
+];
+H3.forEach(h=>task.push({typ:'fach',stufe:h[5],lv:1,cats:['sg4'],input:true,prompt:h[0],sent:h[1],answer:h[2],accept:h[3],strict:true,why:'<b>'+h[2]+'.</b> '+h[4]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'zgs',teil:'satz',nr:8,title:'Zusammengezogener Satz',big:'Anna kocht und deckt den Tisch',desc:'Gemeinsames Satzglied erkennen und Sätze zusammenziehen',
  ex:'«Anna kocht und deckt den Tisch.»',
  goals:['Ich erkenne den zusammengezogenen Satz.','Ich nenne das gemeinsame Satzglied.','Ich ziehe Sätze zusammen.','Ich berichtige falsche Zusammenziehungen (ab B).'],

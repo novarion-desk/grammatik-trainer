@@ -390,6 +390,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 <script src="vendor/firebase-app-compat.js"></script>
 <script src="vendor/firebase-auth-compat.js"></script>
 <script src="vendor/firebase-firestore-compat.js"></script>
+<script src="shared-ki.js"></script>
 <script>
 (function(){
 'use strict';
@@ -934,12 +935,16 @@ async function loadAiKeys(){
   const keys={gemini:clean(d.geminiKey),claude:clean(d.claudeKey),openai:clean(d.openaiKey),mistral:clean(d.mistralKey)};
   const P=['gemini','claude','openai','mistral'];
   const order=[...new Set([...(Array.isArray(d.aiOrder)?d.aiOrder:[]).filter(x=>P.includes(x)),...P])].filter(p=>keys[p]);
-  if(!order.length)throw new Error('Im Konto ist kein KI-Schlüssel gespeichert. Hinterlege ihn im Sek Planer (Einstellungen) mit demselben Konto.');
+  if(!order.length){
+    if(window.SharedKI&&SharedKI.available())return{keys,order:[],shared:true};   // gemeinsamer KI-Zugang (Mistral)
+    throw new Error('Im Konto ist kein KI-Schlüssel gespeichert. Hinterlege ihn im Sek Planer (Einstellungen) mit demselben Konto.');
+  }
   return{keys,order};
 }
 async function fetchT(url,opt,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms||90000);try{return await fetch(url,Object.assign({signal:c.signal},opt));}finally{clearTimeout(t);}}
 async function askAI(system,user){
-  const {keys,order}=await loadAiKeys();const errs=[];
+  const {keys,order,shared}=await loadAiKeys();const errs=[];
+  if(shared)return (await SharedKI.ask({system:system,user:user,maxTokens:3000})).answer;
   for(const p of order){
     try{
       if(p==='claude'){
@@ -1587,7 +1592,7 @@ GT.__test={askKI,KI_ON,S,poolFor,render,visibleTasks,slidesVis,C,altFor,pickMode
 GT.start();</script>
 <script>
 /* Feedback: öffnet das anonyme Tally-Formular (App, Version und Gerät werden mitgegeben, keine Personendaten) */
-function openAppFeedback(){var q=new URLSearchParams({app:'grammatik-trainer',version:'2026-11-22',geraet:(navigator.userAgent||'').slice(0,120)});window.open('https://tally.so/r/GeR9re?'+q.toString(),'_blank','noopener');}
+function openAppFeedback(){var q=new URLSearchParams({app:'grammatik-trainer',version:'2026-11-23',geraet:(navigator.userAgent||'').slice(0,120)});window.open('https://tally.so/r/GeR9re?'+q.toString(),'_blank','noopener');}
 </script>
 <script id="update-notice">
 /* Update-Hinweis: meldet unten eine Leiste, sobald die Seite auf dem Server neuer ist. Lädt nie von selbst neu. */
