@@ -192,8 +192,7 @@ const Q2=[
 ['Die Sonne scheint heute.',0,1,'Aussagesatz.'],['Hast du Geschwister?',1,1,'Fragesatz.'],['Schliess bitte die Tür!',2,1,'Aufforderungssatz.'],['Was für ein schöner Tag!',3,1,'Ausrufesatz.'],
 ['Wir haben morgen frei.',0,1,'Aussagesatz.'],['Wann beginnt der Film?',1,1,'Fragesatz.'],['Setz dich hin!',2,1,'Aufforderungssatz.'],['Wie toll das ist!',3,1,'Ausrufesatz.'],
 ['Der Bus fährt um acht Uhr.',0,1,'Aussagesatz.'],['Woher kommst du?',1,1,'Fragesatz.'],['Öffnet bitte eure Bücher.',2,2,'Aufforderungssatz: eine Bitte oder ein Befehl.'],['Ich habe mich so gefreut!',3,2,'Ausrufesatz: ein Gefühl wird ausgedrückt.'],
-['Könntest du mir kurz helfen?',1,2,'Höfliche Bitte in Fragenform: Fragesatz.'],['Du kommst morgen pünktlich.',0,2,'Aussagesatz in Befehlston. Der Form nach ein Aussagesatz.'],
-['Lass uns gehen!',2,2,'Aufforderungssatz.'],['Nein, wie peinlich!',3,2,'Ausrufesatz.'],['Ich weiss nicht, ob er kommt.',0,3,'Aussagesatz mit indirekter Frage.'],['Gib mir mal den Stift.',2,2,'Aufforderungssatz.']
+['Könntest du mir kurz helfen?',1,2,'Höfliche Bitte in Fragenform: Fragesatz.'],['Lass uns gehen!',2,2,'Aufforderungssatz.'],['Nein, wie peinlich!',3,2,'Ausrufesatz.'],['Ich weiss nicht, ob er kommt.',0,3,'Aussagesatz mit indirekter Frage.'],['Gib mir mal den Stift.',2,2,'Aufforderungssatz.']
 ];
 Q2.forEach(q=>task.push({typ:'satzart',stufe:q[2],lv:q[2]===3?2:1,cats:['sg1'],sent:'«'+q[0]+'»',opts:Z4,answer:Z4[q[1]],why:'<b>'+Z4[q[1]]+'.</b> '+q[3]}));
 const S2=[

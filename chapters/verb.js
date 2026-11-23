@@ -232,7 +232,7 @@ task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_h
 ['finden','fand','gefunden',['findete','fund','findte'],['gefindet','gefand','gefundet'],1]
 ].forEach(s=>{
   task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Präteritum</b> von «'+s[0]+'»? (er/sie/es …)',opts:[s[1]].concat(s[3]),answer:s[1],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Präteritum: «er '+s[1]+'».'});
-  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Partizip II</b> von «'+s[0]+'»?',opts:[s[2]].concat(s[4]),answer:s[2],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Perfekt: «er hat '+s[2]+'».'});
+  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Partizip II</b> von «'+s[0]+'»?',opts:[s[2]].concat(s[4]),answer:s[2],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Perfekt: «er '+((SEIN[s[0]]||s[0]==='fliegen')?'ist ':'hat ')+s[2]+'».'});
 });
 task.push=_p0;
 })();
