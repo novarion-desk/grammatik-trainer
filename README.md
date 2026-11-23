@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Antwortart (23.11.):** Im Üben-Menü gibt es «Selber schreiben», «Auswählen» und «Gemischt». «Auswählen» ist reines Antippen: Aufgaben, die man sonst schreibt, haben Antippen-Varianten (Wortkarten für Sätze, Auswahl mit passenden Fehlantworten für Wörter). «Selber schreiben» zeigt überall dort ein Textfeld, wo es sinnvoll ist (kurze Fachbegriffe, Lückenwörter); Markieren, Anmalen und Kommasetzen bleiben Antippen. «Gemischt» würfelt pro Aufgabe.
 - **Übungsblatt für Schüler (23.11.):** Im Üben-Menü neben «Übung starten» gibt es «🖨️ Drucken / PDF» und «📝 Word». Das Blatt entsteht aus der gewählten Auswahl (Themen, Typen, Stufe, Anzahl). Die Lösungen stehen am Schluss.
 - **Mehr Aufgaben (23.11.):** rund 325 neue Aufgaben in 14 Kapiteln, vor allem dort, wo es wenige gab (Zusammengezogener Satz, Wortlehre/Satzlehre, Verschiebeprobe, Satzarten, Rede, Verbale Teile, Komma, Hauptsatz/Nebensatz, Adjektiv). Mehr Stufe 2 und 3. Pronomen, Satzglieder, Fälle und Feld unverändert.
 - **Merkblatt** enthält jetzt das Glossar (eigene Seite). **Handout:** Folien verkleinert, mehrere pro A4 (Lehrer: Drucken ▾ › Handout). **Mein Fortschritt** auf der Startseite: pro Kapitel Trefferquote, Anzahl Aufgaben, zuletzt geübt (nur auf diesem Gerät).

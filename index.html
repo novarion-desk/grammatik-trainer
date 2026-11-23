@@ -204,6 +204,8 @@ tr.dim td,tr.dim th{opacity:.28}
 .chip{min-height:46px;border:1.5px dashed var(--line2);background:var(--surface);border-radius:.6rem;padding:.2rem .8rem;font-weight:600}
 .chip[class*=" p-"]{border-style:solid;border-color:var(--c);background:var(--b);color:var(--t)}
 .chip.right{outline:3px solid var(--ok)}
+.build{min-height:58px;display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;padding:.6rem;margin:.7rem 0;border:2px dashed var(--line2);border-radius:var(--radius-s);background:var(--surface)}.build.right{border-style:solid;border-color:var(--ok);background:var(--ok-l)}.build.wrong{border-style:solid;border-color:var(--bad)}.chip.built{border-style:solid;border-color:var(--primary);background:var(--primary-l)}
+#cards{margin-top:.4rem}
 .chip.wrong{outline:3px solid var(--bad)}
 .plain{padding:.2rem .1rem}
 .score{font-size:2.2rem;font-weight:800;color:var(--primary)}
@@ -408,16 +410,99 @@ function loadP(){try{return JSON.parse(localStorage.getItem(PK))||{};}catch(e){r
 function saveP(ok){try{const P=loadP(),c=P[S.ch]||{a:0,r:0};c.a++;if(ok)c.r++;c.t=Date.now();P[S.ch]=c;localStorage.setItem(PK,JSON.stringify(P));localStorage.setItem('gt-last',S.ch);}catch(e){}}
 const $app=document.getElementById('app'),$head=document.getElementById('head');
 
-const isW=t=>!!(t.input||(t.w&&t.opts&&S.cfg.mode==='write'));
+const isW=t=>t._m?t._m==='w':!!(t.input||(t.w&&t.opts&&S.cfg.mode==='write'));
 const normA=(x,strict)=>{x=String(x||'').trim().replace(/[\u2018\u2019]/g,"'").replace(/\s+/g,' ').replace(/[.!?]+$/,'').replace(/ß/g,'ss');return strict?x:x.toLowerCase();};
-function autoW(c){c.TASKS.forEach(t=>{if(t.w===undefined&&t.opts&&(c.writeAny||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a);}if(t.w===undefined&&t.opts&&(c.writeTypes||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a)&&(/class="gap"/.test(t.sent||'')||/^Wie lautet/.test(t.prompt||''));}if(c.strictTypes&&c.strictTypes.includes(t.typ))t.strict=true;});}
+function autoW(c){c.TASKS.forEach(t=>{if(t.w===undefined&&t.opts&&(c.writeAny||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a);}if(t.w===undefined&&t.opts&&(c.writeTypes||[]).includes(t.typ)){const a=String(t.answer);t.w=/^[A-Za-zÄÖÜäöü' ]{1,22}$/.test(a)&&(/class="gap"/.test(t.sent||'')||/^Wie lautet/.test(t.prompt||''));}if(c.strictTypes&&c.strictTypes.includes(t.typ))t.strict=true;if(t.w2===undefined)t.w2=writeOk(t);if(t.w2&&t.typ==='gross')t.strict=true;});}
 GT.autoW=autoW;
+/* ---- Antwortart: Selber schreiben / Auswählen / Gemischt ---- */
+const plain=x=>String(x==null?'':x).replace(/<[^>]+>/g,'').trim();
+/* Auswahl-Aufgaben, bei denen Schreiben sinnvoll ist: kurze Fachbegriffe und Lückenwörter */
+const WOK=new Set(['artikel','gross','zeit','satzart','fall','stufe','art','teilsatz','gefuege','konjart','begriff','glied','zuordnen','wissen','adverb','frage','bau']);
+function writeOk(t){
+  if(!t.opts||t.input||t.w||t.tokens||t.cuts||!WOK.has(t.typ))return false;
+  const a=plain(t.answer);if(!/^[A-Za-zÄÖÜäöüß'’ -]{1,26}[?!.]?$/.test(a))return false;
+  if(a.split(/\s+/).length>(t.typ==='frage'?3:2))return false;
+  const q=plain((t.prompt||'')+' '+(t.sent||''));
+  if(t.typ==='frage'&&!/^(Wer|Wen|Wem|Wessen|Was|Wann|Wo|Wohin|Woher|Wie|Warum|Weshalb)\b/.test(a))return false;
+  if(t.typ==='adverb'&&!/^Welche Frage/.test(q))return false;
+  if(t.typ==='wissen'||t.typ==='zuordnen'||t.typ==='begriff'){
+    if(!/^[A-ZÄÖÜ]/.test(a))return false;
+    if(t.typ==='wissen'&&!/(heisst|lautet|nennt|Fachsprache|Fachwort|Fachbegriff|anderes Wort|nennt man)/.test(q))return false;
+  }
+  return true;
+}
+const SYN=[['nomen','substantiv','hauptwort','namenwort'],['verb','zeitwort','tunwort'],['adjektiv','eigenschaftswort','wiewort'],['artikel','begleiter','geschlechtswort'],['pronomen','fuerwort','fürwort'],['präposition','praeposition','verhältniswort','verhaeltniswort'],['konjunktion','bindewort'],['adverb','umstandswort'],['singular','einzahl'],['plural','mehrzahl'],['präsens','gegenwart']];
+function synOk(v,t){
+  if(t.strict)return false;
+  const a=normA(t.answer,false),x=normA(v,false),q=normA(plain((t.prompt||'')+' '+(t.sent||'')),false);
+  const g=SYN.find(g=>g.includes(a));
+  return !!g&&g.includes(x)&&!q.includes(x);
+}
+/* Antippen-Variante für reine Schreib-Aufgaben: Wortkarten (Sätze) oder Auswahl mit passenden Fehlantworten */
+function distractors(t,ans){
+  const ch=GT.chapters[t._ch||S.ch]||C();
+  const bad=new Set([ans].concat(t.accept||[]).map(x=>normA(x,false)));
+  const grab=list=>{const out=[];list.forEach(u=>{if(u===t||!u.input||u.typ!==t.typ)return;const a=plain(u.answer),n=normA(a,false);if(!a||bad.has(n)||out.some(o=>normA(o,false)===n))return;out.push(a);});return out;};
+  let pool=grab(ch.TASKS);
+  if(pool.length<3){Object.keys(GT.chapters).forEach(id=>{grab(GT.chapters[id].TASKS).forEach(a=>{if(!pool.some(o=>normA(o,false)===normA(a,false)))pool.push(a);});});pool=pool.filter(a=>!bad.has(normA(a,false)));}
+  const pre=(a,b)=>{a=a.toLowerCase();b=b.toLowerCase();let i=0;while(i<a.length&&i<b.length&&a[i]===b[i])i++;return i;};
+  return pool.map(a=>({a,sc:pre(a,ans)*2+(Math.abs(a.length-ans.length)<=2?1:0)+Math.random()*.9})).sort((x,y)=>y.sc-x.sc).map(x=>x.a);
+}
+function altFor(t){
+  if(t._alt!==undefined)return t._alt;
+  let alt=null;
+  if(t.opts)alt={opts:t.opts};
+  else if(t.input){
+    const ans=plain(t.answer),words=ans.split(/\s+/);
+    if(words.length>=3)alt={cards:words};
+    else if(/^\d+$/.test(ans)){const n=Number(ans),o=[n,n+1,n+2,Math.max(1,n-1)];const u=[...new Set(o)];let k=n+3;while(u.length<4)u.push(k++);alt={opts:u.map(String)};}
+    else if(t.typ==='einsetzen'&&/\((\p{L}+)\)\s*$/u.test(plain(t.sent))&&/^\p{L}+$/u.test(ans)){
+      const inf=plain(t.sent).match(/\((\p{L}+)\)\s*$/u)[1],st=inf.replace(/e?n$/,'');
+      const bad=new Set([ans].concat(t.accept||[]).map(x=>normA(x,false)));
+      const f=shuffle([st+'t',st+'te',st+'ten',st+'st',st+'e',inf,'ge'+st+'t',st+'test']).filter(x=>!bad.has(normA(x,false)));
+      if(f.length>=3)alt={opts:[ans].concat(f.slice(0,3))};
+    }
+    else{
+      const m=ans.match(/^(der|die|das) (\S+)$/i);
+      if(m){const o=['der','die','das'].map(x=>(m[1][0]===m[1][0].toUpperCase()?x[0].toUpperCase()+x.slice(1):x)+' '+m[2]);const first=o.indexOf(ans)>=0?[ans]:[ans];alt={opts:first.concat(o.filter(x=>x!==ans))};}
+      else{const d=distractors(t,ans);if(d.length>=3)alt={opts:[ans].concat(d.slice(0,3))};}
+    }
+    if(alt&&alt.opts)alt.opts[0]=String(t.answer);
+  }
+  t._alt=alt;return alt;
+}
+const isClick=t=>!!(t.cuts||t.tokens||t.typ==='anmalen'||t.typ==='anmalenlang');
+const canW=t=>!!(t.input||t.w||t.w2);
+const canC=t=>isClick(t)||!!t.opts||!!altFor(t);
+function pickMode(t){
+  if(isClick(t))return null;
+  const m=S.cfg.mode,cw=canW(t),cc=!!t.opts||!!altFor(t);
+  let w=m==='choose'?!cc:m==='write'?cw:(cw&&cc?Math.random()<.5:cw);
+  if(w&&!cw)w=false;if(!w&&!cc)w=true;
+  if(w)return 'w';
+  return t.opts?'c':(altFor(t).cards?'k':'c');
+}
+function modeNote(c){
+  if(c.mode==='choose'){const n=visibleTasks().filter(t=>!canC(t)).length;return 'Alle Antworten werden angetippt.'+(n?' '+n+' Aufgaben lassen sich nur schreiben und fehlen in diesem Modus.':'');}
+  if(c.mode==='mix')return 'Bei jeder Aufgabe zufällig: schreiben oder antippen.';
+  return 'Du schreibst überall dort, wo es sinnvoll ist. Markieren, Anmalen und Kommasetzen bleiben Antippen.';
+}
+const optsOf=t=>t.opts||(altFor(t)&&altFor(t).opts)||[];
+function cardsHTML(R,t){
+  const A=altFor(t),used=new Set(R.bld);
+  return '<div id="cardwrap"><div class="build" id="build">'+(R.bld.length?R.bld.map((ci,p)=>'<button class="chip built" data-a="unbuild" data-i="'+p+'">'+esc(A.cards[ci])+'</button>').join(''):'<span class="muted">Tippe unten die Wörter an …</span>')+'</div>'+
+   '<div class="flow" id="cards">'+R.order.map(ci=>'<button class="chip" data-a="card" data-i="'+ci+'"'+(used.has(ci)?' disabled':'')+'>'+esc(A.cards[ci])+'</button>').join('')+'</div></div>';
+}
+function repaintCards(){
+  const R=S.R,t=R.tasks[R.i],w=document.getElementById('cardwrap');if(!w)return;
+  w.outerHTML=cardsHTML(R,t);document.getElementById('checkBtn').disabled=R.bld.length!==altFor(t).cards.length;
+}
 function visibleTasks(){return C().TASKS.filter(t=>t.lv<=lv());}
 function typesAvailable(){return Object.keys(TY()).filter(k=>visibleTasks().some(t=>t.typ===k));}
-function poolFor(cfg){
+function poolFor(cfg,all){
   if(!cfg.cats)cfg.cats=new Set(CK());
   const types=cfg.types||new Set(typesAvailable());
-  return visibleTasks().filter(t=>types.has(t.typ)&&t.cats.every(f=>cfg.cats.has(f))&&stufeOk(t,cfg.stufe));
+  return visibleTasks().filter(t=>types.has(t.typ)&&t.cats.every(f=>cfg.cats.has(f))&&stufeOk(t,cfg.stufe)&&(all||cfg.mode!=='choose'||canC(t)));
 }
 /* Aufgabentypen gleichmässig mischen (damit ein Typ mit vielen Aufgaben nicht alles dominiert) */
 function balance(arr){const g={};arr.forEach(t=>{(g[t.typ]=g[t.typ]||[]).push(t);});const L=shuffle(Object.keys(g)).map(k=>shuffle(g[k]));const out=[];let more=true;while(more){more=false;L.forEach(l=>{if(l.length){out.push(l.shift());more=true;}});}return out;}
@@ -505,7 +590,7 @@ function screenConfig(){
   const sum='Typen: '+(c.types.size===av.length?'alle':c.types.size)+' · '+C().catWord+': '+(c.cats.size===CK().length?'alle':c.cats.size)+' · Stufe: '+(c.stufe==='mix'?'gemischt':st.find(x=>x[0]===c.stufe)[1])+' · '+want+' Fragen';
   const det='<div class="cfg"><h3>Aufgabentypen <span><button class="btn sm" data-a="all" data-g="types">Alle</button> <button class="btn sm" data-a="none" data-g="types">Keine</button></span></h3><div class="chk cards">'+
    av.map(k=>'<label class="'+(c.types.has(k)?'sel':'')+'"><input type="checkbox" data-cfg="type" value="'+k+'" '+(c.types.has(k)?'checked':'')+'><b>'+(TY()[k].icon?TY()[k].icon+' ':'')+TY()[k].label+'</b><small>'+(TY()[k].short||'')+'</small></label>').join('')+'</div>'+
-   (!S.sheet&&visibleTasks().some(t=>t.w||t.input)?'<h3>Antwort</h3><div class="chk"><label class="'+(c.mode==='write'?'sel':'')+'"><input type="radio" name="amode" data-cfg="mode" value="write" '+(c.mode==='write'?'checked':'')+'> Selber schreiben</label><label class="'+(c.mode==='choose'?'sel':'')+'"><input type="radio" name="amode" data-cfg="mode" value="choose" '+(c.mode==='choose'?'checked':'')+'> Auswählen</label></div>':'')+
+   (!S.sheet&&visibleTasks().some(t=>canW(t))?'<h3>Antwort</h3><div class="chk">'+[['write','Selber schreiben'],['choose','Auswählen'],['mix','Gemischt']].map(o=>'<label class="'+(c.mode===o[0]?'sel':'')+'"><input type="radio" name="amode" data-cfg="mode" value="'+o[0]+'" '+(c.mode===o[0]?'checked':'')+'> '+o[1]+'</label>').join('')+'</div><p class="muted" style="margin:.3rem 0 .8rem;font-size:.88rem">'+modeNote(c)+'</p>':'')+
    '<h3>'+C().catTitle+' <span><button class="btn sm" data-a="all" data-g="cats">Alle</button> <button class="btn sm" data-a="none" data-g="cats">Keine</button></span></h3><div class="chk fall">'+
    CK().map(k=>'<label class="f-'+k+' '+(c.cats.has(k)?'sel':'')+'"><input type="checkbox" data-cfg="fall" value="'+k+'" '+(c.cats.has(k)?'checked':'')+'> '+CN()[k]+'</label>').join('')+'</div>'+
    '<h3>Schwierigkeit</h3><div class="chk">'+st.map(s=>{const n=cnt(s[0]);return '<label class="'+(c.stufe===s[0]?'sel':'')+'" style="'+(n===0?'opacity:.5':'')+'"><input type="radio" name="stufe" data-cfg="stufe" value="'+s[0]+'" '+(c.stufe===s[0]?'checked':'')+(n===0?' disabled':'')+'> '+s[1]+' ('+n+')</label>';}).join('')+'</div>'+
@@ -527,8 +612,9 @@ function updateAvail(){
 
 /* ---- Runde ---- */
 function startRound(tasks,title){
+  tasks.forEach(t=>{t._m=pickMode(t);});
   const isT=tasks.some(t=>t._ch);if(isT)S.ch=tasks[0]._ch;
-  S.R={tasks,i:0,hist:[],title:title||'Runde',answered:false,choice:null,paint:{},sel:new Set(),brush:CK()[0],hint:false,order:null,test:isT,exam:!!(isT&&title==='Test'&&S.test&&S.test.exam),t0:Date.now(),timer:!!(isT&&S.test&&S.test.timer)};
+  S.R={tasks,i:0,bld:[],hist:[],title:title||'Runde',answered:false,choice:null,paint:{},sel:new Set(),brush:CK()[0],hint:false,order:null,test:isT,exam:!!(isT&&title==='Test'&&S.test&&S.test.exam),t0:Date.now(),timer:!!(isT&&S.test&&S.test.timer)};
   clearInterval(window._tclk);if(S.R.timer)window._tclk=setInterval(()=>{const e=document.getElementById('clk');if(!e||!S.R){clearInterval(window._tclk);return;}const sec=Math.floor((Date.now()-S.R.t0)/1000);e.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');},500);
   S.screen='round';render();
 }
@@ -544,11 +630,14 @@ function screenRound(){
     body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow cutflow'+(t.typ==='ktap'?' kf':'')+'">'+t.tokens.map((x,i)=>'<span class="plain cw">'+x+'</span>'+(i<t.tokens.length-1?'<button class="gap" data-a="cut" data-i="'+i+'" aria-label="Trennstrich nach «'+x+'»"><i></i></button>':'')).join('')+'</div>';
   }else if(t.tokens){
     body='<div class="instr">'+(t.instr||T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>':'')+'<div class="flow">'+t.tokens.map((x,i)=>'<button class="chip tok" data-a="tok" data-i="'+i+'">'+x+'</button>').join('')+'</div>';
+  }else if(t._m==='k'){
+    const A=altFor(t);if(!R.order||R.order.length!==A.cards.length)R.order=shuffle(A.cards.map((_,i)=>i));if(!R.bld)R.bld=[];
+    body='<div class="instr">'+(t.prompt||T.winstr||'')+' <span class="muted">Tippe die Wörter in der richtigen Reihenfolge an.</span></div>'+(t.sent?'<div class="sbox">'+t.sent+'</div>':'')+cardsHTML(R,t);
   }else if(isW(t)){
     body='<div class="instr">'+(t.sent&&t.prompt?t.prompt:(T.winstr||T.instr))+'</div><div class="sbox">'+(t.sent||t.prompt)+'</div><input class="wfield" id="wfield" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="Deine Antwort" placeholder="Deine Antwort">';
   }else{
-    if(!R.order)R.order=shuffle(t.opts);
-    body='<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>'+(t.sent&&String(t.prompt).replace(/<[^>]+>/g,'').indexOf(String(t.sent).replace(/<[^>]+>/g,'').slice(0,15))<0?'<div class="sbox sent2">'+t.sent+'</div>':''):'<div class="sbox">'+t.sent+'</div>')+
+    if(!R.order)R.order=shuffle(optsOf(t));
+    body=(!t.opts?'<div class="instr">'+(t.prompt||'')+' <span class="muted">Tippe die richtige Lösung an.</span></div>'+(t.sent?'<div class="sbox">'+t.sent+'</div>':''):'<div class="instr">'+(t.typ==='zuordnen'?T.instr:T.instr)+'</div>'+(t.prompt?'<div class="sbox">'+t.prompt+'</div>'+(t.sent&&String(t.prompt).replace(/<[^>]+>/g,'').indexOf(String(t.sent).replace(/<[^>]+>/g,'').slice(0,15))<0?'<div class="sbox sent2">'+t.sent+'</div>':''):'<div class="sbox">'+t.sent+'</div>'))+
      '<div class="opts">'+R.order.map((o,i)=>{const f=t.optCat&&t.optCat[o];return '<button class="opt '+(f?'fall f-'+f:'')+'" data-a="pick" data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
   }
   return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div>'+(R.test?'<span class="pill gray">'+C().title+'</span> ':'')+'<span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+(R.test?' · '+fmtP(tPts(t))+' P.':'')+'</span></div>'+
@@ -585,15 +674,21 @@ function checkRound(){
     const tg=new Set(t.targets);ok=t.tokens.every((_,i)=>R.sel.has(i)===tg.has(i));
     document.querySelectorAll('.tok').forEach(b=>{const i=Number(b.dataset.i);b.disabled=true;if(R.sel.has(i)&&tg.has(i))b.classList.add('right');else if(R.sel.has(i))b.classList.add('wrong');else if(tg.has(i))b.classList.add('miss');});
     mine=[...R.sel].sort((a,b)=>a-b).map(i=>t.tokens[i]).join(', ');right=t.targets.map(i=>t.tokens[i]).join(', ');
+  }else if(t._m==='k'){
+    const A=altFor(t);if(R.bld.length!==A.cards.length)return;
+    const v=R.bld.map(i=>A.cards[i]).join(' ');
+    ok=[t.answer].concat(t.accept||[]).some(a=>normA(plain(a),false)===normA(v,false));mine=v;right=plain(t.answer);
+    const b=document.getElementById('build');if(b)b.classList.add(ok?'right':'wrong');
+    document.querySelectorAll('#cardwrap .chip').forEach(x=>x.disabled=true);
   }else if(isW(t)){
     const f=document.getElementById('wfield'),v=(f.value||'').trim();if(!v)return;
-    const acc=[t.answer].concat(t.accept||[]);ok=acc.some(a=>normA(a,t.strict)===normA(v,t.strict));mine=v;right=t.answer;
+    const acc=[t.answer].concat(t.accept||[]);ok=acc.some(a=>normA(a,t.strict)===normA(v,t.strict))||synOk(v,t);mine=v;right=t.answer;
     f.disabled=true;f.classList.add(ok?'right':'wrong');
   }else{
     if(R.choice===null)return;
-    const got=R.order[R.choice];ok=got===t.answer;mine=got;right=t.answer;
+    const got=R.order[R.choice];ok=got===String(t.answer);mine=got;right=t.answer;
     if(t.optCat&&!ok)conf=[t.optCat[t.answer],t.optCat[got]];
-    document.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(R.order[i]===t.answer)b.classList.add('right');else if(i===R.choice)b.classList.add('wrong');});
+    document.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(R.order[i]===String(t.answer))b.classList.add('right');else if(i===R.choice)b.classList.add('wrong');});
     document.querySelectorAll('.sbox .hl').forEach(h=>{if(t.cats.length===1)h.classList.add('f-'+t.cats[0]);});
   }
   R.answered=true;R.hist.push({t,ok,mine,right,conf});saveP(ok);
@@ -602,7 +697,7 @@ function checkRound(){
 }
 function nextRound(){
   const R=S.R;
-  if(R.i+1<R.tasks.length){R.i++;R.answered=false;R.choice=null;R.paint={};R.sel=new Set();R.order=null;R.hint=false;render();}
+  if(R.i+1<R.tasks.length){R.i++;R.answered=false;R.choice=null;R.bld=[];R.paint={};R.sel=new Set();R.order=null;R.hint=false;render();}
   else{S.screen='summary';render();}
 }
 function qText(t){return t.prompt||t.sent||(t.tokens?t.tokens.join(' '):'')||(t.parts?t.parts.map(p=>p.t).join(' '):'');}
@@ -780,7 +875,7 @@ function sheetHTML(items,title){
   return{ws:'<div class="wsh">'+head+leg+ws+'</div>',sol:'<div class="wsh"><p class="wi">Lösungen für die Lehrperson</p>'+so+'</div>',n};
 }
 function buildPoolSheet(){
-  const pool=shuffle(poolFor(S.cfg).slice()),want=wanted(S.cfg);
+  const pool=shuffle(poolFor(S.cfg,true).slice()),want=wanted(S.cfg);
   // gleichmässig auf die Aufgabentypen verteilen
   const byT={};pool.forEach(t=>(byT[t.typ]=byT[t.typ]||[]).push(t));
   const keys=Object.keys(byT),pick=[];let i=0;
@@ -895,7 +990,7 @@ function printSheet(w){
 
 /* ================= Testvorbereitung (Schüler: Kapitel mischen, Punkte, Übungsprüfung) ================= */
 function withCh(id,fn){const o=S.ch;S.ch=id;try{return fn();}finally{S.ch=o;}}
-const tPts=t=>(t.opts&&!isW(t)&&!t.lang)?0.5:((t.lang||(Number(t.stufe)||1)>=2)?2:1);
+const tPts=t=>((t.opts||t._m==='c'||t._m==='k')&&!isW(t)&&!t.lang)?0.5:((t.lang||(Number(t.stufe)||1)>=2)?2:1);
 const fmtP=n=>String(Math.round(n*2)/2).replace('.',',');
 function testInit(){if(!S.test)S.test={chs:new Set(),count:'20',custom:20,timer:false,exam:true};}
 function testWanted(){const T=S.test;return T.count==='custom'?Math.max(1,Math.min(80,parseInt(T.custom,10)||20)):parseInt(T.count,10);}
@@ -917,7 +1012,7 @@ function screenTest(){
   const chips=arr=>arr.filter(c=>c[0]!=='#'&&GT.chapters[c[1]]).map(c=>'<button type="button" data-a="tch" data-v="'+c[1]+'" class="'+(T.chs.has(c[1])?'on':'')+'" aria-pressed="'+T.chs.has(c[1])+'">'+c[0]+'</button>').join('');
   const ids=arr=>arr.filter(c=>c[0]!=='#'&&GT.chapters[c[1]]).map(c=>c[1]).join(',');
   const cnt=['10','20','30','40','custom'].map(v=>'<button type="button" data-a="tcount" data-v="'+v+'" class="'+(T.count===v?'on':'')+'">'+(v==='custom'?'Eigene Anzahl':v)+'</button>').join('');
-  const mode='<button type="button" data-a="tmode2" data-v="write" class="'+(S.cfg.mode==='write'?'on':'')+'">Selber schreiben</button><button type="button" data-a="tmode2" data-v="choose" class="'+(S.cfg.mode==='choose'?'on':'')+'">Auswählen</button>';
+  const mode='<button type="button" data-a="tmode2" data-v="write" class="'+(S.cfg.mode==='write'?'on':'')+'">Selber schreiben</button><button type="button" data-a="tmode2" data-v="choose" class="'+(S.cfg.mode==='choose'?'on':'')+'">Auswählen</button><button type="button" data-a="tmode2" data-v="mix" class="'+(S.cfg.mode==='mix'?'on':'')+'">Gemischt</button>';
   setTimeout(testInfo,0);
   return '<h2 class="page">Testvorbereitung</h2><p class="sub">Wähle die Kapitel, die in deinem Test vorkommen. Die Aufgaben werden gemischt. Niveau '+S.niv+' ist eingestellt. Punkte: Auswahlaufgabe 0,5 · selber schreiben, anmalen oder markieren 1 (schwieriger 2) · lange Texte 2.</p>'+
    '<div class="card"><h3>Kapitel <span><button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.WORT)+'">Wortlehre alle/keine</button> <button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.SATZ)+'">Satzlehre alle/keine</button></span></h3>'+
@@ -1079,6 +1174,8 @@ document.addEventListener('click',e=>{
      const need=R.tasks[R.i].parts.filter(p=>p.f).length;document.getElementById('checkBtn').disabled=Object.keys(R.paint).length<need;break;}
    case 'cut':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=false;break;}
    case 'tok':{const R=S.R;if(R.answered)return;const i=Number(b.dataset.i);if(R.sel.has(i))R.sel.delete(i);else R.sel.add(i);b.classList.toggle('sel',R.sel.has(i));document.getElementById('checkBtn').disabled=!R.sel.size;break;}
+   case 'card':{const R=S.R;if(!R||R.answered)return;R.bld.push(Number(b.dataset.i));repaintCards();break;}
+   case 'unbuild':{const R=S.R;if(!R||R.answered)return;R.bld.splice(Number(b.dataset.i),1);repaintCards();break;}
    case 'hint':{const h=document.getElementById('hintBox');h.hidden=!h.hidden;break;}
    case 'check':checkRound();if(S.R&&S.R.exam&&S.R.answered)nextRound();break;
    case 'next':nextRound();break;
@@ -1397,7 +1494,7 @@ GT.start=function(){
   const l=document.getElementById('login');if(l)l.addEventListener('close',()=>{S.loginOpen=false;});
   initAuth();render();
 };
-GT.__test={S,poolFor,render,visibleTasks,slidesVis,C};
+GT.__test={S,poolFor,render,visibleTasks,slidesVis,C,altFor,pickMode,canW,canC,writeOk,startRound};
 
 /* ===== Zurück-Geste (Handy): ein Schritt zurück statt App schliessen ===== */
 (function(){
