@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **KI-Erklärung (Test, 23.11.):** Knopf «💡 Frag die KI» nach einer beantworteten Üben-Aufgabe, nur sichtbar auf Geräten, auf denen einmal `…/grammatik-trainer/#ki-test` geöffnet wurde (`#ki-aus` schaltet ab). Die Anfrage geht an den Cloudflare-Worker `tc-ki-proxy` (Mistral, Key nur dort), mit Tageslimit pro Gerät. Hinweis in der App: KI kann sich irren, keine Namen eingeben. Nicht in der Prüfung.
 - **Tippfehler (23.11.):** Bei Fachbegriffen im Modus «Selber schreiben» zählt ein kleiner Tippfehler (ab 6 Buchstaben: 1 Fehler, ab 12: 2; ä/ae gleichwertig) als richtig, wird aber erwähnt («Achte auf die Schreibweise …») und in der Übersicht markiert. Nicht tolerant: Grammatikformen (Einsetzen, Umformen), Gross-/Kleinschreibungs-Aufgaben und Begriffe, die selbst ein anderer Fachbegriff sind (z. B. «Futur II» statt «Futur I»).
 - **Neuer Typ «Subjekt und Objekte finden» (23.11.):** 8 bisher unsichtbare Aufgaben in «Die Verschiebeprobe» sind jetzt sichtbar.
 - **Antwortart (23.11.):** Im Üben-Menü gibt es «Selber schreiben», «Auswählen» und «Gemischt». «Auswählen» ist reines Antippen: Aufgaben, die man sonst schreibt, haben Antippen-Varianten (Wortkarten für Sätze, Auswahl mit passenden Fehlantworten für Wörter). «Selber schreiben» zeigt überall dort ein Textfeld, wo es sinnvoll ist (kurze Fachbegriffe, Lückenwörter); Markieren, Anmalen und Kommasetzen bleiben Antippen. «Gemischt» würfelt pro Aufgabe.

@@ -167,6 +167,9 @@ tr.dim td,tr.dim th{opacity:.28}
 .opt.right::after{content:' ✓';font-weight:800}.opt.wrong::after{content:' ✗';font-weight:800}
 .chip.right::after{content:' ✓'}.chip.wrong::after{content:' ✗'}
 .fb{margin-top:1rem;padding:.9rem 1.1rem;border-radius:var(--radius-s);border-left:5px solid;font-size:.95rem}
+.ki{margin-top:.7rem;padding:.8rem 1rem;border-radius:12px;background:#f5f3ff;border:1px solid #c4b5fd;color:#2e1065}
+.ki.err{background:#fef2f2;border-color:#fca5a5;color:#7f1d1d}.ki.wait{color:#5b21b6}
+.ki .kit{white-space:pre-wrap;margin:.35rem 0;line-height:1.5}.ki .kin{font-size:.82rem;opacity:.8}
 .typo{display:block;margin:.2rem 0 .3rem;font-weight:600;color:#92400e}
 .fb.ok{background:var(--ok-l);border-color:var(--ok);color:#14532d}
 .fb.err{background:var(--bad-l);border-color:var(--bad);color:#7f1d1d}
@@ -659,8 +662,8 @@ function screenRound(){
   }
   return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div>'+(R.test?'<span class="pill gray">'+C().title+'</span> ':'')+'<span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+(R.test?' · '+fmtP(tPts(t))+' P.':'')+'</span></div>'+
    '<div class="prog"><span>'+(R.i+1)+' / '+total+' · '+(R.exam?'Prüfung':R.test?fmtP(R.hist.reduce((a,h)=>a+(h.ok?tPts(h.t):0),0))+' Punkte':R.hist.filter(h=>h.ok).length+' ✓')+(R.timer?' · <b id="clk">0:00</b>':'')+'</span><div class="bar"><i style="width:'+((R.i+1)/total*100)+'%"></i></div></div></div>'+
-   body+'<div class="hint" id="hintBox" hidden>'+T.hint+'</div><div id="fb" role="status" aria-live="polite"></div>'+
-   '<div class="actions"><div>'+(R.exam?'':'<button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button>')+'</div>'+
+   body+'<div class="hint" id="hintBox" hidden>'+T.hint+'</div><div id="fb" role="status" aria-live="polite"></div><div id="kiBox"></div>'+
+   '<div class="actions"><div>'+(R.exam?'':'<button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button>'+(KI_ON()?' <button class="btn sm" id="kiBtn" data-a="ki" hidden>💡 Frag die KI</button>':''))+'</div>'+
    '<div><button class="btn primary" id="checkBtn" data-a="check" disabled>'+(R.exam?(R.i+1<total?'Weiter →':'Abgeben und auswerten'):'Überprüfen')+'</button><button class="btn ok" id="nextBtn" data-a="next" hidden>'+(R.i+1<total?'Nächste Aufgabe →':'Auswertung anzeigen')+'</button></div></div></div>';
 }
 /* Nach dem Antworten: Tastatur schliessen und den «Nächste»-Knopf sichtbar machen (wichtig auf dem Handy) */
@@ -712,6 +715,7 @@ function checkRound(){
   R.answered=true;R.hist.push({t,ok,mine,right,conf,typo});saveP(ok);
   document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+(typo?'<span class="typo">Achte auf die Schreibweise: «'+esc(mine)+'» schreibt man «'+esc(plain(t.answer))+'». Das zählt trotzdem als richtig.</span> ':'')+t.why+fbX(t,ok,mine,right)+'</div>';
   document.getElementById('checkBtn').hidden=true;document.getElementById('nextBtn').hidden=false;revealNext(document.getElementById('nextBtn'));
+  {const kb=document.getElementById('kiBtn');if(kb){kb.hidden=false;kb.disabled=false;}}
 }
 function nextRound(){
   const R=S.R;
@@ -738,6 +742,27 @@ function screenSummary(){
    '<h3>Alle Fragen</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+TY()[h.t.typ].label+'</b> '+(h.ok?(h.typo?'· richtig (Schreibweise beachten)':'· richtig'):'· falsch')+'<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
 }
 let _rk='',_ry=0;
+/* KI-Erklärung (Test: nur auf Geräten sichtbar, auf denen einmal «#ki-test» geöffnet wurde) */
+const KI_URL='https://tc-ki-proxy.novarian-desk.workers.dev/ask';
+try{if(/ki-test/.test(location.hash))localStorage.setItem('gt-ki','1');if(/ki-aus/.test(location.hash))localStorage.removeItem('gt-ki');}catch(e){}
+const KI_ON=()=>{try{return localStorage.getItem('gt-ki')==='1';}catch(e){return false;}};
+function kiDevice(){try{let d=localStorage.getItem('gt-dev');if(!d){d=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('gt-dev',d);}return d;}catch(e){return 'x';}}
+let kiBusy=false;
+async function askKI(){
+  const R=S.R,box=document.getElementById('kiBox'),btn=document.getElementById('kiBtn');
+  if(!R||!R.answered||!box||kiBusy)return;
+  const h=R.hist[R.hist.length-1],t=h.t,st=v=>String(v==null?'':v).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  const task=[st(t.instr||''),st(t.prompt||''),st(t.sent||''),t.tokens?st(t.tokens.join(' ')):'',t.opts?'Auswahl: '+t.opts.map(st).join(' / '):''].filter(Boolean).join(' – ');
+  kiBusy=true;if(btn)btn.disabled=true;
+  box.innerHTML='<div class="ki wait">Die KI überlegt …</div>';
+  try{
+    const r=await fetch(KI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app:'grammatik',mode:'explain',device:kiDevice(),topic:st(C().title)+' – '+st((TY()[t.typ]||{}).label),task,right:st(h.right),mine:h.ok?'':st(h.mine)})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.answer){box.innerHTML='<div class="ki err">'+esc(j.error||'Die KI ist gerade nicht erreichbar.')+'</div>';if(btn)btn.disabled=(r.status===429);}
+    else{box.innerHTML='<div class="ki"><b>💡 Erklärung der KI</b><div class="kit">'+esc(String(j.answer).replace(/\*\*|__|^#+\s*/gm,''))+'</div><div class="kin">Die KI kann sich irren. Gib nie Namen oder persönliche Daten ein.'+(typeof j.remaining==='number'?' Noch '+j.remaining+' Fragen heute.':'')+'</div></div>';if(btn)btn.disabled=true;}
+  }catch(e){box.innerHTML='<div class="ki err">Keine Verbindung. Versuche es später.</div>';if(btn)btn.disabled=false;}
+  kiBusy=false;
+}
 function fbX(t,ok,mine,right){
   const strip=v=>String(v==null?'':v).replace(/<[^>]+>/g,'').trim();
   const T=(C()&&C().TYPES&&C().TYPES[t.typ])||{},h=t.hint||T.hint;let o='';
@@ -1195,6 +1220,7 @@ document.addEventListener('click',e=>{
    case 'card':{const R=S.R;if(!R||R.answered)return;R.bld.push(Number(b.dataset.i));repaintCards();break;}
    case 'unbuild':{const R=S.R;if(!R||R.answered)return;R.bld.splice(Number(b.dataset.i),1);repaintCards();break;}
    case 'hint':{const h=document.getElementById('hintBox');h.hidden=!h.hidden;break;}
+   case 'ki':askKI();break;
    case 'check':checkRound();if(S.R&&S.R.exam&&S.R.answered)nextRound();break;
    case 'next':nextRound();break;
    case 'stop':clearInterval(window._tclk);S.screen=(S.R&&S.R.test)?'test':'config';render();break;
@@ -1512,7 +1538,7 @@ GT.start=function(){
   const l=document.getElementById('login');if(l)l.addEventListener('close',()=>{S.loginOpen=false;});
   initAuth();render();
 };
-GT.__test={S,poolFor,render,visibleTasks,slidesVis,C,altFor,pickMode,canW,canC,writeOk,startRound};
+GT.__test={askKI,KI_ON,S,poolFor,render,visibleTasks,slidesVis,C,altFor,pickMode,canW,canC,writeOk,startRound};
 
 /* ===== Zurück-Geste (Handy): ein Schritt zurück statt App schliessen ===== */
 (function(){
