@@ -202,6 +202,6 @@ GT.chapter({id:'rede',teil:'satz',nr:13,title:'Direkte und indirekte Rede',big:'
   ersatz:{icon:'🔁',label:'Ersatzform',short:'Wenn Konjunktiv I und Indikativ gleich sind',instr:'Welche Form ist richtig?',hint:'Ist die Form gleich wie im Indikativ? Dann Ersatzform.',ref:'ersatz'},
   umform:{icon:'🔄',label:'Indirekte Rede bilden',short:'Aus direkter Rede wird indirekte',instr:'Wie lautet die indirekte Rede?',hint:'Pronomen, Verb und Einleitung anpassen.',ref:'indirekt'},
   wissen:{label:'Wissen',short:'Begriffe und Regeln',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'was'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

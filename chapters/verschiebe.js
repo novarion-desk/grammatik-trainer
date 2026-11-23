@@ -152,7 +152,7 @@ const SECS=[
   ['3 · Zweiteiliges Verb','«Wir <b>haben</b> gestern <b>gelacht</b>.»','Beide Verbteile bilden zusammen ein Satzglied.'],
   ['4 · Satz muss Sinn ergeben','«Laut bellt der Hund.»','Ein Satz mit anderer Bedeutung ist keine richtige Umstellung.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0">'+x[2]+'</p></div>').join('')+'</div>'},
-{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:4,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
+{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:4,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Ein kleiner Tippfehler zählt nicht als falsch, wird aber erwähnt.',
  html:()=>T(['Begriff','Bedeutung'],[['Verschiebeprobe','Verfahren, um Satzglieder zu finden (auch Umstellprobe)'],['Satzglied','Wort oder Wortgruppe, die beim Umstellen zusammenbleibt'],['Personalform','konjugiertes Verb'],['Vorfeldprobe','anderer Name für die Verschiebeprobe (im Lehrmittel)']])}
 ];
 const EX=[
@@ -230,6 +230,7 @@ GT.chapter({id:'verschiebe',teil:'satz',nr:2,title:'Die Verschiebeprobe',big:'De
  types:{trenn:{icon:'✂️',label:'Satzglieder trennen',short:'Zwischen zwei Wörtern antippen',instr:'Tippe zwischen zwei Wörter, wo eine Satzgliedgrenze liegt.',hint:'Was beim Umstellen zusammenbleibt, ist ein Satzglied. Das Verb kann aus zwei Teilen bestehen.',ref:'abtrennen'},
   probe:{label:'Zählen und Umstellen',short:'Satzglieder zählen, richtig umstellen',instr:'Wähle die richtige Antwort.',hint:'Was beim Umstellen zusammenbleibt, ist ein Satzglied.',ref:'probe'},
   umstellen:{icon:'🔀',label:'Satz umstellen',short:'Mit einem anderen Satzglied beginnen',instr:'Schreibe den umgestellten Satz.',hint:'Das konjugierte Verb bleibt an zweiter Stelle.',ref:'probe'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
+  frage:{icon:'❓',label:'Subjekt und Objekte finden',short:'Mit der richtigen Frage zum Satzglied',instr:'Wähle die richtige Antwort.',hint:'Frage mit «Wer oder was?» (Subjekt), «Wen oder was?» (Akkusativobjekt), «Wem?» (Dativobjekt).',ref:'fachbegriffe'},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

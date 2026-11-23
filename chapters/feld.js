@@ -184,7 +184,7 @@ const SECS=[
   ['4 · Trennbares Verb','«Der Bus fährt um 7 Uhr <b>ab</b>.»','«fährt» links, «ab» rechts: beide gehören zum Verb.'],
   ['5 · Satzglied bleibt zusammen','«<b>Nach der Pause</b> schreibt …»','Alle Wörter eines Satzglieds stehen im selben Feld.']
  ].map(x=>'<div class="card stone"><b>'+x[0]+'</b><p style="margin:.2rem 0">'+x[1]+'</p><p class="muted" style="margin:.2rem 0 0">'+x[2]+'</p></div>').join('')+'</div>'},
-{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:4,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
+{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:4,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Ein kleiner Tippfehler zählt nicht als falsch, wird aber erwähnt.',
  html:()=>T(['Begriff','Bedeutung'],[['Feldermodell','Raster mit fünf Feldern, das zeigt, wo die Teile des Satzes stehen'],['Vorfeld','Feld vor der Personalform: genau ein Satzglied'],['Linke Satzklammer','Feld für die Personalform'],['Mittelfeld','Feld zwischen den Klammern: alle weiteren Satzglieder'],['Rechte Satzklammer','Feld für die übrigen Verbteile'],['Nachfeld','Feld ganz am Schluss, oft mit Nebensatz'],['Vorfeldprobe','anderer Name für die Verschiebeprobe']])}
 ];
 const EX=[
@@ -213,6 +213,6 @@ GT.chapter({id:'feld',teil:'satz',nr:6,title:'Das Feldermodell und die Satzklamm
  liveCats:['fm1','fm2','fm3'],css,widgets,
  cats:C,catTitle:'Welche Themen?',catWord:'Thema',
  types:{probe:{label:'Felder und Klammer bestimmen',short:'Das richtige Feld wählen',instr:'Wähle die richtige Antwort.',hint:'Reihenfolge: Vorfeld, linke Klammer, Mittelfeld, rechte Klammer, Nachfeld.',ref:'idee'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

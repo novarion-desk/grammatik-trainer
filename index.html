@@ -167,6 +167,7 @@ tr.dim td,tr.dim th{opacity:.28}
 .opt.right::after{content:' ✓';font-weight:800}.opt.wrong::after{content:' ✗';font-weight:800}
 .chip.right::after{content:' ✓'}.chip.wrong::after{content:' ✗'}
 .fb{margin-top:1rem;padding:.9rem 1.1rem;border-radius:var(--radius-s);border-left:5px solid;font-size:.95rem}
+.typo{display:block;margin:.2rem 0 .3rem;font-weight:600;color:#92400e}
 .fb.ok{background:var(--ok-l);border-color:var(--ok);color:#14532d}
 .fb.err{background:var(--bad-l);border-color:var(--bad);color:#7f1d1d}
 .hl{background:#fde68a;color:var(--text);border-radius:.4rem;padding:.05rem .35rem;font-weight:700}
@@ -432,6 +433,22 @@ function writeOk(t){
   return true;
 }
 const SYN=[['nomen','substantiv','hauptwort','namenwort'],['verb','zeitwort','tunwort'],['adjektiv','eigenschaftswort','wiewort'],['artikel','begleiter','geschlechtswort'],['pronomen','fuerwort','fürwort'],['präposition','praeposition','verhältniswort','verhaeltniswort'],['konjunktion','bindewort'],['adverb','umstandswort'],['singular','einzahl'],['plural','mehrzahl'],['präsens','gegenwart']];
+/* Tippfehler bei Fachbegriffen: nicht falsch, aber erwähnt (ab 6 Buchstaben, 1 Fehler; ab 12 Buchstaben, 2 Fehler) */
+const TOLT=new Set(['zuordnen','begriff','begriffin','wissen','glied','satzart','fall','stufe','art','teilsatz','gefuege','konjart','bau','zeit','adverb','fach','bestimmen','frage']);
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;const D=[];for(let i=0;i<=m;i++){D[i]=[i];}for(let j=1;j<=n;j++)D[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){const c=a[i-1]===b[j-1]?0:1;D[i][j]=Math.min(D[i-1][j]+1,D[i][j-1]+1,D[i-1][j-1]+c);if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])D[i][j]=Math.min(D[i][j],D[i-2][j-2]+1);}return D[m][n];}
+const trU=x=>x.replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/\s/g,'');
+let _terms=null;
+function termSet(){if(_terms)return _terms;_terms=new Set();Object.keys(GT.chapters).forEach(id=>GT.chapters[id].TASKS.forEach(t=>{if(TOLT.has(t.typ)){[t.answer].concat(t.accept||[]).concat(t.opts||[]).forEach(a=>{const p=plain(a);if(p&&p.split(/\s+/).length<=2)_terms.add(trU(normA(p,false)));});}}));return _terms;}
+function typoOk(v,t){
+  if(t.typ==='gross'||!TOLT.has(t.typ))return false;
+  const x=trU(normA(v,false));
+  const cands=[t.answer].concat(t.accept||[]).map(a=>plain(a)).filter(a=>a.split(/\s+/).length<=2);
+  const others=new Set(optsOf(t).map(o=>trU(normA(plain(o),false))));
+  return cands.some(a=>{
+    const y=trU(normA(a,false));if(y.length<6||others.has(x)&&x!==y||/\s[ivx]+$/i.test(a)||(termSet().has(x)&&x!==y))return false;
+    const d=lev(x,y);return d<=(y.length>=12?2:1);
+  });
+}
 function synOk(v,t){
   if(t.strict)return false;
   const a=normA(t.answer,false),x=normA(v,false),q=normA(plain((t.prompt||'')+' '+(t.sent||'')),false);
@@ -651,7 +668,7 @@ function revealNext(n){try{const a=document.activeElement;if(a&&a.blur&&/INPUT|T
 document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('[data-w="try"]');if(!el)return;setTimeout(()=>revealNext(el.querySelector('[data-a="tnext"],[data-x="new"]')),60);});
 function checkRound(){
   const R=S.R,t=R.tasks[R.i];if(R.answered)return;
-  let ok=false,mine='',right='',conf=null;
+  let ok=false,mine='',right='',conf=null,typo=false;
   if(t.typ==='anmalen'||t.typ==='anmalenlang'){
     const need=t.parts.map((p,i)=>p.f?i:-1).filter(i=>i>=0);
     if(need.some(i=>!R.paint[i])){document.getElementById('fb').innerHTML='<div class="fb err">Male zuerst alle Gruppen an.</div>';return;}
@@ -683,6 +700,7 @@ function checkRound(){
   }else if(isW(t)){
     const f=document.getElementById('wfield'),v=(f.value||'').trim();if(!v)return;
     const acc=[t.answer].concat(t.accept||[]);ok=acc.some(a=>normA(a,t.strict)===normA(v,t.strict))||synOk(v,t);mine=v;right=t.answer;
+    if(!ok&&typoOk(v,t)){ok=true;typo=true;}
     f.disabled=true;f.classList.add(ok?'right':'wrong');
   }else{
     if(R.choice===null)return;
@@ -691,8 +709,8 @@ function checkRound(){
     document.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(R.order[i]===String(t.answer))b.classList.add('right');else if(i===R.choice)b.classList.add('wrong');});
     document.querySelectorAll('.sbox .hl').forEach(h=>{if(t.cats.length===1)h.classList.add('f-'+t.cats[0]);});
   }
-  R.answered=true;R.hist.push({t,ok,mine,right,conf});saveP(ok);
-  document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+t.why+fbX(t,ok,mine,right)+'</div>';
+  R.answered=true;R.hist.push({t,ok,mine,right,conf,typo});saveP(ok);
+  document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'err')+'"><b>'+(ok?'✓ Richtig!':'✗ Nicht ganz richtig.')+'</b> '+(typo?'<span class="typo">Achte auf die Schreibweise: «'+esc(mine)+'» schreibt man «'+esc(plain(t.answer))+'». Das zählt trotzdem als richtig.</span> ':'')+t.why+fbX(t,ok,mine,right)+'</div>';
   document.getElementById('checkBtn').hidden=true;document.getElementById('nextBtn').hidden=false;revealNext(document.getElementById('nextBtn'));
 }
 function nextRound(){
@@ -717,7 +735,7 @@ function screenSummary(){
    (cl?'<div class="callout info"><b>Typische Verwechslungen</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">'+cl+'</ul></div>':'')+
    '<div class="actions" style="justify-content:flex-start;margin:1.2rem 0">'+(wrong.length?'<button class="btn primary" data-a="retry">Fehler gezielt wiederholen ('+wrong.length+')</button>':'')+
    '<button class="btn" data-a="again">Neue Runde</button><button class="btn" data-a="ref" data-v="'+worst+'">Zur passenden Theorie</button><button class="btn" data-a="home">Zur Übersicht</button></div>'+
-   '<h3>Alle Fragen</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+TY()[h.t.typ].label+'</b> '+(h.ok?'· richtig':'· falsch')+'<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
+   '<h3>Alle Fragen</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+TY()[h.t.typ].label+'</b> '+(h.ok?(h.typo?'· richtig (Schreibweise beachten)':'· richtig'):'· falsch')+'<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
 }
 let _rk='',_ry=0;
 function fbX(t,ok,mine,right){
@@ -1042,7 +1060,7 @@ function screenTestSummary(){
    tipsHTML(H)+'<h3>Nach Kapitel (schwächstes zuerst)</h3><div class="grid3" style="margin:.5rem 0 1.2rem">'+bars+'</div>'+
    '<div class="actions" style="justify-content:flex-start;margin:1.2rem 0">'+(wrong.length?'<button class="btn primary" data-a="retry">Fehler gezielt wiederholen ('+wrong.length+')</button>':'')+
    '<button class="btn" data-a="again">Neuer Test</button>'+(weak?'<button class="btn" data-a="theorie" data-t="'+GT.chapters[weak.k].teil+'" data-v="'+weak.k+'">Theorie: '+GT.chapters[weak.k].title+'</button>':'')+'<button class="btn" data-a="home">Zur Übersicht</button></div>'+
-   '<h3>Alle Aufgaben</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+GT.chapters[h.t._ch].title+' · '+withCh(h.t._ch,()=>TY()[h.t.typ].label)+'</b> '+(h.ok?'· richtig':'· falsch')+' · '+fmtP(h.ok?tPts(h.t):0)+' von '+fmtP(tPts(h.t))+' P.<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'<div class="muted" style="margin-top:.25rem">'+h.t.why+'</div></div>').join('')+'</div>';
+   '<h3>Alle Aufgaben</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+GT.chapters[h.t._ch].title+' · '+withCh(h.t._ch,()=>TY()[h.t.typ].label)+'</b> '+(h.ok?(h.typo?'· richtig (Schreibweise beachten)':'· richtig'):'· falsch')+' · '+fmtP(h.ok?tPts(h.t):0)+' von '+fmtP(tPts(h.t))+' P.<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'<div class="muted" style="margin-top:.25rem">'+h.t.why+'</div></div>').join('')+'</div>';
 }
 function testSheetHTML(tasks){
   let n=0,ws='',so='',tot=0;

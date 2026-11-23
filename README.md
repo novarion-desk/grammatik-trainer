@@ -11,6 +11,8 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Tippfehler (23.11.):** Bei Fachbegriffen im Modus «Selber schreiben» zählt ein kleiner Tippfehler (ab 6 Buchstaben: 1 Fehler, ab 12: 2; ä/ae gleichwertig) als richtig, wird aber erwähnt («Achte auf die Schreibweise …») und in der Übersicht markiert. Nicht tolerant: Grammatikformen (Einsetzen, Umformen), Gross-/Kleinschreibungs-Aufgaben und Begriffe, die selbst ein anderer Fachbegriff sind (z. B. «Futur II» statt «Futur I»).
+- **Neuer Typ «Subjekt und Objekte finden» (23.11.):** 8 bisher unsichtbare Aufgaben in «Die Verschiebeprobe» sind jetzt sichtbar.
 - **Antwortart (23.11.):** Im Üben-Menü gibt es «Selber schreiben», «Auswählen» und «Gemischt». «Auswählen» ist reines Antippen: Aufgaben, die man sonst schreibt, haben Antippen-Varianten (Wortkarten für Sätze, Auswahl mit passenden Fehlantworten für Wörter). «Selber schreiben» zeigt überall dort ein Textfeld, wo es sinnvoll ist (kurze Fachbegriffe, Lückenwörter); Markieren, Anmalen und Kommasetzen bleiben Antippen. «Gemischt» würfelt pro Aufgabe.
 - **Übungsblatt für Schüler (23.11.):** Im Üben-Menü neben «Übung starten» gibt es «🖨️ Drucken / PDF» und «📝 Word». Das Blatt entsteht aus der gewählten Auswahl (Themen, Typen, Stufe, Anzahl). Die Lösungen stehen am Schluss.
 - **Mehr Aufgaben (23.11.):** rund 325 neue Aufgaben in 14 Kapiteln, vor allem dort, wo es wenige gab (Zusammengezogener Satz, Wortlehre/Satzlehre, Verschiebeprobe, Satzarten, Rede, Verbale Teile, Komma, Hauptsatz/Nebensatz, Adjektiv). Mehr Stufe 2 und 3. Pronomen, Satzglieder, Fälle und Feld unverändert.

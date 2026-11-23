@@ -169,7 +169,7 @@ const SECS=[
 {id:'stellung',title:'Wortstellung',short:'Wortstellung',min:8,note:'Wichtigste Fehlerquelle: Verb im Nebensatz. Vorangestellter Nebensatz zählt als erstes Satzglied: Danach folgt das Verb des Hauptsatzes.',
  html:()=>'<div class="grid2"><div class="card"><h3>Nebensatz nachgestellt</h3><p>Ich bleibe zu Hause, weil ich krank <b>bin</b>.</p></div>'+
  '<div class="card"><h3>Nebensatz vorangestellt</h3><p>Weil ich krank bin, <b>bleibe</b> ich zu Hause.</p><p class="muted">Der Nebensatz ist das erste Satzglied. Darum folgt das Verb des Hauptsatzes sofort.</p></div></div>'},
-{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
+{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Ein kleiner Tippfehler zählt nicht als falsch, wird aber erwähnt.',
  html:()=>T(['Begriff','Bedeutung'],[['Hauptsatz (H)','selbständiger Teilsatz, Personalform an zweiter Stelle'],['Nebensatz (N)','unselbständiger Teilsatz, Personalform am Schluss'],['Teilsatz','Teil eines zusammengesetzten Satzes'],['Satzverbindung (SV)','H + H, auch Satzreihe'],['Satzgefüge (SG)','H + N'],['Einleitewort','leitet den Nebensatz ein (Konjunktion, Relativpronomen, Fragewort)']])},
 {id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Verbstellung, Komma, «denn» ≠ «weil», dass/das.',
  html:()=>'<div class="grid3">'+[
@@ -243,7 +243,7 @@ GT.chapter({id:'hs-ns',teil:'satz',nr:7,title:'Hauptsatz, Nebensatz und Satzgef�
   konj:{label:'Konjunktionen und Verbstellung',short:'weil, dass, denn …',instr:'Wähle die richtige Antwort.',hint:'Nach weil, dass, obwohl … steht das Verb am Ende.',ref:'stellung'},
   einleit:{icon:'🚪',label:'Einleitewort bestimmen',short:'Konjunktion, Relativpronomen, Fragewort',instr:'Welche Art Einleitewort leitet den Nebensatz ein?',hint:'Konjunktion: weil, dass, obwohl. Relativpronomen: der, die, das. Fragewort: wer, wann, warum.',ref:'einleite'},
   hatns:{icon:'🔍',label:'Hat der Satz einen Nebensatz?',short:'Nebensatz erkennen oder ausschliessen',instr:'Hat der Satz einen Nebensatz?',hint:'Suche ein Einleitewort. Steht das Verb am Ende, ist es ein Nebensatz. Zwei Hauptsätze sind keine Nebensätze.',ref:'haupt'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'},
   gefuege:{label:'Satzverbindung oder Satzgefüge',short:'Satzbau',instr:'Welcher Satzbau liegt vor?',hint:'Hauptsatz + Hauptsatz = Satzverbindung. Hauptsatz + Nebensatz = Satzgefüge.',ref:'verbindung'},
   verbinden:{icon:'🪢',label:'Sätze verbinden',short:'Zwei Sätze zu einem Satzgefüge machen',instr:'Schreibe den neuen Satz mit Komma.',hint:'Die Konjunktion leitet den Nebensatz ein. Das Verb rückt ans Ende.',ref:'verbindung'},
   markieren:{label:'Nebensatz markieren',short:'Nebensatz finden',instr:'Tippe alle Wörter des Nebensatzes an.',hint:'Der Nebensatz beginnt mit einer Konjunktion.',ref:'haupt'}},

@@ -221,7 +221,7 @@ GT.chapter({id:'wl-sl',teil:'satz',nr:1,title:'Wortlehre und Satzlehre',big:'Wö
  types:{
   zaehlen:{icon:'🔢',label:'Satzglieder zählen',short:'Wie viele Satzglieder hat der Satz?',instr:'Schreibe die Zahl.',hint:'Mache die Verschiebeprobe: Was lässt sich zusammen verschieben?',ref:'glieder'},
 wissen:{label:'Wissen',short:'Wortlehre oder Satzlehre',instr:'Wähle die richtige Antwort.',hint:'Wortart = Was ist das Wort? Satzglied = Welche Aufgabe hat es?',ref:'unterschied'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Wortlehre = Morphologie, Satzlehre = Syntax.',ref:'unterschied'},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Wortlehre = Morphologie, Satzlehre = Syntax.',ref:'unterschied'},
   wort:{label:'Wortart bestimmen',short:'Einzelne Wörter bestimmen',instr:'Tippe das richtige Wort an.',hint:'Wortarten: Nomen, Verb, Adjektiv, Pronomen, Partikel.',ref:'unterschied'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

@@ -65,7 +65,7 @@ const SECS=[
 {id:'falsch',title:'Falsche Zusammenziehungen',short:'Falsche Zusammenziehungen',lv:2,min:8,note:'Ab Niveau B. Das gemeinsame Satzglied muss für beide Verben formal passen: helfen + Dativ, unterstützen + Akkusativ; Hilfsverb sein/haben.',
  html:()=>T(['Falsch','Richtig','Grund'],[['Er hilft und unterstützt seinen Freund.','Er hilft seinem Freund und unterstützt ihn.','helfen + Dativ, unterstützen + Akkusativ'],['Sie ist aufgestanden und geduscht.','Sie ist aufgestanden und hat geduscht.','sein und haben: Hilfsverb wiederholen']])+
  '<div class="callout">Verlangen die Verben <b>verschiedene Fälle</b> oder <b>verschiedene Hilfsverben</b>, darf man nicht zusammenziehen.</div>'},
-{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:4,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
+{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:4,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Ein kleiner Tippfehler zählt nicht als falsch, wird aber erwähnt.',
  html:()=>T(['Begriff','Bedeutung'],[['Zusammengezogener Satz (ZGS)','verkürzte Satzverbindung mit gemeinsamem Satzglied'],['Satzverbindung (SV)','mindestens zwei Hauptsätze'],['Satzgefüge (SG)','Hauptsatz + Nebensatz'],['gemeinsames Satzglied','Subjekt, Objekt, Prädikat oder Hilfsverb']])}
 ];
 const EX=[
@@ -143,6 +143,6 @@ GT.chapter({id:'zgs',teil:'satz',nr:8,title:'Zusammengezogener Satz',big:'Anna k
  types:{erkenne:{icon:'🔎',label:'Zusammengezogenen Satz erkennen',short:'Gemeinsames Satzglied finden',instr:'Wähle die richtige Antwort.',hint:'Was wird nur einmal genannt?',ref:'erkennen'},
   zieh:{icon:'🪢',label:'Sätze zusammenziehen',short:'Gemeinsames Satzglied nur einmal nennen',instr:'Schreibe den zusammengezogenen Satz.',hint:'Was in beiden Sätzen gleich ist, nennst du nur einmal.',ref:'was'},
   falsch:{icon:'🛠️',label:'Falsche Zusammenziehung berichtigen',short:'Fall und Hilfsverb prüfen',instr:'Welcher Satz ist richtig?',hint:'Prüfe den Fall und das Hilfsverb.',ref:'falsch'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();

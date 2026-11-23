@@ -164,7 +164,7 @@ const SECS=[
  html:()=>'<p class="lead">Die Teile des Prädikats bilden eine <b>Klammer</b> um den Rest des Satzes.</p>'+
  '<div class="card"><p style="font-size:1.1rem">Er <b>hat</b> gestern im Park mit seinem Freund Fussball <b>gespielt</b>.</p><p class="muted">Erster Teil an Position 2 · Mittelfeld · zweiter Teil am Satzende</p></div>'+
  T(['Satzart','Wo steht das Verb?'],[['Aussagesatz','Personalform an zweiter Stelle, weitere Teile am Ende'],['Ja-/Nein-Frage','Personalform am Satzanfang'],['Nebensatz (weil, dass …)','Alle Verbteile am Satzende']])},
-{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
+{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Ein kleiner Tippfehler zählt nicht als falsch, wird aber erwähnt.',
  html:()=>T(['Begriff','Bedeutung'],[['Personalform','konjugiertes (finites) Verb'],['Infinitiv','Grundform, Rohform des Verbs'],['Partizip','Verbform wie gespielt, gesehen'],['Verbzusatz','abgetrennte Vorsilbe (fortfahren: fort)'],['Rohform des Satzes','Satz mit allen Satzgliedern und dem Verb in der Grundform am Ende; ohne Subjekt: verbale Wortkette']])},
 {id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Typische Fehler: Teile vergessen, Verbpartikel nicht erkennen.',
  html:()=>'<div class="grid3">'+[
@@ -245,7 +245,7 @@ GT.chapter({id:'verbale',teil:'satz',nr:4,title:'Verbale Teile und Rohform des S
   praedikat:{icon:'✏️',label:'Prädikat schreiben',short:'Alle Verbteile im Satz notieren',instr:'Schreibe alle Verbteile in der Reihenfolge des Satzes.',hint:'Suche Hilfsverb, Modalverb, Partizip, Infinitiv und abgetrennte Vorsilbe.',ref:'teile'},
   rohsatz:{icon:'🧩',label:'Aus der Rohform einen Satz bilden',short:'Personalform bilden und verschieben',instr:'Bilde den Satz.',hint:'Verb konjugieren und an die richtige Stelle setzen.',ref:'wortkette'},
   wortkette:{icon:'⛓️',label:'Verbale Wortkette bilden',short:'Rohform des Satzes',instr:'Schreibe die verbale Wortkette.',winstr:'Schreibe die verbale Wortkette.',hint:'Subjekt weglassen, Verb in den Infinitiv, ans Ende stellen, Vorsilbe anhängen.',ref:'wortkette'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'},
   wissen:{label:'Wissen',short:'Verbale Teile, Wortkette und Satzklammer',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'klammer'},
   markieren:{label:'Prädikat markieren',short:'Alle Verbteile finden',instr:'Tippe alle Teile des Prädikats an.',hint:'Suche alle Verbformen im Satz.',ref:'teile'}},
  sections:SECS,tasks:task,exercises:EX,merk});

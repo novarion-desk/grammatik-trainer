@@ -154,7 +154,7 @@ const SECS=[
  '<div class="card"><h3>Ergänzungsfrage</h3><p>Sie beginnt mit einem <b>Fragewort</b> (wer, was, wo, wann, wie, warum).</p><p><b>Wo</b> wohnst du?</p></div></div>'},
 {id:'umformen',title:'Sätze umformen',short:'Umformen',min:8,note:'Aus Aussage wird Frage: Verb und Subjekt tauschen. Aus Aussage wird Aufforderung: Befehlsform.',
  html:()=>T(['Aussage','Frage','Aufforderung'],[['Du kommst her.','Kommst du her?','Komm her!'],['Er hilft mir.','Hilft er mir?','Hilf mir!'],['Du machst das Fenster zu.','Machst du das Fenster zu?','Mach das Fenster zu!']])},
-{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Tippfehler zählen als falsch.',
+{id:'fachbegriffe',title:'Die Fachbegriffe im Überblick',short:'Fachbegriffe',min:6,note:'Diese Begriffe kommen in der Prüfung als Eintippaufgaben vor. Ein kleiner Tippfehler zählt nicht als falsch, wird aber erwähnt.',
  html:()=>T(['Begriff','Bedeutung'],[['Deklaration','Aussage'],['Interrogativ','Frage'],['Imperativ','Aufforderung, Befehl, Befehlsform'],['Einfacher Satz','ein Satz mit einer verbalen Wortkette'],['Zusammengesetzter Satz','mindestens zwei Teilsätze'],['Teilsatz','Teil eines zusammengesetzten Satzes'],['Satzfragment','unvollständiger oder abgebrochener Satz ohne Personalform (auch Ellipse)']])},
 {id:'hoeflich',title:'Höfliche Aufforderungen',short:'Höflichkeit',lv:2,min:6,note:'Ab Niveau B. Höfliche Bitten mit «könnten, würden, bitte».',
  html:()=>'<div class="card"><p>Direkt: <b>Hilf mir!</b></p><p>Höflich: <b>Könntest du mir bitte helfen?</b> · <b>Würden Sie mir bitte helfen?</b></p><p class="muted">Höfliche Aufforderungen haben oft die Form einer Frage.</p></div>'},
@@ -253,6 +253,6 @@ GT.chapter({id:'satzarten',teil:'satz',nr:5,title:'Satzarten und Satzbau',big:'A
   umformen:{icon:'🔁',label:'Sätze umformen',short:'Aussagen zu Fragen und Aufforderungen machen',instr:'Schreibe den umgeformten Satz.',hint:'Frage: Das Prädikat steht an erster Stelle. Aufforderung: ohne «du».',ref:'umformen'},
   wissen:{label:'Wissen',short:'Grundfunktionen, Satzbau und Umformen',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'bau'},
   bau:{icon:'🏗️',label:'Satzbau bestimmen',short:'Einfacher Satz, zusammengesetzter Satz, Satzfragment',instr:'Welcher Satzbau liegt vor?',hint:'Zähle die Personalformen: 1 = einfacher Satz, 2 oder mehr = zusammengesetzter Satz, 0 = Satzfragment.',ref:'bau'},
-  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Tippfehler zählen.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
+  fach:{icon:'⌨️',label:'Fachbegriffe schreiben',short:'Den Fachbegriff selber schreiben',instr:'Schreibe den Fachbegriff. Ein kleiner Tippfehler ist nicht schlimm.',hint:'Schau im Überblick der Fachbegriffe nach.',ref:'fachbegriffe'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();
