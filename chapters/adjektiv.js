@@ -185,6 +185,53 @@ const EX=[
 const merk=()=>T(['Thema','Merksatz'],[['Erkennen','Adjektive beschreiben und lassen sich meist steigern.'],['Steigerung','Positiv: schnell · Komparativ: schneller · Superlativ: am schnellsten'],['Unregelmässig','gut – besser – am besten · viel – mehr – am meisten · gern – lieber – am liebsten'],['Vergleich','grösser als · so gross wie'],['Endungen','Vor dem Nomen braucht das Adjektiv eine Endung; nach «sein» nicht.'],['Nach dem Artikel','-e im Nominativ sowie im Akkusativ weiblich und sächlich, sonst -en (Mehrzahl immer -en).'],['Wortbildung','un-, -lich, -ig, -isch, -bar, -sam, -voll']]);
 const UEM={'merkmale':{types:'erkennen',cats:'sg3'},'steigerung':{types:'komp,stufe',cats:'sg1'},'endungen':{types:'endung',cats:'sg2'},'ohneartikel':{types:'endung',cats:'sg2'},'wortbildung':{types:'wort',cats:'sg4'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,poss:1},opt:{pron:.15,adj:.85,det:{def:.45,indef:.3,poss:.25}},classes:[{gl:'Adjektiv',cats:['sg3'],lv:1}],perClass:34});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['alt','älter','am ältesten',['alter','ältere','mehr alt'],['am altesten','am ältsten','am älteren'],2],
+['jung','jünger','am jüngsten',['junger','jüngere','mehr jung'],['am jungsten','am jüngesten','am jungesten'],2],
+['lang','länger','am längsten',['langer','längere','mehr lang'],['am langsten','am längesten','am langesten'],1],
+['kurz','kürzer','am kürzesten',['kurzer','kürzere','mehr kurz'],['am kürzsten','am kurzsten','am kürzten'],2],
+['kalt','kälter','am kältesten',['kalter','kältere','mehr kalt'],['am kältsten','am kaltesten','am kältern'],2],
+['warm','wärmer','am wärmsten',['warmer','wärmere','mehr warm'],['am warmsten','am wärmesten','am warmesten'],1],
+['schnell','schneller','am schnellsten',['schnellerer','mehr schnell','schnellere'],['am schnellesten','am schnellten','am schnellern'],1],
+['dünn','dünner','am dünnsten',['dünnerer','mehr dünn','dünne'],['am dünnesten','am dünnten','am dünnern'],2]
+].forEach(s=>{
+ task.push({typ:'komp',stufe:s[5],lv:s[5]===3?2:1,cats:['sg1'],prompt:'Wie lautet der <b>Komparativ</b> von «'+s[0]+'»?',opts:[s[1]].concat(s[3]),answer:s[1],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b>'});
+ task.push({typ:'komp',stufe:s[5],lv:s[5]===3?2:1,cats:['sg1'],prompt:'Wie lautet der <b>Superlativ</b> von «'+s[0]+'»?',opts:[s[2]].concat(s[4]),answer:s[2],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b>'});
+});
+[
+['Anna ist schneller als Tim.','Komparativ',1,'«schneller als» vergleicht zwei.'],
+['Das ist der schönste Tag.','Superlativ',1,'«schönste» ist die höchste Stufe.'],
+['Der Berg ist hoch.','Positiv',1,'«hoch» ist die Grundstufe.'],
+['Mia ist so gross wie Lena.','Positiv',1,'«so … wie» steht beim Positiv.'],
+['Dieses Buch ist am spannendsten.','Superlativ',2,'«am spannendsten» ist die höchste Stufe.'],
+['Heute ist es kälter als gestern.','Komparativ',1,'«kälter als» vergleicht zwei Tage.'],
+['Er ist der jüngste Spieler im Team.','Superlativ',2,'«jüngste» ist die höchste Stufe.'],
+['Der Fluss ist länger als der Bach.','Komparativ',1,'«länger als» vergleicht zwei.']
+].forEach(f=>task.push({typ:'stufe',stufe:f[2],lv:1,cats:['sg1'],sent:f[0],opts:['Positiv','Komparativ','Superlativ'],answer:f[1],why:'<b>'+f[1]+'.</b> '+f[3]}));
+const gap2=s=>s.replace('___','<span class="gap">_____</span>');
+[
+['Das ist ein ___ Tisch.','runder',['runde','rundes','runden'],1,'«ein Tisch» ist männlich, Nominativ: ein runder Tisch.'],
+['Ich sehe einen ___ Vogel.','bunten',['bunter','bunte','buntes'],2,'«einen Vogel» ist männlich, Akkusativ: einen bunten Vogel.'],
+['Sie trägt ein ___ Kleid.','neues',['neue','neuer','neuen'],1,'«ein Kleid» ist sächlich: ein neues Kleid.'],
+['Wir wohnen in einem ___ Haus.','kleinen',['kleine','kleiner','kleines'],2,'«in einem Haus» ist Dativ, sächlich: in einem kleinen Haus.'],
+['Der ___ Hund bellt.','grosse',['grosser','grosses','grossen'],1,'Nach «der» (männlich, Nominativ): der grosse Hund.'],
+['Die ___ Kinder spielen.','kleinen',['kleine','kleiner','kleines'],2,'Nach «die» (Mehrzahl): die kleinen Kinder.'],
+['Ich habe ___ Hunger.','grossen',['grosser','grosse','grosses'],2,'«Hunger» ist männlich, Akkusativ ohne Artikel: grossen Hunger.'],
+['Das ist das Auto meiner ___ Schwester.','älteren',['ältere','älterer','älteres'],3,'«meiner Schwester» ist Genitiv, weiblich: meiner älteren Schwester.']
+].forEach(d=>{const base=d[1].replace(/(es|en|er|e)$/,'');task.push({typ:'endung',stufe:d[3],lv:d[3]===3?2:1,cats:['sg2'],sent:gap2(d[0]).replace('<span class="gap">_____</span>','<span class="gap">_____</span> <i class="muted">('+base+')</i>'),opts:[d[1]].concat(d[2]),answer:d[1],why:'<b>'+d[1]+'.</b> '+d[4]})});
+[
+['Welches Wort ist ein Adjektiv?',['mutig','Mut','ermutigen','durch'],'mutig','Adjektive beschreiben: ein mutiger Junge.',1],
+['Welches Wort ist ein Adjektiv?',['bunt','Bund','binden','auf'],'bunt','«bunt» beschreibt, wie etwas aussieht.',1],
+['Welches Wort ist ein Adjektiv?',['sauber','Sauberkeit','säubern','mit'],'sauber','«sauber» beschreibt eine Eigenschaft.',1],
+['Wozu dienen Adjektive?',['Sie beschreiben Nomen genauer.','Sie ersetzen Nomen.','Sie verbinden Sätze.','Sie zeigen Handlungen an.'],'Sie beschreiben Nomen genauer.','Beispiel: der <b>grosse</b> Hund.',1]
+].forEach(e=>task.push({typ:'erkennen',stufe:e[4],lv:e[4]===3?2:1,cats:['sg3'],prompt:e[0],opts:e[1],answer:e[2],why:e[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'adjektiv',teil:'wort',nr:5,title:'Adjektiv',big:'Ein kleiner Hund, ein schnelles Auto',desc:'Eigenschaften, Steigerung und Endungen',
  ex:'«Der '+mk('adj','kleine')+' Hund ist '+mk('adj','schneller')+' als die '+mk('adj','alte')+' Katze.»',
  goals:['Ich erkenne Adjektive mit der Steigerungsprobe.','Ich steigere Adjektive (Positiv, Komparativ, Superlativ).','Ich setze die richtige Endung vor dem Nomen.','Ich bilde Gegenteile und Adjektive aus Nomen.'],

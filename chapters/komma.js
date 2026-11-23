@@ -228,6 +228,43 @@ const EX=[
  ['Schreibe einen Satz mit Aufzählung und einen mit «weil».','Beispiel: Ich esse Äpfel, Birnen und Trauben. Ich bleibe, weil ich müde bin.',2]
 ];
 const merk=()=>T(['Regel','Beispiel'],[['Aufzählung (nicht vor und/oder)','Äpfel<b>,</b> Birnen <b>und</b> Bananen'],['Nebensatz','Ich weiss<b>,</b> dass er kommt.<br>Weil ich müde bin<b>,</b> gehe ich.'],['aber, denn, sondern','Ich will<b>,</b> aber ich kann nicht.'],['Relativsatz / Einschub','Der Mann<b>,</b> der dort steht<b>,</b> …'],['Anrede, Ausruf','Lukas<b>,</b> komm! · Ach<b>,</b> schade!'],['Infinitiv mit um … zu','Sie lernt<b>,</b> um zu bestehen.']]);
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Sie mag Hunde, Katzen und Pferde.',['Sie mag Hunde Katzen und Pferde.','Sie mag Hunde, Katzen, und Pferde.','Sie mag, Hunde, Katzen und Pferde.'],1,'sg1','Aufzählung: Komma zwischen den Gliedern, vor «und» kein Komma.'],
+['Das Wetter ist kalt, aber die Sonne scheint.',['Das Wetter ist kalt aber die Sonne scheint.','Das Wetter ist kalt aber, die Sonne scheint.','Das Wetter ist, kalt aber die Sonne scheint.'],1,'sg2','Vor «aber» steht ein Komma.'],
+['Ich glaube, dass er recht hat.',['Ich glaube dass er recht hat.','Ich glaube dass, er recht hat.','Ich glaube, dass, er recht hat.'],1,'sg2','Vor «dass» steht ein Komma.'],
+['Wenn es regnet, bleiben wir zu Hause.',['Wenn es regnet bleiben wir zu Hause.','Wenn, es regnet bleiben wir zu Hause.','Wenn es regnet bleiben, wir zu Hause.'],1,'sg2','Der Nebensatz am Anfang wird mit einem Komma abgetrennt.'],
+['Wir bleiben zu Hause, weil es regnet.',['Wir bleiben zu Hause weil es regnet.','Wir bleiben, zu Hause weil es regnet.','Wir bleiben zu Hause weil, es regnet.'],1,'sg2','Vor «weil» steht ein Komma.'],
+['Als wir ankamen, war es schon dunkel.',['Als wir ankamen war es schon dunkel.','Als wir ankamen war, es schon dunkel.','Als, wir ankamen war es schon dunkel.'],1,'sg2','Nach dem Nebensatz steht ein Komma.'],
+['Ich weiss, wo du wohnst.',['Ich weiss wo du wohnst.','Ich weiss wo, du wohnst.','Ich, weiss wo du wohnst.'],2,'sg2','Auch ein Nebensatz mit Fragewort wird mit Komma abgetrennt.'],
+['Obwohl er müde war, ging er zur Schule.',['Obwohl er müde war ging er zur Schule.','Obwohl er müde war ging, er zur Schule.','Obwohl, er müde war ging er zur Schule.'],1,'sg2','Nach dem Nebensatz steht ein Komma.'],
+['Der Mann, der dort steht, ist mein Onkel.',['Der Mann der dort steht, ist mein Onkel.','Der Mann, der dort steht ist mein Onkel.','Der Mann der dort steht ist mein Onkel.'],2,'sg3','Der Relativsatz wird vorne und hinten mit Komma abgetrennt.'],
+['Das Mädchen, das ich gestern traf, heisst Mia.',['Das Mädchen das ich gestern traf, heisst Mia.','Das Mädchen, das ich gestern traf heisst Mia.','Das Mädchen das ich gestern traf heisst Mia.'],2,'sg3','Der Relativsatz steht zwischen zwei Kommas.'],
+['Mia, meine Freundin, kommt morgen.',['Mia meine Freundin, kommt morgen.','Mia, meine Freundin kommt morgen.','Mia meine Freundin kommt morgen.'],2,'sg3','Der Einschub «meine Freundin» wird von Kommas eingeschlossen.'],
+['Tim, komm bitte her!',['Tim komm bitte her!','Tim, komm, bitte her!','Tim komm, bitte her!'],1,'sg4','Die Anrede wird mit einem Komma abgetrennt.'],
+['Ja, ich komme gern.',['Ja ich komme gern.','Ja, ich, komme gern.','Ja ich, komme gern.'],1,'sg4','Nach «Ja» steht ein Komma.'],
+['Er ging nach Hause, ohne sich zu verabschieden.',['Er ging nach Hause ohne sich zu verabschieden.','Er ging nach Hause ohne, sich zu verabschieden.','Er ging, nach Hause ohne sich zu verabschieden.'],3,'sg4','Vor «ohne zu» + Infinitiv steht immer ein Komma.'],
+['Sie lernt viel, um eine gute Note zu schreiben.',['Sie lernt viel um eine gute Note zu schreiben.','Sie lernt viel um, eine gute Note zu schreiben.','Sie lernt, viel um eine gute Note zu schreiben.'],3,'sg4','Vor «um zu» + Infinitiv steht immer ein Komma.']
+].forEach(r=>task.push({typ:'komma',stufe:r[2],lv:r[2]===3?2:1,cats:[r[3]],prompt:'Welcher Satz ist richtig geschrieben?',opts:[r[0]].concat(r[1]),answer:r[0],why:'<b>'+r[0]+'</b> '+r[4]}));
+[
+['Tim spielt Gitarre___ und singt dazu.',false,2,'sg2','Zusammengezogener Satz: Vor «und» steht kein Komma.'],
+['Ich bleibe zu Hause___ weil ich krank bin.',true,1,'sg2','Vor «weil» steht ein Komma.'],
+['Es regnet___ aber wir gehen hinaus.',true,1,'sg2','Vor «aber» steht ein Komma.'],
+['Anna___ komm bitte her!',true,1,'sg4','Die Anrede wird mit einem Komma abgetrennt.'],
+['Wir spielen Fussball___ Basketball und Tennis.',true,1,'sg1','In der Aufzählung trennt man mit Komma.'],
+['Ich spiele Gitarre ___ und Klavier.',false,1,'sg1','Vor «und» steht in der Aufzählung kein Komma.'],
+['Ich weiss___ wann der Bus kommt.',true,2,'sg2','Ein Nebensatz mit Fragewort wird mit Komma abgetrennt.'],
+['Sie ging nach Hause___ ohne sich zu verabschieden.',true,3,'sg4','Vor «ohne zu» steht ein Komma.'],
+['Wenn du willst___ kannst du mitkommen.',true,1,'sg2','Nach dem Nebensatz am Anfang steht ein Komma.'],
+['Nach der Pause___ schreiben wir einen Test.',false,2,'sg2','«Nach der Pause» ist kein Nebensatz, darum steht kein Komma.'],
+['Nein___ das stimmt nicht.',true,1,'sg4','Nach «Nein» steht ein Komma.']
+].forEach(j=>task.push({typ:'ja',stufe:j[2],lv:j[2]===3?2:1,cats:[j[3]],sent:j[0].replace(/___ ?/g,'<span class="gap">_</span> '),opts:['Komma setzen','Kein Komma'],answer:j[1]?'Komma setzen':'Kein Komma',why:'<b>'+(j[1]?'Komma setzen.':'Kein Komma.')+'</b> '+j[4]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'komma',teil:'satz',nr:10,title:'Kommasetzung',big:'Ich weiss, dass er kommt',desc:'Kommaregeln anwenden',
  ex:'«Ich weiss, dass er kommt.»',
  goals:['Ich setze das Komma in Aufzählungen.','Ich setze das Komma zwischen Haupt- und Nebensatz.','Ich setze Kommas beim Relativsatz, bei der Anrede und beim Ausruf.'],

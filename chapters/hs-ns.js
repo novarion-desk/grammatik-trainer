@@ -192,6 +192,49 @@ const EX=[
 const merk=()=>T(['Begriff','Merksatz'],[['Hauptsatz','Kann allein stehen. Verb an zweiter Stelle.'],['Nebensatz','Beginnt meist mit einem Einleitewort. Verb am Ende. Kommt nicht allein vor.'],['Satzverbindung','Hauptsatz + Hauptsatz (und, aber, oder, denn).'],['Satzgefüge','Hauptsatz + Nebensatz (weil, dass, obwohl, wenn, damit …).'],['Komma','Zwischen Haupt- und Nebensatz steht immer ein Komma.'],['Teilsatz','Jeder Teil eines zusammengesetzten Satzes.'],['Einleitewort','Relativpronomen (der, die, das), Fragewort (wer, wann, warum) oder unterordnende Konjunktion (weil, dass, obwohl, wenn).']]);
 const UEM={'haupt':{types:'teilsatz,hatns',cats:'sg1'},'verbindung':{types:'gefuege',cats:'sg2'},'einleite':{types:'einleit',cats:'sg3'},'stellung':{types:'konj',cats:'sg4'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{konj:6},opt:{pron:.3,adj:.2,det:{def:.5,indef:.3,poss:.2}},classes:[{gl:'Hauptsatz',cats:['sg1'],lv:1},{gl:'Nebensatz',cats:['sg1'],lv:1},{gl:'Einleitewort',cats:['sg3'],lv:1}],perClass:30});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Wir gehen nach Hause, <b>wenn es dunkel wird</b>.',1,1,'Das Verb «wird» steht am Ende: Nebensatz.'],
+['<b>Wir gehen nach Hause</b>, wenn es dunkel wird.',0,1,'Das Verb «gehen» steht an zweiter Stelle: Hauptsatz.'],
+['<b>Als die Pause begann</b>, rannten alle hinaus.',1,1,'Das Verb «begann» steht am Ende: Nebensatz.'],
+['Als die Pause begann, <b>rannten alle hinaus</b>.',0,2,'Hauptsatz: Die Personalform «rannten» steht an zweiter Stelle. Der Nebensatz davor zählt als erstes Satzglied.'],
+['Ich weiss, <b>dass du recht hast</b>.',1,1,'Das Verb «hast» steht am Ende: Nebensatz.'],
+['<b>Ich weiss</b>, dass du recht hast.',0,1,'Das Verb «weiss» steht an zweiter Stelle: Hauptsatz.'],
+['Mia lernt, <b>damit sie eine gute Note schreibt</b>.',1,1,'Das Verb «schreibt» steht am Ende: Nebensatz.'],
+['Das ist der Hund, <b>der mich gebissen hat</b>.',1,2,'Relativsatz: Das Verb «hat» steht am Ende.'],
+['<b>Obwohl es regnet</b>, gehen wir spazieren.',1,1,'Das Verb «regnet» steht am Ende: Nebensatz.'],
+['Obwohl es regnet, <b>gehen wir spazieren</b>.',0,2,'Hauptsatz: Die Personalform «gehen» steht an zweiter Stelle.']
+].forEach(q=>task.push({typ:'teilsatz',stufe:q[2],lv:q[2]===3?2:1,cats:['sg1'],sent:q[0],opts:HN,answer:HN[q[1]],why:'<b>'+HN[q[1]]+'.</b> '+q[3]}));
+[
+['Welches Wort leitet einen <b>Nebensatz</b> ein?',['obwohl','und','sondern','denn'],'obwohl','obwohl leitet einen Nebensatz ein.','sg4',1],
+['Welches Wort leitet einen <b>Nebensatz</b> ein?',['damit','aber','oder','sondern'],'damit','damit leitet einen Nebensatz ein.','sg4',1],
+['Welches Wort leitet einen <b>Nebensatz</b> ein?',['nachdem','und','aber','oder'],'nachdem','nachdem leitet einen Nebensatz ein.','sg4',1],
+['Welches Wort verbindet zwei <b>Hauptsätze</b>?',['denn','weil','dass','obwohl'],'denn','«denn» verbindet Hauptsätze. Das Verb bleibt an zweiter Stelle.','sg4',2],
+['Wo steht die Personalform nach «weil»?',['am Satzende','an zweiter Stelle','an erster Stelle','vor dem Subjekt'],'am Satzende','Im Nebensatz steht die Personalform am Schluss.','sg4',1],
+['Wo steht die Personalform nach «denn»?',['an zweiter Stelle','am Satzende','an erster Stelle','nirgends'],'an zweiter Stelle','«denn» leitet einen Hauptsatz ein.','sg4',2]
+].forEach(k=>task.push({typ:'konj',stufe:k[5],lv:1,cats:[k[4]],prompt:k[0],opts:k[1],answer:k[2],why:k[3]}));
+[
+['Tim spielt Fussball, und Mia liest ein Buch.','Satzverbindung',1,'Zwei Hauptsätze mit «und».'],
+['Wir bleiben drinnen, weil es regnet.','Satzgefüge',1,'Hauptsatz und Nebensatz mit «weil».'],
+['Der Hund schläft auf dem Sofa.','einfacher Satz',1,'Nur ein Teilsatz.'],
+['Ich glaube, dass er kommt.','Satzgefüge',1,'Hauptsatz und Nebensatz mit «dass».'],
+['Es regnet, aber wir gehen hinaus.','Satzverbindung',1,'«aber» verbindet zwei Hauptsätze.'],
+['Als wir ankamen, war das Spiel schon vorbei.','Satzgefüge',2,'Nebensatz mit «als» und Hauptsatz.'],
+['Mia lacht, denn der Film ist lustig.','Satzverbindung',2,'«denn» verbindet zwei Hauptsätze.'],
+['Das Mädchen, das neben mir sitzt, heisst Lena.','Satzgefüge',2,'Der Relativsatz ist ein Nebensatz.']
+].forEach(r=>task.push({typ:'gefuege',stufe:r[2],lv:1,cats:['sg2'],sent:'«'+r[0]+'»',opts:['einfacher Satz','Satzverbindung','Satzgefüge'],answer:r[1],why:'<b>'+r[1]+'.</b> '+r[3]}));
+[
+['Wir gehen heim, weil es spät ist.',true,1,'Nebensatz «weil es spät ist»: Verb am Ende.'],
+['Anna kocht, und Tim deckt den Tisch.',false,1,'Zwei Hauptsätze: kein Nebensatz.'],
+['Ich hoffe, dass du kommst.',true,1,'Nebensatz «dass du kommst»: Verb am Ende.'],
+['Der Bus fährt ab, und wir winken.',false,1,'Zwei Hauptsätze: kein Nebensatz.']
+].forEach(n=>task.push({typ:'hatns',stufe:n[2],lv:1,cats:['sg1'],sent:'«'+n[0]+'»',opts:['Ja','Nein'],answer:n[1]?'Ja':'Nein',why:'<b>'+(n[1]?'Ja':'Nein')+'.</b> '+n[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'hs-ns',teil:'satz',nr:7,title:'Hauptsatz, Nebensatz und Satzgefüge',big:'Ich bleibe, weil ich müde bin',desc:'Satzverbindung, Satzgefüge, Einleitewörter und Verbstellung',
  ex:'«Ich bleibe zu Hause, weil ich krank bin.»',
  goals:['Ich unterscheide Hauptsatz und Nebensatz.','Ich erkenne Satzverbindung und Satzgefüge.','Ich erkenne Einleitewörter von Nebensätzen.','Ich bilde Satzverbindungen und Satzgefüge aus zwei einfachen Sätzen.','Ich stelle das Verb im Nebensatz richtig.'],

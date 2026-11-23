@@ -190,6 +190,52 @@ const EX=[
 const merk=()=>T(['Thema','Merksatz'],[['Rohform','Grundform des Verbs: lachen, gehen, aufstehen. Endet meist auf -en.'],['Rohform des Satzes','Alle Satzglieder lose, Verb in der Grundform am Ende. Ohne Subjekt: verbale Wortkette (Den Teppich ausrollen).'],['Verbale Teile','Personalform, Infinitiv, Partizip, Verbzusatz. Sie haben einen festen Platz.'],['Prädikat','Sagt, was geschieht. Besteht aus einem oder mehreren verbalen Teilen.'],['Mehrere Teile','haben/sein + Partizip II · Modalverb + Rohform · trennbares Verb · werden + Rohform'],['Satzklammer','Die Teile des Prädikats umschliessen den Rest des Satzes.'],['Stellung','Aussagesatz: Verb an Position 2 · Nebensatz: Verb am Ende']]);
 const UEM={'rohform':{types:'rohform',cats:'sg1'},'teile':{types:'zaehlen',cats:'sg2'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:6,konj:1},opt:{pron:.3,adj:.2,det:{def:.5,indef:.3,poss:.2}},classes:[{gl:'Verbale Teile',cats:['sg2'],lv:1}],perClass:34});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Wie lautet die Rohform von «wir sind gegangen»?',['gehen','gegangen','gingen','geht'],'gehen','Die Rohform (Infinitiv) lautet «gehen».',1],
+['Wie lautet die Rohform von «ihr habt gelesen»?',['lesen','gelesen','last','liest'],'lesen','Die Rohform (Infinitiv) lautet «lesen».',1],
+['Wie lautet die Rohform von «du kommst an»?',['ankommen','kommen','angekommen','an'],'ankommen','Das Verb heisst «ankommen». Die Vorsilbe «an» gehört dazu.',2],
+['Wie lautet die Rohform von «sie ruft an»?',['anrufen','rufen','angerufen','ruft'],'anrufen','Das Verb heisst «anrufen».',2],
+['Wie lautet die Rohform von «er steht auf»?',['aufstehen','stehen','aufgestanden','steht'],'aufstehen','Das Verb heisst «aufstehen».',2],
+['Wie lautet die Rohform von «ich habe gewonnen»?',['gewinnen','gewonnen','gewann','gewinne'],'gewinnen','Die Rohform lautet «gewinnen».',2],
+['Wie lautet die Rohform von «wir fahren ab»?',['abfahren','fahren','abgefahren','fuhren'],'abfahren','Das Verb heisst «abfahren».',2],
+['Wie lautet die Rohform von «sie wird kommen»?',['kommen','werden','gekommen','kommt'],'kommen','«wird» ist das Hilfsverb. Das Verb heisst «kommen».',3]
+].forEach(r=>task.push({typ:'rohform',stufe:r[4],lv:r[4]===3?2:1,cats:['sg1'],prompt:r[0],opts:r[1],answer:r[2],why:r[3]}));
+[
+['Wie viele Teile hat das Prädikat? «Anna hat gelacht.»',['2','1','3'],'2','Zwei Teile: hat … gelacht.',1],
+['Wie viele Teile hat das Prädikat? «Tim steht früh auf.»',['2','1','3'],'2','Zwei Teile: steht … auf.',2],
+['Wie viele Teile hat das Prädikat? «Wir spielen Fussball.»',['1','2','3'],'1','Ein Teil: spielen.',1],
+['Wie viele Teile hat das Prädikat? «Mia hat das Buch gelesen.»',['2','1','3'],'2','Zwei Teile: hat … gelesen.',1],
+['Wie viele Teile hat das Prädikat? «Der Zug fährt pünktlich ab.»',['2','1','3'],'2','Zwei Teile: fährt … ab.',2],
+['Wie viele Teile hat das Prädikat? «Du musst heute früh aufstehen.»',['2','1','3'],'2','Zwei Teile: musst … aufstehen.',2],
+['Wie viele Teile hat das Prädikat? «Ich werde morgen kommen.»',['2','1','3'],'2','Zwei Teile: werde … kommen.',2],
+['Wie viele Teile hat das Prädikat? «Es regnet.»',['1','2','3'],'1','Ein Teil: regnet.',1]
+].forEach(z=>task.push({typ:'zaehlen',stufe:z[4],lv:z[4]===3?2:1,cats:['sg2'],prompt:z[0],opts:z[1],answer:z[2],why:z[3]}));
+[
+['Mia *hat gestern ein Buch *gelesen.',1,'Das Prädikat: «hat … gelesen».'],
+['Der Zug *fährt pünktlich *ab.',1,'Das Prädikat: «fährt … ab».'],
+['Tim *steht früh *auf.',1,'Das Prädikat: «steht … auf».'],
+['Wir *haben im Park *gespielt.',1,'Das Prädikat: «haben … gespielt».'],
+['Ich *werde morgen *kommen.',2,'Das Prädikat: «werde … kommen».'],
+['Er *kann gut *schwimmen.',2,'Das Prädikat: «kann … schwimmen».']
+].forEach(m=>{
+  const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});
+  task.push({typ:'markieren',stufe:m[1],lv:m[1]===3?2:1,cats:['sg2'],tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe alle Teile des Prädikats an.',why:m[2]});
+});
+[
+['Wie nennt man die Rohform eines Verbs noch?',['Infinitiv','Partizip','Personalform','Imperativ'],'Infinitiv','Rohform und Infinitiv sind dasselbe: «lachen».','sg1',1],
+['Welcher Teil des Prädikats steht im Aussagesatz an zweiter Stelle?',['die Personalform','das Partizip','der Infinitiv','die Vorsilbe'],'die Personalform','Beispiel: «Mia <b>hat</b> gestern gelacht.»','sg3',1],
+['Wo steht das Partizip II im Aussagesatz mit «haben»?',['am Satzende','an zweiter Stelle','am Satzanfang','direkt nach dem Subjekt'],'am Satzende','Satzklammer: «Mia hat gestern ein Buch gelesen.»','sg3',2],
+['Wie nennt man «hat … gelesen» zusammen?',['das Prädikat (verbale Wortkette)','das Subjekt','das Objekt','die Adverbiale'],'das Prädikat (verbale Wortkette)','Beide Teile bilden zusammen das Prädikat.','sg4',2],
+['Was ist bei «Der Zug fährt ab.» der abgetrennte Teil?',['ab','fährt','Zug','der'],'ab','Das Verb «abfahren» trennt sich: «fährt … ab».','sg2',2],
+['Welche Wortart ist «hat» in «Mia hat gelacht.»?',['Hilfsverb','Nomen','Adjektiv','Pronomen'],'Hilfsverb','«hat» hilft, die Vergangenheit (Perfekt) zu bilden.','sg5',1]
+].forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'verbale',teil:'satz',nr:4,title:'Verbale Teile und Rohform des Satzes',big:'Er hat gestern gelacht',desc:'Verbale Teile benennen, Rohform des Satzes und verbale Wortkette bilden',
  ex:'«Er '+mk('verb','hat')+' gestern '+mk('verb','gelacht')+'.»',
  goals:['Ich bilde die Rohform eines Verbs.','Ich nenne die verbalen Teile: Personalform, Infinitiv, Partizip, Verbzusatz.','Ich finde alle verbalen Teile im Satz.','Ich weiss, was die Rohform eines Satzes ist, und kann sie bilden (auch als verbale Wortkette).','Ich erkenne die Satzklammer.'],

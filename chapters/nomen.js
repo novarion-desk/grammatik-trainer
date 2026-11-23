@@ -287,6 +287,23 @@ const EX=[
 const merk=()=>T(['Thema','Merksatz'],[['Erkennen','Artikelprobe: der, die, das, ein, eine. Nomen schreibt man gross.'],['Geschlecht','männlich der · weiblich die · sächlich das. Lerne Nomen mit Artikel.'],['Endungen','-ung, -heit, -keit, -schaft, -in → die · -chen, -lein → das'],['Mehrzahl','-e, -e mit Umlaut, -er, -n/-en, -s, nur Umlaut, gleich'],['Gross','Verben und Adjektive werden nach Artikel, beim/zum/im, etwas, nichts, viel, alles zu Nomen.'],['Arten','Nomen nennen Lebewesen, Dinge, Gedachtes · Eigennamen und Gattungsnamen'],['Zusammensetzung','Das letzte Wort bestimmt den Artikel: das Haus → das Schulhaus.'],['Homonyme','Gleiche Schreibung oder Aussprache, andere Bedeutung: die Bank, der See / die See'],['Nur Einzahl / Mehrzahl','Durst, Geduld · Ferien, Eltern'],['Fachwörter','Nomen = Hauptwort · Artikel = Begleiter · Genus = Geschlecht · Numerus = Zahl · Kasus = Fall · deklinieren']]);
 const UEM={'genus':{types:'artikel',cats:'sg1'},'zahl':{types:'mehrzahl,singpl',cats:'sg2'},'gross':{types:'gross',cats:'sg3'},'homonyme':{types:'homonym',cats:'sg5'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,konj:1,pers:1},opt:{pron:.2,adj:.4,det:{def:.55,indef:.35,poss:.1}},classes:[{gl:'Nomen',cats:['sg3'],lv:1},{gl:'Artikel',cats:['sg1'],lv:1,instr:'Tippe alle Artikel an.'}],perClass:34});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Welcher Artikel gehört zu «Mädchen»?',['das','die','der','den'],'das','Wörter auf -chen sind sächlich: das Mädchen.','sg1'],
+['Wie lautet die Mehrzahl von «das Kind»?',['die Kinder','die Kinde','die Kinds','die Kindern'],'die Kinder','Einzahl «das Kind», Mehrzahl «die Kinder».','sg2'],
+['Wie lautet die Mehrzahl von «der Apfel»?',['die Äpfel','die Apfel','die Apfels','die Äpfeln'],'die Äpfel','Einzahl «der Apfel», Mehrzahl «die Äpfel».','sg2'],
+['Wie lautet die Mehrzahl von «das Auto»?',['die Autos','die Auten','die Autoen','die Äuter'],'die Autos','Einzahl «das Auto», Mehrzahl «die Autos».','sg2'],
+['Welches Wort ist ein Nomen?',['Freude','freuen','froh','sehr'],'Freude','«Freude» ist ein Nomen (ein Gefühl).','sg4'],
+['Wie nennt man Namen von Personen und Orten wie «Anna» oder «Bern»?',['Eigennamen','Sammelnamen','Abstrakta','Konkreta'],'Eigennamen','Eigennamen bezeichnen eine bestimmte Person oder einen bestimmten Ort.','sg4'],
+['Welches Nomen kann man <b>nicht</b> anfassen?',['Mut','Tisch','Hund','Buch'],'Mut','«Mut» ist ein Gedanke oder Gefühl (Abstraktum). Tisch, Hund und Buch kann man anfassen.','sg4'],
+['Wie schreibt man «das Laufen» in «Das ___ macht Spass.»?',['Laufen','laufen','Läufen','läufen'],'Laufen','Verben werden zu Nomen, wenn ein Artikel davorsteht: das Laufen.','sg3']
+].forEach(z=>task.push({typ:'wissen',stufe:1,cats:[z[4]],prompt:z[0],opts:z[1],answer:z[2],why:z[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'nomen',teil:'wort',nr:2,title:'Nomen',big:'Der Hund, die Katze, das Kind',desc:'Wörter für Lebewesen, Dinge und Gedanken',
  ex:'«'+mk('nomen','Der Hund')+', '+mk('nomen','die Katze')+', '+mk('nomen','das Kind')+'»',
  goals:['Ich erkenne Nomen mit der Artikelprobe.','Ich kenne das Geschlecht (männlich, weiblich, sächlich) und setze den richtigen Artikel.','Ich bilde die Mehrzahl von Nomen und kenne Nomen ohne Einzahl oder Mehrzahl.','Ich schreibe Nomen und nominalisierte Wörter richtig gross.','Ich unterscheide Eigennamen und Gattungsnamen und weiss, ob ein Nomen ein Lebewesen, ein Ding oder Gedachtes nennt.','Ich bilde zusammengesetzte Nomen und erkenne Homonyme.','Ich kenne die Fachbegriffe zum Nomen (Begleiter, Genus, Numerus, Kasus, deklinieren).'],

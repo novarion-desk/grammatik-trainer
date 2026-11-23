@@ -170,6 +170,58 @@ const merk=()=>'<h3>🔀 Die Verschiebeprobe</h3><p>Mit der <b>Verschiebeprobe</
  '<h3>⚠️ Stolpersteine</h3><ul><li><b>Zweiteiliges Verb:</b> «hat» und «verloren» gehören zusammen und zählen als <b>ein</b> Satzglied, auch wenn sie getrennt stehen.</li><li><b>Nicht zu klein abgrenzen:</b> «Der kleine Hund» ist ein Satzglied, nicht drei.</li><li><b>Verb nicht verschieben:</b> Die Personalform bleibt im Aussagesatz an zweiter Stelle («Heute spielt er.», nicht «Heute er spielt.»).</li><li><b>Sinn prüfen:</b> Bleibt die Aussage gleich?</li></ul>'+
  '<h3>🔤 Fachbegriffe</h3>'+T(['Begriff','Bedeutung'],[['Verschiebeprobe','Verfahren, um Satzglieder zu finden (auch Umstellprobe)'],['Satzglied','Wort oder Wortgruppe, die beim Umstellen zusammenbleibt'],['Personalform','Verb, das sich nach der Person richtet; im Aussagesatz an zweiter Stelle']]);
 const UEM={'probe':{types:'trenn,probe',cats:'sg1,sg2'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Lena | spielt | Klavier .',1,''],['Der Zug | kommt | pünktlich .',1,''],['Heute | schreibt | die Klasse | einen Test .',1,''],['Mia | liest | ein Buch .',1,''],
+['Meine Oma | backt | am Sonntag | einen Kuchen .',2,''],['Im Winter | fahren | wir | nach Davos .',2,''],['Der Lehrer | gibt | den Kindern | Hausaufgaben .',2,''],['Nach dem Training | isst | Noah | einen Apfel .',2,''],
+['Die Katze | hat | gestern | eine Maus | gefangen .',2,' «hat» und «gefangen» gehören beide zum Prädikat.'],
+['Mia | ruft | ihre Freundin | am Abend | an .',2,' «ruft» und «an» gehören beide zum Prädikat.'],
+['Wegen des Regens | findet | das Fest | heute | nicht | statt .',3,' «findet» und «statt» gehören beide zum Prädikat.'],
+['Der freundliche Busfahrer | hilft | der alten Frau | beim Einsteigen .',3,''],
+['Gestern Abend | hat | mein Bruder | seiner Freundin | einen Brief | geschrieben .',3,' «hat» und «geschrieben» gehören beide zum Prädikat.']
+].forEach(t=>{
+  const words=[],cuts=[];
+  t[0].split(' ').forEach(w=>{if(w==='|'){cuts.push(words.length-1);}else if(w!=='.'){words.push(w);}});
+  task.push({typ:'trenn',stufe:t[1],lv:t[1]===3?2:1,cats:['sg1'],tokens:words,cuts,instr:'Tippe zwischen zwei Wörter, wo eine Satzgliedgrenze liegt.',why:'Die Satzglieder: '+t[0].replace(' .','.')+t[2]});
+});
+[
+['Welche Umstellung ist richtig? «Mia spielt heute Klavier.»',['Heute spielt Mia Klavier.','Heute Mia spielt Klavier.','Klavier Mia spielt heute.','Mia heute Klavier spielt.'],'Heute spielt Mia Klavier.','Die Personalform «spielt» bleibt an zweiter Stelle.','sg2',1],
+['Welche Umstellung ist richtig? «Der Bus kommt heute zu spät.»',['Heute kommt der Bus zu spät.','Heute der Bus kommt zu spät.','Zu spät der Bus kommt heute.','Kommt heute der Bus zu spät.'],'Heute kommt der Bus zu spät.','Genau ein Satzglied steht vor der Personalform «kommt».','sg2',1],
+['Welche Umstellung ist <b>falsch</b>? «Wir fahren im Sommer nach Italien.»',['Im Sommer wir fahren nach Italien.','Nach Italien fahren wir im Sommer.','Im Sommer fahren wir nach Italien.','Wir fahren nach Italien im Sommer.'],'Im Sommer wir fahren nach Italien.','Die Personalform «fahren» muss an zweiter Stelle stehen.','sg2',2],
+['Wie viele Satzglieder hat «Am Montag schreibt die Klasse einen Test.»?',['4','3','5','6'],'4','Am Montag · schreibt · die Klasse · einen Test.','sg1',1],
+['Wie viele Satzglieder hat «Meine Tante wohnt in Zürich.»?',['3','2','4','5'],'3','Meine Tante · wohnt · in Zürich.','sg1',1],
+['Wie viele Satzglieder hat «Das Kind hat den Ball ins Wasser geworfen.»?',['4','5','3','6'],'4','Das Kind · hat … geworfen · den Ball · ins Wasser.','sg1',2],
+['Wie viele Satzglieder hat «Gestern hat uns der Lehrer eine Geschichte vorgelesen.»?',['5','4','6','7'],'5','Gestern · hat … vorgelesen · uns · der Lehrer · eine Geschichte.','sg1',3],
+['Wie viele Satzglieder hat «Es regnet.»?',['2','1','3','4'],'2','Es · regnet.','sg1',1],
+['Welche Gruppe lässt sich nur <b>gemeinsam</b> verschieben?',['die neue Lehrerin','die neue','neue Lehrerin schreibt','Lehrerin die neue'],'die neue Lehrerin','Die ganze Gruppe bildet ein Satzglied.','sg1',2],
+['Wie viele Satzglieder stehen im Aussagesatz <b>vor</b> der Personalform?',['genau eines','keines','mindestens zwei','beliebig viele'],'genau eines','Vor der Personalform steht im Aussagesatz genau ein Satzglied.','sg2',2],
+['Welche Umstellung ist richtig? «Lea schenkt ihrer Schwester ein Buch.»',['Ihrer Schwester schenkt Lea ein Buch.','Ihrer Schwester Lea schenkt ein Buch.','Schenkt Lea ihrer Schwester ein Buch.','Ein Buch ihrer Schwester schenkt Lea.'],'Ihrer Schwester schenkt Lea ein Buch.','«ihrer Schwester» ist ein Satzglied. Die Personalform bleibt an zweiter Stelle.','sg2',2],
+['Was passiert mit dem Satzinhalt bei der Verschiebeprobe?',['Er bleibt gleich.','Er verändert sich immer.','Er wird zur Frage.','Er wird verneint.'],'Er bleibt gleich.','Nur die Reihenfolge ändert sich, nicht die Aussage.','sg2',1]
+].forEach(v=>task.push({typ:'probe',stufe:v[5],lv:v[5]===3?2:1,cats:[v[4]],prompt:v[0],opts:v[1],answer:v[2],why:v[3]}));
+[
+['Mit welcher Frage findest du das <b>Subjekt</b>?',['Wer oder was?','Wen oder was?','Wem?','Wessen?'],'Wer oder was?','Subjekt: Wer oder was?','sg3',1],
+['Mit welcher Frage findest du das <b>Akkusativobjekt</b>?',['Wen oder was?','Wer oder was?','Wem?','Wessen?'],'Wen oder was?','Akkusativobjekt: Wen oder was?','sg3',1],
+['Mit welcher Frage findest du das <b>Dativobjekt</b>?',['Wem?','Wen oder was?','Wer oder was?','Wessen?'],'Wem?','Dativobjekt: Wem?','sg3',1],
+['Was ist in «Anna schenkt ihrem Vater ein Buch.» das Dativobjekt?',['ihrem Vater','ein Buch','Anna','schenkt'],'ihrem Vater','Frage: Wem schenkt Anna ein Buch? → ihrem Vater.','sg3',2],
+['Was ist in «Anna schenkt ihrem Vater ein Buch.» das Akkusativobjekt?',['ein Buch','ihrem Vater','Anna','schenkt'],'ein Buch','Frage: Wen oder was schenkt Anna? → ein Buch.','sg3',2],
+['Was ist in «Der Hund jagt die Katze.» das Subjekt?',['Der Hund','die Katze','jagt','Katze'],'Der Hund','Frage: Wer oder was jagt? → Der Hund.','sg3',1],
+['Was ist in «Der Hund jagt die Katze.» das Akkusativobjekt?',['die Katze','Der Hund','jagt','Hund'],'die Katze','Frage: Wen oder was jagt der Hund? → die Katze.','sg3',1],
+['Das Prädikat besteht manchmal aus zwei Teilen. In welchem Satz?',['Mia hat gestern gelacht.','Mia lacht.','Mia lacht laut.','Lacht Mia?'],'Mia hat gestern gelacht.','«hat» und «gelacht» bilden zusammen das Prädikat.','sg3',3]
+].forEach(f=>task.push({typ:'frage',stufe:f[5],lv:f[5]===3?2:1,cats:[f[4]],prompt:f[0],opts:f[1],answer:f[2],why:f[3]}));
+[
+["umstellen",1,"sg1","Stelle den Satz um. Beginne mit «Morgen».","Wir fahren morgen nach Bern.","Morgen fahren wir nach Bern.",[],false,"Das Prädikat bleibt an zweiter Stelle."],
+["umstellen",1,"sg1","Stelle den Satz um. Beginne mit «Am Montag».","Die Klasse schreibt am Montag einen Test.","Am Montag schreibt die Klasse einen Test.",[],false,"Das Prädikat bleibt an zweiter Stelle: «Am Montag» ist ein Satzglied."],
+["umstellen",2,"sg1","Stelle den Satz um. Beginne mit «Ein Eis».","Lena isst heute ein Eis.","Ein Eis isst Lena heute.",["Ein Eis isst heute Lena."],false,"«Ein Eis» ist das Akkusativobjekt. Das Prädikat bleibt an zweiter Stelle."],
+["umstellen",2,"sg1","Stelle den Satz um. Beginne mit «In der Pause».","Tim spielt in der Pause Fussball.","In der Pause spielt Tim Fussball.",[],false,"«In der Pause» ist ein Satzglied. Das Prädikat bleibt an zweiter Stelle."],
+["umstellen",3,"sg1","Stelle den Satz um. Beginne mit «Gestern».","Mia hat gestern ihrem Bruder ein Buch geschenkt.","Gestern hat Mia ihrem Bruder ein Buch geschenkt.",[],false,"«hat» bleibt an zweiter Stelle, «geschenkt» bleibt am Schluss."],
+["umstellen",3,"sg1","Stelle den Satz um. Beginne mit «Den Ball».","Der Junge hat den Ball über den Zaun geworfen.","Den Ball hat der Junge über den Zaun geworfen.",[],false,"«hat» bleibt an zweiter Stelle, «geworfen» am Schluss."]
+].forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'verschiebe',teil:'satz',nr:2,title:'Die Verschiebeprobe',big:'Der Hund | bellt | laut',desc:'Satzglieder durch Umstellen finden und abtrennen',
  ex:'«Der Hund | bellt | laut.»',
  goals:['Ich stelle einen Satz auf mehrere Arten um und lasse die Personalform an zweiter Stelle.','Ich erkenne, was beim Umstellen zusammenbleibt: ein Satzglied.','Ich setze zwischen die Satzglieder einen Strich und zähle sie.','Ich weiss, dass ein Verb aus mehreren Teilen (hat … gelacht) nur ein Satzglied ist.','Ich schreibe den Fachbegriff «Verschiebeprobe» richtig.'],

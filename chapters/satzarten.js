@@ -183,6 +183,68 @@ const EX=[
 const merk=()=>T(['Satzart','Satzzeichen','Beispiel'],[['Aussagesatz','.','Der Hund bellt.'],['Fragesatz','?','Kommst du mit?'],['Aufforderungssatz','! oder .','Komm her!'],['Ausrufesatz (Zusatz)','!','Wie schön das ist!']])+T(['Satzbau','Merkmal'],[['Einfacher Satz','eine Personalform, kann lang sein'],['Zusammengesetzter Satz','mindestens zwei Teilsätze'],['Satzfragment','keine Personalform']])+
  '<ul><li>Ja-/Nein-Frage: Verb an erster Stelle.</li><li>Ergänzungsfrage: Fragewort + Verb an zweiter Stelle.</li><li>Aufforderung: Befehlsform, Verb vorne.</li></ul>';
 const UEM={'arten':{types:'satzart',cats:'sg1'},'bau':{types:'bau',cats:'sg4'},'frage':{types:'zeichen',cats:'sg2'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+const Z4=['Aussagesatz','Fragesatz','Aufforderungssatz','Ausrufesatz'];
+const Q2=[
+['Die Sonne scheint heute.',0,1,'Aussagesatz.'],['Hast du Geschwister?',1,1,'Fragesatz.'],['Schliess bitte die Tür!',2,1,'Aufforderungssatz.'],['Was für ein schöner Tag!',3,1,'Ausrufesatz.'],
+['Wir haben morgen frei.',0,1,'Aussagesatz.'],['Wann beginnt der Film?',1,1,'Fragesatz.'],['Setz dich hin!',2,1,'Aufforderungssatz.'],['Wie toll das ist!',3,1,'Ausrufesatz.'],
+['Der Bus fährt um acht Uhr.',0,1,'Aussagesatz.'],['Woher kommst du?',1,1,'Fragesatz.'],['Öffnet bitte eure Bücher.',2,2,'Aufforderungssatz: eine Bitte oder ein Befehl.'],['Ich habe mich so gefreut!',3,2,'Ausrufesatz: ein Gefühl wird ausgedrückt.'],
+['Könntest du mir kurz helfen?',1,2,'Höfliche Bitte in Fragenform: Fragesatz.'],['Du kommst morgen pünktlich.',0,2,'Aussagesatz in Befehlston. Der Form nach ein Aussagesatz.'],
+['Lass uns gehen!',2,2,'Aufforderungssatz.'],['Nein, wie peinlich!',3,2,'Ausrufesatz.'],['Ich weiss nicht, ob er kommt.',0,3,'Aussagesatz mit indirekter Frage.'],['Gib mir mal den Stift.',2,2,'Aufforderungssatz.']
+];
+Q2.forEach(q=>task.push({typ:'satzart',stufe:q[2],lv:q[2]===3?2:1,cats:['sg1'],sent:'«'+q[0]+'»',opts:Z4,answer:Z4[q[1]],why:'<b>'+Z4[q[1]]+'.</b> '+q[3]}));
+const S2=[
+['Wo ist mein Heft___',['?','.','!',','],'?','Fragesatz: Fragezeichen.',1],
+['Ich mag Schokolade___',['.','?','!',','],'.','Aussagesatz: Punkt.',1],
+['Pass auf___',['!','.','?',','],'!','Aufforderung: Ausrufezeichen.',1],
+['Das ist ja toll___',['!','.','?',','],'!','Ausruf: Ausrufezeichen.',1],
+['Wer hat das Fenster geöffnet___',['?','.','!',','],'?','Fragesatz: Fragezeichen.',1],
+['Morgen beginnen die Ferien___',['.','?','!',','],'.','Aussagesatz: Punkt.',1],
+['Sie fragte, wo ich wohne___',['.','?','!',','],'.','Indirekte Frage: Punkt.',2],
+['Er rief: «Komm schnell___»',['!','.','?',','],'!','Die direkte Aufforderung endet mit einem Ausrufezeichen.',3]
+];
+S2.forEach(s=>task.push({typ:'zeichen',stufe:s[4],lv:s[4]===3?2:1,cats:['sg2'],sent:s[0].replace('___','<span class="gap">__</span>'),opts:s[1],answer:s[2],why:'<b>'+s[2]+'</b> '+s[3]}));
+const BAU2=['Einfacher Satz','Zusammengesetzter Satz','Satzfragment'];
+const B2=[
+['Der Hund schläft auf dem Sofa.',0,1,'Eine Personalform («schläft»): einfacher Satz.'],
+['Wir spielen heute Fussball.',0,1,'Eine Personalform: einfacher Satz.'],
+['Mia liest ein Buch, und Tim löst ein Rätsel.',1,1,'Zwei Personalformen («liest», «löst»): zusammengesetzter Satz.'],
+['Ich bleibe zu Hause, weil ich krank bin.',1,1,'Zwei Personalformen («bleibe», «bin»): zusammengesetzter Satz.'],
+['Sobald es klingelt, gehen wir hinaus.',1,1,'Zwei Personalformen («klingelt», «gehen»): zusammengesetzter Satz.'],
+['Ruhe bitte!',2,1,'Keine Personalform: Satzfragment.'],
+['Alles Gute zum Geburtstag!',2,1,'Keine Personalform: Satzfragment.'],
+['Gute Besserung!',2,1,'Keine Personalform: Satzfragment.'],
+['Meine kleine Schwester hat gestern im Garten einen Frosch gefunden.',0,2,'Nur eine Personalform («hat»): einfacher Satz.'],
+['Der Lehrer sagt, dass wir leise sein sollen.',1,2,'Zwei Personalformen («sagt», «sollen»): zusammengesetzter Satz.'],
+['Wegen des starken Regens bleiben wir heute drinnen.',0,2,'Eine Personalform («bleiben»): einfacher Satz, auch mit langer Einleitung.'],
+['Rauchen verboten.',2,2,'Keine Personalform: Satzfragment.'],
+['Tim kam, sah und siegte.',1,3,'Drei Personalformen («kam», «sah», «siegte») mit gemeinsamem Subjekt: zusammengesetzter Satz.'],
+['Die Frau, die neben uns wohnt, arbeitet im Spital.',1,3,'Zwei Personalformen («wohnt», «arbeitet»): zusammengesetzter Satz mit eingeschobenem Nebensatz.']
+];
+B2.forEach(b=>task.push({typ:'bau',stufe:b[2],lv:b[2]===3?2:1,cats:[b[1]===2?'sg5':'sg4'],sent:'«'+b[0]+'»',opts:BAU2,answer:BAU2[b[1]],why:'<b>'+BAU2[b[1]]+'.</b> '+b[3]}));
+[
+['Wie viele Personalformen hat «Die Katze schläft auf dem Sofa.»?',['1','2','3','0'],'1','Nur «schläft».','sg4',1],
+['Wie viele Personalformen hat «Ich bleibe zu Hause, weil ich krank bin.»?',['2','1','3','0'],'2','«bleibe» und «bin».','sg4',1],
+['Wie viele Personalformen hat «Wir haben gestern gespielt und gewonnen.»?',['1','2','3','0'],'1','Nur «haben». «gespielt» und «gewonnen» sind Partizipien.','sg4',2],
+['Was braucht ein Satzfragment <b>nicht</b>?',['eine Personalform','ein Ausrufezeichen','ein Nomen','einen Anfang'],'eine Personalform','Ein Satzfragment hat keine Personalform. Darum ist es kein vollständiger Satz.','sg5',2],
+['Warum sagt man «Danke!» und nicht «Ich danke dir!»?',['Es ist kürzer und im Gespräch verständlich.','Es ist grammatisch falsch.','Es ist ein Nebensatz.','Es ist ein Fragesatz.'],'Es ist kürzer und im Gespräch verständlich.','Satzfragmente sind in der Alltagssprache normal und kein Fehler.','sg5',2],
+['Welche Satzart hat meistens ein Fragezeichen am Ende?',['Fragesatz','Aussagesatz','Aufforderungssatz','Ausrufesatz'],'Fragesatz','Fragesätze enden mit einem Fragezeichen.','sg2',1],
+['Welche Satzart steht oft in einem Rezept («Rühre die Eier schaumig»)?',['Aufforderungssatz','Fragesatz','Ausrufesatz','Aussagesatz'],'Aufforderungssatz','Rezepte geben Anweisungen.','sg1',2],
+['Was ist ein Ausrufesatz?',['ein Satz, der ein starkes Gefühl ausdrückt','ein Satz mit Fragewort','ein Satz ohne Verb','ein Satz mit «dass»'],'ein Satz, der ein starkes Gefühl ausdrückt','Zum Beispiel: «Das ist ja unglaublich!»','sg1',1]
+].forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+[
+['umformen',1,'sg3','Forme den Aussagesatz in einen Fragesatz um.','Mia kommt heute.','Kommt Mia heute?',[],false,'Die Personalform steht an erster Stelle: «Kommt Mia heute?»'],
+['umformen',1,'sg3','Forme den Aussagesatz in einen Fragesatz um.','Du hast Hunger.','Hast du Hunger?',[],false,'Verb an die erste Stelle: «Hast du Hunger?»'],
+['umformen',1,'sg3','Forme den Aussagesatz in einen Fragesatz um.','Tim spielt Gitarre.','Spielt Tim Gitarre?',[],false,'Verb an die erste Stelle: «Spielt Tim Gitarre?»'],
+['umformen',2,'sg3','Forme die Frage in einen Aussagesatz um.','Hat Lena ein Handy?','Lena hat ein Handy.',[],false,'Das Subjekt steht wieder vorne: «Lena hat ein Handy.»'],
+['umformen',2,'sg3','Forme den Aussagesatz in einen Aufforderungssatz um (Du-Form).','Du machst die Tür zu.','Mach die Tür zu!',['Mach die Tür zu.'],false,'Befehlsform: «Mach die Tür zu!»']
+].forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6],strict:!!r[7],why:'<b>'+r[5]+'</b> '+r[8]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'satzarten',teil:'satz',nr:5,title:'Satzarten und Satzbau',big:'Aussage, Frage, Aufforderung',desc:'Grundfunktionen, einfacher und zusammengesetzter Satz, Satzfragment',
  ex:'«Kommst du mit?» · «Komm mit!» · «Wie schön!»',
  goals:['Ich kenne die drei Grundfunktionen der Rede: Aussage, Frage, Aufforderung.','Ich setze das richtige Satzzeichen und forme Sätze um.','Ich erkenne einfache und zusammengesetzte Sätze und zähle die Personalformen.','Ich erkenne Satzfragmente und baue sie zu ganzen Sätzen aus.'],

@@ -300,6 +300,33 @@ const merk=()=>T(['Art','Beispiele','Merksatz'],[['Partikel','und, in, heute, ab
  T(['Fall','Präpositionen'],[['Akkusativ','durch, für, gegen, ohne, um'],['Dativ','aus, bei, mit, nach, seit, von, zu'],['Genitiv','wegen, während, trotz'],['Wechsel (Wo? Dat. · Wohin? Akk.)','an, auf, in, über, unter, vor, hinter, neben, zwischen']]);
 const UEM={'praep':{types:'praep',cats:'sg1'},'konj':{types:'konj',cats:'sg2'},'adverb':{types:'adverb',cats:'sg3'},'abgrenzung':{types:'art',cats:'sg4'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,konj:3},opt:{pron:.3,adj:.2,det:{def:.5,indef:.3,poss:.2}},classes:[{gl:'Präposition',cats:['sg1'],lv:1},{gl:'Konjunktion',cats:['sg2'],lv:1},{gl:'Adverb',cats:['sg3'],lv:1},{gl:'Partikel',cats:['sg4'],lv:1}],perClass:30});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+const gp=s=>s.replace('___','<span class="gap">_____</span>');
+[
+['Ich warte ___ den Bus.','auf',['für','mit','von'],1,'«warten auf» + Akkusativ: Ich warte auf den Bus.'],
+['Sie fährt ___ dem Zug nach Basel.','mit',['für','gegen','ohne'],1,'«mit» verlangt den Dativ: mit dem Zug.'],
+['Wir bleiben ___ des Regens zu Hause.','wegen',['mit','nach','bei'],2,'«wegen» verlangt den Genitiv: wegen des Regens.'],
+['Das Geschenk ist ___ dich.','für',['mit','bei','aus'],1,'«für» verlangt den Akkusativ: für dich.'],
+['Wir gehen ___ dem Essen spazieren.','nach',['für','gegen','ohne'],1,'«nach» verlangt den Dativ: nach dem Essen.']
+].forEach(p=>task.push({typ:'praep',stufe:p[3],lv:p[3]===3?2:1,cats:['sg1'],sent:gp(p[0]),opts:[p[1]].concat(p[2]),answer:p[1],why:'<b>'+p[1]+'.</b> '+p[4]}));
+[
+['Ich lerne, ___ ich eine gute Note schreibe.','damit',['denn','und','sondern'],2,'«damit» leitet einen Nebensatz ein und nennt den Zweck.'],
+['Es regnet, ___ wir gehen trotzdem hinaus.','aber',['weil','dass','obwohl'],1,'«aber» verbindet zwei Hauptsätze.'],
+['Ich weiss, ___ du recht hast.','dass',['aber','denn','sondern'],1,'«dass» leitet einen Nebensatz ein.'],
+['Er ist nicht müde, ___ hellwach.','sondern',['weil','dass','damit'],2,'«sondern» steht nach einer Verneinung.'],
+['___ es regnet, bleiben wir drinnen.','Weil',['Denn','Aber','Und'],2,'«Weil» leitet einen Nebensatz ein. Das Verb steht am Ende.']
+].forEach(k=>task.push({typ:'konj',stufe:k[3],lv:k[3]===3?2:1,cats:['sg2'],sent:gp(k[0]),opts:[k[1]].concat(k[2]),answer:k[1],why:'<b>'+k[1]+'.</b> '+k[4]}));
+[
+['Welches Wort ist ein Adverb?',['heute','Tisch','laufen','rot'],'heute','«heute» sagt, wann etwas geschieht (Adverb der Zeit).',1],
+['Welches Wort ist ein Adverb?',['hier','Schule','singen','mit'],'hier','«hier» sagt, wo etwas ist (Adverb des Ortes).',1],
+['Welches Wort ist ein Adverb?',['oft','Katze','schlafen','der'],'oft','«oft» sagt, wie häufig etwas geschieht.',1]
+].forEach(a=>task.push({typ:'adverb',stufe:a[4],lv:1,cats:['sg3'],prompt:a[0],opts:a[1],answer:a[2],why:a[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'partikel',teil:'wort',nr:7,css:PVCSS,title:'Partikel',big:'Und, in, heute, aber',desc:'Präpositionen, Konjunktionen, Adverbien und Interjektionen',
  ex:'«'+mk('part','Heute')+' gehe ich '+mk('part','mit')+' dir ins Kino, '+mk('part','denn')+' ich habe Zeit.»',
  goals:['Ich erkenne unveränderliche Wörter (Partikel).','Ich wähle die richtige Präposition und den richtigen Fall (auch Wo? oder Wohin?).','Ich unterscheide nebenordnende und unterordnende Konjunktionen.','Ich erkenne Adverbien und bestimme sie mit Fragen.','Ich erkenne Interjektionen und setze die Satzzeichen.'],

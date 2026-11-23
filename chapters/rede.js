@@ -150,6 +150,46 @@ const EX=[
 const merk=()=>T(['Thema','Merksatz'],[['Direkte Rede','Anführungszeichen «…», Redebegleitsatz mit Doppelpunkt oder Komma'],['Indirekte Rede','kein Anführungszeichen, Pronomen anpassen, Konjunktiv I'],['Konjunktiv I','er/sie/es: Stamm + e (komme, habe), sein: sei'],['Ersatzform','Konjunktiv I = Indikativ → Konjunktiv II oder «würde» + Infinitiv'],['Frage','indirekte Frage mit «ob»']]);
 const UEM={zeichen:{types:'zeichen',cats:'sg1'},was:{types:'erkenne',cats:'sg2'},indirekt:{types:'umform',cats:'sg4'},konj:{types:'konj',cats:'sg3'},ersatz:{types:'ersatz',cats:'sg3'}};
 SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Lena sagt: «Das macht Spass.»','direkte Rede','Anführungszeichen und Doppelpunkt: direkte Rede.',1],
+['Lena sagt, das mache Spass.','indirekte Rede','Konjunktiv I «mache», keine Anführungszeichen: indirekte Rede.',1],
+['«Wo ist mein Heft?», fragt Noah.','direkte Rede','Die Anführungszeichen zeigen die wörtliche Rede.',1],
+['Noah fragt, wo sein Heft sei.','indirekte Rede','Eingeleitet mit dem Fragewort «wo», Konjunktiv I «sei».',2],
+['Die Lehrerin ruft: «Kommt bitte alle her!»','direkte Rede','Anführungszeichen: direkte Rede.',1],
+['Die Lehrerin sagt, alle sollten herkommen.','indirekte Rede','Konjunktiv II «sollten» als Ersatzform, keine Anführungszeichen: indirekte Rede.',2],
+['Mia flüstert: «Ich habe Angst.»','direkte Rede','Anführungszeichen: direkte Rede.',1],
+['Mia flüstert, sie habe Angst.','indirekte Rede','Konjunktiv I «habe», keine Anführungszeichen: indirekte Rede.',1]
+].forEach(e=>add({typ:'erkenne',stufe:e[3],lv:e[3]===2?2:1,cats:['sg2'],prompt:'Ist das <b>direkte</b> oder <b>indirekte</b> Rede?',sent:e[0],opts:['direkte Rede','indirekte Rede'],answer:e[1],why:'<b>'+e[1]+'.</b> '+e[2]}));
+[
+[['Mia fragte: «Kommst du morgen?»','Mia fragte «Kommst du morgen»?','Mia fragte, «Kommst du morgen?»'],'Redebegleitsatz vorn: Doppelpunkt. Das Fragezeichen steht in den Anführungszeichen.',1],
+[['«Ich habe Hunger», sagte Lena.','«Ich habe Hunger.», sagte Lena.','«Ich habe Hunger,» sagte Lena.'],'Redebegleitsatz hinten: Der Schlusspunkt fällt weg, nach den Anführungszeichen steht ein Komma.',1],
+[['Der Lehrer sagte: «Ihr dürft gehen.»','Der Lehrer sagte «Ihr dürft gehen».','Der Lehrer sagte, «Ihr dürft gehen.»'],'Vorangestellter Redebegleitsatz: Doppelpunkt, dann Anführungszeichen. Der Punkt steht in den Anführungszeichen.',1],
+[['Sie rief laut: «Warte auf mich!»','Sie rief laut «Warte auf mich»!','Sie rief laut, «Warte auf mich!»'],'Das Ausrufezeichen gehört zur wörtlichen Rede und steht in den Anführungszeichen.',1],
+[['«Wir gehen heute schwimmen», sagte Papa, «und danach essen wir Pizza.»','«Wir gehen heute schwimmen,» sagte Papa «und danach essen wir Pizza.»','«Wir gehen heute schwimmen», sagte Papa, «Und danach essen wir Pizza.»'],'Redebegleitsatz in der Mitte: Komma davor und danach, die Fortsetzung beginnt klein.',2],
+[['«Wer hat angerufen?», wollte Mama wissen.','«Wer hat angerufen?» wollte Mama wissen.','«Wer hat angerufen»?, wollte Mama wissen.'],'Nach dem Fragezeichen steht trotzdem ein Komma. Der Begleitsatz beginnt klein.',2]
+].forEach(z=>add({typ:'zeichen',stufe:z[2],lv:1,cats:['sg1'],prompt:'Welcher Satz ist richtig geschrieben?',opts:z[0],answer:z[0][0],why:'<b>'+z[0][0]+'</b> '+z[1]}));
+[
+['Mia sagt: «Ich habe Durst.»','Mia sagt, sie habe Durst.',['Mia sagt, sie hat Durst.','Mia sagt, ich habe Durst.','Mia sagt, sie hätte Durst haben.'],'«ich» wird zu «sie», «habe» ist schon Konjunktiv I.',2],
+['Tim sagt: «Ich gehe nach Hause.»','Tim sagt, er gehe nach Hause.',['Tim sagt, er geht nach Hause.','Tim sagt, ich gehe nach Hause.','Tim sagt, er ging nach Hause.'],'«ich» wird zu «er», «gehe» ist schon Konjunktiv I.',2],
+['Lena sagt: «Ich bin krank.»','Lena sagt, sie sei krank.',['Lena sagt, sie ist krank.','Lena sagt, ich sei krank.','Lena sagt, sie sein krank.'],'«ich» wird zu «sie», «bin» wird zu Konjunktiv I «sei».',2],
+['Noah sagt: «Ich muss lernen.»','Noah sagt, er müsse lernen.',['Noah sagt, er muss lernen.','Noah sagt, ich müsse lernen.','Noah sagt, er musste lernen.'],'«ich» wird zu «er», «muss» wird zu «müsse».',2],
+['Anna fragt Tim: «Hast du Zeit?»','Anna fragt Tim, ob er Zeit habe.',['Anna fragt Tim, ob du Zeit hast.','Anna fragt Tim, dass er Zeit habe.','Anna fragt Tim, ob er Zeit hat.'],'Eine Frage wird mit «ob» eingeleitet. «du» wird zu «er», «hast» zu «habe».',3],
+['Tim sagt: «Ich bin schnell gelaufen.»','Tim sagt, er sei schnell gelaufen.',['Tim sagt, er ist schnell gelaufen.','Tim sagt, er habe schnell gelaufen.','Tim sagt, ich sei schnell gelaufen.'],'Vergangenheit mit «sein»: «sei … gelaufen».',3]
+].forEach(u=>add({typ:'umform',stufe:u[4],lv:u[4]===2?2:3,cats:['sg4'],prompt:'Wie lautet die <b>indirekte Rede</b>?',sent:u[0],opts:[u[1]].concat(u[2]),answer:u[1],why:'<b>'+u[1]+'</b> '+u[3]}));
+[
+['Woran erkennst du die direkte Rede?',['an den Anführungszeichen','am Konjunktiv I','am Wort «dass»','am Fragewort'],'an den Anführungszeichen','Die wörtliche Rede steht in Anführungszeichen.','sg2',1],
+['Woran erkennst du oft die indirekte Rede?',['am Konjunktiv I und am Fehlen der Anführungszeichen','an den Anführungszeichen','am Ausrufezeichen','am Doppelpunkt'],'am Konjunktiv I und am Fehlen der Anführungszeichen','Beispiel: Er sagte, er habe keine Zeit.','sg2',2],
+['Wie lautet die Konjunktiv-I-Form von «er hat»?',['er habe','er hätte','er hat','er habe gehabt'],'er habe','Konjunktiv I: «habe».','sg3',1],
+['Wie lautet die Konjunktiv-I-Form von «sie ist»?',['sie sei','sie wäre','sie ist','sie seie'],'sie sei','Konjunktiv I von «sein»: «sei».','sg3',1],
+['In «Tim sagt zu Mia: «Du hast recht.»» wird «du» in der indirekten Rede zu …',['sie','du','ich','er'],'sie','Tim spricht über Mia: «Tim sagt zu Mia, sie habe recht.»','sg4',3]
+].forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+'.</b> '+w[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'rede',teil:'satz',nr:13,title:'Direkte und indirekte Rede',big:'Anna sagt, sie sei müde',desc:'Wörtliche Rede, Zeichensetzung und Konjunktiv I',
  ex:'«Anna sagt: «Ich bin müde.» → Anna sagt, sie <b>sei</b> müde.»',
  goals:['Ich unterscheide direkte und indirekte Rede.','Ich setze die Zeichen in der direkten Rede richtig.','Ich bilde den Konjunktiv I.','Ich forme direkte in indirekte Rede um (ab B).'],

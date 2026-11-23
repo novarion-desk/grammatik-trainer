@@ -240,6 +240,23 @@ const merk=()=>FAM+'<p style="margin-top:.7rem"><b>Merke:</b> Die Bedeutung zäh
  '<h3>Stolpersteine</h3><ul><li>Das Lesen, die Arbeit: Mit Artikel ist es ein Nomen.</li><li>Er singt schön: «schön» bleibt ein Adjektiv.</li><li>Artikel (der, die, das, ein) gehören zu den Pronomen.</li></ul>';
 const UEM={'nomen':{types:'bestimmen'},'verb':{types:'bestimmen'},'adjektiv':{types:'bestimmen'},'pronomen':{types:'bestimmen'},'partikel':{types:'bestimmen'},'proben':{types:'bestimmen'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,konj:1,pers:1,poss:1},opt:{pron:.35,adj:.55,det:{def:.45,indef:.25,poss:.15,dem:.05}},classes:[{gl:'Nomen',cats:['nomen'],lv:1},{gl:'Verb',cats:['verb'],lv:1},{gl:'Adjektiv',cats:['adj'],lv:1},{gl:'Pronomen',cats:['pron'],lv:1},{gl:'Partikel',cats:['part'],lv:1}],perClass:26});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Welche Wortart beschreibt, <b>wie</b> etwas ist (z. B. «rot»)?',['Adjektiv','Nomen','Verb','Partikel'],'Adjektiv','Adjektive beschreiben.','adj'],
+['Zu welcher Wortart gehört «lachen»?',['Verb','Nomen','Adjektiv','Pronomen'],'Verb','«lachen» nennt eine Tätigkeit.','verb'],
+['Zu welcher Wortart gehört «Freundschaft»?',['Nomen','Verb','Adjektiv','Partikel'],'Nomen','Ein Nomen (ein Gedanke). Man schreibt es gross.','nomen'],
+['Zu welcher Wortart gehören «ich, du, er, sie, es»?',['Pronomen','Nomen','Partikel','Adjektiv'],'Pronomen','Personalpronomen stehen für Personen oder Dinge.','pron'],
+['Zu welcher Wortart gehört «heute»?',['Partikel','Nomen','Verb','Adjektiv'],'Partikel','«heute» verändert sich nie: ein Adverb, also Partikel.','part'],
+['Zu welcher Wortart gehört «schnell» in «ein schnelles Auto»?',['Adjektiv','Nomen','Verb','Partikel'],'Adjektiv','Es beschreibt das Auto.','adj'],
+['Zu welcher Wortart gehört «oder»?',['Partikel','Pronomen','Nomen','Verb'],'Partikel','Konjunktion: eine Partikel.','part'],
+['Welche Wortart kann man <b>konjugieren</b> (ich singe, du singst)?',['Verb','Nomen','Adjektiv','Partikel'],'Verb','Verben verändern sich nach Person und Zeit.','verb']
+].forEach(z=>task.push({typ:'zuordnen',stufe:1,cats:[z[4]],prompt:z[0],opts:z[1],answer:z[2],why:z[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'wortarten',teil:'wort',nr:1,title:'Die fünf Wortarten',big:'Nomen, Verb, Adjektiv, Pronomen, Partikel',desc:'Nomen, Verb, Adjektiv, Pronomen und Partikel erkennen',
  ex:'«'+mk('pron','Die')+' '+mk('adj','kleine')+' '+mk('nomen','Katze')+' '+mk('verb','schläft')+' '+mk('part','dort')+'.»',
  goals:['Ich kenne die fünf Wortarten: Nomen, Verb, Adjektiv, Pronomen und Partikel.','Ich weiss, welche Wortarten sich verändern und welche nicht.','Ich kann Wortarten mit Proben bestimmen (Artikelprobe, Konjugationsprobe, Steigerungsprobe, Ersatzprobe).','Ich kann Wortarten in Sätzen erkennen und bestimmen.','Ich kenne die Merkmale der Wortarten (veränderbar, konjugierbar, deklinierbar, steigerbar).','Ich kenne die Fachbegriffe: Zeitwort, Eigenschaftswort, Hauptwort, Fürwort, Begleiter.'],

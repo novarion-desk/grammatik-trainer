@@ -214,6 +214,29 @@ const merk=()=>T(['Zeitform','Beispiel','Bildung'],[['Präsens','er lacht','Stam
  '<ul><li>Grundform (Infinitiv, Rohform): lachen, gehen, sein.</li><li>Hilfsverben: sein, haben, werden.</li><li>Befehlsform: Komm! Lies! Fahr!</li></ul>';
 const UEM={'formen':{types:'person',cats:'sg1'},'zeiten':{types:'zeit,zeitwahl',cats:'sg2'},'bildung':{types:'einsetzen,zeit',cats:'sg2'},'arten':{types:'stamm',cats:'sg3'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{basic:5,konj:2},opt:{pron:.3,adj:.2,det:{def:.5,indef:.3,poss:.2}},classes:[{gl:'Verb',cats:['sg4'],lv:1}],perClass:34});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Du ___ gern Fussball.','spielst',['spielt','spiele','spielen'],1],['Ihr ___ heute früh.','kommt',['kommst','komme','kommen'],1],['Wir ___ ins Kino.','gehen',['geht','gehst','gehe'],1],
+['Ich ___ müde.','bin',['bist','ist','sind'],1],['Die Kinder ___ Hunger.','haben',['hat','habt','hast'],1],['Ihr ___ zu spät.','seid',['bist','ist','sind'],1],
+['Er ___ das Buch.','liest',['lest','lesen','lese'],2],['Du ___ den Ball.','wirfst',['wirft','werfe','werfen'],2],['Mia ___ schnell.','läuft',['laufe','laufst','laufen'],2],['Du ___ mir.','hilfst',['hilft','helfe','helfen'],2]
+].forEach(p=>task.push({typ:'person',stufe:p[3],lv:p[3]===3?2:1,cats:['sg1'],sent:p[0].replace('___','<span class="gap">_____</span>'),opts:[p[1]].concat(p[2]),answer:p[1],why:'<b>'+p[1]+'.</b> Die Personalform richtet sich nach der Person (ich, du, er …) und der Zahl.'}));
+[
+['singen','sang','gesungen',['singte','sing','sung'],['gesingt','gesang','gesingen'],1],
+['trinken','trank','getrunken',['trinkte','trunk','trinkt'],['getrinkt','getrank','getrinken'],1],
+['fliegen','flog','geflogen',['fliegte','flug','flieg'],['gefliegt','geflogt','geflug'],2],
+['helfen','half','geholfen',['helfte','hilft','halfte'],['gehelft','gehalfen','gehilft'],2],
+['nehmen','nahm','genommen',['nehmte','nehm','nahmt'],['genehmt','genahmen','genomm'],2],
+['finden','fand','gefunden',['findete','fund','findte'],['gefindet','gefand','gefundet'],1]
+].forEach(s=>{
+  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Präteritum</b> von «'+s[0]+'»? (er/sie/es …)',opts:[s[1]].concat(s[3]),answer:s[1],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Präteritum: «er '+s[1]+'».'});
+  task.push({typ:'stamm',stufe:s[5],lv:s[5]===3?2:1,cats:['sg3'],prompt:'Wie lautet das <b>Partizip II</b> von «'+s[0]+'»?',opts:[s[2]].concat(s[4]),answer:s[2],why:'<b>'+s[0]+' – '+s[1]+' – '+s[2]+'.</b> Perfekt: «er hat '+s[2]+'».'});
+});
+task.push=_p0;
+})();
+
 GT.chapter({id:'verb',teil:'wort',nr:4,title:'Verb',big:'Er lacht. Er lachte. Er hat gelacht.',desc:'Formen, Zeitformen und Befehlsform',
  ex:'«Er '+mk('verb','lacht')+'. Er '+mk('verb','lachte')+'. Er '+mk('verb','hat gelacht')+'.»',
  goals:['Ich erkenne Verben mit der Konjugationsprobe.','Ich kenne die Grundform (Rohform) und bilde die Personalformen.','Ich kenne die Zeitformen Präsens, Präteritum, Perfekt, Plusquamperfekt und Futur I und erkenne sie im Satz.','Ich bilde Stammformen und das Partizip II.','Ich bilde die Befehlsform (Imperativ).'],

@@ -162,6 +162,57 @@ const merk=()=>'<h3>🔤 Wortlehre und Satzlehre</h3>'+T(['Bereich','Fachwort','
  '<h3>🔎 So findest du die Personalform</h3><ol><li>Personenprobe: Setze eine andere Person ein. Was sich ändert, ist die Personalform.</li><li>Zeitprobe: Setze eine andere Zeit ein. «lacht» wird «lachte».</li><li>Infinitiv und Partizip sind keine Personalformen.</li></ol>'+
  '<h3>⚠️ Satzglied und Wortart</h3><p>Die <b>Wortart</b> sagt, was für ein Wort es ist (Nomen, Verb …). Das <b>Satzglied</b> sagt, welche Aufgabe eine Wortgruppe im Satz hat. Ein Satzglied kann aus mehreren Wörtern bestehen: «Der kleine Hund» ist <b>ein</b> Satzglied.</p>';
 const UEM={'unterschied':{types:'wort',cats:'sg2'},'satz':{types:'wort',cats:'sg2'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+const WS=['Wortlehre','Satzlehre','beides','keines'];
+[['Adverb','Wortlehre','Das Adverb ist eine Wortart (Partikel).'],['Artikel','Wortlehre','Der Artikel ist eine Wortart.'],['Präposition','Wortlehre','Die Präposition ist eine Wortart (Partikel).'],['Konjunktion','Wortlehre','Die Konjunktion ist eine Wortart (Partikel).'],
+['Satzglied','Satzlehre','Satzglieder sind Teile eines Satzes.'],['Adverbiale','Satzlehre','Die Adverbiale ist ein Satzglied.'],['Hauptsatz','Satzlehre','Der Hauptsatz ist ein Teilsatz.'],['Akkusativobjekt','Satzlehre','Das Akkusativobjekt ist ein Satzglied.'],['Dativobjekt','Satzlehre','Das Dativobjekt ist ein Satzglied.'],['Satzart','Satzlehre','Aussage, Frage und Aufforderung sind Satzarten.']
+].forEach(a=>task.push({typ:'wissen',stufe:1,lv:1,cats:['sg1'],prompt:'Wo gehört «'+a[0]+'» hin?',opts:WS,answer:a[1],why:'<b>'+a[1]+'.</b> '+a[2]}));
+const A4=[
+['Wie viele Satzglieder hat: «Die Katze schläft auf dem Sofa.»?',['3','4','5','2'],'3','Die Katze · schläft · auf dem Sofa.','sg2',1],
+['Wie viele Satzglieder hat: «Heute regnet es.»?',['3','2','4','1'],'3','Heute · regnet · es.','sg2',1],
+['Wie viele Satzglieder hat: «Wir gehen.»?',['2','1','3','4'],'2','Wir · gehen.','sg2',1],
+['Wie viele Satzglieder hat: «Mein Vater repariert am Samstag das Fahrrad.»?',['4','3','5','6'],'4','Mein Vater · repariert · am Samstag · das Fahrrad.','sg2',2],
+['Wie viele Satzglieder hat: «Lea gibt ihrer Freundin ein Geschenk.»?',['4','3','5','6'],'4','Lea · gibt · ihrer Freundin · ein Geschenk.','sg2',2],
+['Wie viele Satzglieder hat: «Die Schüler schreiben morgen einen Test.»?',['4','3','5','6'],'4','Die Schüler · schreiben · morgen · einen Test.','sg2',2],
+['Wie viele Satzglieder hat: «Der Lehrer erklärt den Schülern im Klassenzimmer die Aufgabe.»?',['5','4','6','8'],'5','Der Lehrer · erklärt · den Schülern · im Klassenzimmer · die Aufgabe.','sg2',3],
+['Wie viele Satzglieder hat: «Gestern hat es den ganzen Tag geregnet.»?',['4','5','6','3'],'4','Gestern · hat … geregnet · es · den ganzen Tag. «hat» und «geregnet» bilden zusammen das Prädikat.','sg2',3],
+['Wie viele <b>Wörter</b> hat: «Wir gehen heute ins Kino.»?',['5','4','3','6'],'5','Wir · gehen · heute · ins · Kino.','sg2',1],
+['Wie viele <b>Satzglieder</b> hat: «Wir gehen heute ins Kino.»?',['4','5','3','2'],'4','Wir · gehen · heute · ins Kino.','sg2',2],
+['Bei «Anna liest ein Buch.» ist «Anna» …',['Wortart: Nomen · Satzglied: Subjekt','Wortart: Verb · Satzglied: Prädikat','Wortart: Nomen · Satzglied: Objekt','Wortart: Adjektiv · Satzglied: Subjekt'],'Wortart: Nomen · Satzglied: Subjekt','«Anna» ist ein Nomen (Eigenname) und im Satz das Subjekt.','sg2',2],
+['Bei «Anna liest ein Buch.» ist «ein Buch» …',['ein Satzglied (Objekt), aus Artikel und Nomen','nur eine Wortart','ein Prädikat','ein Pronomen'],'ein Satzglied (Objekt), aus Artikel und Nomen','Zwei Wörter bilden zusammen ein Satzglied.','sg2',2],
+['Ein Satzglied kann aus …',['einem Wort oder mehreren Wörtern bestehen','nur einem Wort bestehen','nur zwei Wörtern bestehen','nur einem Nomen bestehen'],'einem Wort oder mehreren Wörtern bestehen','«Anna» ist ein Satzglied mit einem Wort, «die kleine Katze» eines mit drei.','sg2',1],
+['Welche Wortgruppe ist ein <b>vollständiger Satz</b>?',['Der Bus kommt.','Der schnelle Bus','Mit dem Bus','Am Morgen'],'Der Bus kommt.','Es gibt Subjekt «Der Bus» und Prädikat «kommt».','sg3',1],
+['Welche Wortgruppe ist ein <b>vollständiger Satz</b>?',['Es schneit.','Der Schnee','Im Winter','Kalt und weiss'],'Es schneit.','Subjekt «Es» und Prädikat «schneit».','sg3',1],
+['Welche Wortgruppe ist <b>kein</b> Satz?',['Auf dem Pausenplatz','Wir spielen.','Hör zu!','Es regnet.'],'Auf dem Pausenplatz','Es fehlt die Personalform des Verbs.','sg3',2],
+['Welches Satzzeichen steht am Ende einer Frage?',['Fragezeichen','Punkt','Komma','Doppelpunkt'],'Fragezeichen','Fragesätze enden mit einem Fragezeichen.','sg3',1],
+['Woran erkennst du einen Satz?',['Er hat eine Personalform und ein Subjekt.','Er hat mindestens fünf Wörter.','Er beginnt mit einem Nomen.','Er endet mit einem Komma.'],'Er hat eine Personalform und ein Subjekt.','Die Länge entscheidet nicht: «Es regnet.» ist ein Satz.','sg3',2],
+['Wie viele Satzglieder hat der kürzeste vollständige Satz mindestens?',['2','1','3','4'],'2','Subjekt und Prädikat, z. B. «Es regnet.»','sg3',2],
+['Welches Wort ist ein <b>Satzglied</b>, aber keine Wortart?',['Subjekt','Verb','Nomen','Adjektiv'],'Subjekt','Subjekt ist ein Satzglied. Verb, Nomen und Adjektiv sind Wortarten.','sg2',2],
+['Welches Wort ist eine <b>Wortart</b>, aber kein Satzglied?',['Adjektiv','Subjekt','Prädikat','Objekt'],'Adjektiv','Adjektiv ist eine Wortart. Subjekt, Prädikat und Objekt sind Satzglieder.','sg2',2]
+];
+A4.forEach(a=>task.push({typ:'wissen',stufe:a[5],lv:a[5]===3?2:1,cats:[a[4]],prompt:a[0],opts:a[1],answer:a[2],why:a[3]}));
+[
+['Tippe das <b>Verb</b> an: «Mia singt ein Lied.»',['Mia','singt','ein','Lied'],'singt','«singt» ist das Verb.',1],
+['Tippe das <b>Nomen</b> an: «Der Lehrer öffnet das Fenster.»',['Der','Lehrer','öffnet','das'],'Lehrer','«Lehrer» ist ein Nomen.',1],
+['Tippe das <b>Adjektiv</b> an: «Das kleine Kind spielt.»',['Das','kleine','Kind','spielt'],'kleine','«kleine» beschreibt das Kind.',1],
+['Tippe das <b>Pronomen</b> an: «Wir lesen ein Buch.»',['Wir','lesen','ein','Buch'],'Wir','«Wir» steht für Personen.',1],
+['Tippe den <b>Artikel</b> an: «Der Hund schläft.»',['Der','Hund','schläft'],'Der','«Der» ist der Artikel.',1],
+['Tippe die <b>Personalform</b> an: «Tim hat gestern Pizza gegessen.»',['Tim','hat','gestern','Pizza'],'hat','«hat» ist die Personalform, «gegessen» das Partizip.',2],
+['Tippe die <b>Präposition</b> an: «Das Buch liegt auf dem Tisch.»',['Das','Buch','liegt','auf'],'auf','«auf» ist eine Präposition (Partikel).',2],
+['Tippe die <b>Konjunktion</b> an: «Ich bleibe zu Hause, weil ich krank bin.»',['Ich','bleibe','weil','krank'],'weil','«weil» verbindet zwei Teilsätze.',2]
+].forEach(z=>task.push({typ:'wort',stufe:z[4],lv:1,cats:['sg2'],prompt:z[0],opts:z[1],answer:z[2],why:z[3]}));
+[
+['fach',1,'sg4','Welches Satzglied sagt, wer oder was etwas tut?','Das ist das …','Subjekt',['Das Subjekt'],true,'Subjekt (Wer oder was?).'],
+['fach',1,'sg4','Welches Satzglied ist das Verb in der Personalform?','Das ist das …','Prädikat',['Das Prädikat'],true,'Das Verb in der Personalform bildet das Prädikat.'],
+['fach',1,'sg4','Wie heisst die Wortart von «rot» in «das rote Auto»?','Es ist ein …','Adjektiv',['Das Adjektiv'],true,'«rot» beschreibt das Auto.'],
+['fach',1,'sg4','Wie heisst die Wortart von «Haus»?','Es ist ein …','Nomen',['Das Nomen','Substantiv'],true,'Nomen = Namenwort.']
+].forEach(r=>task.push({typ:r[0],stufe:r[1],lv:1,cats:[r[2]],input:true,prompt:r[3],sent:r[4],answer:r[5],accept:r[6],strict:!!r[7],why:'<b>'+r[5]+'.</b> '+r[8]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'wl-sl',teil:'satz',nr:1,title:'Wortlehre und Satzlehre',big:'Wörter und Sätze untersuchen',desc:'Wortart oder Satzglied: was ist der Unterschied?',
  ex:'«[Der kleine Hund] ['+mk('verb','bellt')+'] [laut].»',
  goals:['Ich erkläre, was die Wortlehre (Morphologie) und die Satzlehre (Syntax) untersuchen, und ordne Fragen dem richtigen Bereich zu.','Ich erkläre, was ein Satz ist: Er hat eine Personalform, sagt, wer oder was etwas tut, und endet mit einem Satzzeichen.','Ich erkenne die Personalform eines Verbs und unterscheide sie vom Infinitiv.','Ich entscheide, ob eine Wortgruppe ein Satz ist, und begründe es.'],

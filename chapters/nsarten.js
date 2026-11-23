@@ -212,6 +212,22 @@ const EX=[
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['6 Arten','Konjunktional-, Relativ-, indirekter Frage-, uneingeleiteter Nebensatz, Infinitiv- und Partizipialsatz.'],['Verb','Eingeleitet: am Schluss. Uneingeleitet: vorne. Infinitiv/Partizipialsatz: keine Personalform.'],['Falle','Modalverb + Infinitiv ohne «zu» ist kein Infinitivsatz.']]);
 if(GT.wg)GT.wg.tasks(task,{n:320,kinds:{konj:4,rel:3},opt:{pron:.3,adj:.2,det:{def:.5,indef:.3,poss:.2}},classes:[{gl:'Nebensatz',cats:['sg0'],lv:1},{gl:'Einleitewort',cats:['sg1'],lv:1},{gl:'Relativsatz',cats:['sg3'],lv:3}],perClass:30});
+/* ---- Erweiterung 23.11.2026 ---- */
+(function(){
+const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
+task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_have.has(k))return task.length;_have.add(k);return _p0(t);};
+[
+['Welche Art Nebensatz ist «weil es regnet»?',['Konjunktionalsatz','Relativsatz','Infinitivsatz','Indirekter Fragesatz'],'Konjunktionalsatz','«weil» ist eine unterordnende Konjunktion.','sg1',1],
+['Welche Art Nebensatz ist «der dort steht» in «Der Mann, der dort steht, ist mein Onkel.»?',['Relativsatz','Konjunktionalsatz','Infinitivsatz','Indirekter Fragesatz'],'Relativsatz','Er beginnt mit einem Relativpronomen und bezieht sich auf «Mann».','sg1',1],
+['Welche Art Nebensatz ist «wo du wohnst» in «Ich weiss, wo du wohnst.»?',['Indirekter Fragesatz','Relativsatz','Infinitivsatz','Konjunktionalsatz'],'Indirekter Fragesatz','Er beginnt mit einem Fragewort.','sg1',2],
+['Welche Art Nebensatz ist «um gut zu lernen» in «Er übt, um gut zu lernen.»?',['Infinitivsatz','Konjunktionalsatz','Relativsatz','Indirekter Fragesatz'],'Infinitivsatz','Er hat «zu» + Infinitiv und keine Personalform.','sg1',1],
+['Welche Art Nebensatz ist «er kommt» in «Ich glaube, er kommt.»?',['Uneingeleiteter Nebensatz','Konjunktionalsatz','Relativsatz','Infinitivsatz'],'Uneingeleiteter Nebensatz','Es gibt kein Einleitewort, das Verb steht an zweiter Stelle.','sg1',2],
+['Was ist ein Nebensatz?',['ein Teilsatz, der von einem anderen Satz abhängt','ein Satz ohne Verb','ein Satz mit Ausrufezeichen','ein Satz, der immer allein stehen kann'],'ein Teilsatz, der von einem anderen Satz abhängt','Er gehört zu einem Hauptsatz und steht nicht allein.','sg0',1],
+['Wie viele Personalformen hat «Ich bleibe zu Hause, weil es regnet.»?',['2','1','3','0'],'2','«bleibe» im Hauptsatz und «regnet» im Nebensatz.','sg0',1]
+].forEach(w=>task.push({typ:'form',stufe:w[5],lv:w[5]===3?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
+task.push=_p0;
+})();
+
 GT.chapter({id:'nsarten',teil:'satz',nr:9,title:'Arten der Nebensätze',big:'Ich weiss, dass er kommt',desc:'Formale Arten, Relativsatz, Infinitivsatz und Bedeutung',
  ex:'«Sie hofft, die Prüfung zu bestehen.»',
  goals:['Ich unterscheide die sechs formalen Nebensatzarten.','Ich forme uneingeleitete und eingeleitete Nebensätze um.','Ich erkenne Relativsätze und Infinitivsätze.','Ich bestimme die Bedeutung von Nebensätzen (Zeit, Grund, Bedingung …).','Ich wandle überladene Sätze um (ab B).'],
