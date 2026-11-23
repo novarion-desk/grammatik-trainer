@@ -742,10 +742,10 @@ function screenSummary(){
    '<h3>Alle Fragen</h3>'+H.map((h,i)=>'<div class="rev '+(h.ok?'ok':'err')+'"><b>'+(i+1)+'. '+TY()[h.t.typ].label+'</b> '+(h.ok?(h.typo?'· richtig (Schreibweise beachten)':'· richtig'):'· falsch')+'<div class="muted" style="margin:.2rem 0">'+qText(h.t)+'</div><div>Deine Antwort: '+h.mine+'</div>'+(h.ok?'':'<div style="color:var(--ok)"><b>Richtig:</b> '+h.right+'</div>')+'</div>').join('')+'</div>';
 }
 let _rk='',_ry=0;
-/* KI-Erklärung (Test: nur auf Geräten sichtbar, auf denen einmal «#ki-test» geöffnet wurde) */
+/* «Frag Marty» (KI-Erklärung): für alle sichtbar, ausser im Prüfungsmodus; mit «#ki-aus» im Link auf dem Gerät abschaltbar */
 const KI_URL='https://tc-ki-proxy.novarian-desk.workers.dev/ask';
-try{if(/ki-test/.test(location.hash))localStorage.setItem('gt-ki','1');if(/ki-aus/.test(location.hash))localStorage.removeItem('gt-ki');}catch(e){}
-const KI_ON=()=>{try{return localStorage.getItem('gt-ki')==='1';}catch(e){return false;}};
+try{if(/ki-test/.test(location.hash))localStorage.removeItem('gt-ki');if(/ki-aus/.test(location.hash))localStorage.setItem('gt-ki','0');}catch(e){}
+const KI_ON=()=>{try{return localStorage.getItem('gt-ki')!=='0';}catch(e){return true;}};
 function kiDevice(){try{let d=localStorage.getItem('gt-dev');if(!d){d=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('gt-dev',d);}return d;}catch(e){return 'x';}}
 let kiBusy=false;
 async function askKI(){
