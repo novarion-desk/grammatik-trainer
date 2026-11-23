@@ -663,7 +663,7 @@ function screenRound(){
   return '<div class="card"><div class="topbar"><button class="btn sm" data-a="stop">‹ Abbrechen</button><div>'+(R.test?'<span class="pill gray">'+C().title+'</span> ':'')+'<span class="pill">'+T.label+'</span> <span class="pill gray">'+['Einfach','Mittel','Schwierig'][t.stufe-1]+(R.test?' · '+fmtP(tPts(t))+' P.':'')+'</span></div>'+
    '<div class="prog"><span>'+(R.i+1)+' / '+total+' · '+(R.exam?'Prüfung':R.test?fmtP(R.hist.reduce((a,h)=>a+(h.ok?tPts(h.t):0),0))+' Punkte':R.hist.filter(h=>h.ok).length+' ✓')+(R.timer?' · <b id="clk">0:00</b>':'')+'</span><div class="bar"><i style="width:'+((R.i+1)/total*100)+'%"></i></div></div></div>'+
    body+'<div class="hint" id="hintBox" hidden>'+T.hint+'</div><div id="fb" role="status" aria-live="polite"></div><div id="kiBox"></div>'+
-   '<div class="actions"><div>'+(R.exam?'':'<button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button>'+(KI_ON()?' <button class="btn sm" id="kiBtn" data-a="ki" hidden>💡 Frag die KI</button>':''))+'</div>'+
+   '<div class="actions"><div>'+(R.exam?'':'<button class="btn sm" data-a="hint">Tipp</button> <button class="btn sm" data-a="ref" data-v="'+T.ref+'">Nachschlagen</button>'+(KI_ON()?' <button class="btn sm" id="kiBtn" data-a="ki" hidden>💡 Frag Marty</button>':''))+'</div>'+
    '<div><button class="btn primary" id="checkBtn" data-a="check" disabled>'+(R.exam?(R.i+1<total?'Weiter →':'Abgeben und auswerten'):'Überprüfen')+'</button><button class="btn ok" id="nextBtn" data-a="next" hidden>'+(R.i+1<total?'Nächste Aufgabe →':'Auswertung anzeigen')+'</button></div></div></div>';
 }
 /* Nach dem Antworten: Tastatur schliessen und den «Nächste»-Knopf sichtbar machen (wichtig auf dem Handy) */
@@ -754,12 +754,12 @@ async function askKI(){
   const h=R.hist[R.hist.length-1],t=h.t,st=v=>String(v==null?'':v).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
   const task=[st(t.instr||''),st(t.prompt||''),st(t.sent||''),t.tokens?st(t.tokens.join(' ')):'',t.opts?'Auswahl: '+t.opts.map(st).join(' / '):''].filter(Boolean).join(' – ');
   kiBusy=true;if(btn)btn.disabled=true;
-  box.innerHTML='<div class="ki wait">Die KI überlegt …</div>';
+  box.innerHTML='<div class="ki wait">Marty überlegt …</div>';
   try{
     const r=await fetch(KI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app:'grammatik',mode:'explain',device:kiDevice(),topic:st(C().title)+' – '+st((TY()[t.typ]||{}).label),task,right:st(h.right),mine:h.ok?'':st(h.mine)})});
     const j=await r.json().catch(()=>({}));
-    if(!r.ok||!j.answer){box.innerHTML='<div class="ki err">'+esc(j.error||'Die KI ist gerade nicht erreichbar.')+'</div>';if(btn)btn.disabled=(r.status===429);}
-    else{box.innerHTML='<div class="ki"><b>💡 Erklärung der KI</b><div class="kit">'+esc(String(j.answer).replace(/\*\*|__|^#+\s*/gm,''))+'</div><div class="kin">Die KI kann sich irren. Gib nie Namen oder persönliche Daten ein.'+(typeof j.remaining==='number'?' Noch '+j.remaining+' Fragen heute.':'')+'</div></div>';if(btn)btn.disabled=true;}
+    if(!r.ok||!j.answer){box.innerHTML='<div class="ki err">'+esc(j.error||'Marty ist gerade nicht erreichbar.')+'</div>';if(btn)btn.disabled=(r.status===429);}
+    else{box.innerHTML='<div class="ki"><b>💡 Marty erklärt</b><div class="kit">'+esc(String(j.answer).replace(/\*\*|__|^#+\s*/gm,''))+'</div><div class="kin">Marty ist eine KI und kann sich irren. Gib nie Namen oder persönliche Daten ein.'+(typeof j.remaining==='number'?' Noch '+j.remaining+' Fragen heute.':'')+'</div></div>';if(btn)btn.disabled=true;}
   }catch(e){box.innerHTML='<div class="ki err">Keine Verbindung. Versuche es später.</div>';if(btn)btn.disabled=false;}
   kiBusy=false;
 }
