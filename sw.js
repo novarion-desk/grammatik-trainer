@@ -1,6 +1,6 @@
 // Service Worker: macht den Grammatik Trainer installierbar und offline nutzbar.
 // Immer zuerst das Netz (damit Updates sofort ankommen), bei fehlender Verbindung die gespeicherte Kopie.
-const CACHE = 'gt-v12';
+const CACHE = 'gt-v13';
 self.addEventListener('install', (e) => { self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));

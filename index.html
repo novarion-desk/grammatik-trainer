@@ -394,6 +394,20 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 .ho-nt{background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(8mm - 1px),#94a3b8 calc(8mm - 1px),#94a3b8 8mm);margin-top:2mm}
 .ho-end{break-inside:avoid;height:125mm;margin-top:4mm;border:1px solid #94a3b8;border-radius:6px;padding:2mm 3mm}.ho-end h3{margin:0 0 1mm;font-size:11pt}.ho-end .ho-nt{height:calc(100% - 9mm)}
 @media (max-width:700px){.ddm{left:0;right:auto;max-width:calc(100vw - 2rem)}.ddm .btn{white-space:normal;text-align:left}}
+/* Design 2 (24.11.): Farbcode wie im Lab fuer alle Kapitel */
+.grid2>.card:not([style]):nth-child(4n+1),.grid3>.card:not([style]):nth-child(4n+1),.grid4>.card:not([style]):nth-child(4n+1){--k:#2563eb;--kb:#eff6ff;--kt:#1e3a8a}
+.grid2>.card:not([style]):nth-child(4n+2),.grid3>.card:not([style]):nth-child(4n+2),.grid4>.card:not([style]):nth-child(4n+2){--k:#16a34a;--kb:#f0fdf4;--kt:#14532d}
+.grid2>.card:not([style]):nth-child(4n+3),.grid3>.card:not([style]):nth-child(4n+3),.grid4>.card:not([style]):nth-child(4n+3){--k:#d97706;--kb:#fffbeb;--kt:#78350f}
+.grid2>.card:not([style]):nth-child(4n+4),.grid3>.card:not([style]):nth-child(4n+4),.grid4>.card:not([style]):nth-child(4n+4){--k:#7c3aed;--kb:#f5f3ff;--kt:#4c1d95}
+:is(.sec,.tslide,.tov) .grid2>.card:not([style]),:is(.sec,.tslide,.tov) .grid3>.card:not([style]),:is(.sec,.tslide,.tov) .grid4>.card:not([style]){border:3px solid var(--k);border-radius:16px;background:var(--kb)}
+:is(.sec,.tslide,.tov) .grid2>.card:not([style]) h3,:is(.sec,.tslide,.tov) .grid3>.card:not([style]) h3,:is(.sec,.tslide,.tov) .grid4>.card:not([style]) h3{display:inline-block;padding:.15rem .8rem;border-radius:999px;background:var(--k);color:#fff;font-size:1rem;margin-bottom:.6rem}
+:is(.sec,.tslide,.tov) .grid3>.card.stone:not([style]):nth-child(n){--k:#dc2626;--kb:#fef2f2;border:3px solid var(--k);border-left-width:8px}
+:is(.sec,.tslide,.tov) .card.stone>b{color:#7f1d1d}
+:is(.sec,.tslide,.tov) .steps li{padding:.45rem 0 .45rem 2.6rem}
+:is(.sec,.tslide,.tov) .steps li::before{width:1.9rem;height:1.9rem;line-height:1.9rem;font-size:1rem;top:.4rem;box-shadow:0 2px 0 rgba(0,0,0,.18)}
+:is(.sec,.tslide,.tov) table{border-radius:12px;overflow:hidden;border:2px solid var(--sb,#e0e7ff)}
+:is(.sec,.tslide,.tov) table tr:nth-child(even) td{background:rgba(148,163,184,.10)}
+:is(.sec,.tslide,.tov) table th{font-size:.95rem;text-transform:none}
 </style>
 </head>
 <body>
@@ -1487,7 +1501,10 @@ document.addEventListener('submit',async e=>{
 });
 GT.tryW=(t,c,a)=>'<div class="try" data-w="try" data-types="'+t+'"'+(c?' data-cats="'+c+'"':'')+(a?' data-ans="'+a+'"':'')+'></div>';
 GT.ui={
- chips:(a)=>'<div class="chips">'+a.map(x=>x==='+'?'<span class="chp plus">+</span>':'<span class="chp '+(x[1]||'')+'">'+x[0]+'</span>').join('')+'</div>',
+ col:{bl:['#2563eb','#dbeafe','#1e3a8a'],ro:['#dc2626','#fee2e2','#7f1d1d'],gr:['#16a34a','#dcfce7','#14532d'],or:['#d97706','#fef3c7','#78350f'],vi:['#7c3aed','#ede9fe','#4c1d95']},
+ R:(lab,k,head,ex)=>{const c=GT.ui.col[k];return GT.ui.rule(lab,c[0],c[1],c[2],head,ex)},
+ V:(k,h,items)=>{const c=GT.ui.col[k];return {c:c[0],b:c[1],t:c[2],h:h,items:items}},
+ chips:(a)=>'<div class="chips">'+a.map(x=>(typeof x==='string')?'<span class="chp plus">'+x+'</span>':'<span class="chp '+(x[1]||'')+'">'+x[0]+'</span>').join('')+'</div>',
  vs:(a,b)=>'<div class="vs">'+[a,b].map(x=>'<div class="'+(x.k||'')+'" style="--c:'+x.c+';--b:'+x.b+';--t:'+x.t+'"><h3><span>'+x.h+'</span></h3>'+x.items.map(i=>'<div class="ex">'+i+'</div>').join('')+'</div>').join('')+'</div>',
  rule:(lab,c,b,t,head,ex)=>'<div class="rulec" style="--c:'+c+';--b:'+b+';--t:'+t+'"><b class="lab">'+lab+'</b><div><small>'+head+'</small>'+ex+'</div></div>',
  oops:(a)=>'<div class="oopsg">'+a.map(x=>'<div class="no">✗ <s>'+x[0]+'</s></div><div class="yes">✓ '+x[1]+'</div>').join('')+'</div>',

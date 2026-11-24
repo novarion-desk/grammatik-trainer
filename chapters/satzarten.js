@@ -139,8 +139,7 @@ INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:
 
 const SECS=[
 {id:'arten',title:'Die drei Grundfunktionen der Rede',short:'Grundfunktionen',min:10,note:'Mit Sätzen tun wir drei Dinge: mitteilen, fragen, auffordern. Fachwörter: Deklaration, Interrogativ, Imperativ. Der Ausruf ist ein Zusatz.',
- html:()=>T(['Grundfunktion','Fachwort','Satzzeichen','Beispiel'],[['Aussage','Deklaration','.','Der Hund bellt.'],['Frage','Interrogativ','?','Kommst du mit?'],['Aufforderung (Befehl)','Imperativ','! oder .','Komm her!']])+
- '<div class="callout"><b>Zusatz:</b> Mit einem Ausrufesatz zeigen wir ein Gefühl: «Wie schön das ist!»</div>'},
+ html:()=>GT.ui.R('Aussage','bl','Deklaration · Satzzeichen: .','Der Hund bellt.')+GT.ui.R('Frage','gr','Interrogativ · Satzzeichen: ?','Kommst du mit?')+GT.ui.R('Aufforderung','or','Imperativ · Satzzeichen: ! oder .','Komm her!')+'<div class="callout"><b>Zusatz:</b> Mit einem Ausrufesatz zeigen wir ein Gefühl: «Wie schön das ist!»</div>'},
 {id:'bau',title:'Der Satzbau: einfach, zusammengesetzt, Fragment',short:'Satzbau',min:12,note:'Entscheidend ist die Zahl der Personalformen. Eine = einfacher Satz. Mindestens zwei = zusammengesetzter Satz. Keine = Satzfragment. Einfache Sätze können lang sein.',
  html:()=>T(['Satzbau','Merkmal','Beispiel'],[['Einfacher Satz','genau eine verbale Wortkette (eine Personalform)','Sie schreibt. · Schreib endlich diesen Brief!'],['Zusammengesetzter Satz','mindestens zwei Teilsätze, jeder mit eigener verbaler Wortkette','Ich lerne, weil ich eine Note will.'],['Satzfragment','unvollständig oder abgebrochen, ohne Personalform','Taxi! · Nicht schlecht.']])+
  '<div class="callout">Einfache Sätze müssen <b>nicht kurz</b> sein: «Heute Morgen schrieb Lena zwei Stunden lang an einem Brief an ihre Tante.» (eine Personalform)</div>'+

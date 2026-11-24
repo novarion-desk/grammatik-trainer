@@ -144,7 +144,7 @@ INP.forEach(r=>task.push({typ:r[0],stufe:r[1],lv:r[1]===3?2:1,cats:[r[2]],input:
 
 const SECS=[
 {id:'rohform',title:'Rohform (Infinitiv)',short:'Rohform',min:8,note:'Rohform = Infinitiv = Grundform des Verbs. Bildung: Stamm + -en. Achtung: Die «Rohform eines Satzes» heisst verbale Wortkette (siehe eigene Folie).',
- html:()=>'<p class="lead">Die <b>Rohform</b> (Infinitiv) ist die Grundform des Verbs. So steht es im Wörterbuch.</p>'+T(['Satz','Rohform'],[['Sie lacht.','lachen'],['Er spielte.','spielen'],['Wir sind gegangen.','gehen'],['Er steht früh auf.','aufstehen'],['Du liest.','lesen']])+
+ html:()=>'<p class="lead">Die <b>Rohform</b> (Infinitiv) ist die Grundform des Verbs. So steht es im Wörterbuch.</p>'+[['Sie lacht.','lachen'],['Er spielte.','spielen'],['Wir sind gegangen.','gehen'],['Er steht früh auf.','aufstehen'],['Du liest.','lesen']].map(a=>GT.ui.chips([[a[0],'f-nomen'],'→',[a[1],'f-verb']])).join('')+
  '<div class="callout">Die Rohform endet fast immer auf <b>-en</b> (oder -n). Bei trennbaren Verben schreibt man sie <b>zusammen</b>: aufstehen.</div>'},
 {id:'begriffe',title:'Die verbalen Teile und ihre Namen',short:'Verbale Teile benennen',min:8,note:'Vier Namen für die Verbteile. Personalform = konjugiertes Verb = finites Verb. Die Personalform hat im Hauptsatz einen festen Platz (zweite Stelle).',
  html:()=>T(['Verbaler Teil','Auch genannt','Beispiel'],[['Personalform','konjugiertes Verb, finites Verb','Wir <b>haben</b> gespielt.'],['Infinitiv','Rohform, Grundform','Sie will <b>kommen</b>.'],['Partizip','Mittelwort','Wir haben <b>gespielt</b>.'],['Verbzusatz','abgetrennte Vorsilbe','Er steht früh <b>auf</b>.']])+

@@ -171,19 +171,19 @@ W.forEach(w=>task.push({typ:'wissen',stufe:w[5],lv:1,cats:[w[4]],prompt:w[0],opt
 
 const SECS0=[
 {id:'auf',title:'Aufzählung',short:'Aufzählung',min:6,note:'Einfachste Regel zuerst: Aufzählung. «und» und «oder» ersetzen das Komma.',
- html:()=>'<div class="card"><p>Ich kaufe Äpfel<b>,</b> Birnen <b>und</b> Bananen.</p><p>Er ist gross<b>,</b> stark <b>und</b> freundlich.</p></div>'+
+ html:()=>GT.ui.chips([['Äpfel','f-nomen'],',',['Birnen','f-nomen'],'und',['Bananen','f-nomen']])+'<div class="card"><p>Ich kaufe Äpfel<b>,</b> Birnen <b>und</b> Bananen.</p><p>Er ist gross<b>,</b> stark <b>und</b> freundlich.</p></div>'+
  '<div class="callout"><b>Merke:</b> Zwischen den Gliedern einer Aufzählung steht ein Komma. Vor <b>und</b> und <b>oder</b> steht <b>kein</b> Komma.</div>'},
 {id:'haupt-neben',title:'Hauptsatz und Nebensatz',short:'Nebensatz',min:10,note:'Wichtigste Regel: Nebensatz = Komma. Nebensatz an Satzanfang → Komma nach dem Nebensatz. Nebensatz am Satzende → Komma davor.',
  html:()=>'<div class="grid2"><div class="card"><h3>Nebensatz nachgestellt</h3><p>Ich bleibe zu Hause<b>,</b> weil ich krank bin.</p><p>Ich weiss<b>,</b> dass er kommt.</p></div>'+
  '<div class="card"><h3>Nebensatz vorangestellt</h3><p>Weil ich krank bin<b>,</b> bleibe ich zu Hause.</p><p>Obwohl es regnet<b>,</b> gehen wir hinaus.</p></div></div>'+
  '<div class="callout"><b>Merke:</b> Ein Nebensatz wird <b>immer</b> mit einem Komma vom Hauptsatz getrennt.</div>'},
 {id:'hs-hs',title:'Zwei Hauptsätze',short:'Zwei Hauptsätze',min:8,note:'Vor aber, denn, sondern steht ein Komma. Vor und/oder darf es fehlen.',
- html:()=>T(['Konjunktion','Komma?','Beispiel'],[['aber, sondern, denn','ja','Es regnet<b>,</b> aber wir gehen hinaus.'],['und, oder','nicht nötig','Der Hund bellt <b>und</b> die Katze schläft.']])},
+ html:()=>GT.ui.vs(GT.ui.V('or','Komma: ja (aber, sondern, denn)',['Es regnet<b>,</b> aber wir gehen hinaus.']),GT.ui.V('bl','Komma nicht nötig (und, oder)',['Der Hund bellt <b>und</b> die Katze schläft.']))+'<div class="callout tip">💡 Vor <b>aber, denn, sondern</b> steht ein Komma. Vor <b>und</b> und <b>oder</b> darf es fehlen.</div>'},
 {id:'relativ',title:'Relativsatz und Einschub',short:'Relativsatz',lv:2,min:8,note:'Ab Niveau B. Ein eingeschobener Relativsatz wird mit zwei Kommas eingeschlossen.',
- html:()=>'<div class="card"><p>Der Mann<b>,</b> der dort steht<b>,</b> ist mein Onkel.</p><p>Anna<b>,</b> meine Schwester<b>,</b> wohnt in Bern.</p></div>'+
+ html:()=>GT.ui.chips([['Der Mann','f-nomen'],',',['der dort steht','f-pron'],',',['ist mein Onkel','f-nomen']])+'<div class="card"><p>Der Mann<b>,</b> der dort steht<b>,</b> ist mein Onkel.</p><p>Anna<b>,</b> meine Schwester<b>,</b> wohnt in Bern.</p></div>'+
  '<div class="callout">Eingeschobenes steht <b>zwischen zwei Kommas</b>.</div>'},
 {id:'sonst',title:'Anrede, Ausruf, Infinitivgruppe',short:'Weitere Regeln',min:8,note:'Infinitivgruppen: Komma ist teilweise Pflicht (um … zu, ohne … zu), sonst freiwillig.',
- html:()=>T(['Fall','Beispiel'],[['Anrede','Lukas<b>,</b> komm bitte her!'],['Ausruf','Ach<b>,</b> das ist schade!'],['Ja/Nein/Danke','Ja<b>,</b> ich komme mit.'],['Infinitivgruppe (um … zu)','Sie lernt viel<b>,</b> um die Prüfung zu bestehen.']])},
+ html:()=>[['Anrede','bl','Anrede','Lukas<b>,</b> komm bitte her!'],['Ausruf','gr','Ausruf','Ach<b>,</b> das ist schade!'],['Ja · Nein · Danke','or','Ja/Nein/Danke','Ja<b>,</b> ich komme mit.'],['Infinitivgruppe','vi','Infinitivgruppe (um … zu)','Sie lernt viel<b>,</b> um die Prüfung zu bestehen.']].map(a=>GT.ui.R(a[0],a[1],a[2],a[3])).join('')},
 {id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Typische Fehler: Komma vor «und», fehlendes Komma vor «dass».',
  html:()=>'<div class="grid3">'+[
   ['1 · Komma vor «und»?','«Äpfel, Birnen <b>und</b> Bananen»','In einer Aufzählung kein Komma vor «und».'],
