@@ -387,7 +387,7 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 .hodlg .seg{display:flex;gap:.3rem;flex-wrap:wrap}.hodlg .seg button{flex:1;min-width:3rem}
 .hodlg .seg button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
 .hodlg .acts{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
-.ho-grid{display:grid;gap:5mm;grid-template-columns:1fr 1fr}.ho-grid.c1{grid-template-columns:1fr}.ho-grid.pg{break-after:page;page-break-after:always}
+.ho-grid{display:grid;gap:5mm;grid-template-columns:1fr 1fr}.ho-grid.c1{grid-template-columns:1fr}.ho-grid.hpg:not(:last-child){break-after:page;page-break-after:always}
 .ho-cell{height:var(--hh,58mm);min-height:0}.ho-cell.nr{display:grid;grid-template-columns:58% 1fr;gap:3mm;border:none;background:none}
 .ho-cell.nr>.ho-sl{border:1px solid #94a3b8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;background:#fff;min-height:0}
 .ho-b{zoom:1;padding:0;flex:1;min-height:0;overflow:hidden;position:relative}.ho-in{width:1000px;transform-origin:0 0;padding:3mm}
@@ -408,6 +408,12 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 :is(.sec,.tslide,.tov) table{border-radius:12px;overflow:hidden;border:2px solid var(--sb,#e0e7ff)}
 :is(.sec,.tslide,.tov) table tr:nth-child(even) td{background:rgba(148,163,184,.10)}
 :is(.sec,.tslide,.tov) table th{font-size:.95rem;text-transform:none}
+/* Druck: keine leere erste Seite (24.11.) */
+@media print{html,body{height:auto!important;min-height:0!important;margin:0!important;padding:0!important}
+table.pg,table.pg>tbody,table.pg>tbody>tr{break-inside:auto!important;page-break-inside:auto!important}
+#merk>table.pg:first-child{break-before:avoid!important;page-break-before:avoid!important}
+body.pm>header,body.pm>main,body.pm>dialog{display:none!important;height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;position:absolute!important}
+body.pm #merk{position:static!important;margin:0!important}}
 </style>
 </head>
 <body>
@@ -803,10 +809,13 @@ try{if(/ki-test/.test(location.hash))localStorage.removeItem('gt-ki');if(/ki-aus
 const KI_ON=()=>{try{return localStorage.getItem('gt-ki')!=='0';}catch(e){return true;}};
 function kiDevice(){try{let d=localStorage.getItem('gt-dev');if(!d){d=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('gt-dev',d);}return d;}catch(e){return 'x';}}
 let kiBusy=false;
-async function askKI(){
-  const R=S.R,box=document.getElementById('kiBox'),btn=document.getElementById('kiBtn');
+async function askKI(cx){
+  let R,box,btn,h;
+  if(cx){box=cx.box;btn=cx.btn;h={t:cx.t,ok:cx.ok,right:cx.right,mine:cx.mine};if(!box||kiBusy)return;}
+  else{R=S.R;box=document.getElementById('kiBox');btn=document.getElementById('kiBtn');
   if(!R||!R.answered||!box||kiBusy)return;
-  const h=R.hist[R.hist.length-1],t=h.t,st=v=>String(v==null?'':v).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  h=R.hist[R.hist.length-1];}
+  const t=h.t,st=v=>String(v==null?'':v).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
   const task=[st(t.instr||''),st(t.prompt||''),st(t.sent||''),t.tokens?st(t.tokens.join(' ')):'',t.opts?'Auswahl: '+t.opts.map(st).join(' / '):''].filter(Boolean).join(' – ');
   kiBusy=true;if(btn)btn.disabled=true;
   box.innerHTML='<div class="ki wait">Marty überlegt …</div>';
@@ -818,6 +827,23 @@ async function askKI(){
   }catch(e){box.innerHTML='<div class="ki err">Keine Verbindung. Versuche es später.</div>';if(btn)btn.disabled=false;}
   kiBusy=false;
 }
+/* «Frag Marty» auch in den Folien-Übungen («Probier es aus», Übungsfolien, Gemeinsame Übungen) */
+function kiWidget(btn){
+  const el=btn.closest('[data-w="try"]'),t=el&&el._t;if(!t)return;
+  const st=v=>String(v==null?'':v).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  const ok=!!el.querySelector('.tfb .fb.ok');
+  const right=t.answer!=null&&t.answer!==''?st(t.answer):(t.targets&&t.tokens?t.targets.map(i=>t.tokens[i]).join(' '):st(t.why||''));
+  let mine='';const w=el.querySelector('.opt.wrong');if(w)mine=st(w.textContent);else{const sel=[...el.querySelectorAll('.tapflow .sel,.sel')].map(x=>st(x.textContent)).filter(Boolean);if(sel.length)mine=sel.join(' ');else{const inp=el.querySelector('input[type=text],input:not([type]),textarea');if(inp)mine=inp.value;}}
+  askKI({t,ok,right,mine,box:el.querySelector('.kibw'),btn});
+}
+(function(){
+  if(typeof MutationObserver==='undefined')return;
+  const add=tfb=>{if(!KI_ON()||!tfb||tfb.querySelector('.kirow')||!tfb.querySelector('.fb'))return;
+    const el=tfb.closest('[data-w="try"]');if(!el||!el._t)return;
+    tfb.insertAdjacentHTML('beforeend','<div class="kirow noprint"><button class="btn sm" data-a="kiw">💡 Frag Marty</button></div><div class="kibw"></div>');};
+  const go=()=>new MutationObserver(ms=>{ms.forEach(m=>{const n=m.target;if(n.classList&&n.classList.contains('tfb'))add(n);});}).observe(document.body,{childList:true,subtree:true});
+  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})();
 function fbX(t,ok,mine,right){
   const strip=v=>String(v==null?'':v).replace(/<[^>]+>/g,'').trim();
   const T=(C()&&C().TYPES&&C().TYPES[t.typ])||{},h=t.hint||T.hint;let o='';
@@ -1279,7 +1305,7 @@ document.addEventListener('click',e=>{
    case 'card':{const R=S.R;if(!R||R.answered)return;R.bld.push(Number(b.dataset.i));repaintCards();break;}
    case 'unbuild':{const R=S.R;if(!R||R.answered)return;R.bld.splice(Number(b.dataset.i),1);repaintCards();break;}
    case 'hint':{const h=document.getElementById('hintBox');h.hidden=!h.hidden;break;}
-   case 'ki':askKI();break;
+   case 'ki':askKI();break;case 'kiw':kiWidget(b);break;
    case 'check':checkRound();if(S.R&&S.R.exam&&S.R.answered)nextRound();break;
    case 'next':nextRound();break;
    case 'stop':clearInterval(window._tclk);S.screen=(S.R&&S.R.test)?'test':'config';render();break;
@@ -1410,7 +1436,7 @@ function hoHtml(){
     return right?'<div class="ho-cell nr" style="--hh:'+hh+'"><div class="ho-sl">'+inner+'</div><div class="ho-nt"></div></div>':'<div class="ho-cell" style="--hh:'+hh+';border:1px solid #94a3b8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;background:#fff">'+inner+'</div>';};
   const cols1=right||n<=2||n===3,per=n,pages=[];
   for(let k=0;k<V.length;k+=per)pages.push(V.slice(k,k+per).map((s,j)=>cell(s,k+j)).join(''));
-  return pages.map(p=>'<div class="ho-grid pg'+(cols1?' c1':'')+'">'+p+'</div>').join('')+(HO.notes==='end'?'<div class="ho-end"><h3>Notizen</h3><div class="ho-nt"></div></div>':'');
+  return pages.map(p=>'<div class="ho-grid hpg'+(cols1?' c1':'')+'">'+p+'</div>').join('')+(HO.notes==='end'?'<div class="ho-end"><h3>Notizen</h3><div class="ho-nt"></div></div>':'');
 }
 function hoFit(){
   const m=document.getElementById('merk'),old=m.style.cssText;

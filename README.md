@@ -11,6 +11,8 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Frag Marty in allen Folien-Übungen (24.11.):** Nach jeder beantworteten Aufgabe auf den Übungsfolien, bei «Probier es aus», in den Gemeinsamen Übungen und im Abschluss-Check erscheint «💡 Frag Marty» (wie im Üben-Bereich; `#ki-aus` schaltet es ab).
+- **Druck (24.11.):** Vorsorge gegen eine leere erste Seite bei Merkblatt, Handout und Übersicht (Seitenumbruch-Regeln der Druckvorlage entschärft). Beim Handout entfällt die leere letzte Seite.
 - **Antipp-Aufgaben (24.11.):** 30 neue Sätze zum Antippen in Pronomen, Satzarten (Fragewort), Nebensatzarten (Einleitewort), Feldermodell (Vorfeld), Zusammengezogener Satz (gemeinsames Satzglied) und Verschiebeprobe (verschiebbares Satzglied). Erscheinen auf den Übungsfolien.
 - **Design 2 für alle Kapitel (24.11.):** Karten in Zweier-/Dreierspalten haben jetzt den Farbcode (blau, grün, orange, violett), Stolpersteine sind rot gerahmt, Nummern und Tabellen sind aufgeräumt. Neu gestaltet mit Chips, Vergleich, Regelkarten und Falsch-Richtig-Paaren: Nomen (6 Folien), Komma, Rede, Satzarten, Zusammengezogener Satz, Partikel, Verbale Teile, Verschiebeprobe, Pronomen, Nebensätze, Haupt-/Nebensatz, Adjektiv. Inhalte unverändert. Zweiter Durchgang: Feldermodell, Pronomen (Begleiter/Stellvertreter), Wortarten (Chips, farbige Spaltenköpfe).
 - **Handout mit Auswahl (24.11.):** «Drucken › Handout» fragt Folien pro A4 (1, 2, 4, 6, 8; mit Notizen rechts 2, 3, 4) und Notizen (keine, rechts, am Schluss). Hinweis im Dialog: «Kopf- und Fusszeilen» im Druckdialog ausschalten. Das Drucken-Menü ist auf dem Handy nicht mehr abgeschnitten.
