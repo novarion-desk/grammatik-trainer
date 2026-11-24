@@ -508,7 +508,7 @@ const merk=()=>T(['Thema','Merksatz'],[['Pronomen','Sie ersetzen ein Nomen (Stel
 const UEM={
  begleiter:{types:'wissen',cats:'sg1'},
  artikel:{types:'artikel,artikelein',cats:'sg1'},
- personal:{types:'personal,fall,ersetzen,kuerzen,bezug',cats:'sg2'},
+ personal:{types:'personal,fall,ersetzen,kuerzen,bezug',cats:'sg2',tap:{own:'Pronomen',all:['Pronomen']}},
  hoeflich:{types:'hoeflich',cats:'sg2'},
  possessiv:{types:'possessiv',cats:'sg3'},
  reflexiv:{types:'reflexiv,zuordnen',cats:'sg4'},
@@ -518,6 +518,14 @@ const UEM={
  relativ:{types:'zuordnen,wissen,bezug',cats:'sg6'}
 };
 SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+/* ---- Antipp-Aufgaben (24.11.2026) ---- */
+[
+['*Sie liest *ihr Buch.',1,'Pronomen: Sie (steht für ein Nomen) und ihr (begleitet «Buch»).'],
+['*Ich gebe *dir *meinen Stift.',1,'Pronomen: Ich, dir (Stellvertreter) und meinen (Begleiter).'],
+['*Der Hund bellt, weil *er Hunger hat.',1,'«Der» ist hier Artikel und zählt zu den Pronomen. «er» ersetzt den Hund.'],
+['Wir sehen *uns morgen.',2,'Pronomen: uns. «Wir» ist auch ein Pronomen.'],
+['*Dieses Haus gefällt *mir.',2,'Pronomen: Dieses (Begleiter) und mir (Stellvertreter).']
+].forEach(m=>{const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});task.push({typ:'markieren',stufe:m[1],lv:1,cats:['sg2'],gl:'Pronomen',tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe alle Pronomen an.',why:m[2]});});
 GT.chapter({id:'pronomen',teil:'wort',nr:6,title:'Pronomen',big:'Er gibt ihr sein Buch',desc:'Artikel und Pronomen: ersetzen und begleiten',
  ex:'«'+mk('pron','Er')+' gibt '+mk('pron','ihr')+' '+mk('pron','sein')+' Buch.»',
  goals:['Ich unterscheide Begleiter und Stellvertreter.','Ich erkenne und setze bestimmte und unbestimmte Artikel ein.','Ich ersetze Nomen durch Personalpronomen in der richtigen Form.','Ich wähle das richtige Possessivpronomen (Besitzer und Endung).','Ich kenne Reflexiv-, Demonstrativ-, Frage-, Indefinit- und Relativpronomen.'],

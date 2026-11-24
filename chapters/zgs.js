@@ -73,7 +73,7 @@ const EX=[
  ['Berichtige: «Er hilft und unterstützt seinen Freund.»','Er hilft seinem Freund und unterstützt ihn.',3]
 ];
 const merk=()=>T(['Begriff','Merksatz'],[['ZGS','Ein gemeinsames Satzglied wird nur einmal genannt.'],['Gemeinsam','Subjekt, Objekt, Prädikat oder Hilfsverb.'],['Achtung','Verschiedene Fälle oder Hilfsverben: nicht zusammenziehen.']]);
-const UEM={'erkennen':{types:'erkenne',cats:'sg1'},'falsch':{types:'falsch',cats:'sg3'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+const UEM={'erkennen':{types:'erkenne',cats:'sg1',tap:{own:'Gemeinsames Satzglied',all:['Gemeinsames Satzglied']}},'falsch':{types:'falsch',cats:'sg3'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 /* ---- Erweiterung 23.11.2026 ---- */
 (function(){
 const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
@@ -195,6 +195,14 @@ H3.forEach(h=>task.push({typ:'fach',stufe:h[5],lv:1,cats:['sg4'],input:true,prom
 task.push=_p0;
 })();
 
+/* ---- Antipp-Aufgaben (24.11.2026) ---- */
+[
+['*Anna kocht und singt.',1,'Gemeinsames Satzglied: Anna. Es gehört zu «kocht» und «singt».'],
+['*Der *Hund bellt und beisst.',1,'Gemeinsames Satzglied: Der Hund.'],
+['*Heute lesen wir und schreiben wir.',2,'Gemeinsames Satzglied: Heute (Zeitangabe für beide Teile).'],
+['Tim liebt und spielt *Fussball.',2,'Gemeinsames Satzglied: Fussball. Es ist Objekt für beide Verben.'],
+['*Wir gehen ins Kino und essen Popcorn.',1,'Gemeinsames Satzglied: Wir.']
+].forEach(m=>{const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});task.push({typ:'markieren',stufe:m[1],lv:1,cats:['sg1'],gl:'Gemeinsames Satzglied',tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe das gemeinsame Satzglied an.',why:m[2]});});
 GT.chapter({id:'zgs',teil:'satz',nr:8,title:'Zusammengezogener Satz',big:'Anna kocht und deckt den Tisch',desc:'Gemeinsames Satzglied erkennen und Sätze zusammenziehen',
  ex:'«Anna kocht und deckt den Tisch.»',
  goals:['Ich erkenne den zusammengezogenen Satz.','Ich nenne das gemeinsame Satzglied.','Ich ziehe Sätze zusammen.','Ich berichtige falsche Zusammenziehungen (ab B).'],

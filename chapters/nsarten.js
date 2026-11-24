@@ -176,7 +176,7 @@ const SECS0=[
  T(['Mit Satzglied','Als Nebensatz'],[['Ich bleibe <b>wegen meiner Krankheit</b> zu Hause.','Ich bleibe zu Hause, <b>weil ich krank bin</b>.'],['Wir gehen <b>bei Sonnenschein</b> schwimmen.','Wir gehen schwimmen, <b>wenn die Sonne scheint</b>.']])+
  '<div class="callout">Ein Nebensatz tritt oft an die Stelle eines <b>Satzglieds</b> (Grund, Zeit, Bedingung …). Haupt- und Nebensatz trennt man mit einem <b>Komma</b>.</div>'+
  '<div class="callout">Es gibt <b>sechs</b> Arten: Konjunktionalsatz, Relativsatz, indirekter Fragesatz, uneingeleiteter Nebensatz, Infinitivsatz und (ab Niveau A) Partizipialsatz. Auf den nächsten Folien kommt jede einzeln mit einer Übung.</div>'},
-{id:'konj',uebung:{types:'form',cats:'sg1',ans:'Konjunktionalsatz|Relativsatz|Indirekter Fragesatz'},title:'Der Konjunktionalsatz',short:'Konjunktionalsatz',min:8,note:'Konjunktionalsatz = Nebensatz mit unterordnender Konjunktion (Subjunktion). Verb am Schluss. Hier nur die Form erkennen. Die Bedeutung (Zeit, Grund …) kommt später.',
+{id:'konj',uebung:{tap:{own:'Einleitewort',all:['Einleitewort']},types:'form',cats:'sg1',ans:'Konjunktionalsatz|Relativsatz|Indirekter Fragesatz'},title:'Der Konjunktionalsatz',short:'Konjunktionalsatz',min:8,note:'Konjunktionalsatz = Nebensatz mit unterordnender Konjunktion (Subjunktion). Verb am Schluss. Hier nur die Form erkennen. Die Bedeutung (Zeit, Grund …) kommt später.',
  html:()=>ART({was:'Ein <b>Konjunktionalsatz</b> ist ein Nebensatz, der mit einer <b>unterordnenden Konjunktion</b> beginnt.',erk:['Er beginnt mit <b>weil, dass, wenn, obwohl, damit, als, bevor, nachdem</b> …','Die Personalform steht am <b>Schluss</b>.','Er wird mit einem <b>Komma</b> abgetrennt.'],bsp:[['Ich weiss, <b>dass</b> er kommt.','Konjunktion «dass»'],['<b>Weil</b> es regnet, bleiben wir drinnen.','Konjunktion «weil»'],['Wir gehen schwimmen, <b>wenn</b> die Sonne scheint.','Konjunktion «wenn»']],stolper:'«dass» mit Doppel-s ist eine Konjunktion. «das» ist Artikel oder Pronomen. Probe: Lässt sich «dieses» oder «welches» einsetzen, schreibt man «das».'})},
 {id:'relativ-neu',uebung:{types:'form',cats:'sg1',ans:'Relativsatz|Konjunktionalsatz|Indirekter Fragesatz'},title:'Der Relativsatz im Überblick',short:'Relativsatz (Merkmale)',min:6,note:'Kurzer Überblick über die formale Art. Der Relativsatz selbst wird danach noch genauer behandelt (Bezugswort, Komma).',
  html:()=>ART({was:'Ein <b>Relativsatz</b> beschreibt ein Nomen genauer. Er beginnt mit einem <b>Relativpronomen</b> (der, die, das, welcher) oder einem <b>Relativadverb</b> (wo).',erk:['Er hängt an einem <b>Bezugswort</b> im Hauptsatz.','Das Relativpronomen lässt sich oft durch <b>«welcher, welche, welches»</b> ersetzen.','Die Personalform steht am <b>Schluss</b>.'],bsp:[['Das ist der <b>Lehrer</b>, <b>der</b> Mathe unterrichtet.','Bezugswort «Lehrer»'],['Die <b>Aufgabe</b>, <b>die</b> wir lösten, war schwierig.','Bezugswort «Aufgabe»'],['Der <b>Ort</b>, <b>wo</b> wir uns treffen, ist neu.','Relativadverb «wo»']],stolper:'«das» kann Relativpronomen sein (Das Buch, <b>das</b> ich lese …) oder Artikel. «dass» ist nie ein Relativpronomen.'})},
@@ -228,6 +228,14 @@ task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_h
 task.push=_p0;
 })();
 
+/* ---- Antipp-Aufgaben (24.11.2026) ---- */
+[
+['Ich bleibe zu Hause, *weil ich krank bin.',1,'Einleitewort: weil. Das Verb steht am Schluss.'],
+['Sie weiss, *dass er kommt.',1,'Einleitewort: dass.'],
+['*Obwohl es regnet, gehen wir hinaus.',1,'Einleitewort: Obwohl. Es leitet den vorangestellten Nebensatz ein.'],
+['Der Mann, *der dort steht, ist mein Onkel.',2,'Einleitewort: der (Relativpronomen).'],
+['Sag mir, *wann du kommst.',2,'Einleitewort: wann (Fragewort im indirekten Fragesatz).']
+].forEach(m=>{const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});task.push({typ:'markieren',stufe:m[1],lv:1,cats:['sg1'],gl:'Einleitewort',tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe das Einleitewort des Nebensatzes an.',why:m[2]});});
 GT.chapter({id:'nsarten',teil:'satz',nr:9,title:'Arten der Nebensätze',big:'Ich weiss, dass er kommt',desc:'Formale Arten, Relativsatz, Infinitivsatz und Bedeutung',
  ex:'«Sie hofft, die Prüfung zu bestehen.»',
  goals:['Ich unterscheide die sechs formalen Nebensatzarten.','Ich forme uneingeleitete und eingeleitete Nebensätze um.','Ich erkenne Relativsätze und Infinitivsätze.','Ich bestimme die Bedeutung von Nebensätzen (Zeit, Grund, Bedingung …).','Ich wandle überladene Sätze um (ab B).'],

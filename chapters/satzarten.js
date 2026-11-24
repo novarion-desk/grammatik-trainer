@@ -181,7 +181,7 @@ const EX=[
 ];
 const merk=()=>T(['Satzart','Satzzeichen','Beispiel'],[['Aussagesatz','.','Der Hund bellt.'],['Fragesatz','?','Kommst du mit?'],['Aufforderungssatz','! oder .','Komm her!'],['Ausrufesatz (Zusatz)','!','Wie schön das ist!']])+T(['Satzbau','Merkmal'],[['Einfacher Satz','eine Personalform, kann lang sein'],['Zusammengesetzter Satz','mindestens zwei Teilsätze'],['Satzfragment','keine Personalform']])+
  '<ul><li>Ja-/Nein-Frage: Verb an erster Stelle.</li><li>Ergänzungsfrage: Fragewort + Verb an zweiter Stelle.</li><li>Aufforderung: Befehlsform, Verb vorne.</li></ul>';
-const UEM={'arten':{types:'satzart',cats:'sg1'},'bau':{types:'bau',cats:'sg4'},'frage':{types:'zeichen',cats:'sg2'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+const UEM={'arten':{types:'satzart',cats:'sg1'},'bau':{types:'bau',cats:'sg4'},'frage':{types:'zeichen',cats:'sg2',tap:{own:'Fragewort',all:['Fragewort']}}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 /* ---- Erweiterung 23.11.2026 ---- */
 (function(){
 const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
@@ -243,6 +243,14 @@ B2.forEach(b=>task.push({typ:'bau',stufe:b[2],lv:b[2]===3?2:1,cats:[b[1]===2?'sg
 task.push=_p0;
 })();
 
+/* ---- Antipp-Aufgaben (24.11.2026) ---- */
+[
+['*Wer hat die Aufgabe gemacht?',1,'Fragewort: Wer. Es steht am Anfang der W-Frage.'],
+['*Wann hast du Training?',1,'Fragewort: Wann. Es fragt nach der Zeit.'],
+['*Warum kommst du zu spät?',1,'Fragewort: Warum. Es fragt nach dem Grund.'],
+['*Wo wohnt deine Grossmutter?',2,'Fragewort: Wo. Es fragt nach dem Ort.'],
+['*Wie lange dauert die Pause?',2,'Fragewort: Wie (lange). Es fragt nach der Dauer.']
+].forEach(m=>{const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});task.push({typ:'markieren',stufe:m[1],lv:1,cats:['sg1'],gl:'Fragewort',tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe das Fragewort an.',why:m[2]});});
 GT.chapter({id:'satzarten',teil:'satz',nr:5,title:'Satzarten und Satzbau',big:'Aussage, Frage, Aufforderung',desc:'Grundfunktionen, einfacher und zusammengesetzter Satz, Satzfragment',
  ex:'«Kommst du mit?» · «Komm mit!» · «Wie schön!»',
  goals:['Ich kenne die drei Grundfunktionen der Rede: Aussage, Frage, Aufforderung.','Ich setze das richtige Satzzeichen und forme Sätze um.','Ich erkenne einfache und zusammengesetzte Sätze und zähle die Personalformen.','Ich erkenne Satzfragmente und baue sie zu ganzen Sätzen aus.'],

@@ -169,7 +169,7 @@ const merk=()=>'<h3>🔀 Die Verschiebeprobe</h3><p>Mit der <b>Verschiebeprobe</
  T(['Satz','Satzglieder','Anzahl'],[['Der Hund bellt laut.','Der Hund | bellt | laut','3'],['Gestern spielte der kleine Junge Fussball.','Gestern | spielte | der kleine Junge | Fussball','4'],['Nach der Pause schreibt die Klasse einen Test.','Nach der Pause | schreibt | die Klasse | einen Test','4'],['Mein Bruder hat gestern sein Handy verloren.','Mein Bruder | hat … verloren | gestern | sein Handy','4']])+
  '<h3>⚠️ Stolpersteine</h3><ul><li><b>Zweiteiliges Verb:</b> «hat» und «verloren» gehören zusammen und zählen als <b>ein</b> Satzglied, auch wenn sie getrennt stehen.</li><li><b>Nicht zu klein abgrenzen:</b> «Der kleine Hund» ist ein Satzglied, nicht drei.</li><li><b>Verb nicht verschieben:</b> Die Personalform bleibt im Aussagesatz an zweiter Stelle («Heute spielt er.», nicht «Heute er spielt.»).</li><li><b>Sinn prüfen:</b> Bleibt die Aussage gleich?</li></ul>'+
  '<h3>🔤 Fachbegriffe</h3>'+T(['Begriff','Bedeutung'],[['Verschiebeprobe','Verfahren, um Satzglieder zu finden (auch Umstellprobe)'],['Satzglied','Wort oder Wortgruppe, die beim Umstellen zusammenbleibt'],['Personalform','Verb, das sich nach der Person richtet; im Aussagesatz an zweiter Stelle']]);
-const UEM={'probe':{types:'trenn,probe',cats:'sg1,sg2'}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
+const UEM={'probe':{types:'trenn,probe',cats:'sg1,sg2',tap:{own:'Satzglied zum Verschieben',all:['Satzglied zum Verschieben']}}};SECS.forEach(s=>{if(UEM[s.id]&&!s.uebung)s.uebung=Object.assign({},UEM[s.id]);});
 /* ---- Erweiterung 23.11.2026 ---- */
 (function(){
 const _p0=task.push.bind(task),_have=new Set(task.map(t=>(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer));
@@ -222,6 +222,14 @@ task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_h
 task.push=_p0;
 })();
 
+/* ---- Antipp-Aufgaben (24.11.2026) ---- */
+[
+['Der kleine Hund bellt *laut.',1,'Verschiebbar: laut. Laut bellt der kleine Hund.'],
+['Anna liest *am *Abend ein Buch.',1,'Verschiebbar: am Abend. Am Abend liest Anna ein Buch.'],
+['Wir spielen *im *Park Fussball.',1,'Verschiebbar: im Park. Im Park spielen wir Fussball.'],
+['Er schenkt *seiner *Mutter Blumen.',2,'Verschiebbar: seiner Mutter. Seiner Mutter schenkt er Blumen.'],
+['Der Bus fährt *um *7 *Uhr ab.',2,'Verschiebbar: um 7 Uhr. Um 7 Uhr fährt der Bus ab.']
+].forEach(m=>{const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});task.push({typ:'markieren',stufe:m[1],lv:1,cats:['sg2'],gl:'Satzglied zum Verschieben',tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe das Satzglied an, das du an den Anfang verschieben kannst.',why:m[2]});});
 GT.chapter({id:'verschiebe',teil:'satz',nr:2,title:'Die Verschiebeprobe',big:'Der Hund | bellt | laut',desc:'Satzglieder durch Umstellen finden und abtrennen',
  ex:'«Der Hund | bellt | laut.»',
  goals:['Ich stelle einen Satz auf mehrere Arten um und lasse die Personalform an zweiter Stelle.','Ich erkenne, was beim Umstellen zusammenbleibt: ein Satzglied.','Ich setze zwischen die Satzglieder einen Strich und zähle sie.','Ich weiss, dass ein Verb aus mehreren Teilen (hat … gelacht) nur ein Satzglied ist.','Ich schreibe den Fachbegriff «Verschiebeprobe» richtig.'],
