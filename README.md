@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Handout mit Auswahl (24.11.):** «Drucken › Handout» fragt Folien pro A4 (1, 2, 4, 6, 8; mit Notizen rechts 2, 3, 4) und Notizen (keine, rechts, am Schluss). Hinweis im Dialog: «Kopf- und Fusszeilen» im Druckdialog ausschalten. Das Drucken-Menü ist auf dem Handy nicht mehr abgeschnitten.
 - **Folien neu gestaltet (24.11.):** Verb: Zeitleiste bei den Zeitformen und falsch/richtig-Paare bei den Stolpersteinen; Fälle: Dativ/Genitiv/Akkusativ nebeneinander bei den Stolpersteinen; Satzglieder: Satzglieder als farbige Chips; Haupt-/Nebensatz als Zwei-Spalten-Vergleich. Behoben: Fettschrift in Stolperstein-Karten brach Zeilen um.
 - **Baukasten 2.0 (24.11.):** Neue Bausteine für Folien in `GT.ui` (Satzbaustein-Chips, Zwei-Spalten-Vergleich `vs`, Regelkarten, Oops-Gegenüberstellung, Zeitleiste, Tipp-/Warn-/Oops-Kästen). Bestehende Hinweiskästen «Merke» und «Wichtig» erscheinen jetzt grün mit 💡 bzw. gelb mit ⚠️. Noch in keinem Kapitel eingesetzt (Inhalte kommen über Prüfliste).
 - **KI-Erklärung (23.11.):** Knopf «💡 Frag Marty» nach einer beantworteten Üben-Aufgabe, für alle sichtbar, nicht in der Prüfung (`…/grammatik-trainer/#ki-aus` schaltet ihn auf dem Gerät ab, `#ki-test` wieder ein). Die Anfrage geht an den Cloudflare-Worker `tc-ki-proxy` (Mistral, Key nur dort), mit Tageslimit pro Gerät. Hinweis in der App: KI kann sich irren, keine Namen eingeben. Nicht in der Prüfung.

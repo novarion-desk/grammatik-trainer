@@ -380,6 +380,20 @@ ol.ex{padding-left:1.4rem}ol.ex li{margin:0 0 1rem;padding-left:.3rem;font-size:
 .tln>div::before{content:'';position:absolute;left:50%;top:-1.1rem;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--c,#4f46e5);border:3px solid #fff;box-shadow:0 0 0 2px var(--c,#4f46e5)}
 .tln b{display:block;color:var(--t,#312e81)}
 @media (max-width:700px){.vs,.oopsg{grid-template-columns:minmax(0,1fr)}.tln{flex-wrap:wrap}}
+/* Handout-Auswahl und Menü auf dem Handy */
+.hodlg{position:fixed;inset:0;z-index:2000;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;padding:1rem}
+.hodlg>div{background:#fff;border-radius:16px;padding:1.1rem 1.2rem;max-width:26rem;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.hodlg h3{margin:0 0 .7rem}.hodlg .row{margin:.6rem 0}.hodlg .row>b{display:block;margin-bottom:.3rem}
+.hodlg .seg{display:flex;gap:.3rem;flex-wrap:wrap}.hodlg .seg button{flex:1;min-width:3rem}
+.hodlg .seg button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.hodlg .acts{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
+.ho-grid{display:grid;gap:5mm;grid-template-columns:1fr 1fr}.ho-grid.c1{grid-template-columns:1fr}.ho-grid.pg{break-after:page;page-break-after:always}
+.ho-cell{height:var(--hh,58mm);min-height:0}.ho-cell.nr{display:grid;grid-template-columns:58% 1fr;gap:3mm;border:none;background:none}
+.ho-cell.nr>.ho-sl{border:1px solid #94a3b8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;background:#fff;min-height:0}
+.ho-b{zoom:1;padding:0;flex:1;min-height:0;overflow:hidden;position:relative}.ho-in{width:1000px;transform-origin:0 0;padding:3mm}
+.ho-nt{background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(8mm - 1px),#94a3b8 calc(8mm - 1px),#94a3b8 8mm);margin-top:2mm}
+.ho-end{break-inside:avoid;height:125mm;margin-top:4mm;border:1px solid #94a3b8;border-radius:6px;padding:2mm 3mm}.ho-end h3{margin:0 0 1mm;font-size:11pt}.ho-end .ho-nt{height:calc(100% - 9mm)}
+@media (max-width:700px){.ddm{left:0;right:auto;max-width:calc(100vw - 2rem)}.ddm .btn{white-space:normal;text-align:left}}
 </style>
 </head>
 <body>
@@ -1269,7 +1283,7 @@ document.addEventListener('click',e=>{
    case 'tjump':tGo(Number(b.dataset.i));break;
    case 'tscale':S.t.scale=(S.t.scale+1)%3;render();break;
    case 'tnotes':S.t.notes=!S.t.notes;render();break;
-   case 'tprint':document.querySelectorAll('details.dd[open]').forEach(x=>x.removeAttribute('open'));printTeach(v);break;
+   case 'tprint':document.querySelectorAll('details.dd[open]').forEach(x=>x.removeAttribute('open'));if(v==='ho')openHo();else printTeach(v);break;
    case 'tlogin':if(S.demo)break;S.loginOpen=true;renderLogin();break;
    case 'tlogout':doLogout();break;
    case 'tsettings':if(!teacherAccess())break;openSettings();break;
@@ -1337,7 +1351,7 @@ function screenTeach(){
   const bar='<div class="tbar"><div class="seg"><button data-a="tmode" data-v="slides" class="'+(T.mode==='slides'?'on':'')+'">Folien</button><button data-a="tmode" data-v="overview" class="'+(T.mode==='overview'?'on':'')+'">Übersicht</button></div>'+
    (T.mode==='slides'?'<button class="btn sm primary" data-a="tpres" title="Vollbild, wie in PowerPoint (Esc beendet)">▶ Präsentieren</button>':'')+'<button class="btn sm" data-a="tscale">Schrift: '+SCN[T.scale]+'</button><button class="btn sm" data-a="tnotes">Hinweise: '+(T.notes?'an':'aus')+'</button>'+
    '<span class="tsp"></span><span class="muted tinfo">'+V.length+' Folien · ca. '+tot+' Min.</span>'+
-   '<details class="dd"><summary class="btn sm">Drucken ▾</summary><div class="ddm"><button class="btn sm" data-a="tprint" data-v="h">Übersicht für das Heft</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt</button><button class="btn sm" data-a="tprint" data-v="u">Gemeinsame Übungen</button><button class="btn sm" data-a="tprint" data-v="ho">Handout: Folien (mehrere pro A4)</button><hr style="margin:.3rem 0;border:0;border-top:1px solid var(--line)"><button class="btn sm" data-a="tdocx" data-v="h">Übersicht für das Heft (.docx)</button><button class="btn sm" data-a="tdocx" data-v="m">Merkblatt (.docx)</button><button class="btn sm" data-a="tdocx" data-v="u">Gemeinsame Übungen (.docx)</button></div></details>'+
+   '<details class="dd"><summary class="btn sm">Drucken ▾</summary><div class="ddm"><button class="btn sm" data-a="tprint" data-v="h">Übersicht für das Heft</button><button class="btn sm" data-a="tprint" data-v="m">Merkblatt</button><button class="btn sm" data-a="tprint" data-v="u">Gemeinsame Übungen</button><button class="btn sm" data-a="tprint" data-v="ho">Handout: Folien (Auswahl)</button><hr style="margin:.3rem 0;border:0;border-top:1px solid var(--line)"><button class="btn sm" data-a="tdocx" data-v="h">Übersicht für das Heft (.docx)</button><button class="btn sm" data-a="tdocx" data-v="m">Merkblatt (.docx)</button><button class="btn sm" data-a="tdocx" data-v="u">Gemeinsame Übungen (.docx)</button></div></details>'+
    '<button class="btn sm primary" data-a="sheet" data-t="'+S.teil+'" data-v="'+S.ch+'">Übungsblatt erstellen</button></div>';
   if(T.pres&&T.mode==='slides'){
     const s=V[T.cur];
@@ -1364,15 +1378,42 @@ function mountWidgets(root){
   (root||document).querySelectorAll('[data-w]').forEach(el=>{const f=W[el.dataset.w];if(f&&!el._m){el._m=1;f(el);}});
 }
 function doPrint(html){
-  const m=document.getElementById('merk');m.innerHTML=html;document.body.classList.add('pm');
+  const m=document.getElementById('merk');m.innerHTML=html;document.body.classList.add('pm');if(m.querySelector('.ho-b'))hoFit();
   const done=()=>document.body.classList.remove('pm');window.addEventListener('afterprint',done,{once:true});
   try{window.print();}catch(e){done();}
 }
 function teachInner(mode){
   const c=C();
   if(mode==='m')return ['Merkblatt',c.merk()];
-  if(mode==='ho')return ['Handout',c.title?'<div class="ho-grid">'+slidesVis().filter(s=>(s.p||'')!=='').map((s,i)=>'<div class="ho-cell"><div class="ho-t">'+(i+1)+' · '+s.title+'</div><div class="ho-b">'+stripH(s.print?s.print():s.html())+'</div></div>').join('')+'</div>':''];
+  if(mode==='ho')return ['Handout',hoHtml()];
   return [mode==='u'?'Übungsblatt':'Übersicht für das Heft',slidesVis().filter(s=>(s.p||'').includes(mode)).map(s=>'<section class="ps"><h2 style="font-size:1.15rem">'+s.title+'</h2>'+(s.print?s.print():stripH(s.html()))+'</section>').join('')];
+}
+const HO={n:'4',notes:'none'};
+function hoHtml(){
+  const right=HO.notes==='right',n=+HO.n,V=slidesVis().filter(s=>(s.p||'')!=='');
+  const hh={1:'250mm',2:'123mm',3:'80mm',4:right?'60mm':'123mm',6:'80mm',8:'60mm'}[n]||'60mm';
+  const cell=(s,i)=>{const inner='<div class="ho-t">'+(i+1)+' · '+s.title+'</div><div class="ho-b"><div class="ho-in">'+stripH(s.print?s.print():s.html())+'</div></div>';
+    return right?'<div class="ho-cell nr" style="--hh:'+hh+'"><div class="ho-sl">'+inner+'</div><div class="ho-nt"></div></div>':'<div class="ho-cell" style="--hh:'+hh+';border:1px solid #94a3b8;border-radius:6px;overflow:hidden;display:flex;flex-direction:column;background:#fff">'+inner+'</div>';};
+  const cols1=right||n<=2||n===3,per=n,pages=[];
+  for(let k=0;k<V.length;k+=per)pages.push(V.slice(k,k+per).map((s,j)=>cell(s,k+j)).join(''));
+  return pages.map(p=>'<div class="ho-grid pg'+(cols1?' c1':'')+'">'+p+'</div>').join('')+(HO.notes==='end'?'<div class="ho-end"><h3>Notizen</h3><div class="ho-nt"></div></div>':'');
+}
+function hoFit(){
+  const m=document.getElementById('merk'),old=m.style.cssText;
+  m.style.cssText='display:block;position:absolute;left:-10000px;top:0;width:210mm;padding:0 1.8cm;box-sizing:border-box';
+  m.querySelectorAll('.ho-b').forEach(b=>{const x=b.firstElementChild;x.style.transform='none';const z=Math.min(1,b.clientWidth/1000,b.clientHeight/Math.max(1,x.offsetHeight));x.style.transform='scale('+Math.max(.12,z).toFixed(3)+')'});
+  m.style.cssText=old;
+}
+function openHo(){
+  const old=document.getElementById('hodlg');if(old)old.remove();
+  const draw=()=>{const right=HO.notes==='right',ns=right?['2','3','4']:['1','2','4','6','8'];if(!ns.includes(HO.n))HO.n=right?'3':'4';
+    d.innerHTML='<div><h3>Handout drucken</h3><div class="row"><b>Folien pro A4</b><div class="seg">'+ns.map(k=>'<button class="btn sm'+(HO.n===k?' on':'')+'" data-hn="'+k+'">'+k+'</button>').join('')+'</div></div>'+
+    '<div class="row"><b>Notizen</b><div class="seg">'+[['none','Keine'],['right','Rechts'],['end','Am Schluss']].map(x=>'<button class="btn sm'+(HO.notes===x[0]?' on':'')+'" data-hz="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div>'+
+    '<p class="muted" style="font-size:.85rem;margin:.4rem 0 0">Tipp: Im Druckdialog «Kopf- und Fusszeilen» ausschalten, dann steht keine Webadresse auf dem Blatt.</p>'+
+    '<div class="acts"><button class="btn" data-hc="1">Abbrechen</button><button class="btn primary" data-hp="1">Drucken</button></div></div>'};
+  const d=document.createElement('div');d.id='hodlg';d.className='hodlg';draw();document.body.appendChild(d);
+  d.onclick=e=>{const b=e.target.closest('button');if(e.target===d||(b&&b.dataset.hc))return d.remove();if(!b)return;
+    if(b.dataset.hn){HO.n=b.dataset.hn;draw()}else if(b.dataset.hz){HO.notes=b.dataset.hz;draw()}else if(b.dataset.hp){d.remove();printTeach('ho')}};
 }
 function printTeach(mode){const [name,inner]=teachInner(mode);doPrint(wrapPrint(name,C().title,inner));}
 /* ---- Word-Export (.docx) ---- */
