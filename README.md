@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Baukasten 2.0 (24.11.):** Neue Bausteine für Folien in `GT.ui` (Satzbaustein-Chips, Zwei-Spalten-Vergleich `vs`, Regelkarten, Oops-Gegenüberstellung, Zeitleiste, Tipp-/Warn-/Oops-Kästen). Bestehende Hinweiskästen «Merke» und «Wichtig» erscheinen jetzt grün mit 💡 bzw. gelb mit ⚠️. Noch in keinem Kapitel eingesetzt (Inhalte kommen über Prüfliste).
 - **KI-Erklärung (23.11.):** Knopf «💡 Frag Marty» nach einer beantworteten Üben-Aufgabe, für alle sichtbar, nicht in der Prüfung (`…/grammatik-trainer/#ki-aus` schaltet ihn auf dem Gerät ab, `#ki-test` wieder ein). Die Anfrage geht an den Cloudflare-Worker `tc-ki-proxy` (Mistral, Key nur dort), mit Tageslimit pro Gerät. Hinweis in der App: KI kann sich irren, keine Namen eingeben. Nicht in der Prüfung.
 - **Tippfehler (23.11.):** Bei Fachbegriffen im Modus «Selber schreiben» zählt ein kleiner Tippfehler (ab 6 Buchstaben: 1 Fehler, ab 12: 2; ä/ae gleichwertig) als richtig, wird aber erwähnt («Achte auf die Schreibweise …») und in der Übersicht markiert. Nicht tolerant: Grammatikformen (Einsetzen, Umformen), Gross-/Kleinschreibungs-Aufgaben und Begriffe, die selbst ein anderer Fachbegriff sind (z. B. «Futur II» statt «Futur I»).
 - **Neuer Typ «Subjekt und Objekte finden» (23.11.):** 8 bisher unsichtbare Aufgaben in «Die Verschiebeprobe» sind jetzt sichtbar.
