@@ -471,7 +471,7 @@ const TAPGL={praedikat:'Prädikat',subjekt:'Subjekt',ao:'Akkusativobjekt','do':'
 
 const SECS=[
 {id:'farben',title:'Die Satzglieder und ihre Farben',short:'Farben',min:6,note:'Überblick mit Farbcode. Diese Farben verwenden wir auf allen Folien und im Merkblatt. Jedes Satzglied wird danach auf einer eigenen Folie genau erklärt. Das Attribut ist kein eigenes Satzglied, es gehört zu einem Nomen.',
- html:()=>'<p class="lead">Jedes Satzglied hat eine eigene <b>Farbe</b>, eine eigene <b>Frage</b> und ein eigenes Zeichen.</p>'+
+ html:()=>'<p class="lead">Jedes Satzglied hat eine eigene <b>Farbe</b>, eine eigene <b>Frage</b> und ein eigenes Zeichen.</p>'+GT.ui.chips([['Der Hund','f-nom'],['bellt','f-verb'],['laut','f-adv']])+
  '<div class="grid2">'+SGI.map(x=>'<div class="card f-'+x[0]+'" style="border-left:6px solid var(--c);background:var(--b);color:var(--t)"><div style="display:flex;gap:.6rem;align-items:center"><span style="font-size:1.8rem">'+x[1]+'</span><div><span class="tag f-'+x[0]+'">'+x[2]+'</span><br><b>'+x[3]+'</b></div></div><p style="margin:.4rem 0 0">'+x[4]+'</p></div>').join('')+'</div>'+
  '<div class="callout info">🏷️ Das <b>Attribut</b> ist <b>kein</b> Satzglied. Es gehört zu einem Nomen und bleibt beim Verschieben bei ihm.</div>'},
 {id:'praedikat',uebung:{types:'glied,frage',cats:'sg2',ans:'Prädikat|Was geschieht? / Was tut …?'},title:'Das Prädikat',short:'Prädikat',min:12,note:'Das Prädikat besteht aus allen Teilen des Verbs. Die Personalform steht im Aussagesatz an zweiter Stelle, weitere Teile stehen am Schluss. Ein mehrteiliges Prädikat ist trotzdem nur ein Satzglied. Zuerst das Prädikat suchen, weil es den festen Platz hat. Tipp: Satz in eine Frage umwandeln, das erste Wort ist die Personalform.',

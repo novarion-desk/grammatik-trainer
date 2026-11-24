@@ -159,7 +159,7 @@ const SECS=[
  '<div class="card" style="margin-top:.8rem">'+T(['Person','Endung','lachen','sein','haben'],[['ich','-e','ich lache','ich bin','ich habe'],['du','-st','du lachst','du bist','du hast'],['er/sie/es','-t','er lacht','er ist','er hat'],['wir','-en','wir lachen','wir sind','wir haben'],['ihr','-t','ihr lacht','ihr seid','ihr habt'],['sie (Mz.)','-en','sie lachen','sie sind','sie haben']])+'</div>'+
  '<div class="callout">Bei einigen Verben ändert sich der Stamm: du l<b>ie</b>st, er f<b>ä</b>hrt, du n<b>imm</b>st. Lerne sie mit.</div>'},
 {id:'zeiten',title:'Die Zeitformen',short:'Zeitformen',min:12,note:'Zeitstrahl an die Wandtafel zeichnen. Zuerst Präsens, Präteritum, Perfekt; dann Plusquamperfekt und Futur. Wichtig: Perfekt ist die Form fürs Sprechen.',
- html:()=>T(['Zeitform','Beispiel (lachen)','Bildung','Wann'],[
+ html:()=>GT.ui.tline([['Plusquamperfekt','er hatte gelacht','#7c3aed'],['Präteritum / Perfekt','er lachte · er hat gelacht','#dc2626'],['Präsens','er lacht','#16a34a'],['Futur I','er wird lachen','#2563eb']])+T(['Zeitform','Beispiel (lachen)','Bildung','Wann'],[
   ['Präsens','er lacht','Stamm + Endung','jetzt; auch Zukunft (Morgen fahre ich.)'],
   ['Präteritum','er lachte','Stamm + -te (oder Ablaut: ging)','schriftliches Erzählen'],
   ['Perfekt','er hat gelacht','haben oder sein + Partizip II','mündliches Erzählen von Vergangenem'],
@@ -183,7 +183,7 @@ const SECS=[
  html:()=>'<div class="grid2"><div class="card"><h3>Aktiv</h3><p>Der Handelnde steht im Vordergrund.</p><p>«Der Bäcker <b>backt</b> das Brot.»</p></div>'+
  '<div class="card"><h3>Passiv</h3><p><b>werden + Partizip II</b>. Das Geschehen steht im Vordergrund.</p><p>«Das Brot <b>wird gebacken</b>.»</p></div></div>'},
 {id:'stolper',title:'Stolpersteine',short:'Stolpersteine',min:7,note:'Pro Stolperstein ein Beispiel von den Schülern bilden lassen.',
- html:()=>'<div class="grid3">'+[
+ html:()=>GT.ui.oops([['Ich tue lesen.','Ich lese.'],['gebringt','gebracht']])+'<div class="grid3">'+[
   ['1 · Zwei Teile, ein Verb','«Er <b>hat</b> gestern <b>gelacht</b>.»','Hilfsverb und Partizip II gehören zusammen. Dazwischen können andere Wörter stehen.'],
   ['2 · Trennbare Verben','«Er <b>steht</b> früh <b>auf</b>.»','«aufstehen»: Die Vorsilbe steht am Satzende.'],
   ['3 · Perfekt mit sein','«Ich <b>bin</b> gelaufen.»','Bei Bewegung und Zustandsänderung: sein + Partizip II.'],
