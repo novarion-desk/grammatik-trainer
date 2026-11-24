@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Präsentation (24.11.):** Die Antwort von «Frag Marty» lässt sich nach unten scrollen und wird automatisch ins Bild geholt.
 - **Frag Marty in allen Folien-Übungen (24.11.):** Nach jeder beantworteten Aufgabe auf den Übungsfolien, bei «Probier es aus», in den Gemeinsamen Übungen und im Abschluss-Check erscheint «💡 Frag Marty» (wie im Üben-Bereich; `#ki-aus` schaltet es ab).
 - **Druck (24.11.):** Vorsorge gegen eine leere erste Seite bei Merkblatt, Handout und Übersicht (Seitenumbruch-Regeln der Druckvorlage entschärft). Beim Handout entfällt die leere letzte Seite.
 - **Antipp-Aufgaben (24.11.):** 30 neue Sätze zum Antippen in Pronomen, Satzarten (Fragewort), Nebensatzarten (Einleitewort), Feldermodell (Vorfeld), Zusammengezogener Satz (gemeinsames Satzglied) und Verschiebeprobe (verschiebbares Satzglied). Erscheinen auf den Übungsfolien.
