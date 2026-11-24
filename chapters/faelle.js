@@ -215,7 +215,7 @@ const FE=[
  ['Wegen','dem schlechten Wetter',' fällt der Ausflug aus.','des schlechten Wetters',['dem schlechten Wetter','den schlechten Wetter'],'gen',2,'«wegen» verlangt den Genitiv. In der Mundart hört man «wegen dem», in der Schriftsprache gilt der Genitiv.'],
  ['Während','die Ferien',' arbeitet sie im Café.','der Ferien',['die Ferien','den Ferien'],'gen',2,'«während» verlangt den Genitiv.'],
  ['Ich gehe ohne','meinem Handy',' ins Kino.','mein Handy',['meinem Handy','meines Handys'],'akk',2,'«ohne» verlangt den Akkusativ.'],
- ['Die Katze springt auf','dem Tisch','.','den Tisch',['dem Tisch','des Tisches'],'akk',2,'Wohin springt die Katze? Wohin? gibt den Akkusativ.'],
+ ['Er legt das Buch auf','dem Tisch','.','den Tisch',['dem Tisch','des Tisches'],'akk',2,'Wohin legt er das Buch? Wohin? gibt den Akkusativ.'],
  ['Der Stift liegt auf','den Tisch','.','dem Tisch',['den Tisch','des Tisches'],'dat',2,'Wo liegt der Stift? Wo? gibt den Dativ.'],
  ['Sie hängt das Bild an','der Wand','.','die Wand',['der Wand','den Wand'],'akk',2,'Wohin hängt sie das Bild? Wohin? gibt den Akkusativ.'],
  ['Wir sitzen in','die Klasse','.','der Klasse',['die Klasse','den Klasse'],'dat',2,'Wo sitzen wir? Wo? gibt den Dativ.'],
@@ -354,7 +354,7 @@ const SEC={
    ['Sie sieht <s>der Lehrer</s>.','Sie sieht '+mk('akk','den Lehrer')+'.','Wen sieht sie? Akkusativ'],
    ['Wir spielen mit <s>unsere Freunde</s>.','Wir spielen mit '+mk('dat','unseren Freunden')+'.','mit: Dativ, Mehrzahl mit -n'],
    ['Wegen <s>dem Regen</s> bleiben wir da.',mk('gen','Wegen des Regens')+' bleiben wir da.','wegen: Genitiv'],
-   ['Die Katze springt auf <s>dem Tisch</s>.','Die Katze springt auf '+mk('akk','den Tisch')+'.','Wohin? Akkusativ']].map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>'+
+   ['Er legt das Buch auf <s>dem Tisch</s>.','Er legt das Buch auf '+mk('akk','den Tisch')+'.','Wohin? Akkusativ']].map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>'+
   '<div class="callout"><b>Achtung:</b> Nicht jeder Satz hat einen Fehler. Prüfe zuerst, bevor du etwas änderst.</div>'+tryW('fehler'),
  endung:()=>'<h2>Endungen bei «ein» und Adjektiv</h2><p class="sub" style="margin-top:0">Ein Nomen mit Adjektiv ändert Artikel und Adjektiv. Zuerst den Fall bestimmen, dann die Endung setzen.</p>'+
   '<div class="tw"><table><tr><th>Fall</th><th>männlich</th><th>weiblich</th><th>sächlich</th></tr>'+
@@ -396,7 +396,7 @@ const UEB=[
  ['Bestimme den Fall von «dem kleinen Mädchen»: «Er hilft dem kleinen Mädchen.» <span class="pill">B/A</span>',tag('dat')+' Wem hilft er? Ersatzprobe: dem kleinen Mann.',2],
  ['Welchen Fall verlangt «mit»? Setze ein: «Ich spiele mit [mein Bruder].»','<b>mit meinem Bruder</b> – '+tag('dat')+' («mit» verlangt immer den Dativ)',1],
  ['Korrigiere: «Wegen dem Regen fällt der Ausflug aus.»','<b>Wegen des Regens</b> – '+tag('gen')+' («wegen» verlangt den Genitiv)',2],
- ['Wo oder wohin? «Die Katze springt auf [der Tisch].» Setze in den richtigen Fall.','<b>auf den Tisch</b> – Wohin? '+tag('akk'),2]
+ ['Wo oder wohin? «Er legt das Buch auf [der Tisch].» Setze in den richtigen Fall.','<b>auf den Tisch</b> – Wohin? '+tag('akk'),2]
 ];
 const uebHTML=()=>'<div class="noprint"><div class="callout info" style="margin:0 0 .8rem">👩‍🏫 <b>Gemeinsam vorne lösen:</b> Drei Aufgaben zu den Fällen. Klasse antworten lassen, mit Frage oder Ersatzprobe begründen, dann «Nächste Aufgabe». Mit «Alle drei neu» kommen drei frische.</div>'+[1,2,3].map(()=>tryW('bestimmen,frage,ersatz,einsetzen,praep,fehler,endung')).join('')+'<div style="margin:.8rem 0"><button class="btn" data-a="tall">🔄 Alle drei neu</button></div><h3 style="margin-top:1.2rem">Zum Aufschreiben</h3></div>'+'<ol class="ex">'+UEB.filter(u=>u[2]<=lv()).map(u=>'<li>'+u[0]+'<div class="po wl"></div><div class="noprint">'+REVEAL('Lösung zeigen',u[1])+'</div></li>').join('')+'</ol>';
 const MERKSLIDE=()=>'<div class="tw"><table><tr><th>Fall</th><th>Frage</th><th>Rolle</th><th>Ersatzprobe</th></tr>'+

@@ -173,7 +173,7 @@ const HO=[
 ['Was bedeutet «Bank» im Satz: «Sie bringt das Geld zur <b>Bank</b>.»?',['Geldinstitut','Sitzgelegenheit','Werkzeug','Schule'],'Geldinstitut','Hier ist ein Geldinstitut gemeint. Das Wort ist ein Homonym.',1],
 ['Was bedeutet «Hahn» im Satz: «Der <b>Hahn</b> tropft.»?',['Wasserhahn','Tier','Spielzeug','Haus'],'Wasserhahn','Ein Hahn tropft nur, wenn es der Wasserhahn ist. Der Hahn kann auch ein Tier sein.',1],
 ['Welcher Artikel passt? «Wir baden im See.» Gemeint ist ein Binnengewässer: ___ See',['der','die','das'],'der','Der See ist ein Gewässer an Land. «Die See» bedeutet das Meer.',1],
-['Welcher Artikel passt, wenn das Meer gemeint ist? «Das Schiff fährt auf ___ See.»',['die','der','das'],'die','Die See = das Meer. Der See = Gewässer an Land. Der Artikel ändert die Bedeutung.',1],
+['Welcher Artikel passt, wenn das Meer gemeint ist? «Das Schiff fährt hinaus auf ___ See.»',['die','der','das'],'die','Die See = das Meer. Der See = Gewässer an Land. Der Artikel ändert die Bedeutung.',1],
 ['Wer ist «<b>der Leiter</b>»?',['eine Person, die etwas leitet','ein Gerät zum Hochsteigen','ein Fluss','ein Tier'],'eine Person, die etwas leitet','Der Leiter ist eine Person. Die Leiter ist ein Gerät zum Hochsteigen.',2],
 ['Welches Wort passt? «Auf der Gitarre ist eine ___ gerissen.»',['Saite','Seite'],'Saite','Die Saite gehört zu einem Instrument. Die Seite gehört zu einem Buch. Die Wörter klingen gleich.',2],
 ['Welches Wort passt? «Im Bleistift steckt eine ___.»',['Mine','Miene'],'Mine','Die Mine schreibt. Die Miene ist der Gesichtsausdruck. Die Wörter klingen gleich.',2]
