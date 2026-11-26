@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Niveau A (26.11.):** eigene schwierige Aufgaben für 11 weitere Kapitel in `chapters/niveau-a.js` (nur in A sichtbar).
 - **Komma Niveau A (26.11.):** 10 anspruchsvolle Antipp-Sätze und der Typ «Sätze verbinden» (5 Aufgaben, nur selber schreiben, weil Wortkarten die Kommas verraten würden).
 - **Lernhilfen (26.11.):** «Meine Fehler» (falsche Aufgaben bleiben auf dem Gerät, fällig nach 1 Tag, nach richtiger Antwort nochmals nach 3 Tagen; nach zweimal richtig weg, höchstens 200), Teilthemen in «Mein Fortschritt», Einstiegscheck in der Testvorbereitung, «Aufgabe melden» (Kapitel, Nummer und Aufgabenanfang gehen ins Tally-Formular), beim Üben keine Kopfzeile, Theorie mit «Das Wichtigste in Kürze» (Merkblatt) und eingeklappten Details.
 - **Korrekturen (26.11.):** Frage nicht mehr doppelt, Erklärungen bei Komma, Rede, Nomen und Nebensatzarten korrigiert, vier Texte ausgebaut, doppelte Aufgaben werden beim Laden entfernt.

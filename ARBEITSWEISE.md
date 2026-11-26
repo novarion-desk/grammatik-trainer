@@ -34,6 +34,8 @@ Jedes Kapitel liefert:
 
 Widgets: `GT.tryW(typen, kategorien)` (Probier-es-aus), Trennen und Verschieben (Verschiebeprobe), Felder füllen (`feld.js`).
 
+`chapters/niveau-a.js`: zusätzliche A-Aufgaben (vor `glossar.js` laden).
+
 ## Inhaltsregeln
 
 - Hochdeutsch, Schweizer Rechtschreibung (ss, kein ß). Beispiele aus Schul- und Jugendalltag.
