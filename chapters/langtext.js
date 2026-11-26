@@ -89,6 +89,109 @@ const SINGLE={nomen:{f:'nomen',cat:'sg3',instr:'Tippe alle Nomen im Text an (auc
     c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0],cats,parts,sent:'',lang:true,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,!?;:]$/,'')+' → '+c.catName[p.f]).join(' · ')});
   });
 })();
+/* ===== Satzlehre: lange Texte (Satzglieder anmalen, Kommas setzen, Nebensätze bestimmen) ===== */
+/* Schreibweise anmalen: [Gruppe|Schlüssel]. Alles ausserhalb der Klammern bleibt unbemalt. */
+const brParse=(txt,keys)=>{
+  const re=new RegExp('\\[([^\\]|]+)\\|('+keys.join('|')+')\\]([.,!?;:]*)','g'),parts=[];let last=0,m;
+  while((m=re.exec(txt))){const pl=txt.slice(last,m.index).trim();if(pl)parts.push({t:pl,f:null});parts.push({t:m[1]+m[3],f:m[2]});last=re.lastIndex;}
+  const tail=txt.slice(last).trim();if(tail)parts.push({t:tail,f:null});return parts;
+};
+/* Satzglieder im langen Text: jedes Satzglied anmalen. Adverbiale = einzelnes Wort ohne Präposition, Präpositionalgefüge = beginnt mit Präposition.
+   Prädikat: alle verbalen Teile (auch getrennt). Attribute gehören zum Satzglied. Keine Nebensätze. */
+(function(){
+  const c=GT.chapters.satzglieder;if(!c)return;
+  const BK=['sj','pr','ak','da','ge','pg','ad'],BN={sj:'Subjekt',pr:'Prädikat',ak:'Akkusativobjekt',da:'Dativobjekt',ge:'Genitivobjekt',pg:'Präpositionalgefüge',ad:'Adverbiale'};
+  const ST=[
+[1,"[Der Hund|sj] [bellt|pr] [laut|ad]. [Die Katze|sj] [jagt|pr] [eine Maus|ak]. [Am Abend|pg] [schlafen|pr] [beide|sj] [im Korb|pg]."],
+[1,"[Mia|sj] [schenkt|pr] [ihrem Bruder|da] [ein Buch|ak]. [Er|sj] [liest|pr] [es|ak] [sofort|ad]. [Heute|ad] [gefällt|pr] [ihm|da] [die Geschichte|sj]."],
+[1,"[Der Lehrer|sj] [erklärt|pr] [den Schülern|da] [die Aufgabe|ak]. [Die Schüler|sj] [hören|pr] [aufmerksam|ad] [zu|pr]. [Dann|ad] [rechnen|pr] [sie|sj] [die Lösung|ak]."],
+[1,"[Mein Vater|sj] [kocht|pr] [heute|ad] [eine Suppe|ak]. [Wir|sj] [helfen|pr] [ihm|da]. [Alle|sj] [essen|pr] [mit Appetit|pg]."],
+[1,"[Anna|sj] [kauft|pr] [im Laden|pg] [frisches Brot|ak]. [Die Verkäuferin|sj] [gibt|pr] [ihr|da] [einen Apfel|ak]. [Anna|sj] [lächelt|pr] [freundlich|ad]."],
+[1,"[Der Zug|sj] [fährt|pr] [pünktlich|ad] [ab|pr]. [Die Reisenden|sj] [sitzen|pr] [im Wagen|pg]. [Ein Kind|sj] [zeigt|pr] [seiner Mutter|da] [die Berge|ak]."],
+[2,"[Gestern|ad] [besuchte|pr] [unsere Klasse|sj] [den Zoo|ak]. [Wir|sj] [sahen|pr] [im Käfig|pg] [einen Löwen|ak]. [Der Wärter|sj] [erzählte|pr] [uns|da] [viele Geschichten|ak]."],
+[2,"[Meine Schwester|sj] [spielt|pr] [seit drei Jahren|pg] [Klavier|ak]. [Sie|sj] [übt|pr] [täglich|ad]. [Ihr Lehrer|sj] [lobt|pr] [sie|ak] [oft|ad]."],
+[2,"[Der Bäcker|sj] [steht|pr] [früh|ad] [auf|pr]. [Er|sj] [knetet|pr] [den Teig|ak] [mit starken Händen|pg]. [Die Kunden|sj] [warten|pr] [vor dem Laden|pg]."],
+[2,"[Die Kinder|sj] [spielen|pr] [im Hof|pg] [Fussball|ak]. [Plötzlich|ad] [fliegt|pr] [der Ball|sj] [über den Zaun|pg]. [Ein Nachbar|sj] [bringt|pr] [ihnen|da] [den Ball|ak] [zurück|pr]."],
+[2,"[Lena|sj] [schreibt|pr] [ihrer Freundin|da] [einen Brief|ak]. [Darin|ad] [erzählt|pr] [sie|sj] [von den Ferien|pg]. [Die Freundin|sj] [antwortet|pr] [ihr|da] [schnell|ad]."],
+[3,"[Der Förster|sj] [hat|pr] [gestern|ad] [im Wald|pg] [einen Fuchs|ak] [gesehen|pr]. [Das Tier|sj] [ist|pr] [schnell|ad] [davongelaufen|pr]. [Am Sonntag|pg] [gedenkt|pr] [die Gemeinde|sj] [der Verstorbenen|ge]."],
+[3,"[Ich|sj] [habe|pr] [meiner Oma|da] [ein Foto|ak] [geschickt|pr]. [Sie|sj] [hat|pr] [mir|da] [sofort|ad] [geantwortet|pr]. [Meine Oma|sj] [wird|pr] [bald|ad] [einen Besuch|ak] [machen|pr]."],
+[3,"[Der Trainer|sj] [hat|pr] [den Spielern|da] [die Taktik|ak] [erklärt|pr]. [Die Mannschaft|sj] [kann|pr] [jetzt|ad] [besser|ad] [spielen|pr]. [Nach dem Spiel|pg] [feiern|pr] [alle|sj] [im Klubhaus|pg]."],
+[3,"[Die Lehrerin|sj] [hat|pr] [der Klasse|da] [eine Geschichte|ak] [vorgelesen|pr]. [Danach|ad] [haben|pr] [die Kinder|sj] [über den Schluss|pg] [diskutiert|pr]. [Niemand|sj] [wollte|pr] [nach Hause|pg] [gehen|pr]."],
+[3,"[Wegen des Regens|pg] [muss|pr] [die Klasse|sj] [im Schulhaus|pg] [bleiben|pr]. [Der Hauswart|sj] [hat|pr] [den Kindern|da] [Tee|ak] [gebracht|pr]. [Alle|sj] [danken|pr] [ihm|da] [herzlich|ad]."]
+  ];
+  c.TYPES.anmalenlang={icon:'📄',label:'Satzglieder im langen Text',short:'Alle Satzglieder in einem längeren Text bestimmen',instr:'Wähle ein Satzglied und tippe alle passenden Wortgruppen im Text an.',hint:'Finde zuerst das Prädikat (alle verbalen Teile). Frage dann: Wer oder was? Wen oder was? Wem? Wessen? Adverbiale sind einzelne Wörter, Präpositionalgefüge beginnen mit einer Präposition.',ref:(c.TYPES.glied||c.TYPES.markieren||{}).ref};
+  ST.forEach(a=>{
+    const parts=brParse(a[1],BK),cats=['sg2'];
+    c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0]===3?2:1,cats,parts,sent:'',lang:true,brushKeys:BK,brushNames:BN,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,!?;:]$/,'')+' → '+BN[p.f]).join(' · ')});
+  });
+})();
+/* Kommasetzung im langen Text: Kommastellen antippen. Nur Pflichtkommas (Aufzählung, Nebensatz, aber/denn/sondern, Relativsatz, Anrede, um … zu). Komma vor «und»/«oder» in Aufzählungen: keines. */
+(function(){
+  const c=GT.chapters.komma;if(!c)return;
+  const KT=[
+[1,"Am Samstag kaufen wir Brot, Käse und Äpfel. Wir gehen in den Park, weil die Sonne scheint. Dort spielen wir Fussball, Tennis und Federball.","Aufzählung, weil"],
+[1,"Ich weiss, dass du müde bist. Du solltest früh ins Bett gehen, denn morgen ist ein langer Tag. Wenn du ausgeschlafen bist, schreibst du bessere Noten.","dass, denn, wenn"],
+[1,"Mia packt Hefte, Stifte, Bücher und ein Etui ein. Sie läuft zur Schule, obwohl es regnet. Als sie ankommt, ist sie nass.","Aufzählung, obwohl, als"],
+[1,"Der Hund bellt laut, aber die Katze schläft weiter. Der Besitzer ruft, damit der Hund ruhig wird. Plötzlich ist es still.","aber, damit"],
+[2,"Ich habe gelernt, dass Kommas wichtig sind. Wenn man sie vergisst, versteht man den Satz falsch. Deshalb lese ich meinen Text noch einmal, bevor ich ihn abgebe.","dass, wenn, bevor"],
+[2,"Wir wollen morgen wandern, wenn das Wetter hält. Pack warme Kleider, feste Schuhe und genug Wasser ein, damit du nicht frierst. Das Wandern macht nicht nur Spass, sondern hält auch fit.","wenn, Aufzählung, damit, sondern"],
+[2,"Anna sagt, dass sie heute nicht kommt, weil sie krank ist. Ihre Mutter ruft an, damit wir Bescheid wissen. Wir wünschen ihr gute Besserung, denn wir mögen sie sehr.","dass, weil, damit, denn"],
+[2,"Der Mann, der neben uns wohnt, spielt Gitarre. Das Lied, das er spielt, kennt jeder. Wir hören gerne zu, wenn er übt.","der, das, wenn"],
+[3,"Die Lehrerin, die uns Deutsch unterrichtet, hat ein neues Buch mitgebracht. Sie fragt uns, ob wir die Geschichte kennen. Niemand antwortet, weil alle noch lesen.","die, ob, weil"],
+[3,"Sara geht zur Bäckerei, um frisches Brot zu kaufen. Auf dem Weg trifft sie ihre Freundin, die gerade vom Training kommt. Die beiden reden lange, bis die Glocke läutet.","um … zu, die, bis"],
+[3,"Lena, hast du schon gehört, dass morgen die Schule ausfällt? Ja, ich habe es gestern erfahren. Super, dann können wir ausschlafen, spazieren gehen und lange spielen!","Anrede, dass, Ausruf, Aufzählung"],
+[3,"Obwohl es kalt ist, gehen wir nach draussen. Der Schnee, der in der Nacht gefallen ist, liegt hoch. Die Kinder bauen einen Schneemann, während die Eltern Tee kochen.","obwohl, der, während"]
+  ];
+  KT.forEach(a=>{
+    const toks=[],cuts=[];a[1].split(/\s+/).filter(Boolean).forEach(w=>{if(/,$/.test(w)){toks.push(w.slice(0,-1));cuts.push(toks.length-1);}else toks.push(w);});
+    c.TASKS.push({id:nextId(c),typ:'ktap',stufe:a[0],lv:a[0]===3?2:1,cats:['sg2'],tokens:toks,cuts,full:a[1],lang:true,
+      why:'<b>'+a[1]+'</b><br>Signalwörter und Regeln: <b>'+a[2]+'</b>. Vor «und» und «oder» steht in einer Aufzählung kein Komma.'});
+  });
+})();
+/* Nebensätze im langen Text: [Nebensatz|Art]. nk = Konjunktionalsatz, nr = Relativsatz, nf = indirekter Fragesatz, nu = uneingeleiteter Nebensatz.
+   Nebensatz-Kapitel: Art anmalen. Hauptsatz-Nebensatz-Kapitel: alle Wörter der Nebensätze antippen (ohne uneingeleitete Nebensätze). Keine Infinitiv- oder Partizipialsätze. */
+(function(){
+  const NS=[
+[1,"Ich bleibe zu Hause, [weil ich krank bin|nk]. Mein Bruder, [der in der Schule ist|nr], bringt mir die Aufgaben. Er fragt, [ob ich Hunger habe|nf]."],
+[1,"Wir wandern, [wenn das Wetter schön ist|nk]. Der Weg, [den wir kennen|nr], führt durch den Wald. Mama fragt, [wohin wir gehen|nf]."],
+[1,"Anna weiss, [dass der Test schwer wird|nk]. Sie lernt viel, [damit sie eine gute Note bekommt|nk]. Das Buch, [das sie liest|nr], ist spannend."],
+[1,"Der Hund bellt, [als der Briefträger kommt|nk]. Ich möchte wissen, [warum er so laut ist|nf]. Der Briefträger, [der ihn kennt|nr], bleibt ruhig."],
+[2,"[Obwohl es regnet|nk], gehen wir hinaus. Wir tragen Jacken, [die uns warm halten|nr]. Papa fragt, [wer den Schirm hat|nf]."],
+[2,"Ich glaube, [er kommt morgen|nu]. Er sagt, [dass er viel zu tun hat|nk]. Ich weiss nicht, [ob er Zeit hat|nf]."],
+[2,"Das Mädchen, [das neben mir sitzt|nr], heisst Lea. Sie erzählt, [was sie am Wochenende gemacht hat|nf]. [Nachdem sie gegessen hatte|nk], ging sie schwimmen."],
+[3,"Der Lehrer erklärt, [wie man einen Nebensatz erkennt|nf]. [Wenn man das Verb am Schluss findet|nk], ist es ein Nebensatz. Er meint, [das sei einfach|nu]."],
+[3,"Die Frau, [deren Hund entlaufen ist|nr], sucht ihn überall. Sie weiss nicht, [wo er ist|nf]. [Bevor es dunkel wird|nk], will sie ihn finden."],
+[3,"Ich habe gehört, [du ziehst um|nu]. Stimmt es, [dass ihr nach Bern zieht|nk]? Ich frage mich, [ob ich euch besuchen darf|nf]."]
+  ];
+  const HN=[
+[1,"Wir gehen ins Schwimmbad, [weil es heiss ist|nk]. [Wenn wir ankommen|nk], springen wir sofort ins Wasser. Meine Schwester, [die schon schwimmen kann|nr], hilft mir."],
+[1,"Ich lese ein Buch, [während es draussen regnet|nk]. Mama kocht Tee, [damit wir nicht frieren|nk]. Ich glaube, [dass es bald aufhört|nk]."],
+[1,"[Als der Wecker klingelte|nk], stand Tim sofort auf. Er isst ein Brot, [bevor er zur Schule geht|nk]. Der Bus, [der um sieben fährt|nr], ist schon da."]
+  ];
+  /* Nebensatz-Arten anmalen */
+  (function(){
+    const c=GT.chapters.nsarten;if(!c)return;
+    const BK=['nk','nr','nf','nu'],BN={nk:'Konjunktionalsatz',nr:'Relativsatz',nf:'Indirekter Fragesatz',nu:'Uneingeleiteter Nebensatz'};
+    c.TYPES.anmalenlang={icon:'📄',label:'Nebensätze im langen Text',short:'Die Nebensätze in einem längeren Text nach Art bestimmen',instr:'Wähle eine Nebensatzart und tippe jeden Nebensatz im Text an. Die Hauptsätze bleiben unbemalt.',hint:'Konjunktionalsatz: beginnt mit einer Konjunktion (weil, dass, wenn). Relativsatz: beginnt mit der / die / das und erklärt ein Nomen. Indirekter Fragesatz: beginnt mit ob oder einem Fragewort. Uneingeleitet: ohne Einleitewort.',ref:(c.TYPES.form||{}).ref};
+    NS.forEach(a=>{
+      const parts=brParse(a[1],BK);
+      c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0]===3?2:1,cats:['sg1'],parts,sent:'',lang:true,brushKeys:BK,brushNames:BN,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,!?;:]$/,'')+' → '+BN[p.f]).join(' · ')});
+    });
+  })();
+  /* Hauptsatz und Nebensatz: alle Nebensätze antippen */
+  (function(){
+    const c=GT.chapters['hs-ns'];if(!c)return;
+    c.TYPES.textlang={icon:'📄',label:'Nebensätze im langen Text',short:'Alle Nebensätze in einem längeren Text finden',instr:'Tippe alle Wörter der Nebensätze im Text an.',hint:'Ein Nebensatz beginnt mit einem Einleitewort (Konjunktion oder Relativpronomen) und hat das Verb am Schluss.',ref:(c.TYPES.markieren||{}).ref};
+    NS.filter(a=>!/\|nu\]/.test(a[1])).concat(HN).forEach(a=>{
+      const tokens=[],targets=[];
+      const re=/\[([^\]|]+)\|[a-z]+\]|(\S+)/g;let m;
+      /* Text Wort für Wort zerlegen: Wörter in Klammern sind Ziele */
+      const txt=a[1].replace(/\[([^\]|]+)\|[a-z]+\]/g,(x,g)=>g.split(' ').map(w=>'\u0001'+w).join(' '));
+      txt.split(/\s+/).filter(Boolean).forEach(w=>{if(w[0]==='\u0001'){targets.push(tokens.length);tokens.push(w.slice(1));}else tokens.push(w);});
+      c.TASKS.push({id:nextId(c),typ:'textlang',stufe:a[0],lv:a[0]===3?2:1,cats:['sg1'],tokens,targets,instr:'Tippe alle Wörter der Nebensätze im Text an.',lang:true,why:targets.map(i=>tokens[i]).join(' ')});
+    });
+  })();
+})();
 /* Nomen, Verb, Adjektiv, Pronomen, Partikel: langer Text, alle Wörter der Wortart antippen */
 Object.keys(SINGLE).forEach(id=>{
   const c=GT.chapters[id],S=SINGLE[id];if(!c)return;
