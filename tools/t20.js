@@ -16,7 +16,7 @@ for(const id of Object.keys(GT.chapters)){
   if(t.cuts&&(!t.cuts.length||t.cuts.some(i=>i>=t.tokens.length-1))){bad++;console.log(' bad cuts',t.id)}
   if(t.tokens&&!t.cuts&&(!t.targets.length||t.targets.some(i=>i>=t.tokens.length))){bad++;console.log(' bad targets',t.id)}
   if(!t.opts&&!t.tokens&&!t.parts&&!t.input){bad++;console.log(' no answer form',t.id)}
-  const k=t.typ+'|'+(t.sent||'')+(t.prompt||'')+(t.tokens||[]).join(' ')+(t.parts?JSON.stringify(t.parts):'')+t.answer;if(seen.has(k)){bad++;console.log(' dup',t.id,k.slice(0,60))}seen.add(k);});
+  const k=t.typ+(t.instr||"")+(t.gl||"")+"|"+(t.sent||'')+(t.prompt||'')+(t.tokens||[]).join(' ')+(t.parts?JSON.stringify(t.parts):'')+t.answer+JSON.stringify([t.targets||0,t.cuts||0,t.opts?[...t.opts].sort():0]);if(seen.has(k)){bad++;console.log(' dup',t.id,k.slice(0,60))}seen.add(k);});
  const cnt={};C.TASKS.forEach(t=>{const k=t.typ+'/'+t.stufe;cnt[k]=(cnt[k]||0)+1});
  console.log(id,'tasks',C.TASKS.length,'bad',bad,JSON.stringify(cnt));
  // UI

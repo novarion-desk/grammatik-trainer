@@ -6,11 +6,12 @@ Schul-Web-App (Wortlehre + Satzlehre) mit Schülermodus (ohne Login) und Lehrerm
 - `chapters/*.js`: ein Kapitel pro Datei (Theorie, Folien, Aufgaben, Merkblatt)
 - `vendor/`: Firebase-Bibliotheken
 
-Kapitel: Wortarten, Nomen, Fälle, Verb, Adjektiv, Pronomen, Partikel · Wortlehre und Satzlehre, Verbale Teile, Verschiebeprobe, Satzarten, Hauptsatz/Nebensatz, Kommasetzung.
+Kapitel (18): Wortarten, Nomen, Fälle, Verb, Adjektiv, Pronomen, Partikel · Wortlehre und Satzlehre, Verschiebeprobe, Satzglieder, Verbale Teile, Satzarten, Feldermodell, Hauptsatz/Nebensatz, Zusammengezogener Satz, Arten der Nebensätze, Kommasetzung, Direkte und indirekte Rede.
 Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Korrekturen (26.11.):** Frage nicht mehr doppelt, Erklärungen bei Komma, Rede, Nomen und Nebensatzarten korrigiert, vier Texte ausgebaut, doppelte Aufgaben werden beim Laden entfernt.
 - **Satzlehre-Texte (26.11.):** Lange Texte auch für die Satzlehre: Satzglieder anmalen (16 Texte, 7 Satzglieder), Kommas im Text setzen (12 Texte), Nebensatzarten anmalen (10 Texte) und alle Nebensätze im Text antippen (10 Texte). Sie erscheinen über «Textaufgaben pro Kapitel» im Test und im Druckblatt (mit Legende der Bezeichnungen).
 - **Textaufgaben in der Testvorbereitung (26.11.):** Neue Einstellung «Textaufgaben pro Kapitel» (0 bis 3, Standard 1): Pro gewähltes Kapitel kommen ein bis drei lange Texte in den Test (Wortarten bestimmen, Fälle der Nomen bestimmen, Nomen/Verben/Adjektive/Pronomen/Partikel antippen). Die Texte stehen am Schluss, zählen zur Anzahl Aufgaben (höchstens die Hälfte des Tests) und erscheinen auch auf der Übungsprüfung zum Drucken mit Lösungen. **Neu:** «Fälle im langen Text» (20 Texte: Nomengruppen mit Präposition anmalen, Pronomen bleiben ungemalt) und 10 zusätzliche Texte für Wortarten, Nomen, Verb, Adjektiv, Pronomen und Partikel (30 statt 20).
 - **Präsentation (24.11.):** Die Antwort von «Frag Marty» lässt sich nach unten scrollen und wird automatisch ins Bild geholt.

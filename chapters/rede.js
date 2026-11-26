@@ -57,7 +57,7 @@ const ERS=[
 ['Die Kinder sagen, sie ___ Hunger.','hätten',['haben','hatten','habe'],'«sie haben» ist im Konjunktiv I gleich wie im Indikativ. Darum nimmt man Konjunktiv II: «hätten».'],
 ['Die Eltern sagen, sie ___ morgen.','würden kommen',['kommen','kamen','kommt'],'«sie kommen» ist im Konjunktiv I gleich wie im Indikativ. Ersatz: «würden kommen».'],
 ['Die Schüler sagen, sie ___ müde.','seien',['sind','waren','sei'],'Bei «sein» gibt es eine eigene Form für die Mehrzahl: «seien».'],
-['Tim und Lena sagen, sie ___ nach Hause.','würden gehen',['gehen','gingen','geht'],'«sie gehen» ist im Konjunktiv I gleich wie im Indikativ. Ersatz: «würden gehen».'],
+['Tim und Lena sagen, sie ___ nach Hause.','würden gehen',['gehen','gehe','geht'],'«sie gehen» ist im Konjunktiv I gleich wie im Indikativ. Ersatz: «würden gehen». («gingen» wäre Konjunktiv II, sieht aber aus wie Präteritum.)'],
 ['Wir sagen, wir ___ Zeit.','hätten',['haben','hatten','habe'],'«wir haben» ist im Konjunktiv I gleich wie im Indikativ. Ersatz: «hätten».'],
 ['Die Freunde sagen, sie ___ nicht kommen.','könnten',['können','konnten','könne'],'«sie können» ist im Konjunktiv I gleich wie im Indikativ. Ersatz: «könnten».'],
 ['Die Nachbarn sagen, sie ___ den Film.','würden sehen',['sehen','sahen','sieht'],'«sie sehen» ist im Konjunktiv I gleich wie im Indikativ. Ersatz: «würden sehen».']
@@ -90,10 +90,10 @@ const W=[
 ['Welche Zeitform braucht die indirekte Rede?',['Konjunktiv I','Perfekt','Präteritum','Imperativ'],'Konjunktiv I','Der Konjunktiv I zeigt, dass jemand etwas nur wiedergibt.','sg3',2],
 ['Wann braucht man eine Ersatzform (Konjunktiv II oder «würde» + Infinitiv)?',['wenn Konjunktiv I gleich lautet wie der Indikativ','immer','wenn die Rede eine Frage ist','wenn das Verb «sein» ist'],'wenn Konjunktiv I gleich lautet wie der Indikativ','Beispiel: «sie haben» → «sie hätten».','sg3',3],
 ['Wie bildet man Konjunktiv I der Vergangenheit?',['«habe» oder «sei» + Partizip','«hatte» + Partizip','«würde» + Infinitiv','«ist» + Partizip'],'«habe» oder «sei» + Partizip','Er sagt, er habe gegessen. Sie sagt, sie sei gekommen.','sg3',3],
-['Was ändert sich beim Umformen <b>immer</b>? «Tim sagt: «Ich bin müde.»»',['das Pronomen','der Name','das Nomen','die Zeichensetzung bleibt'],'das Pronomen','«ich» wird zu «er». Zusätzlich ändern sich Verbform und Satzzeichen.','sg4',2],
+['Tim sagt: ‹Ich bin müde.› Welches Wort ersetzt «ich» in der indirekten Rede?',['er','ich','du','wir'],'er','Man erzählt über Tim. Darum wird «ich» zu «er»: Tim sagt, er sei müde.','sg4',2],
 ['Warum benutzt man die indirekte Rede?',['um Gesagtes wiederzugeben, ohne es wörtlich zu zitieren','um etwas zu betonen','um Befehle zu geben','um Fragen zu stellen'],'um Gesagtes wiederzugeben, ohne es wörtlich zu zitieren','Zum Beispiel in Berichten und Zeitungen.','sg2',2]
 ];
-W.forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+'.</b> '+w[3]}));
+W.forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+(/\.»?$/.test(w[2])?'':'.')+'</b> '+w[3]}));
 
 /* ---------- Fachbegriffe ---------- */
 const FB=[
@@ -136,7 +136,7 @@ task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_h
 ['Warum sagt man «Die Kinder sagen, sie hätten Hunger» und nicht «sie haben Hunger»?',['«haben» im Konjunktiv I lautet gleich wie der Indikativ.','«hätten» ist die Höflichkeitsform.','Die Rede steht in der Vergangenheit.','«haben» ist kein Hilfsverb.'],'«haben» im Konjunktiv I lautet gleich wie der Indikativ.','Wenn man den Konjunktiv I nicht vom Indikativ unterscheiden kann, nimmt man den Konjunktiv II als Ersatzform.','sg3',3],
 ['Was passiert beim Umformen in die indirekte Rede meist mit den Personalpronomen?',['Sie richten sich nach der Person, über die man spricht: «ich» wird zu «er» oder «sie».','Sie fallen weg.','Sie werden immer zu «man».','Sie bleiben immer gleich.'],'Sie richten sich nach der Person, über die man spricht: «ich» wird zu «er» oder «sie».','Beispiel: «Ich komme.» wird zu «Er sagt, er komme.»','sg4',2],
 ['Welches Wort kann eine indirekte Aussage einleiten?',['dass','ob','wer','wo'],'dass','Beispiel: Er sagt, dass er komme. «dass» kann auch wegfallen: Er sagt, er komme.','sg4',2]
-].forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+'.</b> '+w[3]}));
+].forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+(/\.»?$/.test(w[2])?'':'.')+'</b> '+w[3]}));
 [
 ['In der direkten Rede steht das Gesagte in ___.','Anführungszeichen',['anführungszeichen'],'Die wörtliche Rede steht in Anführungszeichen.',1],
 ['Wenn der Konjunktiv I wie der Indikativ lautet, braucht man eine ___.','Ersatzform',['ersatzform'],'Ersatzform: Konjunktiv II oder «würde» und Infinitiv.',2],
@@ -230,7 +230,7 @@ task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_h
 ['Wie lautet die Konjunktiv-I-Form von «er hat»?',['er habe','er hätte','er hat','er habe gehabt'],'er habe','Konjunktiv I: «habe».','sg3',1],
 ['Wie lautet die Konjunktiv-I-Form von «sie ist»?',['sie sei','sie wäre','sie ist','sie seie'],'sie sei','Konjunktiv I von «sein»: «sei».','sg3',1],
 ['In «Tim sagt zu Mia: «Du hast recht.»» wird «du» in der indirekten Rede zu …',['sie','du','ich','er'],'sie','Tim spricht über Mia: «Tim sagt zu Mia, sie habe recht.»','sg4',3]
-].forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+'.</b> '+w[3]}));
+].forEach(w=>add({typ:'wissen',stufe:w[5],lv:w[5]===3?3:w[5]===2?2:1,cats:[w[4]],prompt:w[0],opts:w[1],answer:w[2],why:'<b>'+w[2]+(/\.»?$/.test(w[2])?'':'.')+'</b> '+w[3]}));
 task.push=_p0;
 })();
 

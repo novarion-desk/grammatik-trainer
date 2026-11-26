@@ -194,7 +194,7 @@ const SP=[
 ['Welches Nomen gibt es nur in der <b>Einzahl</b>?',['Lärm','Lied','Lampe','Lehrer'],'Lärm','Man sagt «der Lärm», aber nicht «die Lärme».',2],
 ['Welcher Satz ist richtig?',['Die Ferien sind schön.','Der Ferien ist schön.','Das Ferien ist schön.','Eine Ferien ist schön.'],'Die Ferien sind schön.','«Ferien» gibt es nur in der Mehrzahl. Darum «die».',2]
 ];
-SP.forEach(x=>task.push({typ:'singpl',stufe:x[4],lv:1,cats:['sg2'],prompt:x[0],opts:x[1],answer:x[2],why:'<b>'+x[2]+'.</b> '+x[3]}));
+SP.forEach(x=>task.push({typ:'singpl',stufe:x[4],lv:1,cats:['sg2'],prompt:x[0],opts:x[1],answer:x[2],why:'<b>'+x[2]+(/\.$/.test(x[2])?'':'.')+'</b> '+x[3]}));
 
 /* ---- NEU: Zusammengesetzte Nomen bilden ---- */
 const KP=[

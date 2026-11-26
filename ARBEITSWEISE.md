@@ -16,7 +16,9 @@ Gemeinsame Regeln für alle Apps stehen in `TEACHING-COCKPIT.md` im Website-Repo
 Reihenfolge in `GT.WORT` und `GT.SATZ` (oben in `index.html`), Skripte unten in `index.html` eingebunden.
 
 Wortlehre: Wortarten, Nomen, Fälle (`faelle.js`), Verb, Adjektiv, Pronomen, Partikel.
-Satzlehre: `wl-sl`, `verschiebe`, `satzglieder`, `verbale`, `satzarten`, `feld`, `hs-ns`, `zgs`, `nsarten`, `komma`.
+Satzlehre: `wl-sl`, `verschiebe`, `satzglieder`, `verbale`, `satzarten`, `feld`, `hs-ns`, `zgs`, `nsarten`, `komma`, `rede`.
+
+Einzelne Kapitel erzeugen Aufgaben zufällig. Die Anzahl schwankt darum leicht; Dubletten entfernt der Filter am Ende von `chapters/langtext.js`.
 
 Fast alle Kapitel nutzen `GT.chapter({id,teil,nr,title,big,desc,ex,goals,cats,catTitle,catWord,types,sections,tasks,exercises,merk,tryTypes,liveCats,css,widgets})`.
 Nur `faelle.js` ist ein Sonderfall mit `GT.register` und eigenen `SEC`, `SLIDES`, `TASKS`.
@@ -35,7 +37,7 @@ Widgets: `GT.tryW(typen, kategorien)` (Probier-es-aus), Trennen und Verschieben 
 ## Inhaltsregeln
 
 - Hochdeutsch, Schweizer Rechtschreibung (ss, kein ß). Beispiele aus Schul- und Jugendalltag.
-- Fachbegriffe zum Eintippen: Tippfehler zählen als falsch.
+- Fachbegriffe zum Eintippen: Kleine Tippfehler zählen als richtig und werden erwähnt (siehe README).
 - Fokus ist Grammatik, nicht Rechtschreibung.
 - «Gemeinsame Übungen» beziehen sich nur auf das aktuelle Kapitel und greifen dem Stoff nicht vor.
 - Eigene Formulierungen. Nichts aus Lehrmitteln oder Verlagsmaterial kopieren.
@@ -54,7 +56,7 @@ Widgets: `GT.tryW(typen, kategorien)` (Probier-es-aus), Trennen und Verschieben 
 ## Stand
 
 - Fertig: Wortarten (Überblick), Nomen, Fälle (mit Präpositionen, Fallfehler, Endungen), komplette Satzlehre inklusive Feldermodell.
-- Offen: Adjektiv, Verb, Pronomen, Partikel (Kapitelskripte vorhanden, aber noch nicht an den Unterlagen geprüft).
+- Alle 18 Kapitel sind in der App. Adjektiv, Verb, Pronomen, Partikel: noch nicht an den Unterlagen geprüft.
 - Ideen: Verbenfächer, Aktiv/Passiv, Konjunktiv I/II, Zusammensetzungen.
 - Offene Punkte: Tests auf iPad und Handy, Lehrer-Login prüfen, KI-Übungsblatt testen, kleine Testgruppe, Einstellungen im Konto speichern, Knopf «Aufgabe melden», Verschieben auch im Übungsmodus, alte Inhalte in `komma.js` und im Teil «Wortstellung» von `hs-ns.js` noch ungeprüft.
 

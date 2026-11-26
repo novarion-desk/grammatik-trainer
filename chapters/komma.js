@@ -145,7 +145,7 @@ NSD.forEach(a=>{
 [['Lukas','komm bitte her',"!",'Anrede'],['Anna','hilfst du mir',"?",'Anrede'],['Frau Keller','darf ich eine Frage stellen',"?",'Anrede'],
  ['Ja','ich komme mit',".",'Antwortwort'],['Nein','das stimmt nicht',".",'Antwortwort'],['Danke','das ist nett von dir',".",'Antwortwort'],
  ['Ach','das ist schade',"!",'Ausruf'],['Oh','das habe ich nicht gewusst',".",'Ausruf']].forEach(a=>
- ktap([[a[0],1],[a[1],0]],a[2],1,'sg4',a[0],'«'+a[0]+'» ist eine/ein '+a[3]+'. Sie wird mit einem <b>Komma</b> vom Rest des Satzes getrennt.'));
+ ktap([[a[0],1],[a[1],0]],a[2],1,'sg4',a[0],'«'+a[0]+'» ist '+(a[3]==='Anrede'?'eine ':'ein ')+a[3]+'. Sie wird mit einem <b>Komma</b> vom Rest des Satzes getrennt.'));
 /* Infinitivgruppe mit um/ohne/statt */
 [['wir gingen früh','um den Bus zu erreichen','um'],['er ging weg','ohne ein Wort zu sagen','ohne'],['sie lernt viel','um die Prüfung zu bestehen','um'],
  ['er spielt Handy','anstatt zu lernen','anstatt'],['er ging nach Hause','ohne sich zu verabschieden','ohne'],['sie spart Geld','um sich ein Velo zu kaufen','um']].forEach(a=>

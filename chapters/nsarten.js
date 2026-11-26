@@ -105,7 +105,7 @@ const R=[
 ];
 R.forEach((r,i)=>task.push({typ:'relativ',stufe:i<2?1:2,lv:1,cats:['sg3'],prompt:'Auf welches Wort bezieht sich das Relativpronomen?<br>«'+r[0]+'»',opts:r[1],answer:r[2],why:'<b>'+r[2]+'.</b> Das Relativpronomen verweist auf das Bezugswort im Hauptsatz.'}));
 [
-['Wie wird ein Relativsatz vom Hauptsatz abgetrennt?',['mit Komma (vorne und hinten, wenn er eingeschoben ist)','gar nicht','mit einem Doppelpunkt','mit einem Gedankenstrich'],'mit Komma (vorne und hinten, wenn er eingeschoben ist)','Der Relativsatz steht immer zwischen Kommas.',1],
+['Wie wird ein Relativsatz vom Hauptsatz abgetrennt?',['mit Komma (vorne und hinten, wenn er eingeschoben ist)','gar nicht','mit einem Doppelpunkt','mit einem Gedankenstrich'],'mit Komma (vorne und hinten, wenn er eingeschoben ist)','Der Relativsatz wird mit Komma abgetrennt. Steht er mitten im Satz, braucht es vorne und hinten ein Komma.',1],
 ['Wo steht im Relativsatz die Personalform?',['am Schluss','an zweiter Stelle','an erster Stelle','vor dem Relativpronomen'],'am Schluss','Relativsätze sind eingeleitete Nebensätze.',1]
 ].forEach(w=>task.push({typ:'relativ',stufe:w[4],lv:1,cats:['sg3'],prompt:w[0],opts:w[1],answer:w[2],why:w[3]}));
 
@@ -233,7 +233,6 @@ task.push=_p0;
 ['Ich bleibe zu Hause, *weil ich krank bin.',1,'Einleitewort: weil. Das Verb steht am Schluss.'],
 ['Sie weiss, *dass er kommt.',1,'Einleitewort: dass.'],
 ['*Obwohl es regnet, gehen wir hinaus.',1,'Einleitewort: Obwohl. Es leitet den vorangestellten Nebensatz ein.'],
-['Der Mann, *der dort steht, ist mein Onkel.',2,'Einleitewort: der (Relativpronomen).'],
 ['Sag mir, *wann du kommst.',2,'Einleitewort: wann (Fragewort im indirekten Fragesatz).']
 ].forEach(m=>{const raw=m[0].split(' '),targets=[];raw.forEach((w,i)=>{if(w[0]==='*')targets.push(i);});task.push({typ:'markieren',stufe:m[1],lv:1,cats:['sg1'],gl:'Einleitewort',tokens:raw.map(w=>w.replace(/^\*/,'')),targets,instr:'Tippe das Einleitewort des Nebensatzes an.',why:m[2]});});
 GT.chapter({id:'nsarten',teil:'satz',nr:9,title:'Arten der Nebensätze',big:'Ich weiss, dass er kommt',desc:'Formale Arten, Relativsatz, Infinitivsatz und Bedeutung',

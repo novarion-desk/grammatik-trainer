@@ -26,11 +26,11 @@ const TXT=[
 [3,"Die|pron junge|adj Forscherin|nomen untersucht|verb seltene|adj Pflanzen.|nomen Sie|pron notiert|verb jede|pron Beobachtung|nomen in|part ihrem|pron Heft,|nomen damit|part sie|pron nichts|pron vergisst.|verb"],
 [3,"Auf|part dem|pron Markt|nomen verkauft|verb ein|pron freundlicher|adj Händler|nomen frisches|adj Obst.|nomen Die|pron Kunden|nomen prüfen|verb die|pron reifen|adj Früchte|nomen und|part kaufen|verb sofort|part einen|pron grossen|adj Korb.|nomen"],
 [1,"Am|part Sonntag|nomen besucht|verb Lena|nomen ihre|pron Grossmutter|nomen. Sie|pron hat|verb einen|pron bunten|adj Blumenstrauss|nomen gekauft|verb. Die|pron Grossmutter|nomen freut|verb sich|pron sehr|part. Zusammen|part trinken|verb sie|pron heissen|adj Tee|nomen."],
-[1,"Der|pron Vogel|nomen sitzt|verb im|part Baum|nomen. Er|pron singt|verb ein|pron schönes|adj Lied|nomen. Die|pron Kinder|nomen lauschen|verb dem|pron Gesang|nomen gerne|part."],
+[1,"Der|pron kleine|adj Vogel|nomen sitzt|verb auf|part einem|pron dünnen|adj Ast.|nomen Er|pron singt|verb ein|pron schönes|adj Lied.|nomen Die|pron neugierigen|adj Kinder|nomen hören|verb ihm|pron gerne|part zu.|verb"],
 [1,"Heute|part schneit|verb es|pron stark|part. Die|pron Strassen|nomen sind|verb weiss|adj und|part glatt|adj. Viele|pron Menschen|nomen tragen|verb warme|adj Mützen|nomen."],
-[1,"Tim|nomen malt|verb ein|pron rotes|adj Auto|nomen. Danach|part malt|verb er|pron einen|pron blauen|adj Himmel|nomen. Seine|pron Schwester|nomen lobt|verb das|pron schöne|adj Bild|nomen."],
-[2,"Nach|part dem|pron Unterricht|nomen gehen|verb wir|pron oft|part in|part die|pron Bibliothek|nomen. Dort|part lesen|verb wir|pron spannende|adj Bücher|nomen und|part lernen|verb für|part die|pron Prüfung|nomen."],
-[2,"Der|pron Zug|nomen hatte|verb leider|part Verspätung|nomen. Deshalb|part kam|verb ich|pron erst|part am|part Abend|nomen nach|part Hause|nomen. Meine|pron Eltern|nomen waren|verb besorgt|adj."],
+[1,"Tim|nomen malt|verb heute|part ein|pron rotes|adj Auto|nomen auf|part ein|pron grosses|adj Blatt.|nomen Danach|part malt|verb er|pron darüber|part einen|pron blauen|adj Himmel.|nomen Seine|pron Schwester|nomen lobt|verb das|pron Bild,|nomen weil|part es|pron sehr|part schön|adj ist.|verb"],
+[2,"Nach|part dem|pron langen|adj Unterricht|nomen gehen|verb wir|pron oft|part in|part die|pron ruhige|adj Bibliothek.|nomen Dort|part lesen|verb wir|pron spannende|adj Bücher|nomen und|part lernen|verb für|part die|pron nächste|adj Prüfung.|nomen"],
+[2,"Der|pron volle|adj Zug|nomen hatte|verb leider|part eine|pron grosse|adj Verspätung.|nomen Deshalb|part kam|verb ich|pron erst|part am|part späten|adj Abend|nomen nach|part Hause.|nomen Meine|pron Eltern|nomen waren|verb besorgt.|adj"],
 [2,"Im|part Winter|nomen bedeckt|verb dicker|adj Schnee|nomen die|pron Berge|nomen. Die|pron Skifahrer|nomen freuen|verb sich|pron über|part die|pron perfekten|adj Pisten|nomen. Abends|part sitzen|verb sie|pron müde|adj am|part Feuer|nomen."],
 [3,"Obwohl|part es|pron regnete|verb, gingen|verb wir|pron in|part den|pron Wald|nomen. Dort|part fanden|verb wir|pron viele|pron Pilze|nomen und|part sammelten|verb sie|pron in|part einem|pron grossen|adj Korb|nomen. Zu|part Hause|nomen kochte|verb Papa|nomen eine|pron leckere|adj Suppe|nomen."],
 [3,"Weil|part der|pron Bus|nomen spät|part kam|verb, mussten|verb wir|pron lange|part frieren|verb. Ein|pron freundlicher|adj Mann|nomen schenkte|verb uns|pron heissen|adj Kaffee|nomen, denn|part er|pron hatte|verb Mitleid|nomen."],
@@ -239,4 +239,17 @@ Object.keys(SINGLE).forEach(id=>{
     c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0]===3?2:1,cats:['sg4'],parts,sent:'',lang:true,allChips:true,brushKeys:BK,brushNames:BN,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,:!?]$/,'')+' → '+BN[p.f]).join(' · ')});
   });
 })();
+})();
+
+/* Doppelte Aufgaben entfernen (gleiche Frage und gleiche Lösung). Läuft nach allen Kapiteln,
+   weil einzelne Kapitel ihre Aufgaben teilweise zufällig erzeugen. */
+(function(){
+  const GT=window.GT;if(!GT||!GT.chapters)return;
+  Object.keys(GT.chapters).forEach(id=>{
+    const L=GT.chapters[id].TASKS,seen=new Set();
+    for(let i=0;i<L.length;i++){
+      const t=L[i],k=JSON.stringify([t.typ,t.instr||'',t.gl||'',t.prompt||'',t.sent||'',t.tokens||0,t.targets||0,t.cuts||0,t.parts||0,t.answer||'',t.opts?[...t.opts].sort():0]);
+      if(seen.has(k)){L.splice(i,1);i--;}else seen.add(k);
+    }
+  });
 })();
