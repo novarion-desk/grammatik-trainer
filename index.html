@@ -537,6 +537,7 @@ function distractors(t,ans){
 }
 function altFor(t){
   if(t._alt!==undefined)return t._alt;
+  if(t.noCards)return t._alt=null;
   let alt=null;
   if(t.opts)alt={opts:t.opts};
   else if(t.input){

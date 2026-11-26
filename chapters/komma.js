@@ -265,6 +265,29 @@ task.push=function(t){const k=(t.prompt||'')+'|'+(t.sent||'')+'|'+t.answer;if(_h
 task.push=_p0;
 })();
 
+/* ---- Niveau A (26.11.2026): anspruchsvolle Sätze. «|» steht hinter dem Komma. ---- */
+[
+['Er versprach,| dass er kommt,| sobald er Zeit hat.','sg2','dass, sobald','Zwei Nebensätze nacheinander: Vor jedem steht ein Komma.'],
+['Das Buch,| das ich dir geliehen habe,| solltest du lesen,| bevor du den Film schaust.','sg3','das, bevor','Der eingeschobene Relativsatz steht zwischen zwei Kommas. Der Nebensatz mit «bevor» wird auch abgetrennt.'],
+['Ich weiss nicht,| ob der Zug,| der um acht Uhr fährt,| heute pünktlich ist.','sg3','ob, der','Im Nebensatz mit «ob» ist ein Relativsatz eingeschoben.'],
+['Obwohl sie müde war,| half sie ihrem Bruder,| der seine Aufgaben nicht verstand.','sg2','obwohl, der','Komma nach dem vorangestellten Nebensatz und vor dem Relativsatz.'],
+['Unsere Trainerin,| eine ehemalige Spitzensportlerin,| erklärte uns,| wie man sich richtig aufwärmt.','sg3','wie','Der Einschub steht zwischen zwei Kommas. Vor dem Nebensatz mit «wie» steht ein weiteres.'],
+['Er verliess das Zimmer,| ohne das Licht zu löschen,| weil er es eilig hatte.','sg4','ohne, weil','Die Infinitivgruppe mit «ohne … zu» und der Nebensatz mit «weil» werden abgetrennt.'],
+['Nein,| ich habe nicht gesehen,| wer das Fenster geöffnet hat.','sg2','Nein, wer','Komma nach «Nein» und vor dem indirekten Fragesatz.'],
+['Sie kauft Hefte,| Stifte und einen Rucksack,| damit sie für die Schule bereit ist.','sg1','und, damit','Komma in der Aufzählung (nicht vor «und») und vor dem Nebensatz.'],
+['Je länger wir warteten,| desto nervöser wurden wir.','sg2','je … desto','Zwischen dem Teil mit «je» und dem Teil mit «desto» steht ein Komma.'],
+['Anstatt zu lernen,| spielte er den ganzen Abend am Handy.','sg4','anstatt … zu','Eine Infinitivgruppe mit «anstatt … zu» wird mit Komma abgetrennt.']
+].forEach(a=>{const raw=a[0].split(' '),cuts=[],tokens=raw.map((w,i)=>{if(w.endsWith('|')){cuts.push(i);return w.slice(0,-2);}return w;});
+  const full=a[0].replace(/\|/g,'');
+  task.push({typ:'ktap',stufe:3,lv:3,cats:[a[1]],tokens,cuts,full,why:'<b>'+full+'</b><br>Signalwort: <b>'+a[2]+'</b><br>Regel: '+a[3]});});
+[
+['Verbinde mit «obwohl». Der Nebensatz steht vorne.','Es ist kalt. Wir baden im See.','Obwohl es kalt ist, baden wir im See.','sg2','Nach dem vorangestellten Nebensatz steht ein Komma.'],
+['Verbinde mit «weil». Der Nebensatz steht am Schluss.','Mia lernt viel. Sie will die Prüfung bestehen.','Mia lernt viel, weil sie die Prüfung bestehen will.','sg2','Vor dem Nebensatz mit «weil» steht ein Komma.'],
+['Füge den zweiten Satz als Relativsatz mit «der» in den ersten ein.','Der Hund bellt laut. Er gehört unserem Nachbarn.','Der Hund, der unserem Nachbarn gehört, bellt laut.','sg3','Der eingeschobene Relativsatz steht zwischen zwei Kommas.'],
+['Verbinde mit «nachdem». Der Nebensatz steht vorne.','Wir hatten gegessen. Wir gingen spazieren.','Nachdem wir gegessen hatten, gingen wir spazieren.','sg2','Nach dem vorangestellten Nebensatz steht ein Komma.'],
+['Verbinde mit «damit». Der Nebensatz steht am Schluss.','Ich stelle den Wecker. Ich verschlafe nicht.','Ich stelle den Wecker, damit ich nicht verschlafe.','sg2','Vor dem Nebensatz mit «damit» steht ein Komma.']
+].forEach(a=>task.push({typ:'schreiben',stufe:3,lv:3,cats:[a[3]],input:true,noCards:true,prompt:a[0],sent:a[1],answer:a[2],accept:[],why:'<b>'+a[2]+'</b> '+a[4]}));
+
 GT.chapter({id:'komma',teil:'satz',nr:10,title:'Kommasetzung',big:'Ich weiss, dass er kommt',desc:'Kommaregeln anwenden',
  ex:'«Ich weiss, dass er kommt.»',
  goals:['Ich setze das Komma in Aufzählungen.','Ich setze das Komma zwischen Haupt- und Nebensatz.','Ich setze Kommas beim Relativsatz, bei der Anrede und beim Ausruf.'],
@@ -272,6 +295,7 @@ GT.chapter({id:'komma',teil:'satz',nr:10,title:'Kommasetzung',big:'Ich weiss, da
  types:{ktap:{icon:'👆',label:'Kommas antippen',short:'Wo steht ein Komma?',instr:'Tippe zwischen zwei Wörter, wo ein Komma stehen muss.',hint:'Suche das Einleitewort (weil, dass, der …) oder die Aufzählung. Davor oder danach steht das Komma.',ref:'haupt-neben'},
   komma:{label:'Richtigen Satz wählen',short:'Welcher Satz ist richtig?',instr:'Welcher Satz ist richtig geschrieben?',hint:'Suche den Nebensatz, die Aufzählung oder den Einschub.',ref:'haupt-neben'},
   ja:{label:'Komma oder nicht',short:'Komma setzen?',instr:'Muss ein Komma stehen?',hint:'Beginnt ein Nebensatz? Ist es eine Aufzählung?',ref:'haupt-neben'},
+  schreiben:{icon:'✏️',label:'Sätze verbinden',short:'Selber schreiben mit Komma',instr:'Schreibe den ganzen Satz. Achte auf die Kommas.',winstr:'Schreibe den ganzen Satz. Achte auf die Kommas.',hint:'Wo beginnt der Nebensatz, wo endet er? Im Nebensatz steht das Verb am Schluss.',ref:'haupt-neben'},
   wissen:{label:'Wissen',short:'Kommaregeln',instr:'Wähle die richtige Antwort.',hint:'Schau in der Theorie nach.',ref:'auf'}},
  sections:SECS,tasks:task,exercises:EX,merk});
 })();
