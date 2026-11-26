@@ -11,6 +11,7 @@ Niveaus: A = alles, B = mittlerer Umfang, C = Kern.
 
 
 ## Neu (November 2026)
+- **Textaufgaben in der Testvorbereitung (26.11.):** Neue Einstellung «Textaufgaben pro Kapitel» (0 bis 3, Standard 1): Pro gewähltes Kapitel kommen ein bis drei lange Texte in den Test (Wortarten bestimmen, Fälle der Nomen bestimmen, Nomen/Verben/Adjektive/Pronomen/Partikel antippen). Die Texte stehen am Schluss, zählen zur Anzahl Aufgaben (höchstens die Hälfte des Tests) und erscheinen auch auf der Übungsprüfung zum Drucken mit Lösungen. **Neu:** «Fälle im langen Text» (20 Texte: Nomengruppen mit Präposition anmalen, Pronomen bleiben ungemalt) und 10 zusätzliche Texte für Wortarten, Nomen, Verb, Adjektiv, Pronomen und Partikel (30 statt 20).
 - **Präsentation (24.11.):** Die Antwort von «Frag Marty» lässt sich nach unten scrollen und wird automatisch ins Bild geholt.
 - **Frag Marty in allen Folien-Übungen (24.11.):** Nach jeder beantworteten Aufgabe auf den Übungsfolien, bei «Probier es aus», in den Gemeinsamen Übungen und im Abschluss-Check erscheint «💡 Frag Marty» (wie im Üben-Bereich; `#ki-aus` schaltet es ab).
 - **Druck (24.11.):** Vorsorge gegen eine leere erste Seite bei Merkblatt, Handout und Übersicht (Seitenumbruch-Regeln der Druckvorlage entschärft). Beim Handout entfällt die leere letzte Seite.

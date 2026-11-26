@@ -24,7 +24,17 @@ const TXT=[
 [3,"Mein|pron älterer|adj Bruder|nomen repariert|verb das|pron kaputte|adj Fahrrad.|nomen Er|pron sucht|verb das|pron passende|adj Werkzeug|nomen in|part der|pron dunklen|adj Garage,|nomen weil|part er|pron den|pron Schlüssel|nomen verloren|verb hat.|verb"],
 [3,"Nachdem|part die|pron Sonne|nomen untergegangen|verb war,|verb wurde|verb es|pron kühl.|adj Wir|pron entfachten|verb ein|pron gemütliches|adj Feuer|nomen und|part erzählten|verb spannende|adj Geschichten,|nomen denn|part niemand|pron war|verb müde.|adj"],
 [3,"Die|pron junge|adj Forscherin|nomen untersucht|verb seltene|adj Pflanzen.|nomen Sie|pron notiert|verb jede|pron Beobachtung|nomen in|part ihrem|pron Heft,|nomen damit|part sie|pron nichts|pron vergisst.|verb"],
-[3,"Auf|part dem|pron Markt|nomen verkauft|verb ein|pron freundlicher|adj Händler|nomen frisches|adj Obst.|nomen Die|pron Kunden|nomen prüfen|verb die|pron reifen|adj Früchte|nomen und|part kaufen|verb sofort|part einen|pron grossen|adj Korb.|nomen"]
+[3,"Auf|part dem|pron Markt|nomen verkauft|verb ein|pron freundlicher|adj Händler|nomen frisches|adj Obst.|nomen Die|pron Kunden|nomen prüfen|verb die|pron reifen|adj Früchte|nomen und|part kaufen|verb sofort|part einen|pron grossen|adj Korb.|nomen"],
+[1,"Am|part Sonntag|nomen besucht|verb Lena|nomen ihre|pron Grossmutter|nomen. Sie|pron hat|verb einen|pron bunten|adj Blumenstrauss|nomen gekauft|verb. Die|pron Grossmutter|nomen freut|verb sich|pron sehr|part. Zusammen|part trinken|verb sie|pron heissen|adj Tee|nomen."],
+[1,"Der|pron Vogel|nomen sitzt|verb im|part Baum|nomen. Er|pron singt|verb ein|pron schönes|adj Lied|nomen. Die|pron Kinder|nomen lauschen|verb dem|pron Gesang|nomen gerne|part."],
+[1,"Heute|part schneit|verb es|pron stark|part. Die|pron Strassen|nomen sind|verb weiss|adj und|part glatt|adj. Viele|pron Menschen|nomen tragen|verb warme|adj Mützen|nomen."],
+[1,"Tim|nomen malt|verb ein|pron rotes|adj Auto|nomen. Danach|part malt|verb er|pron einen|pron blauen|adj Himmel|nomen. Seine|pron Schwester|nomen lobt|verb das|pron schöne|adj Bild|nomen."],
+[2,"Nach|part dem|pron Unterricht|nomen gehen|verb wir|pron oft|part in|part die|pron Bibliothek|nomen. Dort|part lesen|verb wir|pron spannende|adj Bücher|nomen und|part lernen|verb für|part die|pron Prüfung|nomen."],
+[2,"Der|pron Zug|nomen hatte|verb leider|part Verspätung|nomen. Deshalb|part kam|verb ich|pron erst|part am|part Abend|nomen nach|part Hause|nomen. Meine|pron Eltern|nomen waren|verb besorgt|adj."],
+[2,"Im|part Winter|nomen bedeckt|verb dicker|adj Schnee|nomen die|pron Berge|nomen. Die|pron Skifahrer|nomen freuen|verb sich|pron über|part die|pron perfekten|adj Pisten|nomen. Abends|part sitzen|verb sie|pron müde|adj am|part Feuer|nomen."],
+[3,"Obwohl|part es|pron regnete|verb, gingen|verb wir|pron in|part den|pron Wald|nomen. Dort|part fanden|verb wir|pron viele|pron Pilze|nomen und|part sammelten|verb sie|pron in|part einem|pron grossen|adj Korb|nomen. Zu|part Hause|nomen kochte|verb Papa|nomen eine|pron leckere|adj Suppe|nomen."],
+[3,"Weil|part der|pron Bus|nomen spät|part kam|verb, mussten|verb wir|pron lange|part frieren|verb. Ein|pron freundlicher|adj Mann|nomen schenkte|verb uns|pron heissen|adj Kaffee|nomen, denn|part er|pron hatte|verb Mitleid|nomen."],
+[3,"Bevor|part die|pron Show|nomen begann|verb, kauften|verb wir|pron Popcorn|nomen und|part kalte|adj Getränke|nomen. Der|pron Film|nomen war|verb spannend|adj, doch|part das|pron Ende|nomen überraschte|verb alle|pron."]
 ];
 const parse=a=>a.split(' ').map(w=>{const i=w.indexOf('|');const m=w.slice(i+1).match(/^([a-z]+)(.*)$/);return{t:w.slice(0,i)+m[2],f:m[1]};});
 const nextId=c=>c.TASKS.reduce((m,t)=>Math.max(m,t.id||0),0)+1;
@@ -41,6 +51,42 @@ const SINGLE={nomen:{f:'nomen',cat:'sg3',instr:'Tippe alle Nomen im Text an (auc
   TXT.forEach(a=>{
     const parts=parse(a[1]),cats=[...new Set(parts.map(p=>p.f))];
     c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0]===3?2:1,cats,parts,sent:'',lang:true,why:parts.map(p=>p.t.replace(/[.,]$/,'')+' → '+c.catName[p.f]).join(' · ')});
+  });
+})();
+/* Fälle: langer Text. Die Nomengruppen (mit ihrer Präposition) werden mit dem passenden Fall angemalt, alles andere bleibt unbemalt.
+   Schreibweise: [Gruppe|nom|gen|dat|akk]. Nur Nomengruppen markieren, Pronomen bleiben ungemalt. Bei Wechselpräpositionen muss die Frage Wo? oder Wohin? eindeutig sein. */
+(function(){
+  const c=GT.chapters.faelle;if(!c)return;
+  const FT=[
+[1,"[Mia|nom] schenkt [ihrem Bruder|dat] [ein Buch|akk]. [Der Junge|nom] liest [die Geschichte|akk] sofort. Danach erzählt er [seiner Mutter|dat] [den Inhalt|akk]. [Die Mutter|nom] lacht und lobt [das Buch|akk]."],
+[1,"[Der Lehrer|nom] gibt [den Schülern|dat] [eine Aufgabe|akk]. [Die Schüler|nom] lösen [die Aufgabe|akk] schnell. Dann bringt [die Klasse|nom] [dem Lehrer|dat] [die Blätter|akk]. [Der Lehrer|nom] liest [die Lösungen|akk]."],
+[1,"[Die Mutter|nom] kocht [eine Suppe|akk]. [Der Vater|nom] deckt [den Tisch|akk]. [Die Kinder|nom] helfen [der Mutter|dat]. Später bringt [der Vater|nom] [den Kindern|dat] [das Brot|akk]."],
+[1,"[Der Bäcker|nom] verkauft [dem Kunden|dat] [frisches Brot|akk]. [Der Kunde|nom] bezahlt [die Rechnung|akk]. [Die Verkäuferin|nom] dankt [dem Mann|dat]. [Der Mann|nom] öffnet [die Tür|akk] und geht."],
+[1,"[Ein Hund|nom] bellt [den Briefträger|akk] an. [Der Briefträger|nom] gibt [dem Hund|dat] [ein Stück Wurst|akk]. [Der Hund|nom] frisst [die Wurst|akk] gierig. Dann folgt [der Hund|nom] [dem Briefträger|dat]."],
+[1,"[Anna|nom] schreibt [ihrer Freundin|dat] [einen Brief|akk]. [Die Freundin|nom] schickt [Anna|dat] [eine Karte|akk]. [Anna|nom] liebt [die Karte|akk]."],
+[2,"[Die Klasse|nom] fährt [mit dem Bus|dat] [zum Zoo|dat]. Dort sehen [die Kinder|nom] [einen Elefanten|akk] und [zwei Affen|akk]. [Während der Pause|gen] essen sie [ein Sandwich|akk] [vor dem Eingang|dat]."],
+[2,"[Der Zug|nom] fährt [durch den Tunnel|akk]. [Im Wagen|dat] sitzen [viele Reisende|nom]. [Ein Kind|nom] schaut [aus dem Fenster|dat]. [Nach der Fahrt|dat] steigt [die Familie|nom] aus."],
+[2,"[Wegen des Regens|gen] bleibt [die Klasse|nom] [im Schulhaus|dat]. [Die Lehrerin|nom] liest [den Kindern|dat] [eine Geschichte|akk] vor. [Ohne ein Wort|akk] hören [die Kinder|nom] zu."],
+[2,"[Der Opa|nom] erzählt [den Enkeln|dat] [eine Geschichte|akk] [aus seiner Jugend|dat]. Er arbeitete damals [auf einem Bauernhof|dat]. [Die Arbeit|nom] war hart, aber [der Lohn|nom] war gut."],
+[2,"[Meine Schwester|nom] trainiert [in der Woche|dat] [mit ihrem Team|dat]. [Der Trainer|nom] erklärt [den Spielerinnen|dat] [die Taktik|akk]. [Nach dem Training|dat] duscht [das Team|nom]."],
+[2,"[Der Koch|nom] schneidet [das Gemüse|akk] [mit einem scharfen Messer|dat]. [Die Zwiebeln|akk] brät er [in der Pfanne|dat]. [Der Duft|nom] zieht [durch die Küche|akk]. [Die Gäste|nom] warten [vor der Tür|dat]."],
+[2,"[Die Katze|nom] [meiner Nachbarin|gen] sitzt [auf dem Dach|dat]. [Die Nachbarin|nom] ruft [die Katze|akk]. [Das Tier|nom] hört [die Stimme|akk] nicht."],
+[3,"[Am Samstag|dat] besucht [die Familie|nom] [den Zirkus|akk]. [Vor dem Zelt|dat] steht [eine lange Schlange|nom]. [Der Direktor|nom] begrüsst [die Gäste|akk] und wünscht [den Kindern|dat] [viel Spass|akk]. [Während der Vorstellung|gen] staunt [das Publikum|nom] [über die Kunststücke|akk] [der Artisten|gen]."],
+[3,"[Der Vater|nom] hängt [das Bild|akk] [an die Wand|akk]. Dann stellt er [die Vase|akk] [auf den Tisch|akk]. Jetzt hängt [das Bild|nom] [an der Wand|dat], und [die Vase|nom] steht [auf dem Tisch|dat]."],
+[3,"[Der Hund|nom] rennt [in den Garten|akk]. Dort gräbt er [ein Loch|akk] [unter dem Zaun|dat]. Dann kriecht er [durch das Loch|akk]. [Auf der Strasse|dat] sieht [die Nachbarin|nom] [den Hund|akk] und ruft [den Besitzer|akk]."],
+[3,"[Der Hut|nom] [des Zauberers|gen] liegt [auf dem Boden|dat]. [Die Kinder|nom] [der Nachbarn|gen] staunen [über den Trick|akk]. [Trotz des Lärms|gen] hört [der Zauberer|nom] [die Stimme|akk] [seiner Tochter|gen]."],
+[3,"[Wegen des Streiks|gen] fährt [der Zug|nom] nicht. [Die Reisenden|nom] warten [in der Halle|dat] [auf den nächsten Zug|akk]. [Ein Mitarbeiter|nom] erklärt [den Gästen|dat] [die Lage|akk]. [Die Verspätung|nom] [des Zuges|gen] beträgt [eine Stunde|akk]."],
+[3,"[Anna|nom] sitzt [im Park|dat] und liest [ein Buch|akk]. Plötzlich läuft [ein Eichhörnchen|nom] [auf den Weg|akk]. [Anna|nom] gibt [dem Tier|dat] [eine Nuss|akk]. [Das Eichhörnchen|nom] klettert [auf einen Baum|akk] und frisst [die Nuss|akk] [auf dem Ast|dat]."],
+[3,"[Die Schülerin|nom] hilft [ihrem Lehrer|dat] [bei der Arbeit|dat]. Sie trägt [die Hefte|akk] [der Klasse|gen] [ins Zimmer|akk]. [Der Lehrer|nom] dankt [der Schülerin|dat] [für ihre Hilfe|akk]. [Mit dem Lob|dat] [des Lehrers|gen] ist [die Schülerin|nom] zufrieden."]
+  ];
+  c.TYPES.anmalenlang={icon:'📄',label:'Fälle im langen Text',short:'Die Fälle der Nomen in einem längeren Text bestimmen',instr:'Wähle einen Fall und tippe jede Nomengruppe im Text an. Die Präposition gehört zur Gruppe.',hint:'Finde zuerst das Verb und frage von dort aus: Wer oder was? Wen oder was? Wem? Wessen? Bei Präpositionen entscheidet die Präposition. Wechselpräpositionen: Wo? → Dativ, Wohin? → Akkusativ.',ref:'proben'};
+  const re=/\[([^\]|]+)\|(nom|gen|dat|akk)\]([.,!?;:]*)/g;
+  FT.forEach(a=>{
+    const txt=a[1],parts=[];let last=0,m;re.lastIndex=0;
+    while((m=re.exec(txt))){const pl=txt.slice(last,m.index).trim();if(pl)parts.push({t:pl,f:null});parts.push({t:m[1]+m[3],f:m[2]});last=re.lastIndex;}
+    const tail=txt.slice(last).trim();if(tail)parts.push({t:tail,f:null});
+    const cats=[...new Set(parts.filter(p=>p.f).map(p=>p.f))];
+    c.TASKS.push({id:nextId(c),typ:'anmalenlang',stufe:a[0],lv:a[0],cats,parts,sent:'',lang:true,why:parts.filter(p=>p.f).map(p=>p.t.replace(/[.,!?;:]$/,'')+' → '+c.catName[p.f]).join(' · ')});
   });
 })();
 /* Nomen, Verb, Adjektiv, Pronomen, Partikel: langer Text, alle Wörter der Wortart antippen */

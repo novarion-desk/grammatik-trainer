@@ -1124,19 +1124,32 @@ function printSheet(w){
 function withCh(id,fn){const o=S.ch;S.ch=id;try{return fn();}finally{S.ch=o;}}
 const tPts=t=>((t.opts||t._m==='c'||t._m==='k')&&!isW(t)&&!t.lang)?0.5:((t.lang||(Number(t.stufe)||1)>=2)?2:1);
 const fmtP=n=>String(Math.round(n*2)/2).replace('.',',');
-function testInit(){if(!S.test)S.test={chs:new Set(),count:'20',custom:20,timer:false,exam:true};}
+function testInit(){if(!S.test)S.test={chs:new Set(),count:'20',custom:20,timer:false,exam:true,texts:1};if(S.test.texts==null)S.test.texts=1;}
 function testWanted(){const T=S.test;return T.count==='custom'?Math.max(1,Math.min(80,parseInt(T.custom,10)||20)):parseInt(T.count,10);}
-function testAvail(){let n=0;S.test.chs.forEach(id=>{if(GT.chapters[id])n+=withCh(id,()=>visibleTasks().length);});return n;}
-function testBuild(){
-  testInit();const pools=[...S.test.chs].filter(id=>GT.chapters[id]).map(id=>withCh(id,()=>balance(visibleTasks().map(t=>Object.assign({},t,{_ch:id})))));
-  const want=testWanted(),pick=[];let i=0;
-  while(pick.length<want&&pools.some(p=>p.length)){const p=pools[i++%pools.length];if(p.length)pick.push(p.shift());}
-  return shuffle(pick);
+function testAvail(){
+  const T=S.test,want=testWanted();let nl=0,tx=0;
+  T.chs.forEach(id=>{if(GT.chapters[id])withCh(id,()=>{const v=visibleTasks();nl+=v.filter(t=>!t.lang).length;tx+=Math.min(T.texts,v.filter(t=>t.lang).length);});});
+  return nl+Math.min(tx,Math.floor(want/2));
 }
+/* Textaufgaben (lange Texte): pro Kapitel höchstens S.test.texts, zusammen höchstens die Hälfte des Tests; sie stehen am Schluss. */
+function testBuild(){
+  testInit();const T=S.test,want=testWanted(),texts=[],pools=[];
+  [...T.chs].filter(id=>GT.chapters[id]).forEach(id=>withCh(id,()=>{
+    const v=visibleTasks().map(t=>Object.assign({},t,{_ch:id}));
+    texts.push(shuffle(v.filter(t=>t.lang)).slice(0,T.texts));
+    pools.push(balance(v.filter(t=>!t.lang)));
+  }));
+  const cap=Math.floor(want/2),tx=[];let k=0;
+  while(tx.length<cap&&texts.some(l=>l.length)){const l=texts[k++%texts.length];if(l.length)tx.push(l.shift());}
+  const rest=want-tx.length,pick=[];let i=0;
+  while(pick.length<rest&&pools.some(p=>p.length)){const p=pools[i++%pools.length];if(p.length)pick.push(p.shift());}
+  return shuffle(pick).concat(tx);
+}
+function testTextN(){const T=S.test,want=testWanted();let tx=0;T.chs.forEach(id=>{if(GT.chapters[id])withCh(id,()=>{tx+=Math.min(T.texts,visibleTasks().filter(t=>t.lang).length);});});return Math.min(tx,Math.floor(want/2));}
 function testInfo(){
   const T=S.test,el=document.getElementById('tinfo');if(!el)return;
-  const n=T.chs.size?testAvail():0,want=testWanted();
-  el.innerHTML=!T.chs.size?'<div class="avail none">Wähle mindestens ein Kapitel.</div>':n<want?'<div class="avail warn">Es gibt nur '+n+' passende Aufgaben. Der Test hat deshalb '+n+' statt '+want+' Aufgaben.</div>':'<div class="avail">'+n+' Aufgaben verfügbar. Der Test hat '+want+' Aufgaben.</div>';
+  const n=T.chs.size?testAvail():0,want=testWanted(),tn=T.chs.size?Math.min(testTextN(),want):0,tt=tn?', davon '+tn+' Textaufgabe'+(tn>1?'n':''):'';
+  el.innerHTML=!T.chs.size?'<div class="avail none">Wähle mindestens ein Kapitel.</div>':n<want?'<div class="avail warn">Es gibt nur '+n+' passende Aufgaben. Der Test hat deshalb '+n+' statt '+want+' Aufgaben'+tt+'.</div>':'<div class="avail">'+n+' Aufgaben verfügbar. Der Test hat '+want+' Aufgaben'+tt+'.</div>';
   ['tStartBtn','tSheetBtn'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=!T.chs.size||n===0;});
 }
 function screenTest(){
@@ -1150,6 +1163,7 @@ function screenTest(){
    '<div class="card"><h3>Kapitel <span><button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.WORT)+'">Wortlehre alle/keine</button> <button type="button" class="btn sm" data-a="tgrp" data-v="'+ids(GT.SATZ)+'">Satzlehre alle/keine</button></span></h3>'+
    '<div class="tlab">🔤 Wortlehre</div><div class="tchips">'+chips(GT.WORT)+'</div><div class="tlab">🧩 Satzlehre</div><div class="tchips">'+chips(GT.SATZ)+'</div>'+
    '<h3>Anzahl Aufgaben</h3><div class="tchips">'+cnt+'<input id="tcustom" type="number" inputmode="numeric" min="1" max="80" value="'+T.custom+'" aria-label="Eigene Anzahl" '+(T.count==='custom'?'':'hidden')+' style="width:90px;min-height:46px;border:1.5px solid var(--line2);border-radius:.75rem;padding:.3rem .6rem;text-align:center"></div>'+
+   '<h3>Textaufgaben pro Kapitel</h3><div class="tchips">'+[0,1,2,3].map(v=>'<button type="button" data-a="ttexts" data-v="'+v+'" class="'+(T.texts===v?'on':'')+'">'+v+'</button>').join('')+'</div><p class="muted" style="margin:.3rem 0 .8rem;font-size:.88rem">Ein längerer Text pro Kapitel, wie in der Prüfung (z. B. Wortarten bestimmen, Fälle der Nomen bestimmen). Die Texte stehen am Schluss und zählen zur Anzahl Aufgaben. Es sind höchstens halb so viele Texte wie Aufgaben.</p>'+
    '<h3>Antwort</h3><div class="tchips">'+mode+'</div>'+
    '<h3>Weitere Einstellungen</h3><div class="tchips"><button type="button" data-a="texam" class="'+(T.exam?'on':'')+'" aria-pressed="'+T.exam+'">📋 Prüfungsmodus: Resultate erst am Schluss</button><button type="button" data-a="ttimer" class="'+(T.timer?'on':'')+'" aria-pressed="'+T.timer+'">⏱ Stoppuhr anzeigen</button></div>'+
    '<div id="tinfo" style="margin-top:.8rem"></div>'+
@@ -1267,6 +1281,7 @@ document.addEventListener('click',e=>{
    case 'tch':{testInit();const k=b.dataset.v;if(S.test.chs.has(k))S.test.chs.delete(k);else S.test.chs.add(k);b.classList.toggle('on',S.test.chs.has(k));b.setAttribute('aria-pressed',S.test.chs.has(k));testInfo();break;}
    case 'tgrp':{testInit();const ids=v.split(',');const all=ids.every(k=>S.test.chs.has(k));ids.forEach(k=>all?S.test.chs.delete(k):S.test.chs.add(k));document.querySelectorAll('.tchips [data-a="tch"]').forEach(x=>{const on=S.test.chs.has(x.dataset.v);x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);});testInfo();break;}
    case 'tcount':{testInit();S.test.count=v;document.querySelectorAll('[data-a="tcount"]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));const ci=document.getElementById('tcustom');if(ci)ci.hidden=v!=='custom';testInfo();break;}
+   case 'ttexts':{testInit();S.test.texts=Number(v);document.querySelectorAll('[data-a="ttexts"]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));testInfo();break;}
    case 'tmode2':{S.cfg.mode=v;document.querySelectorAll('[data-a="tmode2"]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));break;}
    case 'texam':{testInit();S.test.exam=!S.test.exam;b.classList.toggle('on',S.test.exam);b.setAttribute('aria-pressed',S.test.exam);break;}
    case 'ttimer':{testInit();S.test.timer=!S.test.timer;b.classList.toggle('on',S.test.timer);b.setAttribute('aria-pressed',S.test.timer);break;}
